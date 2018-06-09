@@ -1,12 +1,15 @@
 //Angular Elements
 import { BrowserModule } from '@angular/platform-browser';
-import {NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+
 
 //External Modules
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 
 //Internal modules
 import { AppRoutingModule } from "./app-routing-module";
+
 
 //User Components
 import { AppComponent } from './app.component';
@@ -22,6 +25,7 @@ import { RegistrationComponent } from "./pages/Registration/registration";
   imports: [
     BrowserModule,
     AppRoutingModule,
+    RouterModule,
     MDBBootstrapModule.forRoot()
   ],
   schemas: [ NO_ERRORS_SCHEMA ],
