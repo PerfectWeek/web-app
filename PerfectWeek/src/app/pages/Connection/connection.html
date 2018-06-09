@@ -1,0 +1,23 @@
+<div class="form-background">
+  <div class="form-container-sm">
+    <form [formGroup]="registrationForm" (ngSubmit)="submit()">
+      <p class="h5 text-center mb-4">Connexion</p>
+
+      <div class="md-form">
+        <i class="fa fa-envelope prefix grey-text"></i>
+        <input type="email" formControlName="email" id="email" class="form-control" mdbInputDirective required>
+        <label for="email">Email</label>
+      </div>
+
+      <div class="md-form">
+        <i class="fa fa-lock prefix grey-text"></i>
+        <input type="password" formControlName="password" id="password" class="form-control" mdbInputDirective required>
+        <label for="password">Mot de passe</label>
+      </div>
+
+      <div class="text-center">
+        <input type="submit" class="btn btn-default waves-light" mdbWavesEffect value="Register">
+      </div>
+    </form>
+  </div>
+</div>
