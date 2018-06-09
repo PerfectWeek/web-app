@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 //External Modules
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
+import { InputsModule, WavesModule } from 'angular-bootstrap-md'
 
 //Internal modules
 import { AppRoutingModule } from "./app-routing-module";
@@ -29,6 +30,8 @@ import { RegistrationComponent } from "./pages/Registration/registration";
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
+    InputsModule,
+    WavesModule,
     MDBBootstrapModule.forRoot()
   ],
   schemas: [ NO_ERRORS_SCHEMA ],
