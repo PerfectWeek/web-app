@@ -1,7 +1,7 @@
 //Angular Elements
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 
@@ -17,7 +17,7 @@ import { AppRoutingModule } from "./app-routing-module";
 import { AppComponent } from './app.component';
 import { RegistrationComponent } from "./pages/Registration/registration";
 import { ConnectionComponent } from "./pages/Connection/connection";
-
+import {NotFoundComponent} from "./pages/NotFound/not-found";
 
 
 @NgModule({
@@ -25,6 +25,7 @@ import { ConnectionComponent } from "./pages/Connection/connection";
     AppComponent,
     RegistrationComponent,
     ConnectionComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,
