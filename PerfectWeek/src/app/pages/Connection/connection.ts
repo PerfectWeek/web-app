@@ -15,7 +15,6 @@ export class ConnectionComponent {
     return this.fb.group({
       email: [null, Validators.required],
       password: [null, Validators.required],
-      confirm: [null, Validators.required]
     });
   }
 
@@ -24,6 +23,7 @@ export class ConnectionComponent {
   }
 
   submit() {
+    console.log('form => ', this.registrationForm);
     console.log('values => ', this.registrationForm.value);
   }
 }

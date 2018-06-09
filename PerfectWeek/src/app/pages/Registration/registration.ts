@@ -13,6 +13,7 @@ export class RegistrationComponent {
 
   initRegistrationForm() {
     return this.fb.group({
+      name: [null, Validators.required],
       email: [null, Validators.required],
       password: [null, Validators.required],
       confirm: [null, Validators.required]
@@ -24,6 +25,7 @@ export class RegistrationComponent {
   }
 
   submit() {
+    console.log('form => ', this.registrationForm);
     console.log('values => ', this.registrationForm.value);
   }
 }
