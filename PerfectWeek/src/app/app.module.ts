@@ -16,13 +16,15 @@ import { AppRoutingModule } from "./app-routing-module";
 //User Components
 import { AppComponent } from './app.component';
 import { RegistrationComponent } from "./pages/Registration/registration";
+import { ConnectionComponent } from "./pages/Connection/connection";
 
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    ConnectionComponent,
   ],
   imports: [
     BrowserModule,
