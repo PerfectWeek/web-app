@@ -2,6 +2,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 
 //External Modules
@@ -26,6 +27,8 @@ import { RegistrationComponent } from "./pages/Registration/registration";
     BrowserModule,
     AppRoutingModule,
     RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
     MDBBootstrapModule.forRoot()
   ],
   schemas: [ NO_ERRORS_SCHEMA ],

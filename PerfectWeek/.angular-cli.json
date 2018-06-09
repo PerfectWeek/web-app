@@ -22,7 +22,7 @@
         "../node_modules/font-awesome/scss/font-awesome.scss",
         "../node_modules/angular-bootstrap-md/scss/bootstrap/bootstrap.scss",
         "../node_modules/angular-bootstrap-md/scss/mdb-free.scss",
-        "styles.scss"
+        "scss/styles.scss"
       ],
       "scripts": [
         "../node_modules/chart.js/dist/Chart.js",
