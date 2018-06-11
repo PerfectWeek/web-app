@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import {RequestService} from "../../core/services/request.service";
 
 @Component({
   selector: 'not-found',
@@ -7,7 +8,9 @@ import { Component } from "@angular/core";
 })
 export class NotFoundComponent {
 
-  constructor() {
-
+  constructor(private requestSrv: RequestService) {
+    this.requestSrv.get('users/test')
+      .do((users) => console.log('users => ', users))
+      .subscribe()
   }
 }
