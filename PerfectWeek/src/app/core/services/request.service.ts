@@ -46,10 +46,6 @@ export class RequestService {
     const httpHeaders = (RequestService.prepareHeader(headers)).append('Content-Type', 'application/x-www-form-urlencoded');
     const params = RequestService.prepareParams(body);
 
-    console.log('params => ', params.toString());
-
-    console.log('header => ', httpHeaders);
-
     return this.http.post(url, params, {
         headers: httpHeaders
       }

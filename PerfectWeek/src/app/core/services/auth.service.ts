@@ -66,7 +66,6 @@ export class AuthService {
 
     if (this.canConnect() === true && this.tokenSrv.token === null) {
       return this.connection()
-      // .do(() => this.isLoggedSubject.next(this._logged), () => this.isLoggedSubject.next(this._logged))
         .switchMap(() => this.isLoggedObservable)
         .catch(() => this.isLoggedObservable);
     }
@@ -88,7 +87,9 @@ export class AuthService {
   connection(): Observable<void> {
     return this.requestSrv.post('auth/login', this.auth, {
       noMultiple: ''
-    }).do((data: any) => this.tokenSrv.token = data.token)
+    }).do((data: any) => {
+      this.tokenSrv.token = data.access_token;
+    })
       .do(() => this.logged = true, () => this.logged = false);
   }
 

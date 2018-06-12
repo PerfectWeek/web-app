@@ -21,7 +21,7 @@ export class DashboardComponent implements OnInit {
     this.route.queryParams
       .subscribe(params => {
         if (params.user_pseudo)
-          this.requestSrv.get('users/' + params.user_pseudo)
+          this.requestSrv.get('users/' + params.user_pseudo, {}, {'access-token': ''})
             .do((user) => this.user = user.user)
             .subscribe()
         })

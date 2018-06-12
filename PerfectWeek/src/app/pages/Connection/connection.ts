@@ -31,10 +31,7 @@ export class ConnectionComponent {
   submit() {
     this.authSrv.newConnection(this.connectionForm.value)
       .do(
-        ((user: any) => {
-          console.log('user => ', user.user.pseudo);
-          this.router.navigate(['/dashboard'], {queryParams: {user_pseudo: user.user.pseudo}})
-        } ),
+        ((user: any) => this.router.navigate(['/dashboard'], {queryParams: {user_pseudo: user.user.pseudo}})),
         () => {
           this.connectionForm.reset();
           this.toastSrv.error('Erreur lors de la tentative de connexion.\n Veuillez réessayer', 'Erreur de connexion');

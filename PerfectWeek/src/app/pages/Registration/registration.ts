@@ -35,12 +35,8 @@ export class RegistrationComponent {
   submit() {
     const user: User = this.registrationForm.value;
     delete (<any>user).confirm;
-    console.log('User => ', user);
     this.requestSrv.post('users', user)
-      .do((response) => {
-        this.toastSrv.success('Vous vous êtes inscrit avec succès', 'Inscription effectué');
-        console.log(response)
-      })
+      .do((response) => this.toastSrv.success('Vous vous êtes inscrit avec succès', 'Inscription effectué'))
       .do(
         () => this.router.navigate(['/login']),
         (err: HttpErrorResponse) => {

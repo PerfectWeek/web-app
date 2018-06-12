@@ -8,9 +8,7 @@ import {RequestService} from "../../core/services/request.service";
 })
 export class NotFoundComponent {
 
-  constructor(private requestSrv: RequestService) {
-    this.requestSrv.get('users/test')
-      .do((users) => console.log('users => ', users))
-      .subscribe()
+  constructor() {
+
   }
 }
