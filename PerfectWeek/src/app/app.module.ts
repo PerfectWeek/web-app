@@ -9,7 +9,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 //External Modules
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { InputsModule, WavesModule } from 'angular-bootstrap-md'
-import { ToastrModule } from 'ngx-toastr';
+import {ToastContainerModule, ToastrModule, ToastrService} from 'ngx-toastr';
 
 //Internal modules
 import { AppRoutingModule } from "./app-routing-module";
@@ -30,6 +30,8 @@ import { RegistrationComponent } from "./pages/Registration/registration";
 import { ConnectionComponent } from "./pages/Connection/connection";
 import { NotFoundComponent } from "./pages/NotFound/not-found";
 import {DashboardComponent} from "./pages/dashboard/dashboard";
+import {BrowserDynamicTestingModule, platformBrowserDynamicTesting} from "@angular/platform-browser-dynamic/testing";
+import {TestRequest} from "@angular/common/http/testing";
 
 
 @NgModule({
@@ -50,6 +52,9 @@ import {DashboardComponent} from "./pages/dashboard/dashboard";
     InputsModule,
     WavesModule,
     HttpClientModule,
+    //ToastrService,
+    //TestRequest,
+    ToastContainerModule,
     ToastrModule.forRoot({
       timeOut: 10000,
       positionClass: 'toast-bottom-center',

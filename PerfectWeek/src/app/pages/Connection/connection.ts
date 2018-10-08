@@ -14,18 +14,22 @@ export class ConnectionComponent {
 
   connectionForm: FormGroup;
 
-  initConnectionForm() {
+/*  initConnectionForm() {
     return this.fb.group({
       email: [null, Validators.required],
       password: [null, Validators.required],
     });
-  }
+  }*/
 
   constructor(private fb: FormBuilder,
               private authSrv: AuthService,
               private router: Router,
               private toastSrv: ToastrService) {
-    this.connectionForm = this.initConnectionForm();
+    this.connectionForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.pattern("^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$"),
+                      Validators.minLength(8)]]
+    });
   }
 
   submit() {

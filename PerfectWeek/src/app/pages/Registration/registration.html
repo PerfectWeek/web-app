@@ -6,24 +6,28 @@
 
         <div class="md-form">
           <i class="fa fa-user prefix"></i>
+          <!-- <input type="text" formControlName="pseudo" id="name" class="form-control" [mdbValidate]="false" mdbInputDirective required> -->
           <input type="text" formControlName="pseudo" id="name" class="form-control" [mdbValidate]="false" mdbInputDirective required>
           <label for="name">Pseudo</label>
         </div>
 
         <div class="md-form">
           <i class="fa fa-envelope prefix"></i>
+          <!-- <input type="email" email formControlName="email" id="email" class="form-control" [mdbValidate]="false" mdbInputDirective required> -->
           <input type="email" email formControlName="email" id="email" class="form-control" [mdbValidate]="false" mdbInputDirective required>
           <label for="email">Email</label>
         </div>
 
         <div class="md-form">
           <i class="fa fa-lock prefix"></i>
+          <!-- <input type="password" pattern="^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$" minlength="8" formControlName="password" id="password" class="form-control" [mdbValidate]="false" mdbInputDirective required> -->
           <input type="password" pattern="^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$" minlength="8" formControlName="password" id="password" class="form-control" [mdbValidate]="false" mdbInputDirective required>
           <label for="password" data-error="">Mot de passe</label>
         </div>
 
         <div class="md-form">
           <i class="fa fa-lock prefix"></i>
+          <!-- <input type="password" pattern="{{registrationForm.value.password}}" formControlName="confirm" id="confirm" class="form-control" [mdbValidate]="false" mdbInputDirective required> -->
           <input type="password" pattern="{{registrationForm.value.password}}" formControlName="confirm" id="confirm" class="form-control" [mdbValidate]="false" mdbInputDirective required>
           <label for="confirm">Confirmer le mot de passe</label>
         </div>
