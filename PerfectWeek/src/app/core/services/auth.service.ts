@@ -13,6 +13,7 @@ import 'rxjs/add/observable/empty';
 import { User } from "../models/User";
 import 'rxjs/add/operator/switchMap';
 import {  ReplaySubject} from "rxjs/ReplaySubject";
+import {Router} from "@angular/router";
 
 @Injectable()
 export class AuthService {
@@ -54,6 +55,7 @@ export class AuthService {
   isLoggedObservable: Observable<boolean> = this.isLoggedSubject.asObservable();
 
   constructor(private requestSrv: RequestService,
+              private router: Router,
               private tokenSrv: TokenService) {
     this._auth = JSON.parse(localStorage.getItem('auth'));
   }
@@ -88,6 +90,8 @@ export class AuthService {
     return this.requestSrv.post('auth/login', this.auth, {
       noMultiple: ''
     }).do((data: any) => {
+      console.log('connection');
+      localStorage.setItem('user_pseudo', data.user.pseudo);
       this.tokenSrv.token = data.access_token;
     })
       .do(() => this.logged = true, () => this.logged = false);
@@ -103,11 +107,21 @@ export class AuthService {
   }
 
   logout(): Observable<void> {
+    localStorage.removeItem('user_pseudo');
+    this.logged = false;
+    this.auth = null;
+    this.router.navigate(['/login']);
     return this.requestSrv.delete('logout', {
       noMultiple: '',
-      Authorization: '',
+      'Authorization': '',
     })
-      .do(() => this.logged = false)
-      .do(() => this.auth = null);
+      .do(() => {
+        localStorage.removeItem('user_pseudo');
+        this.logged = false
+      })
+      .do(() => {
+        this.auth = null;
+        this.router.navigate(['/login']);
+      });
   }
 }

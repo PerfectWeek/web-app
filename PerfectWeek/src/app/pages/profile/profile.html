@@ -1,0 +1,38 @@
+<div>
+  <div>
+    <h1 style="text-align: center">Profil</h1>
+  </div>
+  <div>
+    <div class="profile-container" *ngIf="user && modifying === false">
+      <div class="md-form">
+        <input disabled mdbInputDirective type="text" name="pseudo" [(ngModel)]="user.pseudo" id="pseudo" class="form-control">
+        <label for="pseudo" class="">Pseudo</label>
+      </div>
+
+      <div class="md-form">
+        <input disabled mdbInputDirective type="text" name="email" [(ngModel)]="user.email" id="email" class="form-control">
+        <label for="email" class="">Adresse mail</label>
+      </div>
+    </div>
+
+    <div class="profile-container" *ngIf="user && modifying === true">
+      <div class="md-form">
+        <input mdbInputDirective type="text" name="pseudo" [(ngModel)]="pseudo" id="modify_pseudo" class="form-control" required>
+        <label for="pseudo" class="">Pseudo</label>
+      </div>
+
+      <div class="md-form">
+        <input disabled mdbInputDirective type="text" name="email" [(ngModel)]="user.email" id="modify_email" class="form-control">
+        <label for="email" class="">Adresse mail</label>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-flow: row-reverse; margin: 5px 0; justify-content: space-between" *ngIf="user">
+      <button mdbBtn type="button" color="primary" class="waves-light" mdbWavesEffect *ngIf="modifying === false; else modify" (click)="modifying = true">Modifier le profil</button>
+      <ng-template #modify>
+        <button mdbBtn type="button" color="default" class="waves-light" mdbWavesEffect [disabled]="!user.pseudo" (click)="modifyProfile()">Modifier</button>
+      </ng-template>
+      <button mdbBtn type="button" color="red" class="waves-light" (click)="deleteProfile()">Supprimer le profil</button>
+    </div>
+  </div>
+</div>

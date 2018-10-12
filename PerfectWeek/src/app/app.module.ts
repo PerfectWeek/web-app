@@ -8,8 +8,30 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 
 //External Modules
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
-import { InputsModule, WavesModule } from 'angular-bootstrap-md'
+import { InputsModule, WavesModule, ButtonsModule } from 'angular-bootstrap-md'
 import { ToastrModule } from 'ngx-toastr';
+import {
+  MatSelectModule,
+  MatDialogModule,
+  MatExpansionModule,
+  MatCheckboxModule,
+  MatInputModule,
+  MatPaginatorModule,
+  MatProgressSpinnerModule,
+  MatSortModule,
+  MatTableModule,
+  MatTabsModule,
+  MatCardModule,
+  MatAutocompleteModule,
+  MatFormFieldModule,
+  MatOptionModule,
+  MatChipsModule,
+  MatButtonModule,
+  MatListModule,
+  MatIconModule,
+  MAT_LABEL_GLOBAL_OPTIONS,
+  MAT_DATE_LOCALE, MatDialogRef, MatPaginatorIntl } from "@angular/material";
+
 
 //Internal modules
 import { AppRoutingModule } from "./app-routing-module";
@@ -18,6 +40,7 @@ import { AppRoutingModule } from "./app-routing-module";
 import { RequestService } from "./core/services/request.service";
 import { TokenService } from "./core/services/token.service";
 import { AuthService } from "./core/services/auth.service";
+import {ProfileService} from "./core/services/profile.service";
 
 //Interceptors
 import { InterceptorToken } from "./core/Interceptors/token-interceptor";
@@ -29,7 +52,17 @@ import { AppComponent } from './app.component';
 import { RegistrationComponent } from "./pages/Registration/registration";
 import { ConnectionComponent } from "./pages/Connection/connection";
 import { NotFoundComponent } from "./pages/NotFound/not-found";
-import {DashboardComponent} from "./pages/dashboard/dashboard";
+import { DashboardComponent } from "./pages/dashboard/dashboard";
+import { ProfileComponent } from "./pages/profile/profile";
+
+
+//Dialog
+import { ConfirmDialog } from "./module/dialog/Confirm-dialog/Confirm-dialog";
+
+
+//Guards
+import { isLogged } from "./core/Guards/isLogged-guard";
+import { IsLogout } from "./core/Guards/isLogout-guard";
 
 
 @NgModule({
@@ -39,6 +72,8 @@ import {DashboardComponent} from "./pages/dashboard/dashboard";
     ConnectionComponent,
     NotFoundComponent,
     DashboardComponent,
+    ProfileComponent,
+    ConfirmDialog
   ],
   imports: [
     BrowserModule,
@@ -49,7 +84,26 @@ import {DashboardComponent} from "./pages/dashboard/dashboard";
     ReactiveFormsModule,
     InputsModule,
     WavesModule,
+    ButtonsModule,
     HttpClientModule,
+    MatSelectModule,
+    MatDialogModule,
+    MatExpansionModule,
+    MatCheckboxModule,
+    MatInputModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    MatSortModule,
+    MatTableModule,
+    MatTabsModule,
+    MatCardModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatOptionModule,
+    MatChipsModule,
+    MatButtonModule,
+    MatListModule,
+    MatIconModule,
     ToastrModule.forRoot({
       timeOut: 10000,
       positionClass: 'toast-bottom-center',
@@ -62,6 +116,7 @@ import {DashboardComponent} from "./pages/dashboard/dashboard";
     RequestService,
     TokenService,
     AuthService,
+    ProfileService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: InterceptorUrl,
@@ -77,7 +132,12 @@ import {DashboardComponent} from "./pages/dashboard/dashboard";
       useClass: InterceptorLogin,
       multi: true
     },
+    isLogged,
+    IsLogout
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    ConfirmDialog
+  ]
 })
 export class AppModule { }

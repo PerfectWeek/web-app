@@ -11,7 +11,7 @@ import 'rxjs/add/observable/throw';
 export class InterceptorToken implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (req.headers.has('access-token')) {
+    if (req.headers.has('Authorization')) {
       return next.handle(this.fillToken(req))
         .catch((err: any) => {
           if (err instanceof HttpErrorResponse) {
@@ -29,7 +29,7 @@ export class InterceptorToken implements HttpInterceptor {
 
   fillToken(req: HttpRequest<any>): HttpRequest<any> {
     const dup = req.clone({
-      headers: req.headers.set('access-token', `${this.tokenSrv.token}`)
+      headers: req.headers.set('Authorization', `Bearer ${this.tokenSrv.token}`)
     });
     return (dup);
   }
