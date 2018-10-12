@@ -1,0 +1,18 @@
+.profile-container {
+  padding: 15px;
+  border: none;
+
+  > .data-container {
+    display: flex;
+    flex-flow: row;
+    padding: 5px;
+
+    > * {
+      margin: 0 5px;
+    }
+
+    > p {
+      border-bottom: 1px solid black;
+    }
+  }
+}

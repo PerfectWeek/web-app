@@ -1,3 +1,15 @@
-<div class="main-container">
-  <h1>Bonjour {{user?.pseudo}}</h1>
+<div class="form-background">
+  <div class="main-container">
+    <h1 style="text-align: center">Dashboard</h1>
+  </div>
+  <mat-tab-group class="main-container">
+    <mat-tab label="Profil">
+      <div>
+        <profile></profile>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+  <!--<div class="main-container">-->
+    <!--<button mdbBtn type="button" color="elegant" class="waves-effect" (click)="navigateTo('profile')">Profile</button>-->
+  <!--</div>-->
 </div>
