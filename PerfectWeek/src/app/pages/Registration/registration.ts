@@ -5,6 +5,7 @@ import { User } from "../../core/models/User";
 import { RequestService } from "../../core/services/request.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
+import { PasswordValidation } from "../../module/MatchPassword/MatchPassword";
 
 
 @Component({
@@ -21,8 +22,11 @@ export class RegistrationComponent {
       pseudo: [null, Validators.required],
       email: [null, Validators.required],
       password: [null, Validators.required],
-      confirm: [null, Validators.required]
-    });
+      confirmPassword: [null, Validators.required]
+    },
+      {
+        validator: PasswordValidation.MatchPassword
+      });
   }
 
   constructor(private fb: FormBuilder,
@@ -34,16 +38,20 @@ export class RegistrationComponent {
 
   submit() {
     const user: User = this.registrationForm.value;
-    delete (<any>user).confirm;
+    delete (<any>user).confirmPassword;
     this.requestSrv.post('users', user)
       .do((response) => this.toastSrv.success('Vous vous êtes inscrit avec succès', 'Inscription effectué'))
       .do(
-        () => this.router.navigate(['/login']),
+        () => {
+          this.router.navigate(['/login'])
+          return true;
+        },
         (err: HttpErrorResponse) => {
           if (err.status === 422) {
             err.error.forEach((element) => this.registrationForm.controls[element].reset());
           }
           this.toastSrv.error("Votre inscription s'est terminé sur un échec", "Inscription Refusé");
+          return false;
         })
       .subscribe();
   }

@@ -54,6 +54,8 @@ import { ConnectionComponent } from "./pages/Connection/connection";
 import { NotFoundComponent } from "./pages/NotFound/not-found";
 import { DashboardComponent } from "./pages/dashboard/dashboard";
 import { ProfileComponent } from "./pages/profile/profile";
+import { GroupManagementComponent } from "./pages/groups/group-management";
+import { GroupComponent } from "./pages/groups/group/group";
 
 
 //Dialog
@@ -73,7 +75,9 @@ import { IsLogout } from "./core/Guards/isLogout-guard";
     NotFoundComponent,
     DashboardComponent,
     ProfileComponent,
-    ConfirmDialog
+    GroupManagementComponent,
+    ConfirmDialog,
+    GroupComponent
   ],
   imports: [
     BrowserModule,

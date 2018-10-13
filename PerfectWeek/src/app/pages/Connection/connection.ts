@@ -36,10 +36,12 @@ export class ConnectionComponent {
         ((data: any) => {
           this.profileSrv.fetchUser$(data.user.pseudo).subscribe();
           this.router.navigate(['/dashboard']);
+          return true;
         }),
         () => {
           this.connectionForm.reset();
           this.toastSrv.error('Erreur lors de la tentative de connexion.\n Veuillez réessayer', 'Erreur de connexion');
+          return false;
         })
       .subscribe();
   }
