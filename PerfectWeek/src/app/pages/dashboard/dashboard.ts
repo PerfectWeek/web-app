@@ -19,8 +19,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.profileSrv.userProfile$.subscribe(user => {
-      console.log('user => ', user);
-      this.requestSrv.get(`users/${user.pseudo}`, {}, {Authorization: ''}).subscribe(ret => console.log('ret => ', ret));
+      this.requestSrv.get(`users/${user.pseudo}`, {}, {Authorization: ''}).subscribe();
     })
   }
 

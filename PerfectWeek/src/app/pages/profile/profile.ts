@@ -35,7 +35,6 @@ export class ProfileComponent implements OnInit {
     this.profileSrv.userProfile$.subscribe(user => {
       this.user = user;
     }, (error) => {console.log('error => ', error)});
-
   }
 
   modifyProfile() {
@@ -44,7 +43,11 @@ export class ProfileComponent implements OnInit {
       this.modifying = false;
       this.pseudo = null;
       this.toastSrv.info('Votre profil a été modifié')
-    }, err => this.toastSrv.error(err.error.message, 'Une erreur est survenue'));
+      return true;
+    }, err => {
+      this.toastSrv.error(err.error.message, 'Une erreur est survenue');
+      return false;
+    });
   }
 
   deleteProfile() {
@@ -60,7 +63,11 @@ export class ProfileComponent implements OnInit {
         this.profileSrv.delete$().subscribe(ret => {
           this.toastSrv.info('Votre profil a été supprimé');
           this.authSrv.logout().subscribe();
-        }, (err) => this.toastSrv.error(err.error.message, 'Une erreur est survenue'))
+          return true;
+        }, (err) => {
+          this.toastSrv.error(err.error.message, 'Une erreur est survenue');
+          return false;
+        })
     })
   }
 }
