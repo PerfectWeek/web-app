@@ -24,7 +24,7 @@ export class GroupComponent implements OnInit {
   group_id: number = null;
 
   constructor(private requestSrv: RequestService,
-              private profileSrv: ProfileService,
+              public profileSrv: ProfileService,
               private toastSrv: ToastrService,
               private dialog: MatDialog,
               private router: Router) {
