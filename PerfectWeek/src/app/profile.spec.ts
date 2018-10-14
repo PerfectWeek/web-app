@@ -36,13 +36,13 @@ describe('Profil Component:', () => {
     expect(component).toBeDefined();
     });
 
-  /*it('ModifyProfile', () => {
-      component.user = {pseudo: "test", email: "test@gmail.com", password: "passwordvalid1"};
-      component.pseudo = "newpseudo";
+  it('ModifyProfile', () => {
+    component.user = {pseudo: "test", email: "test@gmail.com", password: "passwordvalid1"};
+    component.pseudo = "newpseudo";
     //console.log("LOOL " + component.user);
     //console.log("LOOL " + component.pseudo);
     expect(component.user).toBeDefined();
     expect(component.pseudo).toBeDefined();
-    component.modifyProfile();
-  });*/
+    //component.modifyProfile();
+  });
 });
