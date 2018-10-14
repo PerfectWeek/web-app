@@ -10,6 +10,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {ConnectionComponent} from "./pages/Connection/connection";
 import {AuthService} from "./core/services/auth.service";
 import {TokenService} from "./core/services/token.service";
+import {ProfileService} from "./core/services/profile.service";
 
 
 describe('Connection Component:', () => {
@@ -24,7 +25,7 @@ describe('Connection Component:', () => {
           RouterTestingModule,
           MDBBootstrapModule, MDBRootModule ],
         declarations: [ ConnectionComponent ],
-        providers: [ RequestService, ToastrService, AuthService, TokenService ],
+        providers: [ RequestService, ToastrService, AuthService, TokenService, ProfileService ],
       }).compileComponents();
 
       fixture = TestBed.createComponent(ConnectionComponent);
