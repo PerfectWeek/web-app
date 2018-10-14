@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import {AuthService} from "../../core/services/auth.service";
 import {Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
+import {ProfileService} from "../../core/services/profile.service";
 
 
 @Component({
@@ -23,6 +24,7 @@ export class ConnectionComponent {
 
   constructor(private fb: FormBuilder,
               private authSrv: AuthService,
+              private profileSrv: ProfileService,
               private router: Router,
               private toastSrv: ToastrService) {
     this.connectionForm = this.fb.group({
@@ -35,7 +37,10 @@ export class ConnectionComponent {
   submit() {
     this.authSrv.newConnection(this.connectionForm.value)
       .do(
-        ((user: any) => this.router.navigate(['/dashboard'], {queryParams: {user_pseudo: user.user.pseudo}})),
+        ((data: any) => {
+          this.profileSrv.fetchUser$(data.user.pseudo).subscribe();
+          this.router.navigate(['/dashboard']);
+        }),
         () => {
           this.connectionForm.reset();
           this.toastSrv.error('Erreur lors de la tentative de connexion.\n Veuillez réessayer', 'Erreur de connexion');
