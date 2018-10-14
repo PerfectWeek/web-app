@@ -58,32 +58,27 @@ describe('Connection Component:', () => {
     expect(component.connectionForm.valid).toBeTruthy();
   });
 
-  /*it('invalid email', () => {
+  it('invalid email', () => {
     let itemEmail = component.connectionForm.controls["email"];
     itemEmail.setValue("ThisIsNotAnEmail");
     let itemPassword = component.connectionForm.controls["password"];
     itemPassword.setValue(valid_password);
     expect(component.connectionForm.invalid).toBeTruthy();
-  });*/
+  });
 
-  /*it('confirm != password', () => {
-    let itemPseudo = component.connectionForm.controls["pseudo"];
-    itemPseudo.setValue(valid_pseudo);
+  /*it('check submit function with already created account', () => {
     let itemEmail = component.connectionForm.controls["email"];
     itemEmail.setValue(valid_email);
     let itemPassword = component.connectionForm.controls["password"];
     itemPassword.setValue(valid_password);
-    let itemConfirm = component.connectionForm.controls["confirm"];
-    itemConfirm.setValue("othervalidpassword1");
-    expect(component.connectionForm.invalid).toBeTruthy();
+    expect(component.submit()).toBeTruthy();
   });*/
 
-
-  it('check submit function', () => {
+  it('check submit function with not created account', () => {
     let itemEmail = component.connectionForm.controls["email"];
-    itemEmail.setValue(valid_email);
+    itemEmail.setValue('PLZtellmethisaccountdoesntexist');
     let itemPassword = component.connectionForm.controls["password"];
-    itemPassword.setValue(valid_password);
-    expect(component.submit()).toBeUndefined();
+    itemPassword.setValue("PLZtellmethisaccountdoesntexist1");
+    expect(component.submit()).toBeFalsy();
   });
 });

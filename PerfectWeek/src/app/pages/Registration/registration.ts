@@ -20,8 +20,8 @@ export class RegistrationComponent {
   initRegistrationForm() {
     return this.fb.group({
       pseudo: [null, Validators.required],
-      email: [null, Validators.required],
-      password: [null, Validators.required],
+      email: [null, [Validators.required, Validators.email]],
+      password: [null, [Validators.required, Validators.pattern("^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$"), Validators.minLength(8)]],
       confirmPassword: [null, Validators.required]
     },
       {
@@ -37,6 +37,7 @@ export class RegistrationComponent {
   }
 
   submit() {
+    let ret;
     const user: User = this.registrationForm.value;
     delete (<any>user).confirmPassword;
     this.requestSrv.post('users', user)
@@ -44,15 +45,16 @@ export class RegistrationComponent {
       .do(
         () => {
           this.router.navigate(['/login'])
-          return true;
+          ret =  true;
         },
         (err: HttpErrorResponse) => {
           if (err.status === 422) {
             err.error.forEach((element) => this.registrationForm.controls[element].reset());
           }
           this.toastSrv.error("Votre inscription s'est terminé sur un échec", "Inscription Refusé");
-          return false;
+          ret = false;
         })
       .subscribe();
+    return ret;
   }
 }

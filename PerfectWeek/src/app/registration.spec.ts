@@ -48,7 +48,7 @@ describe('RegistrationComponent:', () => {
     expect(component.registrationForm.valid).toBeFalsy();
   });
 
-  it('test of test', () => {
+  it('test individual form email invalid', () => {
     let a = component.registrationForm.controls["email"];
     a.setValue("lol");
     expect(component.registrationForm.controls["email"].invalid).toBeTruthy();
@@ -61,7 +61,7 @@ describe('RegistrationComponent:', () => {
     itemEmail.setValue(valid_email);
     let itemPassword = component.registrationForm.controls["password"];
     itemPassword.setValue(valid_password);
-    let itemConfirm = component.registrationForm.controls["confirm"];
+    let itemConfirm = component.registrationForm.controls["confirmPassword"];
     itemConfirm.setValue(valid_password);
     expect(component.registrationForm.valid).toBeTruthy();
   });
@@ -73,7 +73,7 @@ describe('RegistrationComponent:', () => {
     itemEmail.setValue("ThisIsNotAnEmail");
     let itemPassword = component.registrationForm.controls["password"];
     itemPassword.setValue(valid_password);
-    let itemConfirm = component.registrationForm.controls["confirm"];
+    let itemConfirm = component.registrationForm.controls["confirmPassword"];
     itemConfirm.setValue(valid_password);
     expect(component.registrationForm.invalid).toBeTruthy();
   });
@@ -85,7 +85,7 @@ describe('RegistrationComponent:', () => {
     itemEmail.setValue(valid_email);
     let itemPassword = component.registrationForm.controls["password"];
     itemPassword.setValue("notvalidpassword");
-    let itemConfirm = component.registrationForm.controls["confirm"];
+    let itemConfirm = component.registrationForm.controls["confirmPassword"];
     itemConfirm.setValue("notvalidpassword");
     expect(component.registrationForm.invalid).toBeTruthy();
   });
@@ -97,33 +97,33 @@ describe('RegistrationComponent:', () => {
     itemEmail.setValue(valid_email);
     let itemPassword = component.registrationForm.controls["password"];
     itemPassword.setValue("abc123");
-    let itemConfirm = component.registrationForm.controls["confirm"];
+    let itemConfirm = component.registrationForm.controls["confirmPassword"];
     itemConfirm.setValue("abc123");
     expect(component.registrationForm.invalid).toBeTruthy();
   });
 
-  /*it('confirm != password', () => {
+  it('confirm != password', () => {
     let itemPseudo = component.registrationForm.controls["pseudo"];
     itemPseudo.setValue(valid_pseudo);
     let itemEmail = component.registrationForm.controls["email"];
     itemEmail.setValue(valid_email);
     let itemPassword = component.registrationForm.controls["password"];
     itemPassword.setValue(valid_password);
-    let itemConfirm = component.registrationForm.controls["confirm"];
+    let itemConfirm = component.registrationForm.controls["confirmPassword"];
     itemConfirm.setValue("othervalidpassword1");
     expect(component.registrationForm.invalid).toBeTruthy();
-  });*/
+  });
 
 
-  it('check submit function', () => {
+  /*it('check submit function', () => {
     let itemPseudo = component.registrationForm.controls["pseudo"];
     itemPseudo.setValue(valid_pseudo);
     let itemEmail = component.registrationForm.controls["email"];
     itemEmail.setValue(valid_email);
     let itemPassword = component.registrationForm.controls["password"];
     itemPassword.setValue(valid_password);
-    let itemConfirm = component.registrationForm.controls["confirm"];
+    let itemConfirm = component.registrationForm.controls["confirmPassword"];
     itemConfirm.setValue(valid_password);
-    expect(component.submit()).toBeUndefined();
-  });
+    expect(component.submit()).toBeTruthy();
+  });*/
 });
