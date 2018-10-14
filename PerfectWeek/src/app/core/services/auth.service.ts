@@ -90,7 +90,6 @@ export class AuthService {
     return this.requestSrv.post('auth/login', this.auth, {
       noMultiple: ''
     }).do((data: any) => {
-      console.log('connection');
       localStorage.setItem('user_pseudo', data.user.pseudo);
       this.tokenSrv.token = data.access_token;
     })

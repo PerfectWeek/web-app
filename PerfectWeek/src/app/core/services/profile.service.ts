@@ -25,7 +25,6 @@ export class ProfileService {
   constructor(private requestSrv: RequestService,
               private toastSrv: ToastrService,
               private authSrv: AuthService) {
-    console.log('pseudo => ', localStorage.getItem('user_pseudo'));
     if (localStorage.getItem('user_pseudo')) {
       let pseudo = localStorage.getItem('user_pseudo');
       this.subscription = this.authSrv.isLogged().pipe(
@@ -49,7 +48,7 @@ export class ProfileService {
       )
   }
 
-  modify$(modification: string): Observable<User> {
+  public modify$(modification: string): Observable<User> {
     return this.requestSrv.put(`users/${this.user.pseudo}`,
       {
         pseudo: modification
@@ -64,7 +63,7 @@ export class ProfileService {
     )
   }
 
-  delete$(): Observable<User> {
+  public delete$(): Observable<User> {
     return this.requestSrv.delete(`users/${this.user.pseudo}`, {Authorization: ''})
   }
 }
