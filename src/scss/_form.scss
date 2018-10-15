@@ -1,0 +1,54 @@
+.form-container-sm {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+  form {
+    width: 40%;
+    padding: 15px;
+    box-shadow: 0 0 6px 2px rgba(50, 50, 50, .25);
+    z-index: 1;
+    background-color: rgba(255, 255, 255, .85);
+
+    &, .md-form label, .fa {
+      color: #757575 !important;
+    }
+
+    .md-form {
+      padding: 5px 0;
+      outline: none !important;
+    }
+
+    .md-form input:focus {
+      border: none !important;
+    }
+
+    .md-form input {
+      border-bottom-width: 1px;
+      border-bottom-color: #757575 !important;
+
+      &.ng-touched.ng-valid {
+        border-bottom-width: 2px;
+        border-bottom-color: #2bbbad !important;
+      }
+
+      &.ng-touched.ng-invalid {
+        border-bottom-width: 2px;
+        border-bottom-color: red !important;
+      }
+    }
+  }
+}
+
+.form-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: url("/assets/Pictures/logo.jpg");
+  background-size: cover;
+  z-index: -5;
+}
