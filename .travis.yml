@@ -4,6 +4,16 @@ language:
 node_js:
   - "9"
 
+addons:
+  chrome: stable
+
+cache:
+  directories:
+  - node_modules
+
+before_script:
+  - npm install -g @angular/cli
+
 before_install:
   - npm install
 
