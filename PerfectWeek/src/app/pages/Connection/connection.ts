@@ -17,8 +17,8 @@ export class ConnectionComponent {
 
   initConnectionForm() {
     return this.fb.group({
-      email: [null, Validators.required],
-      password: [null, Validators.required],
+      email: [null, Validators.compose([Validators.email, Validators.required])],
+      password: [null, Validators.compose([Validators.pattern('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$'), Validators.minLength(8), Validators.required])],
     });
   }
 
@@ -40,7 +40,7 @@ export class ConnectionComponent {
         }),
         () => {
           this.connectionForm.reset();
-          this.toastSrv.error('Erreur lors de la tentative de connexion.\n Veuillez réessayer', 'Erreur de connexion');
+          this.toastSrv.error('Utilisateur ou mot de passe incorrect', 'Erreur lors de la tentative de connexion');
           return false;
         })
       .subscribe();
