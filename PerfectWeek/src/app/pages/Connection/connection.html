@@ -1,0 +1,26 @@
+<div class="form-background">
+  <div class="flex">
+    <div class="form-container-sm">
+      <form [formGroup]="connectionForm" (ngSubmit)="submit()">
+        <p class="h3 text-center mb-4">Connexion</p>
+
+        <div class="md-form">
+          <i class="fa fa-envelope prefix"></i>
+          <input type="email" email formControlName="email" id="email" class="form-control" [mdbValidate]="false" mdbInputDirective required>
+          <label for="email">Email</label>
+        </div>
+
+        <div class="md-form">
+          <i class="fa fa-lock prefix"></i>
+          <input type="password" formControlName="password" id="password" class="form-control" [mdbValidate]="false" mdbInputDirective required>
+          <label for="password" data-error="">Mot de passe</label>
+        </div>
+
+        <div class="text-center">
+          <button [disabled]="connectionForm.invalid" class="btn btn-default waves-light" mdbWavesEffect>Se connecter</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
