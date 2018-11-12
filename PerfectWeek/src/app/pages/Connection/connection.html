@@ -12,7 +12,7 @@
 
         <div class="md-form">
           <i class="fa fa-lock prefix"></i>
-          <input type="password" pattern="^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$" minlength="8" formControlName="password" id="password" class="form-control" [mdbValidate]="false" mdbInputDirective required>
+          <input type="password" formControlName="password" id="password" class="form-control" [mdbValidate]="false" mdbInputDirective required>
           <label for="password" data-error="">Mot de passe</label>
         </div>
 
