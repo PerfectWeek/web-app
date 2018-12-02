@@ -18,10 +18,23 @@ export class GroupComponent implements OnInit {
   group: Group = {
     name: '',
     members: [],
-    owner: {pseudo: ''}
+    owner: ''
   };
 
+  display_members: any[] = [];
+
   group_id: number = null;
+
+  user_role: string;
+
+  modify: boolean = false;
+
+  roles: string[] = [
+    "Admin",
+    "Spectator"
+  ];
+
+  new_member: {pseudo: string, role: string} = {pseudo: '', role: ''};
 
   constructor(private requestSrv: RequestService,
               public profileSrv: ProfileService,
@@ -32,19 +45,36 @@ export class GroupComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getGroup();
+  }
+
+  refreshMembers(members) {
+    this.group.members = members;
+    this.display_members = members.filter(member => member.pseudo !== this.group.owner);
+  }
+
+  getGroup() {
     this.group_id = +(this.router.url.slice(this.router.url.lastIndexOf('/') + 1));
     this.requestSrv.get(`groups/${this.group_id}`, {}, {Authorization: ''})
       .subscribe(ret => {
-        this.group = ret.group;
-        this.group.members = this.group.members.filter(member => member.pseudo !== this.group.owner.pseudo);
+        this.group.name = ret.group.name;
+        this.group.owner = ret.group.owner;
+        this.requestSrv.get(`groups/${this.group_id}/members`, {}, {Authorization: ''})
+          .subscribe(members => {
+            this.refreshMembers(members.members);
+          });
         this.profileSrv.userProfile$.subscribe(user => {
           let isOk: boolean = false;
-          if (this.group.owner.pseudo === user.pseudo)
+          if (this.group.owner === user.pseudo) {
+            this.user_role = "Admin";
             isOk = true;
+          }
           else
             this.group.members.forEach(member => {
-              if (member.pseudo === user.pseudo)
+              if (member.pseudo === user.pseudo) {
                 isOk = true;
+                this.user_role = member.role;
+              }
             });
           if (isOk === false) {
             this.toastSrv.warning('Vous ne faites pas parti de ce groupe');
@@ -55,6 +85,22 @@ export class GroupComponent implements OnInit {
         this.toastSrv.error(err.error.message, 'Impossible de récupérer ce groupe');
         this.router.navigate(['dashboard']);
       });
+  }
+
+  Modifying() {this.modify = true;}
+
+  modifyGroup() {
+    this.requestSrv.put(`groups/${this.group_id}`, {
+      group: this.group
+    }, {Authorization: ''}).subscribe(ret => {
+      this.toastSrv.success("Mise à jour du groupe effectuée");
+      this.display_members.forEach(member => this.requestSrv.put(`groups/${this.group_id}/members/${member.pseudo}`,
+        {role: member.role}, {Authorization: ''}).subscribe());
+      this.modify = false;
+    }, err => {
+      this.toastSrv.error("Une erreur est survenue lors de la modification du groupe");
+      this.modify = false;
+    });
   }
 
   deleteGroup() {
@@ -76,6 +122,41 @@ export class GroupComponent implements OnInit {
             this.toastSrv.error(err.error.message, 'Une erreur est survenue');
             return false;
           });
+    })
+  }
+
+  addMember() {
+    if (this.new_member.pseudo == '')
+      this.toastSrv.error('Veuillez entrer un pseudo');
+    else if (this.new_member.role == '')
+      this.toastSrv.error('Veuillez sélectionner un rôle');
+    else
+      this.requestSrv.get(`users/${this.new_member.pseudo}`, {}, {Authorization: ''})
+        .subscribe(ret => {
+          this.requestSrv.post(`groups/${this.group_id}/add-members`, {members: [this.new_member]}, {Authorization: ''})
+            .subscribe(ret => {
+              this.toastSrv.success("User ajouté au groupe");
+              this.refreshMembers(ret.members);
+              this.new_member = {pseudo: '', role: ''};
+            }),
+            err => this.toastSrv.error("Une erreur est survenue lors de l'ajout du nouveau membre")
+        },err => this.toastSrv.error("Veuillez rentrer le pseudo d'un utilisateur existant"))
+  }
+
+  deleteMember(member) {
+    let dialogRef = this.dialog.open(ConfirmDialog, {
+      data: {
+        title: 'Suppression du profil',
+        question: 'Voulez-vous vraiment supprimer ce membre ?'
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true)
+        this.requestSrv.post(`groups/${this.group_id}/kick-members`, {members: [member]}, {Authorization: ''})
+          .subscribe(ret => {
+            this.toastSrv.success("Membre supprimé avec succès");
+            this.refreshMembers(ret.members);
+          }, ret => this.toastSrv.error("Une erreur est survenue lors de la suppression d\'un membre"))
     })
   }
 }
