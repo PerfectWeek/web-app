@@ -6,10 +6,10 @@
     <div class="main-container">
       <div class="member-panel">
         <h3>Membres</h3>
-        <div class="group-list-member">
-          <p>{{group?.owner}}</p>
-          <i class="fas fa-jedi" title="Propiétaire"></i>
-        </div>
+        <!--<div class="group-list-member">-->
+          <!--<p>{{group?.owner}}</p>-->
+          <!--<i class="fas fa-jedi" title="Propiétaire"></i>-->
+        <!--</div>-->
         <div *ngFor="let member of display_members" class="group-list-member">
           <p>{{member.pseudo}}</p>
           <i *ngIf="member.role === 'Admin'" class="fab fa-jedi-order" title="Administrateur"></i>
@@ -17,7 +17,7 @@
       </div>
       <div class="button-panel">
         <button [disabled]="user_role !== 'Admin'" mdbBtn type="button" color="red" class="waves-light" mdbWavesEffect (click)="deleteGroup()">Supprimer</button>
-        <button [disabled]="user_role !== 'Admin'" mdbBtn type="button" color="default" class="waves-light" mdbWavesEffect (click)="Modifying()">Modifier</button>
+        <button mdbBtn type="button" color="default" class="waves-light" mdbWavesEffect (click)="Modifying()">Modifier</button>
       </div>
     </div>
   </div>
@@ -31,12 +31,12 @@
       <div class="main-container">
         <div class="member-panel">
           <h3>Membres</h3>
-          <div class="group-list-member" style="margin: 15px 0">
-            <mat-select [(ngModel)]="group.owner">
-              <mat-option *ngFor="let member of group.members" [value]="member.pseudo">{{member.pseudo}}</mat-option>
-            </mat-select>
-            <i class="fas fa-jedi" title="Propriétaire" style="margin-left: 15px"></i>
-          </div>
+          <!--<div class="group-list-member" style="margin: 15px 0">-->
+            <!--<mat-select [(ngModel)]="group.owner">-->
+              <!--<mat-option *ngFor="let member of group.members" [value]="member.pseudo">{{member.pseudo}}</mat-option>-->
+            <!--</mat-select>-->
+            <!--<i class="fas fa-jedi" title="Propriétaire" style="margin-left: 15px"></i>-->
+          <!--</div>-->
           <div *ngFor="let member of display_members" class="group-list-member">
             <p>{{member.pseudo}}</p>
             <mat-select [(ngModel)]="member.role">

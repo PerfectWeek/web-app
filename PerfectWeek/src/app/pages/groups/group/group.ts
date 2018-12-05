@@ -76,10 +76,10 @@ export class GroupComponent implements OnInit {
                 this.user_role = member.role;
               }
             });
-          if (isOk === false) {
-            this.toastSrv.warning('Vous ne faites pas parti de ce groupe');
-            this.router.navigate(['dashboard']);
-          }
+          // if (isOk === false) {
+          //   this.toastSrv.warning('Vous ne faites pas parti de ce groupe');
+          //   this.router.navigate(['dashboard']);
+          // }
         })
       }, err => {
         this.toastSrv.error(err.error.message, 'Impossible de récupérer ce groupe');
@@ -152,7 +152,7 @@ export class GroupComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result === true)
-        this.requestSrv.post(`groups/${this.group_id}/kick-members`, {members: [member]}, {Authorization: ''})
+        this.requestSrv.delete(`groups/${this.group_id}/members/${member.pseudo}`, {Authorization: ''})
           .subscribe(ret => {
             this.toastSrv.success("Membre supprimé avec succès");
             this.refreshMembers(ret.members);
