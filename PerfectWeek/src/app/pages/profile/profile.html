@@ -1,35 +1,31 @@
 <div>
   <div>
     <div class="profile-container" *ngIf="user && modifying === false">
-      <div class="md-form">
-        <input disabled mdbInputDirective type="text" name="pseudo" [(ngModel)]="user.pseudo" id="pseudo" class="form-control">
-        <label for="pseudo" class="">Pseudo</label>
-      </div>
+      <mat-form-field class="col-5">
+        <input disabled matInput type="text" name="pseudo" [(ngModel)]="user.pseudo" id="pseudo" class="form-control">
+      </mat-form-field>
 
-      <div class="md-form">
-        <input disabled mdbInputDirective type="text" name="email" [(ngModel)]="user.email" id="email" class="form-control">
-        <label for="email" class="">Adresse mail</label>
-      </div>
+      <mat-form-field class="col-5">
+        <input disabled matInput type="text" name="email" [(ngModel)]="user.email" id="email" class="form-control">
+      </mat-form-field>
     </div>
 
     <div class="profile-container" *ngIf="user && modifying === true">
-      <div class="md-form">
-        <input mdbInputDirective type="text" name="pseudo" [(ngModel)]="pseudo" id="modify_pseudo" class="form-control" required>
-        <label for="pseudo" class="">Pseudo</label>
-      </div>
+      <mat-form-field class="col-5">
+        <input matInput type="text" name="pseudo" [(ngModel)]="pseudo" id="modify_pseudo" class="form-control" placeholder="Pseudo" required>
+      </mat-form-field>
 
-      <div class="md-form">
-        <input disabled mdbInputDirective type="text" name="email" [(ngModel)]="user.email" id="modify_email" class="form-control">
-        <label for="email" class="">Adresse mail</label>
-      </div>
+      <mat-form-field class="col-5">
+        <input matInput type="text" name="email" [(ngModel)]="email" id="modify_email" class="form-control" placeholder="Email" required>
+      </mat-form-field>
     </div>
 
     <div style="display: flex; flex-flow: row-reverse; margin: 5px 0; justify-content: space-between" *ngIf="user">
-      <button mdbBtn type="button" color="primary" class="waves-light" mdbWavesEffect *ngIf="modifying === false; else modify" (click)="modifying = true">Modifier le profil</button>
+      <button mat-raised-button type="button" class="btn-primary" *ngIf="modifying === false; else modify" (click)="modifying = true">Modifier le profil</button>
       <ng-template #modify>
-        <button mdbBtn type="button" color="default" class="waves-light" mdbWavesEffect [disabled]="!pseudo" (click)="modifyProfile()">Modifier</button>
+        <button mat-raised-button type="button" class="btn-secondary" [disabled]="!pseudo && !email" (click)="modifyProfile()">Modifier</button>
       </ng-template>
-      <button mdbBtn type="button" color="red" class="waves-light" (click)="deleteProfile()">Supprimer le profil</button>
+      <button mat-raised-button type="button" class="btn-danger" (click)="deleteProfile()">Supprimer le profil</button>
     </div>
   </div>
 </div>

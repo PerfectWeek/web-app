@@ -27,6 +27,8 @@ export class GroupManagementComponent implements OnInit {
   userFiltered: any[] = [];
   @ViewChild('userInput') userInput;
 
+  userGroups: any[];
+
   constructor(private requestSrv: RequestService,
               private profileSrv: ProfileService,
               private toastSrv: ToastrService,
@@ -35,6 +37,14 @@ export class GroupManagementComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.profileSrv.userProfile$.subscribe(user => {
+      this.requestSrv.get(`users/${user.pseudo}/groups`, {}, {Authorization: ''})
+        .subscribe(groups => {
+          console.log('groups => ', groups);
+          this.userGroups = groups.groups;
+          console.log('groups => ', this.userGroups);
+        })
+    });
   }
 
   addUser(event) {
@@ -89,5 +99,9 @@ export class GroupManagementComponent implements OnInit {
         return false;
         });
     }, (error) => {console.log('error => ', error)});
+  }
+
+  goToGroup(group) {
+    this.router.navigate([`group/${group.id}`]);
   }
 }

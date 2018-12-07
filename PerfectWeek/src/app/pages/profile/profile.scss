@@ -1,6 +1,9 @@
 .profile-container {
   padding: 15px;
   border: none;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-around;
 
   > .data-container {
     display: flex;

@@ -7,3 +7,52 @@
   flex-flow: row-reverse;
   justify-content: space-between;
 }
+
+
+.group-list-member {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+
+  &.md-form {
+    margin: 0;
+
+   & > .fas.fa-plus {
+      color: #2bbbad;
+      cursor: pointer;
+    }
+  }
+
+  & > p {
+    width: 100px !important;
+  }
+
+  & .fas.fa-times {
+    color: red;
+    cursor: pointer;
+  }
+}
+
+.name-container {
+  width: fit-content;
+  text-align: center;
+  margin: auto;
+
+  .name-input {
+    text-align: center;
+    font-size: 42px;
+  }
+}
+
+.new-member-input {
+  width: 100px;
+}
+
+input {
+  border: none;
+  border-bottom: 1px solid rgba(206, 212, 218, 1);
+}
+
+mat-select {
+  width: 200px;
+}

@@ -42,6 +42,20 @@
   }
 }
 
+.col-fields {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-around;
+}
+
+div.input-error-message {
+  width: 100%;
+
+  & > mat-form-field {
+    width: 100%;
+  }
+}
+
 .form-background {
   position: absolute;
   top: 0;

@@ -3,7 +3,9 @@
 @import "~ngx-toastr/toastr.css";
 @import "~@angular/material/prebuilt-themes/indigo-pink";
 
+@import "variables";
 @import "form";
+@import "buttons";
 
 .mat-tab-label-content {
   font-size: 22px;
@@ -13,5 +15,6 @@
 .error-message {
   color: red;
   font-size: 14px;
-  margin: 0 40px;
+  margin: 0 20px;
+  margin-bottom: 10px;
 }

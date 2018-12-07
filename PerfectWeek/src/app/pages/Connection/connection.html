@@ -4,20 +4,18 @@
       <form [formGroup]="connectionForm" (ngSubmit)="submit()">
         <p class="h3 text-center mb-4">Connexion</p>
 
-        <div class="md-form">
-          <i class="fa fa-envelope prefix"></i>
-          <input type="email" email formControlName="email" id="email" class="form-control" [mdbValidate]="false" mdbInputDirective required>
-          <label for="email">Email</label>
-        </div>
+        <div class="col-fields">
+          <mat-form-field>
+            <input type="email" email formControlName="email" id="email" class="form-control" placeholder="Email" matInput required>
+          </mat-form-field>
 
-        <div class="md-form">
-          <i class="fa fa-lock prefix"></i>
-          <input type="password" formControlName="password" id="password" class="form-control" [mdbValidate]="false" mdbInputDirective required>
-          <label for="password" data-error="">Mot de passe</label>
+          <mat-form-field>
+            <input type="password" formControlName="password" id="password" class="form-control" placeholder="Mot de Passe" matInput required>
+          </mat-form-field>
         </div>
 
         <div class="text-center">
-          <button [disabled]="connectionForm.invalid" class="btn btn-default waves-light" mdbWavesEffect>Se connecter</button>
+          <button [disabled]="connectionForm.invalid" class="btn btn-secondary" mat-raised-button>Se connecter</button>
         </div>
       </form>
     </div>

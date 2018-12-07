@@ -4,35 +4,36 @@
       <form [formGroup]="registrationForm" (ngSubmit)="submit()">
         <p class="h3 text-center mb-4">Inscription</p>
 
-        <div class="md-form">
-          <i class="fa fa-user prefix"></i>
-          <input type="text" formControlName="pseudo" id="name" class="form-control" [mdbValidate]="false" mdbInputDirective required>
-          <label for="name">Pseudo</label>
-        </div>
+        <div class="col-fields">
+          <mat-form-field>
+            <input type="text" formControlName="pseudo" id="name" class="form-control" placeholder="Pseudo" matInput required>
+          </mat-form-field>
 
-        <div class="md-form">
-          <i class="fa fa-envelope prefix"></i>
-          <input type="email" email formControlName="email" id="email" class="form-control" [mdbValidate]="false" mdbInputDirective required>
-          <label for="email">Email</label>
-        </div>
+          <div class="input-error-message">
+            <mat-form-field>
+              <input type="email" email formControlName="email" id="email" class="form-control" matInput placeholder="Email" required>
+            </mat-form-field>
+            <p class="error-message" *ngIf="registrationForm.get('email').invalid && registrationForm.get('email').touched">Veuillez entrer un format valide.</p>
+          </div>
 
-        <div class="md-form">
-          <i class="fa fa-lock prefix"></i>
-          <input type="password" formControlName="password" id="password" class="form-control" [mdbValidate]="false" mdbInputDirective data-error="error" required>
-          <p class="error-message" *ngIf="registrationForm.get('password').invalid && registrationForm.get('password').errors.minlength">Le mot de passe doit faire minimum 8 caractères.</p>
-          <p class="error-message" *ngIf="registrationForm.get('password').invalid && registrationForm.get('password').errors.pattern">Le mot de passe doit comprendre au moins une lettre et un chiffre et n'accepte pas les charactères spéciaux.</p>
-          <label for="password" data-error="">Mot de passe</label>
-        </div>
+          <div class="input-error-message">
+            <mat-form-field>
+              <input type="password" formControlName="password" id="password" class="form-control" matInput placeholder="Mot de Passe" required>
+            </mat-form-field>
+            <p class="error-message" *ngIf="registrationForm.get('password').invalid && registrationForm.get('password').errors.minlength">Le mot de passe doit faire minimum 8 caractères.</p>
+            <p class="error-message" *ngIf="registrationForm.get('password').invalid && registrationForm.get('password').errors.pattern">Le mot de passe doit comprendre au moins une lettre et un chiffre et n'accepte pas les charactères spéciaux.</p>
+          </div>
 
-        <div class="md-form">
-          <i class="fa fa-lock prefix"></i>
-          <input type="password" formControlName="confirmPassword" id="confirmPassword" class="form-control" [mdbValidate]="false" mdbInputDirective required>
-          <p class="error-message" *ngIf="registrationForm.get('confirmPassword').invalid && registrationForm.get('confirmPassword').touched">Les 2 mots de passe ne sont pas identiques.</p>
-          <label for="confirmPassword">Confirmer le mot de passe</label>
+          <div class="input-error-message">
+            <mat-form-field>
+              <input type="password" formControlName="confirmPassword" id="confirmPassword" class="form-control" matInput placeholder="Confirmation du Mot de Passe" required>
+            </mat-form-field>
+            <p class="error-message" *ngIf="registrationForm.get('confirmPassword').invalid && registrationForm.get('confirmPassword').touched">Les 2 mots de passe ne sont pas identiques.</p>
+          </div>
         </div>
 
         <div class="text-center">
-          <button [disabled]="registrationForm.invalid" class="btn btn-default waves-light" mdbWavesEffect>S'inscrire</button>
+          <button [disabled]="registrationForm.invalid" class="btn btn-secondary" mat-raised-button>S'inscrire</button>
         </div>
       </form>
     </div>

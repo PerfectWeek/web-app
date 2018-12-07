@@ -1,0 +1,13 @@
+mat-expansion-panel-header {
+  height: 64px;
+}
+
+.group {
+  cursor: pointer;
+  padding: 5px;
+  font-size: 14px;
+
+  &:hover {
+    background-color: rgba(225,225,225,0.9);
+  }
+}

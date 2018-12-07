@@ -21,6 +21,7 @@ export class ProfileComponent implements OnInit {
   modifying: boolean = false;
 
   pseudo: string = null;
+  email: string = null;
 
   constructor(private route: ActivatedRoute,
               private requestSrv: RequestService,
@@ -38,10 +39,12 @@ export class ProfileComponent implements OnInit {
   }
 
   modifyProfile() {
-    this.profileSrv.modify$(this.pseudo).subscribe((user: any) => {
+    this.profileSrv.modify$({pseudo: this.pseudo, email: this.email}).subscribe((user: any) => {
       this.user.pseudo = this.pseudo;
+      this.user.email = this.email;
       this.modifying = false;
       this.pseudo = null;
+      this.email = null;
       this.toastSrv.info('Votre profil a été modifié')
       return true;
     }, err => {
