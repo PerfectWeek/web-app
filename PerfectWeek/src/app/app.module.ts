@@ -7,8 +7,6 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 
 //External Modules
-import { MDBBootstrapModule } from 'angular-bootstrap-md';
-import { InputsModule, WavesModule, ButtonsModule } from 'angular-bootstrap-md'
 import { ToastrModule } from 'ngx-toastr';
 import {
   MatSelectModule,
@@ -86,9 +84,6 @@ import { IsLogout } from "./core/Guards/isLogout-guard";
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    InputsModule,
-    WavesModule,
-    ButtonsModule,
     HttpClientModule,
     MatSelectModule,
     MatDialogModule,
@@ -113,7 +108,6 @@ import { IsLogout } from "./core/Guards/isLogout-guard";
       positionClass: 'toast-bottom-center',
       preventDuplicates: true,
     }),
-    MDBBootstrapModule.forRoot()
   ],
   schemas: [ NO_ERRORS_SCHEMA ],
   providers: [

@@ -48,15 +48,16 @@ export class ProfileService {
       )
   }
 
-  public modify$(modification: string): Observable<User> {
+  public modify$(user: {pseudo: string, email: string}): Observable<User> {
     return this.requestSrv.put(`users/${this.user.pseudo}`,
       {
-        pseudo: modification
+        pseudo: user.pseudo,
+        email: user.email
     }, {
         Authorization: ''
     }).pipe(
       tap(data => {{
-        localStorage.setItem('user_pseudo', modification);
+        localStorage.setItem('user_pseudo', user.pseudo);
         this.userProfileSubject.next(data.user);
         this.user.pseudo = data.user.pseudo;
       }})

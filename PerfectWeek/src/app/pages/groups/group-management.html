@@ -12,11 +12,11 @@
     <ng-template matExpansionPanelContent>
       <div>
         <form #groupForm="ngForm" (ngSubmit)="createGroup()" class="form-row" style="padding: 15px; margin: 15px 0">
-          <mat-form-field>
+          <mat-form-field style="width: 33%">
             <input matInput placeholder="Nom" [(ngModel)]="name" name="name" required>
           </mat-form-field>
 
-          <mat-form-field class="col-12">
+          <mat-form-field style="width: 100%">
             <mat-chip-list #userList>
               <mat-chip *ngFor="let user of selectedUsers"
                         [selectable]="selectable"
@@ -33,7 +33,7 @@
             </mat-chip-list>
           </mat-form-field>
           <div>
-            <button [disabled]="groupForm.valid === false || selectedUsers.length < 1" mat-raised-button type="submit">Créer</button>
+            <button [disabled]="groupForm.valid === false || selectedUsers.length < 1" mat-raised-button class="btn-secondary" type="submit">Créer</button>
           </div>
         </form>
       </div>
