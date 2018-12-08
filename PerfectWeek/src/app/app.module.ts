@@ -54,6 +54,7 @@ import { DashboardComponent } from "./pages/dashboard/dashboard";
 import { ProfileComponent } from "./pages/profile/profile";
 import { GroupManagementComponent } from "./pages/groups/group-management";
 import { GroupComponent } from "./pages/groups/group/group";
+import { Navbar } from "./module/Navbar/navbar";
 
 
 //Dialog
@@ -68,6 +69,7 @@ import { IsLogout } from "./core/Guards/isLogout-guard";
 @NgModule({
   declarations: [
     AppComponent,
+    Navbar,
     RegistrationComponent,
     ConnectionComponent,
     NotFoundComponent,

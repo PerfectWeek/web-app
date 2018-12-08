@@ -11,3 +11,10 @@ $colors: (
   bright:     #ffc125,
   desgrey:    #717271,
 );
+
+$navbar-height: 4rem;
+$navbar-padding: 2rem;
+
+
+$main-full-page-margin: #{$navbar-height};
+$main-full-page-height: calc(100vh - #{$navbar-height});
