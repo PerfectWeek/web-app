@@ -45,6 +45,7 @@ export class GroupComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log("ngOnInit Group");
     this.getGroup();
   }
 

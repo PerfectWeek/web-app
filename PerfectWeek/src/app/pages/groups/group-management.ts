@@ -101,7 +101,19 @@ export class GroupManagementComponent implements OnInit {
     }, (error) => {console.log('error => ', error)});
   }
 
+  goToCalendar(group) {
+    // console.log("GROUPE ", group);
+    this.requestSrv.get(`groups/${group.id}`, {}, {Authorization: ''})
+      .subscribe(ret => {
+        // console.log("THE OBJECT ",ret);
+        // console.log("TA MERDE LA PUTE ", ret.calendar.id);
+        this.router.navigate([`calendar/${ret.group.calendar_id}`]);
+    });
+  }
   goToGroup(group) {
-    this.router.navigate([`group/${group.id}`]);
+    console.log("AVANT");
+    this.goToCalendar(group);
+    console.log("APRES");
+    // this.router.navigate([`group/${group.id}`]);
   }
 }

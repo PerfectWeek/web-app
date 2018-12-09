@@ -11,12 +11,15 @@ import {isLogged} from "./core/Guards/isLogged-guard";
 import {IsLogout} from "./core/Guards/isLogout-guard";
 import {GroupComponent} from "./pages/groups/group/group";
 
+import {CalendarComponent} from "./pages/calendar/calendar";
+
 const routes: Routes = [
   { path: '', redirectTo: '/registration', pathMatch: 'full' },
   { path: 'registration', component: RegistrationComponent, canActivate: [ IsLogout ] },
   { path: 'login', component: ConnectionComponent, canActivate: [ IsLogout ] },
   { path: 'dashboard', component: DashboardComponent, canActivate: [isLogged ] },
   { path: 'group/:id', component: GroupComponent, canActivate: [isLogged] },
+  { path: 'calendar/:id', component: CalendarComponent, canActivate: [ isLogged ] },
   { path: '404', component: NotFoundComponent },
   { path: '**', redirectTo: '/404' }
 ];

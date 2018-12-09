@@ -63,7 +63,12 @@ import { ConfirmDialog } from "./module/dialog/Confirm-dialog/Confirm-dialog";
 //Guards
 import { isLogged } from "./core/Guards/isLogged-guard";
 import { IsLogout } from "./core/Guards/isLogout-guard";
-
+import {CalendarModule, DateAdapter} from "angular-calendar";
+import {adapterFactory} from "angular-calendar/date-adapters/date-fns";
+import {CommonModule} from "@angular/common";
+import {CalendarComponent} from "./pages/calendar/calendar";
+import {NgbModalModule} from "@ng-bootstrap/ng-bootstrap";
+import {FlatpickrModule} from "angularx-flatpickr";
 
 @NgModule({
   declarations: [
@@ -74,10 +79,18 @@ import { IsLogout } from "./core/Guards/isLogout-guard";
     DashboardComponent,
     ProfileComponent,
     GroupManagementComponent,
+    CalendarComponent,
     ConfirmDialog,
     GroupComponent
   ],
   imports: [
+    CommonModule,
+    NgbModalModule,
+    FlatpickrModule.forRoot(),
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
