@@ -65,7 +65,7 @@ export class ProfileComponent implements OnInit {
       if (result === true)
         this.profileSrv.delete$().subscribe(ret => {
           this.toastSrv.info('Votre profil a été supprimé');
-          this.authSrv.logout().subscribe();
+          this.authSrv.logout();
           return true;
         }, (err) => {
           this.toastSrv.error(err.error.message, 'Une erreur est survenue');

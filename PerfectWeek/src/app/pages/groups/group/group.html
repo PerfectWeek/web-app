@@ -39,21 +39,26 @@
           <!--</div>-->
           <div *ngFor="let member of display_members" class="group-list-member">
             <p>{{member.pseudo}}</p>
-            <mat-select [(ngModel)]="member.role">
-              <mat-option *ngFor="let role of roles" [value]="role">{{role}}</mat-option>
-            </mat-select>
+            <!--<mat-select [(ngModel)]="member.role">-->
+              <!--<mat-option *ngFor="let role of roles" [value]="role">{{role}}</mat-option>-->
+            <!--</mat-select>-->
             <i (click)="deleteMember(member)" class="fas fa-times"></i>
           </div>
+          <div *ngFor="let temp of new_members; let i = index" class="group-list-member">
+            <p>{{temp}}</p>
+            <i (click)="deleteTemp(i)" class="fas fa-times"></i>
+          </div>
           <div class="group-list-member md-form">
-            <input class="form-control new-member-input" [(ngModel)]="new_member.pseudo" placeholder="Pseudo">
-            <mat-select [(ngModel)]="new_member.role" placeholder="Role">
-              <mat-option *ngFor="let role of roles" [value]="role">{{role}}</mat-option>
-            </mat-select>
+            <input class="form-control new-member-input" [(ngModel)]="new_member" placeholder="Pseudo">
+            <!--<mat-select [(ngModel)]="new_member.role" placeholder="Role">-->
+              <!--<mat-option *ngFor="let role of roles" [value]="role">{{role}}</mat-option>-->
+            <!--</mat-select>-->
             <i (click)="addMember()" class="fas fa-plus"></i>
           </div>
         </div>
-        <div class="button-panel">
+        <div class="button-panel" style="margin: 10px 0">
           <button mat-raised-button type="button" class="btn-secondary" (click)="modifyGroup()">Sauvegarder les changements</button>
+          <button mat-raised-button type="button" class="btn-danger" (click)="Modifying()">Annuler</button>
         </div>
       </div>
     </div>
