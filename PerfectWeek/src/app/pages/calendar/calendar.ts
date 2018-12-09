@@ -73,6 +73,7 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log("ngOnInit Calendar");
     this.get_group_info();
   }
 
@@ -114,11 +115,39 @@ export class CalendarComponent implements OnInit {
   calendar_id: number = null;
   calendar_name: string = null;
 
+  // get_calendar_events(calendar_id): void {
+  //   this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''})
+  //     .subscribe(resp => {
+  //       for (const idx in resp.events) {
+  //         this.requestSrv.get(`events/${resp.events[idx].id}`, {}, {Authorization: ''})
+  //           .subscribe(ret => {
+  //             // console.log("ENORME", `events/${resp.events[idx].id}`);
+  //             // console.log("PTDR", ret);
+  //             this.events.push({
+  //               description: ret.event.description,
+  //               location: ret.event.location,
+  //               id: ret.event.id,
+  //               title: ret.event.name,
+  //               start: startOfDay(ret.event.start_time),
+  //               end: endOfDay(ret.event.end_time),
+  //               color: colors.perfectweek,
+  //               draggable: true,
+  //               actions: this.actions,
+  //               resizable: {
+  //                 beforeStart: true,
+  //                 afterEnd: true
+  //               }
+  //             });
+  //             this.refresh.next();
+  //           });
+  //       }
+  //     });
+  // }
+
   get_calendar_events(calendar_id): void {
     this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''})
       .subscribe(ret => {
-        console.log(ret);
-        for (let idx in ret.events) {
+        for (const idx in ret.events) {
           this.events.push({
             description: ret.events[idx].description,
             location: ret.events[idx].location,
@@ -139,6 +168,7 @@ export class CalendarComponent implements OnInit {
       });
   }
 
+
   get_group_calendar(): void {
     this.get_calendar_events(this.calendar_id);
   this.requestSrv.get(`calendars/${this.calendar_id}`, {}, {Authorization: ''})
@@ -153,7 +183,7 @@ export class CalendarComponent implements OnInit {
         .subscribe(ret => {
         for (let idx in ret.calendars) {
           // si cette ligne est decomenter
-          // this.get_calendar_events(ret.calendars[idx].calendar.id);
+          this.get_calendar_events(ret.calendars[idx].calendar.id);
           // ca fou la merde sur le dashboard
         }
       });

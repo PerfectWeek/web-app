@@ -2,7 +2,7 @@
   <div class="main-container">
     <h1 style="text-align: center">Dashboard</h1>
   </div>
-  <mat-tab-group class="main-container">
+  <mat-tab-group class="main-container" #tabGroup>
     <mat-tab label="Profil">
         <profile></profile>
     </mat-tab>
@@ -10,7 +10,8 @@
       <group-management></group-management>
     </mat-tab>
     <mat-tab label="Calendrier personnel">
-      <mwl-demo-component></mwl-demo-component>
+      <mwl-demo-component *ngIf="tabGroup.selectedIndex === 2"></mwl-demo-component>
+      <!-- <mwl-demo-component></mwl-demo-component> -->
     </mat-tab>
 
   </mat-tab-group>

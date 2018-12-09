@@ -138,6 +138,7 @@
     <th>Secondary color</th>
     <th>Starts at</th>
     <th>Ends at</th>
+    <th>Modify</th>
     <th>Remove</th>
   </tr>
   </thead>
@@ -148,34 +149,34 @@
       <input
         type="text"
         class="form-control"
-        [(ngModel)]="event.title"
-        (keyup)="eventModification()">
+        [(ngModel)]="event.title">
+        <!--(keyup)="eventModification()"-->
     </td>
     <td>
       <input
         type="text"
         class="form-control"
-        [(ngModel)]="event.description"
-        (keyup)="eventModification()">
+        [(ngModel)]="event.description">
+        <!--(keyup)="eventModification()"-->
     </td>
     <td>
       <input
         type="text"
         class="form-control"
-        [(ngModel)]="event.location"
-        (keyup)="eventModification()">
+        [(ngModel)]="event.location">
+      <!--(keyup)="eventModification()"-->
     </td>
     <td>
       <input
         type="color"
-        [(ngModel)]="event.color.primary"
-        (change)="eventModification()">
+        [(ngModel)]="event.color.primary">
+      <!--(change)="eventModification()"-->
     </td>
     <td>
       <input
         type="color"
-        [(ngModel)]="event.color.secondary"
-        (change)="eventModification()">
+        [(ngModel)]="event.color.secondary">
+      <!--(change)="eventModification()"-->
     </td>
     <td>
       <input
@@ -183,7 +184,6 @@
         type="text"
         mwlFlatpickr
         [(ngModel)]="event.start"
-        (ngModelChange)="eventModification()"
         [altInput]="true"
         [convertModelValue]="true"
         [enableTime]="true"
@@ -191,19 +191,27 @@
         altFormat="F j, Y H:i"
         placeholder="Not set">
     </td>
+    <!--(ngModelChange)="eventModification()"-->
     <td>
       <input
         class="form-control"
         type="text"
         mwlFlatpickr
         [(ngModel)]="event.end"
-        (ngModelChange)="eventModification()"
         [altInput]="true"
         [convertModelValue]="true"
         [enableTime]="true"
         dateFormat="Y-m-dTH:i"
         altFormat="F j, Y H:i"
         placeholder="Not set">
+    </td>
+    <!--(ngModelChange)="eventModification()"-->
+    <td>
+      <button
+        class="btn btn-primary"
+        (click)="eventModification()">
+        Modify
+      </button>
     </td>
     <td>
       <button
