@@ -1,9 +1,9 @@
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import {AuthService} from "../../core/services/auth.service";
-import {Router} from "@angular/router";
-import {ToastrService} from "ngx-toastr";
-import {ProfileService} from "../../core/services/profile.service";
+import {AuthService} from '../../core/services/auth.service';
+import {Router} from '@angular/router';
+import {ToastrService} from 'ngx-toastr';
+import {ProfileService} from '../../core/services/profile.service';
 
 
 @Component({

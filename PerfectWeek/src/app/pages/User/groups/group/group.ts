@@ -1,17 +1,17 @@
 import {Component, OnInit} from "@angular/core";
-import {RequestService} from "../../../core/services/request.service";
+import {RequestService} from "../../../../core/services/request.service";
 import {Router} from "@angular/router";
-import {Group} from "../../../core/models/Group";
+import {Group} from "../../../../core/models/Group";
 import {ToastrService} from "ngx-toastr";
-import {ConfirmDialog} from "../../../module/dialog/Confirm-dialog/Confirm-dialog";
+import {ConfirmDialog} from "../../../../module/dialog/Confirm-dialog/Confirm-dialog";
 import {MatDialog} from "@angular/material";
-import {ProfileService} from "../../../core/services/profile.service";
-import {User} from "../../../core/models/User";
+import {ProfileService} from "../../../../core/services/profile.service";
+import {User} from "../../../../core/models/User";
 
 @Component({
   selector: 'group',
   templateUrl: 'group.html',
-  styleUrls: ['group.scss', '../../../../scss/themes/main.scss']
+  styleUrls: ['group.scss', '../../../../../scss/themes/main.scss']
 })
 export class GroupComponent implements OnInit {
 
@@ -34,7 +34,11 @@ export class GroupComponent implements OnInit {
     "Spectator"
   ];
 
-  new_member: {pseudo: string, role: string} = {pseudo: '', role: ''};
+  new_members: string[] = [];
+
+  new_member: string = '';
+
+  new_group_name: string;
 
   constructor(private requestSrv: RequestService,
               public profileSrv: ProfileService,
@@ -52,6 +56,19 @@ export class GroupComponent implements OnInit {
   refreshMembers(members) {
     this.group.members = members;
     this.display_members = members.filter(member => member.pseudo !== this.group.owner);
+    this.profileSrv.userProfile$.subscribe(user => {
+      let isOk: boolean = false;
+      this.group.members.forEach(member => {
+        if (member.pseudo === user.pseudo) {
+          isOk = true;
+          this.user_role = member.role;
+        }
+      });
+      if (isOk === false) {
+        this.toastSrv.warning('Vous ne faites pas parti de ce groupe');
+        this.router.navigate(['dashboard']);
+      }
+    })
   }
 
   getGroup() {
@@ -64,45 +81,46 @@ export class GroupComponent implements OnInit {
           .subscribe(members => {
             this.refreshMembers(members.members);
           });
-        this.profileSrv.userProfile$.subscribe(user => {
-          let isOk: boolean = false;
-          if (this.group.owner === user.pseudo) {
-            this.user_role = "Admin";
-            isOk = true;
-          }
-          else
-            this.group.members.forEach(member => {
-              if (member.pseudo === user.pseudo) {
-                isOk = true;
-                this.user_role = member.role;
-              }
-            });
-          // if (isOk === false) {
-          //   this.toastSrv.warning('Vous ne faites pas parti de ce groupe');
-          //   this.router.navigate(['dashboard']);
-          // }
-        })
       }, err => {
         this.toastSrv.error(err.error.message, 'Impossible de récupérer ce groupe');
         this.router.navigate(['dashboard']);
       });
   }
 
-  Modifying() {this.modify = true;}
+  Modifying() {
+    this.modify = !this.modify;
+    console.log('modify => ', this.modify);
+    this.new_member = '';
+    this.new_members = [];
+  }
 
   modifyGroup() {
     this.requestSrv.put(`groups/${this.group_id}`, {
       group: this.group
     }, {Authorization: ''}).subscribe(ret => {
+      this.group.name = ret.group.name;
       this.toastSrv.success("Mise à jour du groupe effectuée");
-      this.display_members.forEach(member => this.requestSrv.put(`groups/${this.group_id}/members/${member.pseudo}`,
-        {role: member.role}, {Authorization: ''}).subscribe());
+      // this.display_members.forEach(member => this.requestSrv.put(`groups/${this.group_id}/members/${member.pseudo}`,
+      //   {role: member.role}, {Authorization: ''}).subscribe());
+      let users: string[] = this.new_members;
+      if (this.new_members.length > 0)
+        this.requestSrv.post(`groups/${this.group_id}/add-members`,
+          {users},
+          {Authorization: ''})
+          .subscribe(ret => {
+            this.toastSrv.success("User ajouté au groupe");
+            this.refreshMembers(ret.members);
+            this.new_members = [];
+          },
+          err => this.toastSrv.error("Une erreur est survenue lors de l'ajout du nouveau membre"))
       this.modify = false;
     }, err => {
       this.toastSrv.error("Une erreur est survenue lors de la modification du groupe");
       this.modify = false;
     });
   }
+
+
 
   deleteGroup() {
     let dialogRef = this.dialog.open(ConfirmDialog, {
@@ -127,22 +145,15 @@ export class GroupComponent implements OnInit {
   }
 
   addMember() {
-    if (this.new_member.pseudo == '')
+    if (this.new_member == '')
       this.toastSrv.error('Veuillez entrer un pseudo');
-    else if (this.new_member.role == '')
-      this.toastSrv.error('Veuillez sélectionner un rôle');
-    else
-      this.requestSrv.get(`users/${this.new_member.pseudo}`, {}, {Authorization: ''})
-        .subscribe(ret => {
-          this.requestSrv.post(`groups/${this.group_id}/add-members`, {members: [this.new_member]}, {Authorization: ''})
-            .subscribe(ret => {
-              this.toastSrv.success("User ajouté au groupe");
-              this.refreshMembers(ret.members);
-              this.new_member = {pseudo: '', role: ''};
-            }),
-            err => this.toastSrv.error("Une erreur est survenue lors de l'ajout du nouveau membre")
-        },err => this.toastSrv.error("Veuillez rentrer le pseudo d'un utilisateur existant"))
+    else {
+      this.new_members.push(this.new_member);
+      this.new_member = '';
+    }
   }
+
+  deleteTemp(idx) {this.new_members.splice(idx, 1);}
 
   deleteMember(member) {
     let dialogRef = this.dialog.open(ConfirmDialog, {

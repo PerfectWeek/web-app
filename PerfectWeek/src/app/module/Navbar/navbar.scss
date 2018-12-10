@@ -1,0 +1,24 @@
+@import "~scss/variables";
+
+nav {
+  height: $navbar-height;
+  padding: $navbar-padding;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 1);
+}
+
+.bg-light {
+  background-image: linear-gradient(to right, map_get($colors, primary), map_get($colors, secondary));
+}
+
+.navbar-collapse.bg-light {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+.navbar-brand > img {
+  filter: brightness(0) invert(1);
+}
+

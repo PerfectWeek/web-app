@@ -44,7 +44,7 @@ export class ProfileService {
           this.userProfileSubject.next(data.user)
         }),
         tap((data: any) => this.user.pseudo = data.user.pseudo),
-        tap(null, () => this.authSrv.logout().subscribe())
+        tap(null, () => this.authSrv.logout())
       )
   }
 

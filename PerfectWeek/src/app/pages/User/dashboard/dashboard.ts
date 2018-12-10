@@ -1,12 +1,12 @@
-import {Component, OnInit} from "@angular/core";
-import {ProfileService} from "../../core/services/profile.service";
-import {Router} from "@angular/router";
-import {RequestService} from "../../core/services/request.service";
+import {Component, OnInit} from '@angular/core';
+import {ProfileService} from '../../../core/services/profile.service';
+import {Router} from '@angular/router';
+import {RequestService} from '../../../core/services/request.service';
 
 @Component({
   selector: 'dashboard',
   templateUrl: 'dashboard.html',
-  styleUrls: ['dashboard.scss', '../../../scss/themes/main.scss']
+  styleUrls: ['dashboard.scss', '../../../../scss/themes/main.scss']
 })
 
 export class DashboardComponent implements OnInit {
@@ -20,10 +20,10 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.profileSrv.userProfile$.subscribe(user => {
       this.requestSrv.get(`users/${user.pseudo}`, {}, {Authorization: ''}).subscribe();
-    })
+    });
   }
 
   navigateTo(path: string) {
-    this.router.navigate([`/${path}`])
+    this.router.navigate([`/${path}`]);
   }
 }

@@ -7,7 +7,6 @@ import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, Cal
 import {RequestService} from "../../core/services/request.service";
 import {ToastrService} from "ngx-toastr";
 import {Router} from "@angular/router";
-import {Group} from "../../core/models/Group";
 import {ProfileService} from "../../core/services/profile.service";
 
 const colors: any = {
