@@ -1,15 +1,15 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
-import {RequestService} from "../../core/services/request.service";
+import {RequestService} from "../../../core/services/request.service";
 import {FormControl} from "@angular/forms";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {ToastrService} from "ngx-toastr";
-import {ProfileService} from "../../core/services/profile.service";
+import {ProfileService} from "../../../core/services/profile.service";
 import {Router} from "@angular/router";
 
 @Component({
   selector: 'group-management',
   templateUrl: 'group-management.html',
-  styleUrls: ['group-management.scss']
+  styleUrls: ['group-management.scss', '../../../../scss/themes/main.scss']
 })
 export class GroupManagementComponent implements OnInit {
 

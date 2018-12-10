@@ -1,17 +1,17 @@
 import {Component, OnInit} from "@angular/core";
-import {RequestService} from "../../../core/services/request.service";
+import {RequestService} from "../../../../core/services/request.service";
 import {Router} from "@angular/router";
-import {Group} from "../../../core/models/Group";
+import {Group} from "../../../../core/models/Group";
 import {ToastrService} from "ngx-toastr";
-import {ConfirmDialog} from "../../../module/dialog/Confirm-dialog/Confirm-dialog";
+import {ConfirmDialog} from "../../../../module/dialog/Confirm-dialog/Confirm-dialog";
 import {MatDialog} from "@angular/material";
-import {ProfileService} from "../../../core/services/profile.service";
-import {User} from "../../../core/models/User";
+import {ProfileService} from "../../../../core/services/profile.service";
+import {User} from "../../../../core/models/User";
 
 @Component({
   selector: 'group',
   templateUrl: 'group.html',
-  styleUrls: ['group.scss', '../../../../scss/themes/main.scss']
+  styleUrls: ['group.scss', '../../../../../scss/themes/main.scss']
 })
 export class GroupComponent implements OnInit {
 

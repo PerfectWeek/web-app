@@ -50,10 +50,10 @@ import { AppComponent } from './app.component';
 import { RegistrationComponent } from "./pages/Registration/registration";
 import { ConnectionComponent } from "./pages/Connection/connection";
 import { NotFoundComponent } from "./pages/NotFound/not-found";
-import { DashboardComponent } from "./pages/dashboard/dashboard";
-import { ProfileComponent } from "./pages/profile/profile";
-import { GroupManagementComponent } from "./pages/groups/group-management";
-import { GroupComponent } from "./pages/groups/group/group";
+import { DashboardComponent } from "./pages/User/dashboard/dashboard";
+import { ProfileComponent } from "./pages/User/profile/profile";
+import { GroupManagementComponent } from "./pages/User/groups/group-management";
+import { GroupComponent } from "./pages/User/groups/group/group";
 import { Navbar } from "./module/Navbar/navbar";
 
 

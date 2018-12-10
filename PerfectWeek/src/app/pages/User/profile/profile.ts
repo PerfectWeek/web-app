@@ -1,18 +1,18 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import {User} from "../../core/models/User";
-import {RequestService} from "../../core/services/request.service";
-import {ProfileService} from "../../core/services/profile.service";
+import {User} from "../../../core/models/User";
+import {RequestService} from "../../../core/services/request.service";
+import {ProfileService} from "../../../core/services/profile.service";
 import {ToastrService} from "ngx-toastr";
-import {AuthService} from "../../core/services/auth.service";
+import {AuthService} from "../../../core/services/auth.service";
 import {MatDialog} from "@angular/material";
-import {ConfirmDialog} from "../../module/dialog/Confirm-dialog/Confirm-dialog";
+import {ConfirmDialog} from "../../../module/dialog/Confirm-dialog/Confirm-dialog";
 import {filter, switchMap} from "rxjs/operators";
 
 @Component({
   selector: 'profile',
   templateUrl: 'profile.html',
-  styleUrls: ['profile.scss', '../../../scss/themes/main.scss']
+  styleUrls: ['profile.scss', '../../../../scss/themes/main.scss']
 })
 export class ProfileComponent implements OnInit {
 
