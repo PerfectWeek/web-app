@@ -40,9 +40,7 @@ export class GroupManagementComponent implements OnInit {
     this.profileSrv.userProfile$.subscribe(user => {
       this.requestSrv.get(`users/${user.pseudo}/groups`, {}, {Authorization: ''})
         .subscribe(groups => {
-          console.log('groups => ', groups);
           this.userGroups = groups.groups;
-          console.log('groups => ', this.userGroups);
         })
     });
   }

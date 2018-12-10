@@ -97,6 +97,7 @@ export class GroupComponent implements OnInit {
     this.requestSrv.put(`groups/${this.group_id}`, {
       group: this.group
     }, {Authorization: ''}).subscribe(ret => {
+      this.group.name = ret.group.name;
       this.toastSrv.success("Mise à jour du groupe effectuée");
       // this.display_members.forEach(member => this.requestSrv.put(`groups/${this.group_id}/members/${member.pseudo}`,
       //   {role: member.role}, {Authorization: ''}).subscribe());

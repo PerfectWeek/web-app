@@ -12,11 +12,23 @@
     <ng-template #navLogin>
       <ul class="navbar-nav mr-auto" data-toggle="collapse" data-target=".navbar-collapse.show">
         <li class="nav-item"><a class="nav-link" routerLink="dashboard">Dashboard</a></li>
-        <li class="nav-item"><a class="nav-link" routerLink="profile">Profile</a></li>
       </ul>
 
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item" style="cursor: pointer"><a class="nav-link" (click)="logout()"><i class="fas fa-sign-out-alt"></i> Se déconnecter</a></li>
+      <ul class="navbar-nav ml-auto" data-toggle="collapse" data-target=".navbar-collapse.show">
+        <li class="nav-item dropdown">
+          <a *ngIf="userProfile$ | async as user"
+             class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Bonjour {{user.pseudo}}
+          </a>
+
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" routerLink="/profile"><i class="fas fa-user"></i> mon profile</a>
+            <a class="dropdown-item" routerLink="/groups"><i class="fas fa-users"></i> Mes groupes</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item button" (click)="logout()"><i class="fas fa-sign-out-alt"></i> Se déconnecter</a>
+          </div>
+        </li>
       </ul>
     </ng-template>
     <ng-template #navLogout>
