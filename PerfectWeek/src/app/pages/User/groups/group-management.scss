@@ -1,19 +1,26 @@
 @import "~scss/variables";
 
+.main-container {
+  width: 40% !important;
+}
+
 .group {
   cursor: pointer;
   padding: 5px;
+  margin: 5px 0;
   font-size: 2rem;
-  height: 2.5rem;
+  height: 3rem;
+  border-bottom: 1px solid map_get($colors, desgrey);
   background-color: transparent;
   color: map_get($colors, primary);
   display: flex;
   flex-flow: row;
   justify-content: space-between;
+  align-items: center;
   transition: background-color 1s, color 1s;
 
   &:hover {
-    background-color: rgba(250,250,250,1);
+    background-color: rgba(245,245,245,1);
     color: map_get($colors, secondary);
   }
 }
@@ -28,5 +35,5 @@
 .group-creation-container {
   display: flex;
   flex-flow: row-reverse;
-  margin: 10px 0;
+  margin: 20px 0;
 }

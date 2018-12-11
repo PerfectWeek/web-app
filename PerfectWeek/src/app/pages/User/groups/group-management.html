@@ -9,7 +9,10 @@
     <div *ngIf="userGroups?.length > 0, else empty">
       <div class="group" *ngFor="let group of userGroups" (click)="goToGroup(group, $event)">
         <div>
-          <p><i class="fas fa-universal-access"></i> {{group.name}}</p>
+          <div class="flex-r" style="margin-top: 10px">
+            <i class="fas fa-users" style="margin-top: 10px; margin-right: 5px"></i>
+            <p> {{group.name}}</p>
+          </div>
         </div>
         <i class="fas fa-calendar-alt" (click)="goToCalendar(group)"></i>
       </div>
