@@ -7,11 +7,8 @@
 .group {
   cursor: pointer;
   padding: 5px;
-  margin: 5px 0;
   font-size: 2rem;
-  height: 3rem;
-  border-bottom: 1px solid map_get($colors, desgrey);
-  background-color: transparent;
+  max-height: 4.5rem;
   color: map_get($colors, primary);
   display: flex;
   flex-flow: row;
@@ -20,7 +17,6 @@
   transition: background-color 1s, color 1s;
 
   &:hover {
-    background-color: rgba(245,245,245,1);
     color: map_get($colors, secondary);
   }
 }
@@ -36,4 +32,14 @@
   display: flex;
   flex-flow: row-reverse;
   margin: 20px 0;
+}
+
+#group-list {
+  & > .group:nth-child(odd) {
+    background-color: rgba(240, 240, 240, 1);
+  }
+
+  & > .group:nth-child(even) {
+    background-color: transparent;
+  }
 }
