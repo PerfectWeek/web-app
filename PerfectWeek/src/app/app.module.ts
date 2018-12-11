@@ -75,6 +75,7 @@ import {FlatpickrModule} from "angularx-flatpickr";
 import localeFr from '@angular/common/locales/fr';
 import {CalendarHeaderComponent} from "./pages/calendar/demo-utils/calendar-header.component";
 import {FormModalComponent} from "./pages/calendar/demo-utils/ModalForm/form-modal.component";
+import {CreateEventDialog} from "./module/dialog/CreateEvent-dialog/CreateEvent-dialog";
 
 registerLocaleData(localeFr);
 
@@ -90,6 +91,7 @@ registerLocaleData(localeFr);
     GroupManagementComponent,
     CalendarComponent,
     ConfirmDialog,
+    CreateEventDialog,
     GroupCreationDialog,
     GroupComponent,
     CalendarHeaderComponent,
@@ -163,6 +165,7 @@ registerLocaleData(localeFr);
     ConfirmDialog,
     GroupCreationDialog,
     FormModalComponent,
+    CreateEventDialog
   ]
 })
 export class AppModule { }

@@ -34,6 +34,17 @@
       [locale]="locale">
     </mwl-demo-utils-calendar-header>
 
+    <h3>
+      Create events
+      <button
+        class="btn btn-primary pull-right"
+        (click)="addEvent()">
+        Add new
+      </button>
+      <div class="clearfix"></div>
+    </h3>
+
+
     <div [ngSwitch]="view">
       <mwl-calendar-month-view
         *ngSwitchCase="CalendarView.Month"
@@ -74,16 +85,16 @@
 
     <br><br><br>
 
-    <h3>
-      Create events
-      <button
-        class="btn btn-primary pull-right"
-        (click)="createEvent()">
-        Add new
-      </button>
+    <!--<h3>-->
+      <!--Create events-->
+      <!--<button-->
+        <!--class="btn btn-primary pull-right"-->
+        <!--(click)="addEvent()">-->
+        <!--Add new-->
+      <!--</button>-->
 
-      <div class="clearfix"></div>
-    </h3>
+      <!--<div class="clearfix"></div>-->
+    <!--</h3>-->
 
     <!--
     <table class="table table-bordered">

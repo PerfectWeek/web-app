@@ -15,6 +15,11 @@ import {ToastrService} from "ngx-toastr";
 import {Router} from "@angular/router";
 import {ProfileService} from "../../core/services/profile.service";
 import {FormModalComponent} from "./demo-utils/ModalForm/form-modal.component";
+import {int} from "flatpickr/dist/utils";
+import {MatDialog} from "@angular/material";
+import {ConfirmDialog} from "../../module/dialog/Confirm-dialog/Confirm-dialog";
+import {CreateEventDialog} from "../../module/dialog/CreateEvent-dialog/CreateEvent-dialog";
+import {GroupCreationDialog} from "../../module/dialog/Group-creation-dialog/group-creation";
 
 const colors: any = {
   red: {
@@ -75,8 +80,8 @@ export class CalendarComponent implements OnInit {
     event: CalendarEvent;
   };
 
-  //p rivate modal: NgbModal,
-  constructor(private  modal: NgbModal,
+  // private modal: NgbModal,
+  constructor(private modal: NgbModal,public dialog: MatDialog,
               private requestSrv: RequestService,
               private profileSrv: ProfileService,
               private toastSrv: ToastrService,
@@ -99,8 +104,9 @@ export class CalendarComponent implements OnInit {
     {
       label: '<i class="fa fa-fw fa-times"></i>',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.events = this.events.filter(iEvent => iEvent !== event);
-        this.handleEvent('Deleted', event);
+        //this.events = this.events.filter(iEvent => iEvent !== event);
+        //this.handleEvent('Deleted', event);
+        this.deleteEvent(event);
       }
     }
   ];
@@ -247,7 +253,7 @@ export class CalendarComponent implements OnInit {
   }
 
   handleEvent(action: string, event: CalendarEvent): void {
-    this.modalData = { event, action };
+    //this.modalData = { event, action };
     //this.modal.open(this.modalContent, { size: 'lg' });
     //this.modal.open(FormModalComponent, { size: 'lg' });
   }
@@ -258,31 +264,52 @@ export class CalendarComponent implements OnInit {
   }
 
   addEvent(): void {
-    this.requestSrv.post(`calendars/${this.calendar_id}/events`,{
-      name: 'Default name form Event',
-      description: 'Default description form Event',
-      location: 'Default description from Event',
-      start_time: startOfDay(new Date()),
-      end_time: startOfDay(new Date())}, {Authorization: ''})
-      .subscribe(ret => {
-        this.events.push({
-          title: '',
-          description: '',
-          location: '',
-          start: startOfDay(new Date()),
-          end: endOfDay(new Date()),
-          color: colors.perfectweek,
-          draggable: true,
-          actions: this.actions,
-          resizable: {
-            beforeStart: true,
-            afterEnd: true
-          },
-          id: ret.event.id,
-        });
-        this.refresh.next();
-        this.toastSrv.success("Evenement ajouté au groupe");
-      },err => this.toastSrv.error("Une erreur est survenue lors de l'ajout du nouvel evenement"))
+    let dialogRef = this.dialog.open(CreateEventDialog, {
+      data: {
+        calendar_id: this.calendar_id,
+        actions: this.actions,
+        events: this.events,
+        refresh: this.refresh,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== null && result !== undefined) {
+        // this.requestSrv.post(`calendars/${this.calendar_id}/events`,{
+        //   name: 'lol',
+        //   description: 'Default description form Event',
+        //   location: 'Default description from Event',
+        //   start_time: startOfDay(new Date()),
+        //   end_time: startOfDay(new Date())}, {Authorization: ''})
+        //   .subscribe(ret => {
+        //     this.events.push({
+        //       title: '',
+        //       description: '',
+        //       location: '',
+        //       start: startOfDay(new Date()),
+        //       end: endOfDay(new Date()),
+        //       color: colors.perfectweek,
+        //       draggable: true,
+        //       actions: this.actions,
+        //       resizable: {
+        //         beforeStart: true,
+        //         afterEnd: true
+        //       },
+        //       id: ret.event.id,
+        //     });
+        //     this.refresh.next();
+        //     this.toastSrv.success("Evenement ajouté au groupe");
+        //   },err => this.toastSrv.error("Une erreur est survenue lors de l'ajout du nouvel evenement"))
+      console.log("OK")
+      }
+    });
+
+    // let dialogRef = this.dialog.open(CreateEventDialog, {
+    //   data: {
+    //     title: "Creation d'évenement",
+    //     //question: 'Voulez-vous vraiment supprimer votre profil ?'
+    //   }
+    // });
   }
 
   createEvent(): void {
@@ -292,13 +319,26 @@ export class CalendarComponent implements OnInit {
     this.refresh.next();
   }
 
-  deleteEvent(index): void {
-    console.log("index", index);
-    console.log("mdr", this.events[index]);
-    this.requestSrv.delete(`events/${this.events[index].id}`, {Authorization: ''})
+  deleteEvent(elem): void {
+    let event_id;
+
+    console.log("elem", elem);
+    console.log("mdr", this.events[elem]);
+    if (typeof elem === 'number') {
+      event_id = elem;
+    }
+    else {
+      event_id = elem.id;
+    }
+    this.requestSrv.delete(`events/${event_id}`, {Authorization: ''})
     .subscribe(ret => {
       this.toastSrv.success("Evenement Supprimé");
-      this.events.splice(index, 1);
+
+      if (typeof elem === 'number') {
+        this.events.splice(elem, 1);
+      } else {
+        this.events = this.events.filter(iEvent => iEvent !== elem);
+      }
       this.refresh.next();
     }, ret => this.toastSrv.error("Une erreur est survenue lors de la suppression de l'evenement"))
   }
