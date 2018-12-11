@@ -35,7 +35,8 @@
             </div>
           </div>
 
-          <div class="text-center">
+          <div class="buttons-spaced">
+            <button class="btn-primary" (click)="router.navigate(['/login'])" mat-raised-button>Déjà inscrit ?</button>
             <button [disabled]="registrationForm.invalid" class="btn btn-secondary" mat-raised-button>S'inscrire</button>
           </div>
         </form>

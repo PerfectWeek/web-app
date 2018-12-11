@@ -13,6 +13,10 @@ nav {
   background-image: linear-gradient(to right, map_get($colors, primary), map_get($colors, secondary));
 }
 
+.navbar-collapse.collapse.show.bg-light[_ngcontent-c1] {
+  background-image: linear-gradient(to right, map_get($colors, primary), map_get($colors, secondary)) !important;
+}
+
 .navbar-collapse.bg-light {
   background-color: transparent !important;
   background-image: none !important;

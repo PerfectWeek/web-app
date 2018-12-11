@@ -52,7 +52,7 @@ export class PerfectWeekCalendarEvent implements CalendarEvent {
 @Component({
   selector: 'mwl-demo-component',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['calendar.scss'],
+  styleUrls: ['calendar.scss', '../../../scss/themes/main.scss'],
   templateUrl: 'calendar.html'
 })
 export class CalendarComponent implements OnInit {
@@ -186,6 +186,7 @@ export class CalendarComponent implements OnInit {
   this.requestSrv.get(`calendars/${this.calendar_id}`, {}, {Authorization: ''})
   .subscribe(ret => {
   this.calendar_name = ret.calendar.name;
+  console.log('aclendar_name => ', this.calendar_name)
   });
 }
 

@@ -1,7 +1,13 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-light fixed-top">
-  <a id="logo-nav" class="navbar-brand" routerLink="/dashboard">
+  <a id="logo-nav" class="navbar-brand" routerLink="/dashboard" *ngIf="isLogged$ | async; else toConnection">
     <img src="/assets/Pictures/Perfectweek Logo.png" height="45">
   </a>
+
+  <ng-template #toConnection>
+    <a id="logo-nav-alt" class="navbar-brand" routerLink="/login">
+      <img src="/assets/Pictures/Perfectweek Logo.png" height="45">
+    </a>
+  </ng-template>
 
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse"
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

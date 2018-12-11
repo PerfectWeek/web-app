@@ -1,13 +1,32 @@
-mat-expansion-panel-header {
-  height: 64px;
-}
+@import "~scss/variables";
 
 .group {
   cursor: pointer;
   padding: 5px;
-  font-size: 14px;
+  font-size: 2rem;
+  height: 2.5rem;
+  background-color: transparent;
+  color: map_get($colors, primary);
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  transition: background-color 1s, color 1s;
 
   &:hover {
-    background-color: rgba(225,225,225,0.9);
+    background-color: rgba(250,250,250,1);
+    color: map_get($colors, secondary);
   }
+}
+
+.groupe-title {
+  height: 64px;
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+}
+
+.group-creation-container {
+  display: flex;
+  flex-flow: row-reverse;
+  margin: 10px 0;
 }

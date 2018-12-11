@@ -59,6 +59,7 @@ import { Navbar } from "./module/Navbar/navbar";
 
 //Dialog
 import { ConfirmDialog } from "./module/dialog/Confirm-dialog/Confirm-dialog";
+import {GroupCreationDialog} from "./module/dialog/Group-creation-dialog/group-creation";
 
 
 //Guards
@@ -89,6 +90,7 @@ registerLocaleData(localeFr);
     GroupManagementComponent,
     CalendarComponent,
     ConfirmDialog,
+    GroupCreationDialog,
     GroupComponent,
     CalendarHeaderComponent,
     FormModalComponent,
@@ -159,6 +161,7 @@ registerLocaleData(localeFr);
   bootstrap: [AppComponent],
   entryComponents: [
     ConfirmDialog,
+    GroupCreationDialog,
     FormModalComponent,
   ]
 })

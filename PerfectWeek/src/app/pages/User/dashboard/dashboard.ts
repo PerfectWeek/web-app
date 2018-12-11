@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit} from "@angular/core";
 import {ProfileService} from '../../../core/services/profile.service';
-import {Router} from '@angular/router';
+import {Router } from "@angular/router";
 import {RequestService} from '../../../core/services/request.service';
 
 @Component({

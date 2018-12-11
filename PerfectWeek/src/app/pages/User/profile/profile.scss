@@ -1,8 +1,14 @@
+@import "~scss/variables";
+
+.main-container {
+  width: 40% !important;
+}
+
 .profile-container {
   padding: 15px;
   border: none;
   display: flex;
-  flex-flow: row;
+  flex-flow: column;
   justify-content: space-around;
 
   > .data-container {
@@ -20,6 +26,15 @@
   }
 
   .profile-field-info {
+    border-radius: 3px;
+    border: 1px solid map_get($colors, desgrey);
+    padding: 5px;
+    background-color: rgba(250, 250, 250, 1);
+  }
+}
 
+.buttons-spaced {
+  & > button {
+    margin: 0 5px;
   }
 }
