@@ -32,7 +32,7 @@ export class RegistrationComponent {
   constructor(private fb: FormBuilder,
               private toastSrv: ToastrService,
               private requestSrv: RequestService,
-              private router: Router) {
+              public router: Router) {
     this.registrationForm = this.initRegistrationForm();
   }
 

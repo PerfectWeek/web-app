@@ -26,7 +26,8 @@ export class FormModalComponent {
     //   password: ''
     });
   }
-  private submitForm() {
+
+  public submitForm() {
     this.activeModal.close(this.myForm.value);
   }
 }

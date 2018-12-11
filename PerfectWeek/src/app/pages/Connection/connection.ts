@@ -25,7 +25,7 @@ export class ConnectionComponent {
   constructor(private fb: FormBuilder,
               private authSrv: AuthService,
               private profileSrv: ProfileService,
-              private router: Router,
+              public router: Router,
               private toastSrv: ToastrService) {
     this.connectionForm = this.initConnectionForm();
   }
