@@ -66,10 +66,16 @@ import { isLogged } from "./core/Guards/isLogged-guard";
 import { IsLogout } from "./core/Guards/isLogout-guard";
 import {CalendarModule, DateAdapter} from "angular-calendar";
 import {adapterFactory} from "angular-calendar/date-adapters/date-fns";
-import {CommonModule} from "@angular/common";
+import {CommonModule, registerLocaleData} from "@angular/common";
 import {CalendarComponent} from "./pages/calendar/calendar";
 import {NgbModalModule} from "@ng-bootstrap/ng-bootstrap";
 import {FlatpickrModule} from "angularx-flatpickr";
+
+import localeFr from '@angular/common/locales/fr';
+import {CalendarHeaderComponent} from "./pages/calendar/demo-utils/calendar-header.component";
+import {FormModalComponent} from "./pages/calendar/demo-utils/ModalForm/form-modal.component";
+
+registerLocaleData(localeFr);
 
 @NgModule({
   declarations: [
@@ -83,7 +89,9 @@ import {FlatpickrModule} from "angularx-flatpickr";
     GroupManagementComponent,
     CalendarComponent,
     ConfirmDialog,
-    GroupComponent
+    GroupComponent,
+    CalendarHeaderComponent,
+    FormModalComponent,
   ],
   imports: [
     CommonModule,
@@ -150,7 +158,8 @@ import {FlatpickrModule} from "angularx-flatpickr";
   ],
   bootstrap: [AppComponent],
   entryComponents: [
-    ConfirmDialog
+    ConfirmDialog,
+    FormModalComponent,
   ]
 })
 export class AppModule { }

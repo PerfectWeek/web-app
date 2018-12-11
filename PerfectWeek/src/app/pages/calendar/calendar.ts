@@ -2,12 +2,19 @@ import {Component, ChangeDetectionStrategy, ViewChild, TemplateRef, OnInit} from
 import { startOfDay, endOfDay, subDays, addDays, endOfMonth, isSameDay, isSameMonth, addHours } from 'date-fns';
 import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarView } from 'angular-calendar';
+import {
+  CalendarEvent,
+  CalendarEventAction,
+  CalendarEventTimesChangedEvent,
+  CalendarView,
+  DAYS_OF_WEEK
+} from 'angular-calendar';
 
 import {RequestService} from "../../core/services/request.service";
 import {ToastrService} from "ngx-toastr";
 import {Router} from "@angular/router";
 import {ProfileService} from "../../core/services/profile.service";
+import {FormModalComponent} from "./demo-utils/ModalForm/form-modal.component";
 
 const colors: any = {
   red: {
@@ -52,6 +59,11 @@ export class CalendarComponent implements OnInit {
   @ViewChild('modalContent')
   modalContent: TemplateRef<any>;
 
+  // FRENCH CALENDAR
+  locale: string = 'fr';
+  weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
+  weekendDays: number[] = [DAYS_OF_WEEK.FRIDAY, DAYS_OF_WEEK.SATURDAY];
+
   view: CalendarView = CalendarView.Month;
 
   CalendarView = CalendarView;
@@ -63,7 +75,8 @@ export class CalendarComponent implements OnInit {
     event: CalendarEvent;
   };
 
-  constructor(private modal: NgbModal,
+  //p rivate modal: NgbModal,
+  constructor(private  modal: NgbModal,
               private requestSrv: RequestService,
               private profileSrv: ProfileService,
               private toastSrv: ToastrService,
@@ -77,12 +90,12 @@ export class CalendarComponent implements OnInit {
   }
 
   actions: CalendarEventAction[] = [
-    /*{
+    {
       label: '<i class="fa fa-fw fa-pencil"></i>',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         this.handleEvent('Edited', event);
       }
-    },*/
+    },
     {
       label: '<i class="fa fa-fw fa-times"></i>',
       onClick: ({ event }: { event: CalendarEvent }): void => {
@@ -235,6 +248,7 @@ export class CalendarComponent implements OnInit {
   handleEvent(action: string, event: CalendarEvent): void {
     this.modalData = { event, action };
     //this.modal.open(this.modalContent, { size: 'lg' });
+    //this.modal.open(FormModalComponent, { size: 'lg' });
   }
 
   eventModification(): void {
@@ -269,6 +283,14 @@ export class CalendarComponent implements OnInit {
         this.toastSrv.success("Evenement ajouté au groupe");
       },err => this.toastSrv.error("Une erreur est survenue lors de l'ajout du nouvel evenement"))
   }
+
+  createEvent(): void {
+    //this.addEvent();
+    //this.handleEvent('Create event', event);
+    this.modal.open(FormModalComponent, { size: 'lg' });
+    this.refresh.next();
+  }
+
   deleteEvent(index): void {
     console.log("index", index);
     console.log("mdr", this.events[index]);

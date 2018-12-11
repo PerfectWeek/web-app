@@ -2,7 +2,12 @@
 <link href="https://unpkg.com/font-awesome@4.7.0/css/font-awesome.css" rel="stylesheet">
 <link href="https://unpkg.com/angular-calendar@0.26.4/css/angular-calendar.css" rel="stylesheet">
 <link href="https://unpkg.com/flatpickr@4.5.2/dist/flatpickr.css" rel="stylesheet">
-<!-- <div class="row"> -->
+
+<div class="title-and-logo">
+  <h3>"Calendrier du groupe {{this?.calendar_name}}"</h3>
+  <img src="/assets/Pictures/perfectwekk_logo.png" alt="PerfectWeek Logo" id="perfectweek_logo">
+</div>
+
 <ng-template #modalContent let-close="close">
   <div class="modal-header">
     <h5 class="modal-title">Event action occurred</h5>
@@ -25,72 +30,20 @@
   </div>
 </ng-template>
 
-<div class="title-and-logo">
-<!-- <div class="calendar-header" style="display: flex; flex-flow: row; justify-content: center"> -->
-  <h3>"Calendrier du groupe {{this?.calendar_name}}"</h3>
-  <!--<h3>Nom en dur pour l'instant</h3>-->
-  <img src="/assets/Pictures/perfectwekk_logo.png" alt="PerfectWeek Logo" id="perfectweek_logo">
-</div>
+<mwl-demo-utils-calendar-header
+  [(view)]="view"
+  [(viewDate)]="viewDate"
+  [locale]="locale">
+</mwl-demo-utils-calendar-header>
 
-<div class="row text-center">
-  <div class="col-md-4">
-    <div class="btn-group">
-      <div
-        class="btn btn-primary"
-        mwlCalendarPreviousView
-        [view]="view"
-        [(viewDate)]="viewDate"
-        (viewDateChange)="activeDayIsOpen = false">
-        Previous
-      </div>
-      <div
-        class="btn btn-outline-secondary"
-        mwlCalendarToday
-        [(viewDate)]="viewDate">
-        Today
-      </div>
-      <div
-        class="btn btn-primary"
-        mwlCalendarNextView
-        [view]="view"
-        [(viewDate)]="viewDate"
-        (viewDateChange)="activeDayIsOpen = false">
-        Next
-      </div>
-    </div>
-  </div>
-  <div class="col-md-4">
-    <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
-  </div>
-  <div class="col-md-4">
-    <div class="btn-group">
-      <div
-        class="btn btn-primary"
-        (click)="view = CalendarView.Month"
-        [class.active]="view === CalendarView.Month">
-        Month
-      </div>
-      <div
-        class="btn btn-primary"
-        (click)="view = CalendarView.Week"
-        [class.active]="view === CalendarView.Week">
-        Week
-      </div>
-      <div
-        class="btn btn-primary"
-        (click)="view = CalendarView.Day"
-        [class.active]="view === CalendarView.Day">
-        Day
-      </div>
-    </div>
-  </div>
-</div>
-<br>
 <div [ngSwitch]="view">
   <mwl-calendar-month-view
     *ngSwitchCase="CalendarView.Month"
     [viewDate]="viewDate"
     [events]="events"
+    [locale]="locale"
+    [weekStartsOn]="weekStartsOn"
+    [weekendDays]="weekendDays"
     [refresh]="refresh"
     [activeDayIsOpen]="activeDayIsOpen"
     (dayClicked)="dayClicked($event.day)"
@@ -101,6 +54,9 @@
     *ngSwitchCase="CalendarView.Week"
     [viewDate]="viewDate"
     [events]="events"
+    [locale]="locale"
+    [weekStartsOn]="weekStartsOn"
+    [weekendDays]="weekendDays"
     [refresh]="refresh"
     (eventClicked)="handleEvent('Clicked', $event.event)"
     (eventTimesChanged)="eventTimesChanged($event)">
@@ -109,6 +65,9 @@
     *ngSwitchCase="CalendarView.Day"
     [viewDate]="viewDate"
     [events]="events"
+    [locale]="locale"
+    [weekStartsOn]="weekStartsOn"
+    [weekendDays]="weekendDays"
     [refresh]="refresh"
     (eventClicked)="handleEvent('Clicked', $event.event)"
     (eventTimesChanged)="eventTimesChanged($event)">
@@ -118,15 +77,17 @@
 <br><br><br>
 
 <h3>
-  Edit events
+  Create events
   <button
     class="btn btn-primary pull-right"
-    (click)="addEvent()">
+    (click)="createEvent()">
     Add new
   </button>
+
   <div class="clearfix"></div>
 </h3>
 
+<!--
 <table class="table table-bordered">
 
   <thead>
@@ -150,33 +111,28 @@
         type="text"
         class="form-control"
         [(ngModel)]="event.title">
-        <!--(keyup)="eventModification()"-->
     </td>
     <td>
       <input
         type="text"
         class="form-control"
         [(ngModel)]="event.description">
-        <!--(keyup)="eventModification()"-->
     </td>
     <td>
       <input
         type="text"
         class="form-control"
         [(ngModel)]="event.location">
-      <!--(keyup)="eventModification()"-->
     </td>
     <td>
       <input
         type="color"
         [(ngModel)]="event.color.primary">
-      <!--(change)="eventModification()"-->
     </td>
     <td>
       <input
         type="color"
         [(ngModel)]="event.color.secondary">
-      <!--(change)="eventModification()"-->
     </td>
     <td>
       <input
@@ -191,7 +147,6 @@
         altFormat="F j, Y H:i"
         placeholder="Not set">
     </td>
-    <!--(ngModelChange)="eventModification()"-->
     <td>
       <input
         class="form-control"
@@ -205,7 +160,6 @@
         altFormat="F j, Y H:i"
         placeholder="Not set">
     </td>
-    <!--(ngModelChange)="eventModification()"-->
     <td>
       <button
         class="btn btn-primary"
@@ -222,5 +176,4 @@
     </td>
   </tr>
   </tbody>
-
-</table>
+</table> -->
