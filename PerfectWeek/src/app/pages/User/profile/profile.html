@@ -1,13 +1,16 @@
-<div>
-  <div>
+<div class="main-full-component">
+  <div class="main-container">
+    <h1 style="text-align: center">Mon Profil</h1>
+  </div>
+  <div class="main-container">
     <div class="profile-container" *ngIf="user && modifying === false">
-      <mat-form-field class="col-5">
-        <input disabled matInput type="text" name="pseudo" [(ngModel)]="user.pseudo" id="pseudo" class="form-control">
-      </mat-form-field>
+      <div>
+        <p class="profile-field-info">{{user.pseudo}}</p>
+      </div>
 
-      <mat-form-field class="col-5">
-        <input disabled matInput type="text" name="email" [(ngModel)]="user.email" id="email" class="form-control">
-      </mat-form-field>
+      <div>
+        <p class="profile-field-info">{{user.email}}</p>
+      </div>
     </div>
 
     <div class="profile-container" *ngIf="user && modifying === true">
@@ -23,7 +26,10 @@
     <div style="display: flex; flex-flow: row-reverse; margin: 5px 0; justify-content: space-between" *ngIf="user">
       <button mat-raised-button type="button" class="btn-primary" *ngIf="modifying === false; else modify" (click)="modifying = true">Modifier le profil</button>
       <ng-template #modify>
-        <button mat-raised-button type="button" class="btn-secondary" [disabled]="!pseudo && !email" (click)="modifyProfile()">Modifier</button>
+        <div>
+          <button mat-raised-button type="button" class="btn-primary" (click)="modifying = false">Annuler</button>
+          <button mat-raised-button type="button" class="btn-secondary" [disabled]="!pseudo && !email" (click)="modifyProfile()">Modifier</button>
+        </div>
       </ng-template>
       <button mat-raised-button type="button" class="btn-danger" (click)="deleteProfile()">Supprimer le profil</button>
     </div>

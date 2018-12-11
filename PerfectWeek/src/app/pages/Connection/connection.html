@@ -1,24 +1,27 @@
-<div class="form-background">
-  <div class="flex">
-    <div class="form-container-sm">
-      <form [formGroup]="connectionForm" (ngSubmit)="submit()">
-        <p class="h3 text-center mb-4">Connexion</p>
+<div style="background-color: white">
+  <div class="background-logo-circle"></div>
+  <div class="background-logo-name"></div>
+  <div class="main-full-component" style="background-color: transparent; z-index: 2">
+    <div class="flex">
+      <div class="form-container-sm">
+        <form [formGroup]="connectionForm" (ngSubmit)="submit()">
+          <p class="h3 text-center mb-4">Connexion</p>
 
-        <div class="col-fields">
-          <mat-form-field>
-            <input type="email" email formControlName="email" id="email" class="form-control" placeholder="Email" matInput required>
-          </mat-form-field>
+          <div class="col-fields">
+            <mat-form-field>
+              <input type="email" email formControlName="email" id="email" class="form-control" placeholder="Email" matInput required>
+            </mat-form-field>
 
-          <mat-form-field>
-            <input type="password" formControlName="password" id="password" class="form-control" placeholder="Mot de Passe" matInput required>
-          </mat-form-field>
-        </div>
+            <mat-form-field>
+              <input type="password" formControlName="password" id="password" class="form-control" placeholder="Mot de Passe" matInput required>
+            </mat-form-field>
+          </div>
 
-        <div class="text-center">
-          <button [disabled]="connectionForm.invalid" class="btn btn-secondary" mat-raised-button>Se connecter</button>
-        </div>
-      </form>
+          <div class="text-center">
+            <button [disabled]="connectionForm.invalid" class="btn btn-secondary" mat-raised-button>Se connecter</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>
-

@@ -18,3 +18,14 @@
   margin: 0 20px;
   margin-bottom: 10px;
 }
+
+.main-full-page {
+  height: $main-full-page-height;
+  margin-top: $main-full-page-margin;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.main-full-component {
+  padding-top: $navbar-padding;
+}
