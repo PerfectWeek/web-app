@@ -26,7 +26,7 @@ export class RequestService {
     //   httpParam = httpParam.append(key, params[key]);
     // }
       for (const key in params) {
-        if (params[key].constructor === Array)
+        if (params != undefined && params[key] != undefined && params[key].constructor === Array)
           params[key].forEach(val => httpParam = httpParam.append(`${key}[]`, val));
         else
           httpParam = httpParam.append(key, params[key]);
