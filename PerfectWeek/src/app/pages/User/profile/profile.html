@@ -26,7 +26,7 @@
       </mat-form-field>
         <div style="display: flex; flex-flow: row-reverse; margin: 5px 0; justify-content: space-between">
           <div class="buttons-spaced">
-            <button mat-raised-button type="button" class="btn-primary" (click)="modifying = false">Annuler</button>
+            <button mat-raised-button type="button" class="btn-primary" (click)="modifying = false; pseudo = null; email = null">Annuler</button>
             <button mat-raised-button type="button" class="btn-secondary" type="submit" [disabled]="checkInfoFormat() === true" (click)="modifyProfile()">Modifier</button>
           </div>
           <button mat-raised-button type="button" class="btn-danger" (click)="deleteProfile()">Supprimer le profil</button>
