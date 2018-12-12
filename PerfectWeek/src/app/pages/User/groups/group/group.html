@@ -16,8 +16,8 @@
         </div>
       </div>
       <div class="button-panel">
-        <button [disabled]="user_role !== 'Admin'" mat-raised-button type="button" class="btn-danger" (click)="deleteGroup()">Supprimer</button>
         <button [disabled]="user_role !== 'Admin'" mat-raised-button type="button" class="btn-primary" (click)="Modifying()">Modifier</button>
+        <button [disabled]="user_role !== 'Admin'" mat-raised-button type="button" class="btn-danger" (click)="deleteGroup()">Supprimer</button>
       </div>
     </div>
   </div>

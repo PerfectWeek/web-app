@@ -16,24 +16,27 @@
     </div>
 
     <div class="profile-container" *ngIf="user && modifying === true">
+      <form>
       <mat-form-field class="col-12">
         <input matInput type="text" name="pseudo" [(ngModel)]="pseudo" id="modify_pseudo" class="form-control" placeholder="Pseudo" required>
       </mat-form-field>
 
       <mat-form-field class="col-12">
-        <input matInput type="text" name="email" [(ngModel)]="email" id="modify_email" class="form-control" placeholder="Email" required>
+        <input matInput type="text" name="email" [(ngModel)]="email" id="modify_email" class="form-control" placeholder="Email" pattern="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$" required>
       </mat-form-field>
+        <div style="display: flex; flex-flow: row-reverse; margin: 5px 0; justify-content: space-between">
+          <div class="buttons-spaced">
+            <button mat-raised-button type="button" class="btn-primary" (click)="modifying = false; pseudo = null; email = null">Annuler</button>
+            <button mat-raised-button type="button" class="btn-secondary" type="submit" [disabled]="checkInfoFormat() === true" (click)="modifyProfile()">Modifier</button>
+          </div>
+          <button mat-raised-button type="button" class="btn-danger" (click)="deleteProfile()">Supprimer le profil</button>
+        </div>
+      </form>
     </div>
 
     <div style="display: flex; flex-flow: row-reverse; margin: 5px 0; justify-content: space-between" *ngIf="user">
-      <button mat-raised-button type="button" class="btn-primary" *ngIf="modifying === false; else modify" (click)="modifying = true">Modifier le profil</button>
-      <ng-template #modify>
-        <div class="buttons-spaced">
-          <button mat-raised-button type="button" class="btn-primary" (click)="modifying = false">Annuler</button>
-          <button mat-raised-button type="button" class="btn-secondary" [disabled]="!pseudo && !email" (click)="modifyProfile()">Modifier</button>
-        </div>
-      </ng-template>
-      <button mat-raised-button type="button" class="btn-danger" (click)="deleteProfile()">Supprimer le profil</button>
+      <button mat-raised-button type="button" class="btn-primary" *ngIf="modifying === false" (click)="modifying = true">Modifier le profil</button>
+      <button mat-raised-button type="button" class="btn-danger" *ngIf="modifying === false" (click)="deleteProfile()">Supprimer le profil</button>
     </div>
   </div>
 </div>
