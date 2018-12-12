@@ -38,6 +38,12 @@ export class ProfileComponent implements OnInit {
     }, (error) => {console.log('error => ', error)});
   }
 
+  checkInfoFormat() {
+    if (this.pseudo && this.email && this.email.match("^\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$"))
+      return false;
+    return true;
+  }
+
   modifyProfile() {
     this.profileSrv.modify$({pseudo: this.pseudo, email: this.email}).subscribe((user: any) => {
       this.user.pseudo = this.pseudo;
