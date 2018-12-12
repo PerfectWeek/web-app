@@ -17,8 +17,7 @@ export class GroupComponent implements OnInit {
 
   group: Group = {
     name: '',
-    members: [],
-    owner: ''
+    description: ''
   };
 
   display_members: any[] = [];
@@ -28,6 +27,10 @@ export class GroupComponent implements OnInit {
   user_role: string;
 
   modify: boolean = false;
+
+  group_members = [];
+
+  group_owner: null;
 
   roles: string[] = [
     "Admin",
@@ -53,11 +56,11 @@ export class GroupComponent implements OnInit {
   }
 
   refreshMembers(members) {
-    this.group.members = members;
-    this.display_members = members.filter(member => member.pseudo !== this.group.owner);
+    this.group_members = members;
+    this.display_members = members.filter(member => member.pseudo !== this.group_owner);
     this.profileSrv.userProfile$.subscribe(user => {
       let isOk: boolean = false;
-      this.group.members.forEach(member => {
+      this.group_members.forEach(member => {
         if (member.pseudo === user.pseudo) {
           isOk = true;
           this.user_role = member.role;
@@ -75,7 +78,8 @@ export class GroupComponent implements OnInit {
     this.requestSrv.get(`groups/${this.group_id}`, {}, {Authorization: ''})
       .subscribe(ret => {
         this.group.name = ret.group.name;
-        this.group.owner = ret.group.owner;
+        this.group_owner = ret.group.owner;
+        this.group.description = ret.group.description;
         this.requestSrv.get(`groups/${this.group_id}/members`, {}, {Authorization: ''})
           .subscribe(members => {
             this.refreshMembers(members.members);
@@ -93,10 +97,13 @@ export class GroupComponent implements OnInit {
   }
 
   modifyGroup() {
+    let desc = this.group.description.length > 0 ? this.group.description : 'Pas de description';
     this.requestSrv.put(`groups/${this.group_id}`, {
-      group: this.group
+      name: this.group.name,
+      description: desc
     }, {Authorization: ''}).subscribe(ret => {
       this.group.name = ret.group.name;
+      this.group.description = ret.group.description;
       this.toastSrv.success("Mise à jour du groupe effectuée");
       // this.display_members.forEach(member => this.requestSrv.put(`groups/${this.group_id}/members/${member.pseudo}`,
       //   {role: member.role}, {Authorization: ''}).subscribe());

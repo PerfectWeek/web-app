@@ -2,7 +2,11 @@
   <div *ngIf="modify === false, else modifying">
     <div class="main-container">
       <h1 style="text-align: center">{{group?.name}}</h1>
+      <div style="text-align: center">
+        {{group?.description}}
+      </div>
     </div>
+
     <div class="main-container">
       <div class="member-panel">
         <h3>Membres</h3>
@@ -24,8 +28,11 @@
   <ng-template #modifying>
     <div>
       <div class="main-container">
-        <div class="md-form name-container">
+        <div class="md-form name-container" style="border-radius: 0">
           <input class="form-control name-input" [(ngModel)]="group.name">
+          <div style="text-align: center">
+            <textarea class="form-control" rows="1" cols="3" [(ngModel)]="group.description" type="text"></textarea>
+          </div>
         </div>
       </div>
       <div class="main-container">
