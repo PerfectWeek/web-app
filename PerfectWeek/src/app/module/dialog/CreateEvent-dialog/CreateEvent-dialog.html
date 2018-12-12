@@ -1,0 +1,75 @@
+<div class="flex flex-r-centered">
+  <h2 mat-dialog-title>Création d'un nouveau évenement</h2>
+</div>
+<mat-dialog-content style="white-space: pre-wrap; text-align: center">
+  <div>
+    <form #groupForm="ngForm" (ngSubmit)="createEvent()" class="form-row" style="padding: 15px; margin: 15px 0">
+
+      <mat-form-field style="width: 100%">
+        <input matInput
+               placeholder="Nom de l'évenement"
+               [(ngModel)]="name"
+               name="name"
+               required>
+      </mat-form-field>
+
+      <mat-form-field style="width: 100%">
+        <input  matInput
+                placeholder="Description"
+                name="description"
+                [(ngModel)]="description">
+      </mat-form-field>
+
+      <mat-form-field style="width: 100%">
+        <input matInput
+               placeholder="Lieux"
+               name="location"
+          [(ngModel)]="location">
+      </mat-form-field>
+
+      <mat-form-field style="width: 5%">
+        <input matInput
+               type="color"
+               name="color"
+               [(ngModel)]="color">
+      </mat-form-field>
+
+      <mat-form-field style="width: 100%">
+        <input  matInput
+                class="form-control"
+                type="text"
+                mwlFlatpickr
+                [(ngModel)]="start"
+                [altInput]="true"
+                [convertModelValue]="true"
+                [enableTime]="true"
+                name="start"
+                dateFormat="Y-m-dTH:i"
+                altFormat="F j, Y H:i"
+                placeholder="Not set"
+                required>
+      </mat-form-field>
+      <mat-form-field style="width: 100%">
+        <input  matInput
+                class="form-control"
+                type="text"
+                mwlFlatpickr
+                [(ngModel)]="end"
+                [altInput]="true"
+                [convertModelValue]="true"
+                [enableTime]="true"
+                name="end"
+                dateFormat="Y-m-dTH:i"
+                altFormat="F j, Y H:i"
+                placeholder="Not set"
+                required>
+      </mat-form-field>
+
+    </form>
+  </div>
+</mat-dialog-content>
+<br>
+<mat-dialog-actions style="display: flex; justify-content: space-between">
+  <button class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
+  <button [disabled]="groupForm.valid === false" class="mat-raised-button btn-secondary" (click)="createEvent()">Confirmer</button>
+</mat-dialog-actions>

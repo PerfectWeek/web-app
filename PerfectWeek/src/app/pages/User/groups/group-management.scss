@@ -1,13 +1,45 @@
-mat-expansion-panel-header {
-  height: 64px;
+@import "~scss/variables";
+
+.main-container {
+  width: 40% !important;
 }
 
 .group {
   cursor: pointer;
   padding: 5px;
-  font-size: 14px;
+  font-size: 2rem;
+  max-height: 4.5rem;
+  color: map_get($colors, primary);
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 1s, color 1s;
 
   &:hover {
-    background-color: rgba(225,225,225,0.9);
+    color: map_get($colors, secondary);
+  }
+}
+
+.groupe-title {
+  height: 64px;
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+}
+
+.group-creation-container {
+  display: flex;
+  flex-flow: row-reverse;
+  margin: 20px 0;
+}
+
+#group-list {
+  & > .group:nth-child(odd) {
+    background-color: rgba(240, 240, 240, 1);
+  }
+
+  & > .group:nth-child(even) {
+    background-color: transparent;
   }
 }

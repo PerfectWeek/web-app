@@ -1,11 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "~ngx-toastr/toastr.css";
+@import '~bootstrap/dist/css/bootstrap.min.css';
 @import "~@angular/material/prebuilt-themes/indigo-pink";
 
 @import "variables";
 @import "form";
 @import "buttons";
+@import "flex";
 
 .mat-tab-label-content {
   font-size: 22px;
@@ -28,4 +30,10 @@
 
 .main-full-component {
   padding-top: $navbar-padding;
+}
+
+.buttons-spaced {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
 }

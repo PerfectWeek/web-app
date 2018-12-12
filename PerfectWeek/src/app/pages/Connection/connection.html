@@ -2,7 +2,7 @@
   <div class="background-logo-circle"></div>
   <div class="background-logo-name"></div>
   <div class="main-full-component" style="background-color: transparent; z-index: 2">
-    <div class="flex">
+    <div class="main-container">
       <div class="form-container-sm">
         <form [formGroup]="connectionForm" (ngSubmit)="submit()">
           <p class="h3 text-center mb-4">Connexion</p>
@@ -17,7 +17,8 @@
             </mat-form-field>
           </div>
 
-          <div class="text-center">
+          <div class="buttons-spaced">
+            <button class="btn-primary" (click)="router.navigate(['/registration'])" mat-raised-button>Pas encore inscrit ?</button>
             <button [disabled]="connectionForm.invalid" class="btn btn-secondary" mat-raised-button>Se connecter</button>
           </div>
         </form>

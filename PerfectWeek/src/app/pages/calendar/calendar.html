@@ -1,0 +1,190 @@
+<!--<link href="https://unpkg.com/bootstrap-css-only@4.1.1/css/bootstrap.min.css" rel="stylesheet">-->
+<!--<link href="https://unpkg.com/font-awesome@4.7.0/css/font-awesome.css" rel="stylesheet">-->
+
+<!--<div class="title-and-logo">-->
+  <!--<img src="/assets/Pictures/perfectwekk_logo.png" alt="PerfectWeek Logo" id="perfectweek_logo">-->
+<!--</div>-->
+<div class="main-full-component">
+  <div class="main-container">
+    <ng-template #modalContent let-close="close">
+      <div class="modal-header">
+        <h5 class="modal-title">Event action occurred</h5>
+        <button type="button" class="close" (click)="close()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div>
+          Action:
+          <pre>{{ modalData?.action }}</pre>
+        </div>
+        <div>
+          Event:
+          <pre>{{ modalData?.event | json }}</pre>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="close()">OK</button>
+      </div>
+    </ng-template>
+
+    <mwl-demo-utils-calendar-header
+      [(view)]="view"
+      [(viewDate)]="viewDate"
+      [locale]="locale">
+    </mwl-demo-utils-calendar-header>
+
+    <h3>
+      Create events
+      <button
+        class="btn btn-primary pull-right"
+        (click)="addEvent()">
+        Add new
+      </button>
+      <div class="clearfix"></div>
+    </h3>
+
+
+    <div [ngSwitch]="view">
+      <mwl-calendar-month-view
+        *ngSwitchCase="CalendarView.Month"
+        [viewDate]="viewDate"
+        [events]="events"
+        [locale]="locale"
+        [weekStartsOn]="weekStartsOn"
+        [weekendDays]="weekendDays"
+        [refresh]="refresh"
+        [activeDayIsOpen]="activeDayIsOpen"
+        (dayClicked)="dayClicked($event.day)"
+        (eventClicked)="handleEvent('Clicked', $event.event)"
+        (eventTimesChanged)="eventTimesChanged($event)">
+      </mwl-calendar-month-view>
+      <mwl-calendar-week-view
+        *ngSwitchCase="CalendarView.Week"
+        [viewDate]="viewDate"
+        [events]="events"
+        [locale]="locale"
+        [weekStartsOn]="weekStartsOn"
+        [weekendDays]="weekendDays"
+        [refresh]="refresh"
+        (eventClicked)="handleEvent('Clicked', $event.event)"
+        (eventTimesChanged)="eventTimesChanged($event)">
+      </mwl-calendar-week-view>
+      <mwl-calendar-day-view
+        *ngSwitchCase="CalendarView.Day"
+        [viewDate]="viewDate"
+        [events]="events"
+        [locale]="locale"
+        [weekStartsOn]="weekStartsOn"
+        [weekendDays]="weekendDays"
+        [refresh]="refresh"
+        (eventClicked)="handleEvent('Clicked', $event.event)"
+        (eventTimesChanged)="eventTimesChanged($event)">
+      </mwl-calendar-day-view>
+    </div>
+
+    <br><br><br>
+
+    <!--<h3>-->
+      <!--Create events-->
+      <!--<button-->
+        <!--class="btn btn-primary pull-right"-->
+        <!--(click)="addEvent()">-->
+        <!--Add new-->
+      <!--</button>-->
+
+      <!--<div class="clearfix"></div>-->
+    <!--</h3>-->
+
+    <!--
+    <table class="table table-bordered">
+
+      <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Location</th>
+        <th>Primary color</th>
+        <th>Secondary color</th>
+        <th>Starts at</th>
+        <th>Ends at</th>
+        <th>Modify</th>
+        <th>Remove</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr *ngFor="let event of events; let index = index">
+        <td>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="event.title">
+        </td>
+        <td>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="event.description">
+        </td>
+        <td>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="event.location">
+        </td>
+        <td>
+          <input
+            type="color"
+            [(ngModel)]="event.color.primary">
+        </td>
+        <td>
+          <input
+            type="color"
+            [(ngModel)]="event.color.secondary">
+        </td>
+        <td>
+          <input
+            class="form-control"
+            type="text"
+            mwlFlatpickr
+            [(ngModel)]="event.start"
+            [altInput]="true"
+            [convertModelValue]="true"
+            [enableTime]="true"
+            dateFormat="Y-m-dTH:i"
+            altFormat="F j, Y H:i"
+            placeholder="Not set">
+        </td>
+        <td>
+          <input
+            class="form-control"
+            type="text"
+            mwlFlatpickr
+            [(ngModel)]="event.end"
+            [altInput]="true"
+            [convertModelValue]="true"
+            [enableTime]="true"
+            dateFormat="Y-m-dTH:i"
+            altFormat="F j, Y H:i"
+            placeholder="Not set">
+        </td>
+        <td>
+          <button
+            class="btn btn-primary"
+            (click)="eventModification()">
+            Modify
+          </button>
+        </td>
+        <td>
+          <button
+            class="btn btn-danger"
+            (click)="deleteEvent(index)">
+            Delete
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table> -->
+  </div>
+</div>

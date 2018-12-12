@@ -88,7 +88,6 @@ export class GroupComponent implements OnInit {
 
   Modifying() {
     this.modify = !this.modify;
-    console.log('modify => ', this.modify);
     this.new_member = '';
     this.new_members = [];
   }
@@ -147,8 +146,14 @@ export class GroupComponent implements OnInit {
     if (this.new_member == '')
       this.toastSrv.error('Veuillez entrer un pseudo');
     else {
-      this.new_members.push(this.new_member);
-      this.new_member = '';
+      this.requestSrv.get(`users/${this.new_member}`, {}, {Authorization: ''})
+        .subscribe(ret => {
+          this.new_members.push(this.new_member);
+          this.new_member = '';
+        }, err => {
+          this.toastSrv.error("Veuillez rentrer un utilisateur existant")
+          this.new_member = '';
+        });
     }
   }
 

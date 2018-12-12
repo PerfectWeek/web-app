@@ -1,9 +1,9 @@
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import {AuthService} from "../../core/services/auth.service";
-import {Router} from "@angular/router";
-import {ToastrService} from "ngx-toastr";
-import {ProfileService} from "../../core/services/profile.service";
+import {AuthService} from '../../core/services/auth.service';
+import {Router} from '@angular/router';
+import {ToastrService} from 'ngx-toastr';
+import {ProfileService} from '../../core/services/profile.service';
 
 
 @Component({
@@ -25,7 +25,7 @@ export class ConnectionComponent {
   constructor(private fb: FormBuilder,
               private authSrv: AuthService,
               private profileSrv: ProfileService,
-              private router: Router,
+              public router: Router,
               private toastSrv: ToastrService) {
     this.connectionForm = this.initConnectionForm();
   }
