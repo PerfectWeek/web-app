@@ -58,8 +58,8 @@ export class CreateEventDialog {
       name: this.name,
       description: this.description,
       location: this.location,
-      start_time: this.start,
-      end_time: this.end}, {Authorization: ''})
+      start_time: this.start.toLocaleDateString(),
+      end_time: this.end.toLocaleDateString()}, {Authorization: ''})
       .subscribe(ret => {
         this.data.events.push({
           title: this.name,
