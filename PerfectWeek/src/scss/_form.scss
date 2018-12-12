@@ -42,13 +42,46 @@
   }
 }
 
-.form-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: url("/assets/Pictures/logo.jpg");
-  background-size: cover;
-  z-index: -5;
+.col-fields {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-around;
 }
+
+div.input-error-message {
+  width: 100%;
+
+  & > mat-form-field {
+    width: 100%;
+  }
+}
+
+.background-logo-name {
+  position: fixed;
+  top: calc(25% - (2.5vw + 2.5vh));
+  left: calc(50% - (10vw + 10vh));
+  background: url("../assets/Pictures/logo_name.png");
+  background-size: cover;
+  z-index: 1;
+  width: calc(20vw + 20vh);
+  height: calc(5vw + 5vh);
+}
+
+.background-logo-circle {
+  position: fixed;
+  top: calc(100% - (20vw + 20vh));
+  left: calc(15% - (20vw + 20vh));
+  z-index: 1;
+  background: url("../assets/Pictures/logo_circle.png");
+  background-size: cover;
+  width: calc(40vw + 40vh);
+  height: calc(40vw + 40vh);
+  -webkit-animation:spin 256s linear infinite;
+  -moz-animation:spin 256s linear infinite;
+  animation:spin 256s linear infinite;
+}
+
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+

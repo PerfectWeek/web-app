@@ -1,0 +1,25 @@
+.flex, %flex {
+  display: flex;
+}
+
+.flex-r, %flex-r {
+  flex-flow: row;
+  @extend %flex;
+}
+
+.flex-c, %flex-c {
+  flex-flow: column;
+  @extend %flex;
+}
+
+.flex-r-centered {
+  justify-content: center;
+  align-items: center;
+  @extend %flex-r;
+}
+
+.flex-c-centered {
+  justify-content: center;
+  align-items: center;
+  @extend %flex-c;
+}

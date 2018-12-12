@@ -1,9 +1,9 @@
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import {AuthService} from "../../core/services/auth.service";
-import {Router} from "@angular/router";
-import {ToastrService} from "ngx-toastr";
-import {ProfileService} from "../../core/services/profile.service";
+import {AuthService} from '../../core/services/auth.service';
+import {Router} from '@angular/router';
+import {ToastrService} from 'ngx-toastr';
+import {ProfileService} from '../../core/services/profile.service';
 
 
 @Component({
@@ -17,7 +17,7 @@ export class ConnectionComponent {
 
   initConnectionForm() {
     return this.fb.group({
-      email: [null, Validators.compose([Validators.email, Validators.required])],
+      email: [null, Validators.compose([Validators.email, Validators.pattern("^\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$"), Validators.required])],
       password: [null, Validators.compose([Validators.pattern('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$'), Validators.minLength(8), Validators.required])],
     });
   }
@@ -25,7 +25,7 @@ export class ConnectionComponent {
   constructor(private fb: FormBuilder,
               private authSrv: AuthService,
               private profileSrv: ProfileService,
-              private router: Router,
+              public router: Router,
               private toastSrv: ToastrService) {
     this.connectionForm = this.initConnectionForm();
   }

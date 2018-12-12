@@ -1,9 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "~ngx-toastr/toastr.css";
+@import '~bootstrap/dist/css/bootstrap.min.css';
 @import "~@angular/material/prebuilt-themes/indigo-pink";
 
+@import "variables";
 @import "form";
+@import "buttons";
+@import "flex";
 
 .mat-tab-label-content {
   font-size: 22px;
@@ -13,5 +17,23 @@
 .error-message {
   color: red;
   font-size: 14px;
-  margin: 0 40px;
+  margin: 0 20px;
+  margin-bottom: 10px;
+}
+
+.main-full-page {
+  height: $main-full-page-height;
+  margin-top: $main-full-page-margin;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.main-full-component {
+  padding-top: $navbar-padding;
+}
+
+.buttons-spaced {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
 }

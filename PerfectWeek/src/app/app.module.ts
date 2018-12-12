@@ -7,8 +7,6 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 
 //External Modules
-import { MDBBootstrapModule } from 'angular-bootstrap-md';
-import { InputsModule, WavesModule, ButtonsModule } from 'angular-bootstrap-md'
 import { ToastrModule } from 'ngx-toastr';
 import {
   MatSelectModule,
@@ -52,43 +50,67 @@ import { AppComponent } from './app.component';
 import { RegistrationComponent } from "./pages/Registration/registration";
 import { ConnectionComponent } from "./pages/Connection/connection";
 import { NotFoundComponent } from "./pages/NotFound/not-found";
-import { DashboardComponent } from "./pages/dashboard/dashboard";
-import { ProfileComponent } from "./pages/profile/profile";
-import { GroupManagementComponent } from "./pages/groups/group-management";
-import { GroupComponent } from "./pages/groups/group/group";
+import { DashboardComponent } from "./pages/User/dashboard/dashboard";
+import { ProfileComponent } from "./pages/User/profile/profile";
+import { GroupManagementComponent } from "./pages/User/groups/group-management";
+import { GroupComponent } from "./pages/User/groups/group/group";
+import { Navbar } from "./module/Navbar/navbar";
 
 
 //Dialog
 import { ConfirmDialog } from "./module/dialog/Confirm-dialog/Confirm-dialog";
+import {GroupCreationDialog} from "./module/dialog/Group-creation-dialog/group-creation";
 
 
 //Guards
 import { isLogged } from "./core/Guards/isLogged-guard";
 import { IsLogout } from "./core/Guards/isLogout-guard";
+import {CalendarModule, DateAdapter} from "angular-calendar";
+import {adapterFactory} from "angular-calendar/date-adapters/date-fns";
+import {CommonModule, registerLocaleData} from "@angular/common";
+import {CalendarComponent} from "./pages/calendar/calendar";
+import {NgbModalModule} from "@ng-bootstrap/ng-bootstrap";
+import {FlatpickrModule} from "angularx-flatpickr";
 
+import localeFr from '@angular/common/locales/fr';
+import {CalendarHeaderComponent} from "./pages/calendar/demo-utils/calendar-header.component";
+import {FormModalComponent} from "./pages/calendar/demo-utils/ModalForm/form-modal.component";
+import {CreateEventDialog} from "./module/dialog/CreateEvent-dialog/CreateEvent-dialog";
+
+registerLocaleData(localeFr);
 
 @NgModule({
   declarations: [
     AppComponent,
+    Navbar,
     RegistrationComponent,
     ConnectionComponent,
     NotFoundComponent,
     DashboardComponent,
     ProfileComponent,
     GroupManagementComponent,
+    CalendarComponent,
     ConfirmDialog,
-    GroupComponent
+    CreateEventDialog,
+    GroupCreationDialog,
+    GroupComponent,
+    CalendarHeaderComponent,
+    FormModalComponent,
   ],
   imports: [
+    CommonModule,
+    NgbModalModule,
+    FlatpickrModule.forRoot(),
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    InputsModule,
-    WavesModule,
-    ButtonsModule,
     HttpClientModule,
     MatSelectModule,
     MatDialogModule,
@@ -113,7 +135,6 @@ import { IsLogout } from "./core/Guards/isLogout-guard";
       positionClass: 'toast-bottom-center',
       preventDuplicates: true,
     }),
-    MDBBootstrapModule.forRoot()
   ],
   schemas: [ NO_ERRORS_SCHEMA ],
   providers: [
@@ -141,7 +162,10 @@ import { IsLogout } from "./core/Guards/isLogout-guard";
   ],
   bootstrap: [AppComponent],
   entryComponents: [
-    ConfirmDialog
+    ConfirmDialog,
+    GroupCreationDialog,
+    FormModalComponent,
+    CreateEventDialog
   ]
 })
 export class AppModule { }

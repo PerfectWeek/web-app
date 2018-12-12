@@ -1,0 +1,16 @@
+@import "variables";
+
+.btn-danger {
+  background-color: map_get($colors, danger);
+  color: white !important;
+}
+
+.btn-primary {
+  background-color: map_get($colors, primary);
+  color: white !important;
+}
+
+.btn-secondary {
+  background-color: map_get($colors, secondary);
+  color: white !important;
+}

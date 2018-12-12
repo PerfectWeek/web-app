@@ -1,0 +1,32 @@
+/*.drag-active {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+.drag-over {
+  background-color: #eee;
+}*/
+
+.title-and-logo {
+  justify-content: center;
+}
+
+#perfectweek_logo {
+  width: 100px;
+  height: auto;
+}
+
+h3 {
+  margin: 0 0 10px;
+}
+
+//AMINNNNNNNNNNNN CA MARCHE PASSSSSSSSSSSSSSSSS
+//.cal-day-badge ng-star-inserted
+.cal-day-badge .ng-star-inserted {
+  color: #5ABC95;
+}
+
+pre {
+  background-color: #f5f5f5;
+  padding: 15px;
+}

@@ -14,6 +14,7 @@ import { User } from "../models/User";
 import 'rxjs/add/operator/switchMap';
 import {  ReplaySubject} from "rxjs/ReplaySubject";
 import {Router} from "@angular/router";
+import {ToastrService} from "ngx-toastr";
 
 @Injectable()
 export class AuthService {
@@ -32,6 +33,11 @@ export class AuthService {
   }
 
   private _logged: boolean;
+
+  clearData() {
+    this.auth = null;
+    this.tokenSrv.clear();
+  }
 
   private set auth(value: User) {
     this._auth = value;
@@ -56,7 +62,8 @@ export class AuthService {
 
   constructor(private requestSrv: RequestService,
               private router: Router,
-              private tokenSrv: TokenService) {
+              private tokenSrv: TokenService,
+              private toastSrv: ToastrService) {
     this._auth = JSON.parse(localStorage.getItem('auth'));
   }
 
@@ -105,22 +112,23 @@ export class AuthService {
     }
   }
 
-  logout(): Observable<void> {
+  logout() {
     localStorage.removeItem('user_pseudo');
     this.logged = false;
-    this.auth = null;
+    this.clearData();
     this.router.navigate(['/login']);
-    return this.requestSrv.delete('logout', {
-      noMultiple: '',
-      'Authorization': '',
-    })
-      .do(() => {
-        localStorage.removeItem('user_pseudo');
-        this.logged = false
-      })
-      .do(() => {
-        this.auth = null;
-        this.router.navigate(['/login']);
-      });
+    this.toastSrv.info('Vous avez été déconnecté avec succès')
+    // return this.requestSrv.delete('logout', {
+    //   noMultiple: '',
+    //   'Authorization': '',
+    // })
+    //   .do(() => {
+    //     localStorage.removeItem('user_pseudo');
+    //     this.logged = false
+    //   })
+    //   .do(() => {
+    //     this.auth = null;
+    //     this.router.navigate(['/login']);
+    //   });
   }
 }

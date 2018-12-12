@@ -16,4 +16,9 @@ export class TokenService {
   constructor() {
     this._token = localStorage.getItem("token");
   }
+
+  clear() {
+    localStorage.removeItem("token");
+    this._token = null;
+  }
 }

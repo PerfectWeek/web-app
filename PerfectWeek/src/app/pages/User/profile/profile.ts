@@ -1,18 +1,18 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import {User} from "../../core/models/User";
-import {RequestService} from "../../core/services/request.service";
-import {ProfileService} from "../../core/services/profile.service";
+import {User} from "../../../core/models/User";
+import {RequestService} from "../../../core/services/request.service";
+import {ProfileService} from "../../../core/services/profile.service";
 import {ToastrService} from "ngx-toastr";
-import {AuthService} from "../../core/services/auth.service";
+import {AuthService} from "../../../core/services/auth.service";
 import {MatDialog} from "@angular/material";
-import {ConfirmDialog} from "../../module/dialog/Confirm-dialog/Confirm-dialog";
+import {ConfirmDialog} from "../../../module/dialog/Confirm-dialog/Confirm-dialog";
 import {filter, switchMap} from "rxjs/operators";
 
 @Component({
   selector: 'profile',
   templateUrl: 'profile.html',
-  styleUrls: ['profile.scss', '../../../scss/themes/main.scss']
+  styleUrls: ['profile.scss', '../../../../scss/themes/main.scss']
 })
 export class ProfileComponent implements OnInit {
 
@@ -21,6 +21,7 @@ export class ProfileComponent implements OnInit {
   modifying: boolean = false;
 
   pseudo: string = null;
+  email: string = null;
 
   constructor(private route: ActivatedRoute,
               private requestSrv: RequestService,
@@ -37,11 +38,19 @@ export class ProfileComponent implements OnInit {
     }, (error) => {console.log('error => ', error)});
   }
 
+  checkInfoFormat() {
+    if (this.pseudo && this.email && this.email.match("^\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$"))
+      return false;
+    return true;
+  }
+
   modifyProfile() {
-    this.profileSrv.modify$(this.pseudo).subscribe((user: any) => {
+    this.profileSrv.modify$({pseudo: this.pseudo, email: this.email}).subscribe((user: any) => {
       this.user.pseudo = this.pseudo;
+      this.user.email = this.email;
       this.modifying = false;
       this.pseudo = null;
+      this.email = null;
       this.toastSrv.info('Votre profil a été modifié')
       return true;
     }, err => {
@@ -62,7 +71,7 @@ export class ProfileComponent implements OnInit {
       if (result === true)
         this.profileSrv.delete$().subscribe(ret => {
           this.toastSrv.info('Votre profil a été supprimé');
-          this.authSrv.logout().subscribe();
+          this.authSrv.logout();
           return true;
         }, (err) => {
           this.toastSrv.error(err.error.message, 'Une erreur est survenue');
