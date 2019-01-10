@@ -4,7 +4,7 @@
   </div>
   <div class="main-container">
     <div class="group-creation-container">
-      <button class="btn-secondary" (click)="createGroup()" mat-raised-button><i class="fas fa-plus"></i> Créer un groupe</button>
+      <button class="btn-secondary" (click)="createGroup()" mat-raised-button>Créer un groupe</button>
     </div>
     <div *ngIf="userGroups?.length > 0, else empty" id="group-list">
       <div class="group" *ngFor="let group of userGroups" (click)="goToGroup(group, $event)">
