@@ -5,6 +5,9 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
+import {
+    RouterTestingModule
+} from '@angular/router/testing';
 
 //External Modules
 import { ToastrModule } from 'ngx-toastr';
@@ -109,6 +112,7 @@ registerLocaleData(localeFr);
     BrowserAnimationsModule,
     AppRoutingModule,
     RouterModule,
+    RouterTestingModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
