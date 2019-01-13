@@ -5,7 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   CalendarEvent,
   CalendarEventAction,
-  CalendarEventTimesChangedEvent,
+  CalendarEventTimesChangedEvent, CalendarEventTitleFormatter,
   CalendarView,
   DAYS_OF_WEEK
 } from 'angular-calendar';
@@ -15,11 +15,10 @@ import {ToastrService} from "ngx-toastr";
 import {Router} from "@angular/router";
 import {ProfileService} from "../../core/services/profile.service";
 import {FormModalComponent} from "./demo-utils/ModalForm/form-modal.component";
-import {int} from "flatpickr/dist/utils";
 import {MatDialog} from "@angular/material";
-import {ConfirmDialog} from "../../module/dialog/Confirm-dialog/Confirm-dialog";
 import {CreateEventDialog} from "../../module/dialog/CreateEvent-dialog/CreateEvent-dialog";
-import {GroupCreationDialog} from "../../module/dialog/Group-creation-dialog/group-creation";
+import {CustomEventTitleFormatter} from "./demo-utils/custom-event-title-formatter.provider";
+import {formatDate} from "@angular/common";
 
 const colors: any = {
   red: {
@@ -58,7 +57,13 @@ export class PerfectWeekCalendarEvent implements CalendarEvent {
   selector: 'mwl-demo-component',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['calendar.scss', '../../../scss/themes/main.scss'],
-  templateUrl: 'calendar.html'
+  templateUrl: 'calendar.html',
+  providers: [
+    {
+      provide: CalendarEventTitleFormatter,
+      useClass: CustomEventTitleFormatter
+    }
+  ]
 })
 export class CalendarComponent implements OnInit {
   @ViewChild('modalContent')
@@ -80,6 +85,9 @@ export class CalendarComponent implements OnInit {
     event: CalendarEvent;
   };
 
+  is_global_calendar: boolean = true;
+  date_format: string = "yyyy-MM-ddThh:mm:ss";
+
   // private modal: NgbModal,
   constructor(private modal: NgbModal,public dialog: MatDialog,
               private requestSrv: RequestService,
@@ -98,7 +106,8 @@ export class CalendarComponent implements OnInit {
     {
       label: '<i class="fa fa-fw fa-pencil"></i>',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.handleEvent('Edited', event);
+        this.eventModification(event);
+        //this.handleEvent('Edited', event);
       }
     },
     {
@@ -113,78 +122,71 @@ export class CalendarComponent implements OnInit {
 
   refresh: Subject<any> = new Subject();
 
-  // events: CalendarEvent[] = [
   events: PerfectWeekCalendarEvent[] = [
-    /*{
-      start: addHours(startOfDay(new Date()), 2),
-      end: new Date(),
-      title: 'A draggable and resizable event',
-      color: colors.yellow,
-      actions: this.actions,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-      draggable: true
-    }*/
   ];
 
   activeDayIsOpen: boolean = true;
   calendar_id: number = null;
   calendar_name: string = null;
 
-  // get_calendar_events(calendar_id): void {
-  //   this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''})
-  //     .subscribe(resp => {
-  //       for (const idx in resp.events) {
-  //         this.requestSrv.get(`events/${resp.events[idx].id}`, {}, {Authorization: ''})
-  //           .subscribe(ret => {
-  //             // console.log("ENORME", `events/${resp.events[idx].id}`);
-  //             // console.log("PTDR", ret);
-  //             this.events.push({
-  //               description: ret.event.description,
-  //               location: ret.event.location,
-  //               id: ret.event.id,
-  //               title: ret.event.name,
-  //               start: startOfDay(ret.event.start_time),
-  //               end: endOfDay(ret.event.end_time),
-  //               color: colors.perfectweek,
-  //               draggable: true,
-  //               actions: this.actions,
-  //               resizable: {
-  //                 beforeStart: true,
-  //                 afterEnd: true
-  //               }
-  //             });
-  //             this.refresh.next();
-  //           });
-  //       }
-  //     });
-  // }
-
   get_calendar_events(calendar_id): void {
     this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''})
-      .subscribe(ret => {
-        for (const idx in ret.events) {
-          this.events.push({
-            description: ret.events[idx].description,
-            location: ret.events[idx].location,
-            id: ret.events[idx].id,
-            title: ret.events[idx].name,
-            start: startOfDay(ret.events[idx].start_time),
-            end: endOfDay(ret.events[idx].end_time),
-            color: colors.perfectweek,
-            draggable: true,
-            actions: this.actions,
-            resizable: {
-              beforeStart: true,
-              afterEnd: true
-            }
-          });
-          this.refresh.next();
+      .subscribe(resp => {
+              let random_color = {
+                primary: '#'+(Math.random() * 0xFFFFFF << 0).toString(16),
+                secondary: '#1C4891',
+              };
+        for (const idx in resp.events) {
+          this.requestSrv.get(`events/${resp.events[idx].id}`, {}, {Authorization: ''})
+            .subscribe(ret => {
+              this.events.push({
+                description: ret.event.description,
+                location: ret.event.location,
+                id: ret.event.id,
+                title: ret.event.name,
+                start: startOfDay(ret.event.start_time),
+                end: endOfDay(ret.event.end_time),
+                color: random_color,
+                draggable: true,
+                actions: this.actions,
+                resizable: {
+                  beforeStart: true,
+                  afterEnd: true
+                }
+              });
+              this.refresh.next();
+            });
         }
       });
   }
+
+  // get_calendar_events(calendar_id): void {
+  //   this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''})
+  //     .subscribe(ret => {
+  //       let random_color = {
+  //         primary: '#'+(Math.random() * 0xFFFFFF << 0).toString(16),
+  //         secondary: '#1C4891',
+  //       };
+  //       for (const idx in ret.events) {
+  //         this.events.push({
+  //           description: ret.events[idx].description,
+  //           location: ret.events[idx].location,
+  //           id: ret.events[idx].id,
+  //           title: ret.events[idx].name,
+  //           start: startOfDay(ret.events[idx].start_time),
+  //           end: endOfDay(ret.events[idx].end_time),
+  //           color: random_color,
+  //           draggable: true,
+  //           actions: this.actions,
+  //           resizable: {
+  //             beforeStart: true,
+  //             afterEnd: true
+  //           }
+  //         });
+  //         this.refresh.next();
+  //       }
+  //     });
+  // }
 
 
   get_group_calendar(): void {
@@ -196,14 +198,12 @@ export class CalendarComponent implements OnInit {
   });
 }
 
-  get_personal_calendar (): void {
+  get_global_calendar (): void {
     this.profileSrv.userProfile$.subscribe(user => {
       this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
         .subscribe(ret => {
         for (let idx in ret.calendars) {
-          // si cette ligne est decomenter
           this.get_calendar_events(ret.calendars[idx].calendar.id);
-          // ca fou la merde sur le dashboard
         }
       });
     });
@@ -211,12 +211,12 @@ export class CalendarComponent implements OnInit {
 
   get_group_info() {
       this.calendar_id = +(this.router.url.slice(this.router.url.lastIndexOf('/') + 1));
-      // console.log("calendar ID", this.calendar_id);
       if (!Number.isNaN(this.calendar_id)) {
-        // console.log("CA PASSE PAR LA");
+        this.is_global_calendar = false;
         this.get_group_calendar();
       } else {
-        this.get_personal_calendar();
+        this.is_global_calendar = true;
+        this.get_global_calendar();
       }
     }
 
@@ -240,15 +240,19 @@ export class CalendarComponent implements OnInit {
                       newEnd,
                     }: CalendarEventTimesChangedEvent): void {
       let modified_event = this.events.find(current_event => current_event.id === event.id);
-      this.requestSrv.put(`events/${event.id}`, {start_time: newStart,
-                                                            end_time: newEnd,
-                                                            description: modified_event.description},
+      console.log(modified_event);
+      this.requestSrv.put(`events/${event.id}`, {start_time: formatDate(newStart, this.date_format, this.locale),
+                                                            end_time: formatDate(newEnd, this.date_format, this.locale),
+                                                            location: modified_event.location,
+                                                            description: modified_event.description,
+                                                            name: modified_event.title},
                                                             {Authorization: ''})
       .subscribe(ret => {
         event.start = newStart;
         event.end = newEnd;
-        this.handleEvent('Dropped or resized', event);
         this.refresh.next();
+        this.toastSrv.success("Evenement modifié");
+        console.log("Modification done");
       });
   }
 
@@ -258,9 +262,22 @@ export class CalendarComponent implements OnInit {
     //this.modal.open(FormModalComponent, { size: 'lg' });
   }
 
-  eventModification(): void {
+  // modify all fields
+  eventModification(event): void {
     console.log("Modification done");
-    this.refresh.next();
+    // let modified_event = this.events.find(current_event => current_event.id === event.id);
+    // console.log(modified_event);
+    // this.requestSrv.put(`events/${event.id}`, {start_time: formatDate(newStart, this.date_format, this.locale),
+    //     end_time: formatDate(newEnd, this.date_format, this.locale),
+    //     location: modified_event.location,
+    //     description: modified_event.description,
+    //     name: modified_event.title},
+    //   {Authorization: ''})
+    //   .subscribe(ret => {
+    //     event.start = newStart;
+    //     event.end = newEnd;
+    //     this.refresh.next();
+    //   });
   }
 
   addEvent(): void {
@@ -270,37 +287,14 @@ export class CalendarComponent implements OnInit {
         actions: this.actions,
         events: this.events,
         refresh: this.refresh,
+        is_global_calendar: this.is_global_calendar,
+        calendar_locale: this.locale,
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== null && result !== undefined) {
-        // this.requestSrv.post(`calendars/${this.calendar_id}/events`,{
-        //   name: 'lol',
-        //   description: 'Default description form Event',
-        //   location: 'Default description from Event',
-        //   start_time: startOfDay(new Date()),
-        //   end_time: startOfDay(new Date())}, {Authorization: ''})
-        //   .subscribe(ret => {
-        //     this.events.push({
-        //       title: '',
-        //       description: '',
-        //       location: '',
-        //       start: startOfDay(new Date()),
-        //       end: endOfDay(new Date()),
-        //       color: colors.perfectweek,
-        //       draggable: true,
-        //       actions: this.actions,
-        //       resizable: {
-        //         beforeStart: true,
-        //         afterEnd: true
-        //       },
-        //       id: ret.event.id,
-        //     });
-        //     this.refresh.next();
-        //     this.toastSrv.success("Evenement ajouté au groupe");
-        //   },err => this.toastSrv.error("Une erreur est survenue lors de l'ajout du nouvel evenement"))
-      console.log("OK")
+      console.log("Event created")
       }
     });
 
