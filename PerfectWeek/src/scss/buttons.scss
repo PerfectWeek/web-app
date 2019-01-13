@@ -1,16 +1,29 @@
 @import "variables";
 
+
 .btn-danger {
   background-color: map_get($colors, danger);
   color: white !important;
+
+  &:hover, &:active {
+    background-color: map_get($colors, red) !important;
+  }
 }
 
 .btn-primary {
   background-color: map_get($colors, primary);
   color: white !important;
+
+  &:hover, &:active {
+    background-color: map_get($colors, true_blue) !important;
+  }
 }
 
 .btn-secondary {
   background-color: map_get($colors, secondary);
   color: white !important;
+
+  &:hover, &:active {
+    background-color: map_get($colors, aquamarine) !important;
+  }
 }

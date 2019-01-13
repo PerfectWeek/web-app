@@ -13,18 +13,19 @@ import {GroupComponent} from './pages/User/groups/group/group';
 import {GroupManagementComponent} from './pages/User/groups/group-management';
 
 import {CalendarComponent} from './pages/calendar/calendar';
+import {RegistrationConfirmationComponent} from "./pages/Registration_Confirmation/registration-confirmation";
 
 const routes: Routes = [
   { path: '', redirectTo: '/registration', pathMatch: 'full' },
   { path: 'registration', component: RegistrationComponent, canActivate: [ IsLogout ] },
+  { path: 'registration/confirm', component: RegistrationConfirmationComponent, canActivate: [IsLogout] },
   { path: 'login', component: ConnectionComponent, canActivate: [ IsLogout ] },
   { path: 'dashboard', component: DashboardComponent, canActivate: [isLogged ] },
   { path: 'group/:id', component: GroupComponent, canActivate: [isLogged] },
   { path: 'calendar/:id', component: CalendarComponent, canActivate: [ isLogged ] },
   { path: 'profile', component: ProfileComponent, canActivate: [isLogged] },
   { path: 'groups', component: GroupManagementComponent, canActivate: [isLogged] },
-  { path: '404', component: NotFoundComponent },
-  { path: '**', redirectTo: '/404' }
+  { path: '**', component: NotFoundComponent }
 ];
 
 @NgModule({

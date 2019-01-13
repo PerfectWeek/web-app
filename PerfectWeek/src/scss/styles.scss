@@ -32,8 +32,8 @@
   padding-top: $navbar-padding;
 }
 
-.buttons-spaced {
+.buttons-spaced-reversed {
   display: flex;
-  flex-flow: row;
+  flex-flow: row-reverse;
   justify-content: space-between;
 }
