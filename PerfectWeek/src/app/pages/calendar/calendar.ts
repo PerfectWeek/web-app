@@ -19,6 +19,7 @@ import {MatDialog} from "@angular/material";
 import {CreateEventDialog} from "../../module/dialog/CreateEvent-dialog/CreateEvent-dialog";
 import {CustomEventTitleFormatter} from "./demo-utils/custom-event-title-formatter.provider";
 import {formatDate} from "@angular/common";
+import {ModifyEventDialog} from "../../module/dialog/ModifyEvent-dialog/ModifyEvent";
 
 const colors: any = {
   red: {
@@ -252,7 +253,6 @@ export class CalendarComponent implements OnInit {
         event.end = newEnd;
         this.refresh.next();
         this.toastSrv.success("Evenement modifié");
-        console.log("Modification done");
       });
   }
 
@@ -264,7 +264,12 @@ export class CalendarComponent implements OnInit {
 
   // modify all fields
   eventModification(event): void {
-    console.log("Modification done");
+    let dialogRef = this.dialog.open(ModifyEventDialog, {
+      data: {
+        event,
+        calendar_locale: this.locale
+      }
+    });
     // let modified_event = this.events.find(current_event => current_event.id === event.id);
     // console.log(modified_event);
     // this.requestSrv.put(`events/${event.id}`, {start_time: formatDate(newStart, this.date_format, this.locale),
