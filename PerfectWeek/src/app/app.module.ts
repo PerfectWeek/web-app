@@ -62,6 +62,8 @@ import {CalendarHeaderComponent} from "./pages/calendar/demo-utils/calendar-head
 import {FormModalComponent} from "./pages/calendar/demo-utils/ModalForm/form-modal.component";
 import {RegistrationConfirmationComponent} from "./pages/Registration_Confirmation/registration-confirmation";
 import {CalendarComponent} from "./pages/calendar/calendar";
+import {CalendarHeaderComponent} from "./pages/calendar/demo-utils/calendar-header.component";
+import {FormModalComponent} from "./pages/calendar/demo-utils/ModalForm/form-modal.component";
 import { Navbar } from "./module/Navbar/navbar";
 
 
@@ -69,6 +71,7 @@ import { Navbar } from "./module/Navbar/navbar";
 import { ConfirmDialog } from "./module/dialog/Confirm-dialog/Confirm-dialog";
 import {GroupCreationDialog} from "./module/dialog/Group-creation-dialog/group-creation";
 import {CreateEventDialog} from "./module/dialog/CreateEvent-dialog/CreateEvent-dialog";
+import {ModifyEventDialog} from "./module/dialog/ModifyEvent-dialog/ModifyEvent";
 
 
 //Guards
@@ -93,6 +96,7 @@ registerLocaleData(localeFr);
     ConfirmDialog,
     CreateEventDialog,
     GroupCreationDialog,
+    ModifyEventDialog,
     GroupComponent,
     CalendarHeaderComponent,
     FormModalComponent,
@@ -166,7 +170,8 @@ registerLocaleData(localeFr);
     ConfirmDialog,
     GroupCreationDialog,
     FormModalComponent,
-    CreateEventDialog
+    CreateEventDialog,
+    ModifyEventDialog,
   ]
 })
 export class AppModule { }

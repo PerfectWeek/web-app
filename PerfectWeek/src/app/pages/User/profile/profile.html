@@ -35,7 +35,7 @@
     </div>
 
     <div style="display: flex; flex-flow: row-reverse; margin: 5px 0; justify-content: space-between" *ngIf="user">
-      <button mat-raised-button type="button" class="btn-primary" *ngIf="modifying === false" (click)="modifying = true">Modifier le profil</button>
+      <button mat-raised-button type="button" class="btn-primary" *ngIf="modifying === false" (click)="startModification()">Modifier le profil</button>
       <button mat-raised-button type="button" class="btn-danger" *ngIf="modifying === false" (click)="deleteProfile()">Supprimer le profil</button>
     </div>
   </div>

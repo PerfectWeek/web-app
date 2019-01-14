@@ -44,6 +44,12 @@ export class ProfileComponent implements OnInit {
     return true;
   }
 
+  startModification() {
+    this.modifying = true;
+    this.pseudo = this.user.pseudo;
+    this.email = this.user.email;
+  }
+
   modifyProfile() {
     this.profileSrv.modify$({pseudo: this.pseudo, email: this.email}).subscribe((user: any) => {
       this.user.pseudo = this.pseudo;

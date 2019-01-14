@@ -3,6 +3,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {ToastrService} from "ngx-toastr";
 import {ProfileService} from "../../../core/services/profile.service";
 import {RequestService} from "../../../core/services/request.service";
+import {DatePipe, formatDate} from "@angular/common";
 
 @Component({
   selector: 'createEvent-creation-dialog',
@@ -43,23 +44,43 @@ export class CreateEventDialog {
   start: Date;
   end: Date;
 
+  dialog_calendar_id: string = null;
   user: any = null;
+  calendars_list: any;
+  date_format: string = "yyyy-MM-ddThh:mm:ss";
+
   @ViewChild('userInput') userInput;
 
   constructor(private requestSrv: RequestService,
               private profileSrv: ProfileService,
               private toastSrv: ToastrService,
               public dialogRef: MatDialogRef<CreateEventDialog>,
-              @Inject(MAT_DIALOG_DATA) public data: any) {}
+              @Inject(MAT_DIALOG_DATA) public data: any) {
+    this.profileSrv.userProfile$.subscribe(user => {
+      this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
+        .subscribe(ret => {
+          this.calendars_list = ret.calendars;
+          console.log('CAL', this.calendars_list);
+        });
+    });
+  }
 
 
   createEvent() {
-    this.requestSrv.post(`calendars/${this.data.calendar_id}/events`,{
+    let route_id_calendar;
+    if (this.dialog_calendar_id != null) {
+      route_id_calendar = this.dialog_calendar_id;
+    } else {
+      route_id_calendar = this.data.calendar_id;
+    }
+
+    this.requestSrv.post(`calendars/${route_id_calendar}/events`,{
       name: this.name,
       description: this.description,
       location: this.location,
-      start_time: this.start.toLocaleDateString(),
-      end_time: this.end.toLocaleDateString()}, {Authorization: ''})
+      start_time: formatDate(this.start, this.date_format, this.data.calendar_locale),//.toLocaleDateString(),
+      end_time: formatDate(this.end, this.date_format, this.data.calendar_locale)//.toLocaleDateString()
+    }, {Authorization: ''})
       .subscribe(ret => {
         this.data.events.push({
           title: this.name,
