@@ -90,6 +90,10 @@ export class GroupComponent implements OnInit {
       });
   }
 
+  goToCalendar() {
+    this.router.navigate([`calendar/${this.group_id}`]);
+  }
+
   Modifying() {
     this.modify = !this.modify;
     this.new_member = '';

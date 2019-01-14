@@ -1,38 +1,42 @@
+@import "~scss/variables";
+
 main {
   width: 100%;
   height: 100%;
-  background-image: url('/assets/Pictures/404.jpeg');
-  background-repeat: no-repeat;
-  background-size: cover;
 
   .message {
-    width: 50%;
-    color: white;
-    margin: 0 auto;
+    width: 30%;
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.01);
 
     h1 {
-      font-size: 10em;
+      font-size: 10rem;
       font-weight: 900;
     }
 
     h2 {
+      font-size: 1.5rem;
       margin-bottom: 30px;
     }
 
     a {
-      background-color: transparent;
-      border: 2px solid white;
+      background-color: map_get($colors, primary);
       width: fit-content;
       padding: 15px;
       color: white;
-      transition: background-color 1s, color 1s;
+      transition: background-color 1s;
     }
 
     a:hover {
-      background-color: rgba(255, 255, 255, 1);
-      color: black;
+      background-color: map_get($colors, secondary);
     }
+  }
+
+  .background-logo-circle {
+    position: fixed;
+    top: calc(55% - (15.5vw + 15.5vh));
+    left: calc(50% - (15.5vw + 15.5vh));
+    z-index: 1;
+    width: calc(31vw + 31vh);
+    height: calc(31vw + 31vh);
   }
 }

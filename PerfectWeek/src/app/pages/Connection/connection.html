@@ -17,9 +17,9 @@
             </mat-form-field>
           </div>
 
-          <div class="buttons-spaced">
-            <button class="btn-primary" (click)="router.navigate(['/registration'])" mat-raised-button>Pas encore inscrit ?</button>
+          <div class="buttons-spaced-reversed">
             <button [disabled]="connectionForm.invalid" class="btn btn-secondary" mat-raised-button>Se connecter</button>
+            <button class="btn-primary" (click)="router.navigate(['/registration'])" mat-raised-button>Pas encore inscrit ?</button>
           </div>
         </form>
       </div>
