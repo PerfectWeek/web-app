@@ -18,7 +18,7 @@ import {RegistrationConfirmationComponent} from "./pages/Registration_Confirmati
 const routes: Routes = [
   { path: '', redirectTo: '/registration', pathMatch: 'full' },
   { path: 'registration', component: RegistrationComponent, canActivate: [ IsLogout ] },
-  { path: 'registration/confirm', component: RegistrationConfirmationComponent, canActivate: [IsLogout] },
+  { path: 'auth/validate-email/:id', component: RegistrationConfirmationComponent, canActivate: [IsLogout] },
   { path: 'login', component: ConnectionComponent, canActivate: [ IsLogout ] },
   { path: 'dashboard', component: DashboardComponent, canActivate: [isLogged ] },
   { path: 'group/:id', component: GroupComponent, canActivate: [isLogged] },
