@@ -61,7 +61,8 @@ export class ModifyEventDialog {
       location: this.event.location
     }, {Authorization: ''})
       .subscribe(ret => {
-          this.toastSrv.success("L'évènement a bien été modifié"),
+          this.data.refresh.next();
+          this.toastSrv.success("L'évènement a bien été modifié");
           this.dialogRef.close(true);
         },
           err => {

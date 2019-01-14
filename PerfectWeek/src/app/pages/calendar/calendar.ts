@@ -20,6 +20,7 @@ import {CreateEventDialog} from "../../module/dialog/CreateEvent-dialog/CreateEv
 import {CustomEventTitleFormatter} from "./demo-utils/custom-event-title-formatter.provider";
 import {formatDate} from "@angular/common";
 import {ModifyEventDialog} from "../../module/dialog/ModifyEvent-dialog/ModifyEvent";
+import {ConfirmDialog} from "../../module/dialog/Confirm-dialog/Confirm-dialog";
 
 const colors: any = {
   red: {
@@ -90,7 +91,7 @@ export class CalendarComponent implements OnInit {
   date_format: string = "yyyy-MM-ddThh:mm:ss";
 
   // private modal: NgbModal,
-  constructor(private modal: NgbModal,public dialog: MatDialog,
+  constructor(private modal: NgbModal, public dialog: MatDialog,
               private requestSrv: RequestService,
               private profileSrv: ProfileService,
               private toastSrv: ToastrService,
@@ -106,14 +107,14 @@ export class CalendarComponent implements OnInit {
   actions: CalendarEventAction[] = [
     {
       label: '<i class="fa fa-fw fa-pencil"></i>',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
+      onClick: ({event}: { event: CalendarEvent }): void => {
         this.eventModification(event);
         //this.handleEvent('Edited', event);
       }
     },
     {
       label: '<i class="fa fa-fw fa-times"></i>',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
+      onClick: ({event}: { event: CalendarEvent }): void => {
         //this.events = this.events.filter(iEvent => iEvent !== event);
         //this.handleEvent('Deleted', event);
         this.deleteEvent(event);
@@ -123,8 +124,7 @@ export class CalendarComponent implements OnInit {
 
   refresh: Subject<any> = new Subject();
 
-  events: PerfectWeekCalendarEvent[] = [
-  ];
+  events: PerfectWeekCalendarEvent[] = [];
 
   activeDayIsOpen: boolean = true;
   calendar_id: number = null;
@@ -133,10 +133,10 @@ export class CalendarComponent implements OnInit {
   get_calendar_events(calendar_id): void {
     this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''})
       .subscribe(resp => {
-              let random_color = {
-                primary: '#'+(Math.random() * 0xFFFFFF << 0).toString(16),
-                secondary: '#1C4891',
-              };
+        let random_color = {
+          primary: '#' + (Math.random() * 0xFFFFFF << 0).toString(16),
+          secondary: '#1C4891',
+        };
         for (const idx in resp.events) {
           this.requestSrv.get(`events/${resp.events[idx].id}`, {}, {Authorization: ''})
             .subscribe(ret => {
@@ -192,36 +192,36 @@ export class CalendarComponent implements OnInit {
 
   get_group_calendar(): void {
     this.get_calendar_events(this.calendar_id);
-  this.requestSrv.get(`calendars/${this.calendar_id}`, {}, {Authorization: ''})
-  .subscribe(ret => {
-  this.calendar_name = ret.calendar.name;
-  console.log('aclendar_name => ', this.calendar_name)
-  });
-}
+    this.requestSrv.get(`calendars/${this.calendar_id}`, {}, {Authorization: ''})
+      .subscribe(ret => {
+        this.calendar_name = ret.calendar.name;
+        console.log('aclendar_name => ', this.calendar_name)
+      });
+  }
 
-  get_global_calendar (): void {
+  get_global_calendar(): void {
     this.profileSrv.userProfile$.subscribe(user => {
       this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
         .subscribe(ret => {
-        for (let idx in ret.calendars) {
-          this.get_calendar_events(ret.calendars[idx].calendar.id);
-        }
-      });
+          for (let idx in ret.calendars) {
+            this.get_calendar_events(ret.calendars[idx].calendar.id);
+          }
+        });
     });
   }
 
   get_group_info() {
-      this.calendar_id = +(this.router.url.slice(this.router.url.lastIndexOf('/') + 1));
-      if (!Number.isNaN(this.calendar_id)) {
-        this.is_global_calendar = false;
-        this.get_group_calendar();
-      } else {
-        this.is_global_calendar = true;
-        this.get_global_calendar();
-      }
+    this.calendar_id = +(this.router.url.slice(this.router.url.lastIndexOf('/') + 1));
+    if (!Number.isNaN(this.calendar_id)) {
+      this.is_global_calendar = false;
+      this.get_group_calendar();
+    } else {
+      this.is_global_calendar = true;
+      this.get_global_calendar();
     }
+  }
 
-  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
+  dayClicked({date, events}: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
       this.viewDate = date;
       if (
@@ -240,14 +240,16 @@ export class CalendarComponent implements OnInit {
                       newStart,
                       newEnd,
                     }: CalendarEventTimesChangedEvent): void {
-      let modified_event = this.events.find(current_event => current_event.id === event.id);
-      console.log(modified_event);
-      this.requestSrv.put(`events/${event.id}`, {start_time: formatDate(newStart, this.date_format, this.locale),
-                                                            end_time: formatDate(newEnd, this.date_format, this.locale),
-                                                            location: modified_event.location,
-                                                            description: modified_event.description,
-                                                            name: modified_event.title},
-                                                            {Authorization: ''})
+    let modified_event = this.events.find(current_event => current_event.id === event.id);
+    console.log(modified_event);
+    this.requestSrv.put(`events/${event.id}`, {
+        start_time: formatDate(newStart, this.date_format, this.locale),
+        end_time: formatDate(newEnd, this.date_format, this.locale),
+        location: modified_event.location,
+        description: modified_event.description,
+        name: modified_event.title
+      },
+      {Authorization: ''})
       .subscribe(ret => {
         event.start = newStart;
         event.end = newEnd;
@@ -267,7 +269,8 @@ export class CalendarComponent implements OnInit {
     let dialogRef = this.dialog.open(ModifyEventDialog, {
       data: {
         event,
-        calendar_locale: this.locale
+        calendar_locale: this.locale,
+        refresh: this.refresh,
       }
     });
     // let modified_event = this.events.find(current_event => current_event.id === event.id);
@@ -299,7 +302,7 @@ export class CalendarComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result !== null && result !== undefined) {
-      console.log("Event created")
+        console.log("Event created")
       }
     });
 
@@ -314,31 +317,40 @@ export class CalendarComponent implements OnInit {
   createEvent(): void {
     //this.addEvent();
     //this.handleEvent('Create event', event);
-    this.modal.open(FormModalComponent, { size: 'lg' });
+    this.modal.open(FormModalComponent, {size: 'lg'});
     this.refresh.next();
   }
 
   deleteEvent(elem): void {
-    let event_id;
-
-    console.log("elem", elem);
-    console.log("mdr", this.events[elem]);
-    if (typeof elem === 'number') {
-      event_id = elem;
-    }
-    else {
-      event_id = elem.id;
-    }
-    this.requestSrv.delete(`events/${event_id}`, {Authorization: ''})
-    .subscribe(ret => {
-      this.toastSrv.success("Evenement Supprimé");
-
-      if (typeof elem === 'number') {
-        this.events.splice(elem, 1);
-      } else {
-        this.events = this.events.filter(iEvent => iEvent !== elem);
+    let dialogRef = this.dialog.open(ConfirmDialog, {
+      data: {
+        title: "Suppression d'evenement",
+        question: 'Voulez-vous vraiment supprimer cette evenement ?'
       }
-      this.refresh.next();
-    }, ret => this.toastSrv.error("Une erreur est survenue lors de la suppression de l'evenement"))
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        let event_id;
+
+        if (typeof elem === 'number') {
+          event_id = elem;
+        } else {
+          event_id = elem.id;
+        }
+
+        this.requestSrv.delete(`events/${event_id}`, {Authorization: ''})
+          .subscribe(ret => {
+            this.toastSrv.success("Evenement Supprimé");
+
+            if (typeof elem === 'number') {
+              this.events.splice(elem, 1);
+            } else {
+              this.events = this.events.filter(iEvent => iEvent !== elem);
+            }
+            this.refresh.next();
+          }, ret => this.toastSrv.error("Une erreur est survenue lors de la suppression de l'evenement"))
+      }
+    });
   }
 }
