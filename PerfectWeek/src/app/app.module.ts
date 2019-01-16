@@ -62,8 +62,6 @@ import {CalendarHeaderComponent} from "./pages/calendar/demo-utils/calendar-head
 import {FormModalComponent} from "./pages/calendar/demo-utils/ModalForm/form-modal.component";
 import {RegistrationConfirmationComponent} from "./pages/Registration_Confirmation/registration-confirmation";
 import {CalendarComponent} from "./pages/calendar/calendar";
-import {CalendarHeaderComponent} from "./pages/calendar/demo-utils/calendar-header.component";
-import {FormModalComponent} from "./pages/calendar/demo-utils/ModalForm/form-modal.component";
 import { Navbar } from "./module/Navbar/navbar";
 
 
