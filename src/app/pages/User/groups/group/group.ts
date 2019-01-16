@@ -24,6 +24,8 @@ export class GroupComponent implements OnInit {
 
   group_id: number = null;
 
+  calendar_id: number = null;
+
   user_role: string;
 
   modify: boolean = false;
@@ -79,6 +81,7 @@ export class GroupComponent implements OnInit {
       .subscribe(ret => {
         this.group.name = ret.group.name;
         this.group_owner = ret.group.owner;
+        this.calendar_id = ret.group.calendar_id;
         this.group.description = ret.group.description;
         this.requestSrv.get(`groups/${this.group_id}/members`, {}, {Authorization: ''})
           .subscribe(members => {
@@ -91,7 +94,7 @@ export class GroupComponent implements OnInit {
   }
 
   goToCalendar() {
-    this.router.navigate([`calendar/${this.group_id}`]);
+    this.router.navigate([`calendar/${this.calendar_id}`]);
   }
 
   Modifying() {
