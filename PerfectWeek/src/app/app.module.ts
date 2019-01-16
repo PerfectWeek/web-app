@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
+import {CommonModule, registerLocaleData} from "@angular/common";
 
 //External Modules
 import { ToastrModule } from 'ngx-toastr';
@@ -29,7 +30,10 @@ import {
   MatIconModule,
   MAT_LABEL_GLOBAL_OPTIONS,
   MAT_DATE_LOCALE, MatDialogRef, MatPaginatorIntl } from "@angular/material";
-
+import {CalendarModule, DateAdapter} from "angular-calendar";
+import {NgbModalModule} from "@ng-bootstrap/ng-bootstrap";
+import {FlatpickrModule} from "angularx-flatpickr";
+import {adapterFactory} from "angular-calendar/date-adapters/date-fns";
 
 //Internal modules
 import { AppRoutingModule } from "./app-routing-module";
@@ -54,28 +58,25 @@ import { DashboardComponent } from "./pages/User/dashboard/dashboard";
 import { ProfileComponent } from "./pages/User/profile/profile";
 import { GroupManagementComponent } from "./pages/User/groups/group-management";
 import { GroupComponent } from "./pages/User/groups/group/group";
+import {CalendarHeaderComponent} from "./pages/calendar/demo-utils/calendar-header.component";
+import {FormModalComponent} from "./pages/calendar/demo-utils/ModalForm/form-modal.component";
+import {RegistrationConfirmationComponent} from "./pages/Registration_Confirmation/registration-confirmation";
+import {CalendarComponent} from "./pages/calendar/calendar";
 import { Navbar } from "./module/Navbar/navbar";
 
 
 //Dialog
 import { ConfirmDialog } from "./module/dialog/Confirm-dialog/Confirm-dialog";
 import {GroupCreationDialog} from "./module/dialog/Group-creation-dialog/group-creation";
+import {CreateEventDialog} from "./module/dialog/CreateEvent-dialog/CreateEvent-dialog";
+import {ModifyEventDialog} from "./module/dialog/ModifyEvent-dialog/ModifyEvent";
 
 
 //Guards
 import { isLogged } from "./core/Guards/isLogged-guard";
 import { IsLogout } from "./core/Guards/isLogout-guard";
-import {CalendarModule, DateAdapter} from "angular-calendar";
-import {adapterFactory} from "angular-calendar/date-adapters/date-fns";
-import {CommonModule, registerLocaleData} from "@angular/common";
-import {CalendarComponent} from "./pages/calendar/calendar";
-import {NgbModalModule} from "@ng-bootstrap/ng-bootstrap";
-import {FlatpickrModule} from "angularx-flatpickr";
 
 import localeFr from '@angular/common/locales/fr';
-import {CalendarHeaderComponent} from "./pages/calendar/demo-utils/calendar-header.component";
-import {FormModalComponent} from "./pages/calendar/demo-utils/ModalForm/form-modal.component";
-import {CreateEventDialog} from "./module/dialog/CreateEvent-dialog/CreateEvent-dialog";
 
 registerLocaleData(localeFr);
 
@@ -93,9 +94,11 @@ registerLocaleData(localeFr);
     ConfirmDialog,
     CreateEventDialog,
     GroupCreationDialog,
+    ModifyEventDialog,
     GroupComponent,
     CalendarHeaderComponent,
     FormModalComponent,
+    RegistrationConfirmationComponent,
   ],
   imports: [
     CommonModule,
@@ -165,7 +168,8 @@ registerLocaleData(localeFr);
     ConfirmDialog,
     GroupCreationDialog,
     FormModalComponent,
-    CreateEventDialog
+    CreateEventDialog,
+    ModifyEventDialog,
   ]
 })
 export class AppModule { }

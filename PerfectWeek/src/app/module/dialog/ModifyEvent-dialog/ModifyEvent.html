@@ -3,24 +3,12 @@
 </div>
 <mat-dialog-content style="white-space: pre-wrap; text-align: center">
   <div>
-    <form #groupForm="ngForm" (ngSubmit)="createEvent()" class="form-row" style="padding: 15px; margin: 15px 0">
-
-      <mat-select placeholder="Groupe"
-      *ngIf="data.is_global_calendar == true"
-      style="width: 100%"
-      [(ngModel)]="dialog_calendar_id"
-      name="dialog_calendar_id" required>
-      <mat-option *ngFor="let calendar of calendars_list" [value]="calendar.calendar.id">
-      {{calendar.calendar.name}}
-      </mat-option>
-      </mat-select>
-
-
+    <form #groupForm="ngForm" (ngSubmit)="modifyEvent()" class="form-row" style="padding: 15px; margin: 15px 0">
       <mat-form-field style="width: 100%">
         <input matInput
                placeholder="Nom de l'évenement"
-               [(ngModel)]="name"
-               name="name"
+               [(ngModel)]="event.title"
+               name="title"
                required>
       </mat-form-field>
 
@@ -28,7 +16,7 @@
         <input  matInput
                 placeholder="Description"
                 name="description"
-                [(ngModel)]="description"
+                [(ngModel)]="event.description"
                 required>
       </mat-form-field>
 
@@ -36,7 +24,7 @@
         <input matInput
                placeholder="Lieux"
                name="location"
-               [(ngModel)]="location"
+               [(ngModel)]="event.location"
                required>
       </mat-form-field>
 
@@ -44,7 +32,7 @@
         <input matInput
                type="color"
                name="color"
-               [(ngModel)]="color">
+               [(ngModel)]="event.color">
       </mat-form-field>
 
       <mat-form-field style="width: 100%">
@@ -52,7 +40,7 @@
                 class="form-control"
                 type="text"
                 mwlFlatpickr
-                [(ngModel)]="start"
+                [(ngModel)]="event.start"
                 [altInput]="true"
                 [convertModelValue]="true"
                 [enableTime]="true"
@@ -67,7 +55,7 @@
                 class="form-control"
                 type="text"
                 mwlFlatpickr
-                [(ngModel)]="end"
+                [(ngModel)]="event.end"
                 [altInput]="true"
                 [convertModelValue]="true"
                 [enableTime]="true"
@@ -84,5 +72,5 @@
 <br>
 <mat-dialog-actions style="display: flex; justify-content: space-between">
   <button class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
-  <button [disabled]="groupForm.valid === false" class="mat-raised-button btn-secondary" (click)="createEvent()">Confirmer</button>
+  <button [disabled]="groupForm.valid === false" class="mat-raised-button btn-secondary" (click)="modifyEvent()">Confirmer</button>
 </mat-dialog-actions>

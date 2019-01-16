@@ -2,7 +2,11 @@
   <div *ngIf="modify === false, else modifying">
     <div class="main-container">
       <h1 style="text-align: center">{{group?.name}}</h1>
+      <div style="text-align: center">
+        {{group?.description}}
+      </div>
     </div>
+
     <div class="main-container">
       <div class="member-panel">
         <h3>Membres</h3>
@@ -17,6 +21,7 @@
       </div>
       <div class="button-panel">
         <button [disabled]="user_role !== 'Admin'" mat-raised-button type="button" class="btn-primary" (click)="Modifying()">Modifier</button>
+        <button mat-raised-button type="button" class="btn-secondary" (click)="goToCalendar()"><i class="fas fa-calendar-alt"></i></button>
         <button [disabled]="user_role !== 'Admin'" mat-raised-button type="button" class="btn-danger" (click)="deleteGroup()">Supprimer</button>
       </div>
     </div>
@@ -24,8 +29,11 @@
   <ng-template #modifying>
     <div>
       <div class="main-container">
-        <div class="md-form name-container">
+        <div class="md-form name-container" style="border-radius: 0">
           <input class="form-control name-input" [(ngModel)]="group.name">
+          <div style="text-align: center">
+            <textarea class="form-control" rows="1" cols="3" [(ngModel)]="group.description" type="text" placeholder="Veuillez entrer une description de votre groupe"></textarea>
+          </div>
         </div>
       </div>
       <div class="main-container">
@@ -49,7 +57,7 @@
             <i (click)="deleteTemp(i)" class="fas fa-times"></i>
           </div>
           <div class="group-list-member md-form">
-            <input class="form-control new-member-input" [(ngModel)]="new_member" placeholder="Pseudo">
+            <input class="form-control new-member-input" [(ngModel)]="new_member" placeholder="Pseudo" (onsubmit)="addMember()">
             <!--<mat-select [(ngModel)]="new_member.role" placeholder="Role">-->
               <!--<mat-option *ngFor="let role of roles" [value]="role">{{role}}</mat-option>-->
             <!--</mat-select>-->

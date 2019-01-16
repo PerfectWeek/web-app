@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  url: "https://api.prod.kalastud.io/",
-  apiEndpoint: 'https://api.prod.kalastud.io/',
+  url: "https://api.kalastud.io/",
+  apiEndpoint: 'https://api.kalastud.io/',
   appName: 'PerfectWeek',
 };
