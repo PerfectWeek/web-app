@@ -1,14 +1,37 @@
-import { Component } from "@angular/core";
-import {Router} from "@angular/router";
+import {Component, OnInit} from "@angular/core";
+import {ActivatedRoute, Router} from "@angular/router";
+import {RequestService} from "../../core/services/request.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: "registration-confirmation",
   templateUrl: "registration-confirmation.html",
   styleUrls: ["registration-confirmation.scss", '../../../scss/themes/main.scss']
 })
-export class RegistrationConfirmationComponent {
+export class RegistrationConfirmationComponent implements OnInit {
 
-  constructor(public router: Router) {
+  isOk: boolean = null;
+  error_message: string = null;
 
+  constructor(public router: Router,
+              private route: ActivatedRoute,
+              public requestSrv: RequestService,
+              public toastSrv: ToastrService) {
+
+  }
+
+  ngOnInit() {
+    this.route.params.subscribe(params => {
+      this.requestSrv.get(`auth/validate-email/${params['id']}`, {}, {})
+          .subscribe(
+              ret => {
+                  this.isOk = true;
+              },
+              err => {
+                this.toastSrv.error('Une erreur est survenue')
+                this.isOk = false;
+                this.error_message = err.error.message;
+              })
+    })
   }
 }
