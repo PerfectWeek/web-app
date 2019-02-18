@@ -14,6 +14,7 @@ import {GroupManagementComponent} from './pages/User/groups/group-management';
 
 import {CalendarComponent} from './pages/calendar/calendar';
 import {RegistrationConfirmationComponent} from "./pages/Registration_Confirmation/registration-confirmation";
+import {MainViewComponent} from "./pages/Main_View/main_view";
 
 const routes: Routes = [
   { path: '', redirectTo: '/registration', pathMatch: 'full' },
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'auth/validate-email/:id', component: RegistrationConfirmationComponent, canActivate: [IsLogout] },
   { path: 'login', component: ConnectionComponent, canActivate: [ IsLogout ] },
   { path: 'dashboard', component: DashboardComponent, canActivate: [isLogged ] },
+  { path: 'main_view', component: MainViewComponent, canActivate: [isLogged] },
   { path: 'group/:id', component: GroupComponent, canActivate: [isLogged] },
   { path: 'calendar/:id', component: CalendarComponent, canActivate: [ isLogged ] },
   { path: 'profile', component: ProfileComponent, canActivate: [isLogged] },
