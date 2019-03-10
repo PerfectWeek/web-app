@@ -1,13 +1,12 @@
 <section class="groups">
-    <section *ngFor="let group of userGroups" class="group">
-        <img src="/assets/Pictures/logo_circle.png" alt="Group's image" title="Group's image">
-        <h4>{{group.name}}</h4>
+    <section class="search-bar">
+
     </section>
-    <section *ngFor="let group of userGroups" class="group">
-        <img src="/assets/Pictures/logo_circle.png" alt="Group's image" title="Group's image">
-        <h4>{{group.name}}</h4>
+    <section tabindex="-1" #user class="group" (click)="sendGroup(-1, -1)">
+        <img src="/assets/Pictures/logo_circle.png" alt="User's profile image" title="User's profile image">
+        <h4 *ngIf="profileSrv.userProfile$ | async, let user">{{user.pseudo}}</h4>
     </section>
-    <section *ngFor="let group of userGroups" class="group">
+    <section #groups *ngFor="let group of userGroups; let idx = index" class="group" (click)="sendGroup(group.id, idx)" tabindex="{{idx}}">
         <img src="/assets/Pictures/logo_circle.png" alt="Group's image" title="Group's image">
         <h4>{{group.name}}</h4>
     </section>

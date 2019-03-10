@@ -1,4 +1,13 @@
-import {Component, ChangeDetectionStrategy, ViewChild, TemplateRef, OnInit} from '@angular/core';
+import {
+    Component,
+    ChangeDetectionStrategy,
+    ViewChild,
+    TemplateRef,
+    OnInit,
+    Input,
+    OnChanges,
+    SimpleChanges, SimpleChange
+} from '@angular/core';
 import { startOfDay, endOfDay, subDays, addDays, endOfMonth, isSameDay, isSameMonth, addHours } from 'date-fns';
 import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -67,9 +76,11 @@ export class PerfectWeekCalendarEvent implements CalendarEvent {
     }
   ]
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnChanges {
   @ViewChild('modalContent')
   modalContent: TemplateRef<any>;
+
+  @Input('in_calendar_id') in_calendar_id: number = null;
 
   // FRENCH CALENDAR
   locale: string = 'fr';
@@ -99,9 +110,28 @@ export class CalendarComponent implements OnInit {
               private router: Router) {
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    this.events = [];
+    this.in_calendar_id = changes.in_calendar_id.currentValue;
+    (this.in_calendar_id === -1) ? this.get_global_calendar() : this.getInGroupCalendar();
+  }
+
   ngOnInit(): void {
-    console.log("ngOnInit Calendar");
-    this.get_group_info();
+      this.events = [];
+    if (this.in_calendar_id) {
+        (this.in_calendar_id === -1) ? this.get_global_calendar() : this.getInGroupCalendar();
+    }
+    else
+      this.get_group_info();
+  }
+
+  getInGroupCalendar() {
+      this.get_calendar_events(this.in_calendar_id);
+      this.requestSrv.get(`calendars/${this.in_calendar_id}`, {}, {Authorization: ''})
+          .subscribe(ret => {
+              this.calendar_name = ret.calendar.name;
+              console.log('calendar_name => ', this.calendar_name)
+          });
   }
 
   actions: CalendarEventAction[] = [
@@ -195,7 +225,7 @@ export class CalendarComponent implements OnInit {
     this.requestSrv.get(`calendars/${this.calendar_id}`, {}, {Authorization: ''})
       .subscribe(ret => {
         this.calendar_name = ret.calendar.name;
-        console.log('aclendar_name => ', this.calendar_name)
+        console.log('calendar_name => ', this.calendar_name)
       });
   }
 

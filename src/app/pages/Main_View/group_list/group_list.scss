@@ -1,5 +1,11 @@
 @import "~scss/variables";
 
+.search-bar {
+  padding: 15px;
+  height: 2rem;
+  line-height: 2rem;
+}
+
 .groups {
   width: 100%;
   height: 100%;
@@ -11,6 +17,7 @@
   flex-wrap: wrap;
   align-items: center;
   padding: 0.9rem;
+  outline: none !important;
 
   &:hover {
     cursor: pointer;
@@ -19,12 +26,29 @@
 
   & > img {
     margin-right: 1rem;
-    width: calc(2.5vw + 2.5vh);
-    height: calc(2.5vw + 2.5vh);
+    width: calc(2.2vw + 2.2vh);
+    height: calc(2.2vw + 2.2vh);
     border-radius: 50%;
   }
 
   & > h4 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+  }
+}
+
+.group-focused {
+  background-color: map_get($colors, light);
+  outline: none;
+}
+
+@media only screen and (max-width: map_get($widths, m)) {
+  .group {
+    & > img {
+      display: none;
+    }
+
+    & > h4 {
+      font-size: 0.9rem;
+    }
   }
 }

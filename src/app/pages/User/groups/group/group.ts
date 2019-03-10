@@ -20,11 +20,11 @@ export class GroupComponent implements OnInit {
     description: ''
   };
 
-  display_members: any[] = [];
-
   group_id: number = null;
 
   calendar_id: number = null;
+
+  display_members: any[] = [];
 
   user_role: string;
 

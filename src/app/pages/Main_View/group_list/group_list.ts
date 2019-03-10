@@ -1,4 +1,14 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    EventEmitter,
+    OnInit,
+    Output,
+    QueryList,
+    ViewChild,
+    ViewChildren
+} from "@angular/core";
 import {RequestService} from "../../../core/services/request.service";
 import {ToastrService} from "ngx-toastr";
 import {ProfileService} from "../../../core/services/profile.service";
@@ -14,6 +24,16 @@ import {GroupCreationDialog} from "../../../module/dialog/Group-creation-dialog/
 export class GroupListComponent implements OnInit {
 
     userGroups: any[];
+
+    private user: ElementRef;
+
+    @ViewChild('user') set content(user: ElementRef) {
+        this.user = user;
+    }
+
+    @ViewChildren('groups') groups: QueryList<ElementRef>;
+
+    @Output() group_clicked = new EventEmitter<number>();
 
     constructor(private requestSrv: RequestService,
                 private profileSrv: ProfileService,
@@ -33,6 +53,11 @@ export class GroupListComponent implements OnInit {
         });
     }
 
+    ngAfterViewInit() {
+        this.user.nativeElement.className += ' group-focused';
+        setTimeout(() => this.user.nativeElement.focus(), 0);
+    }
+
     createGroup() {
         let dialogRef = this.dialog.open(GroupCreationDialog, {});
 
@@ -41,6 +66,28 @@ export class GroupListComponent implements OnInit {
                 this.router.navigate([`/group/${result}`]);
             }
         })
+    }
+
+    private removeClass(element, className: string) {
+        let cn = element.className;
+        let rxp = new RegExp( "("+className+")", "g" );
+        cn = cn.replace(rxp, '');
+        element.className = cn;
+    }
+
+    sendGroup(group_id: number, pos_id: number) {
+        let groups = this.groups.toArray();
+
+        this.group_clicked.emit(group_id);
+        this.removeClass(this.user.nativeElement, 'group-focused');
+        groups.forEach(group => {
+            this.removeClass(group.nativeElement, 'group-focused');
+        });
+        if (pos_id === -1)
+            this.user.nativeElement.className += ' group-focused';
+        else {
+            groups[pos_id].nativeElement.className += ' group-focused';
+        }
     }
 
     // goToCalendar(group) {

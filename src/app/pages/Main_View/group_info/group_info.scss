@@ -1,0 +1,24 @@
+@import "~scss/variables";
+
+.group-info {
+
+  & > .group-name {
+    border-bottom: 1px solid map_get($colors, lightgrey);
+    height: 5rem;
+    line-height: 5rem;
+    font-size: 1.5rem;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+
+    & > img {
+      margin-right: 1rem;
+      width: calc(2.2vw + 2.2vh);
+      height: calc(2.2vw + 2.2vh);
+      border-radius: 50%;
+    }
+  }
+
+}

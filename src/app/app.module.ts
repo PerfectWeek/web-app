@@ -64,6 +64,7 @@ import {RegistrationConfirmationComponent} from "./pages/Registration_Confirmati
 import {CalendarComponent} from "./pages/calendar/calendar";
 import {MainViewComponent} from "./pages/Main_View/main_view";
 import { GroupListComponent } from "./pages/Main_View/group_list/group_list";
+import {GroupInfoComponent} from "./pages/Main_View/group_info/group_info";
 import { Navbar } from "./module/Navbar/navbar";
 
 
@@ -103,6 +104,7 @@ registerLocaleData(localeFr);
     RegistrationConfirmationComponent,
     MainViewComponent,
     GroupListComponent,
+    GroupInfoComponent
   ],
   imports: [
     CommonModule,
