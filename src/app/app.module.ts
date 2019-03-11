@@ -7,6 +7,14 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import {CommonModule, registerLocaleData} from "@angular/common";
 
+//SocialMediaLogin
+import {
+    SocialLoginModule,
+    AuthServiceConfig,
+    GoogleLoginProvider,
+    FacebookLoginProvider,
+} from "angular-6-social-login";
+
 //External Modules
 import { ToastrModule } from 'ngx-toastr';
 import {
@@ -80,6 +88,22 @@ import localeFr from '@angular/common/locales/fr';
 
 registerLocaleData(localeFr);
 
+export function getAuthServiceConfigs() {
+  let config = new AuthServiceConfig(
+      [
+        {
+          id: FacebookLoginProvider.PROVIDER_ID,
+          provider: new FacebookLoginProvider("Your-Facebook-app-id")
+        },
+	{
+          id: GoogleLoginProvider.PROVIDER_ID,
+          provider: new GoogleLoginProvider("Your-Google-Client-Id")
+        },
+      ]
+  );
+  return config;
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -138,6 +162,7 @@ registerLocaleData(localeFr);
       positionClass: 'toast-bottom-center',
       preventDuplicates: true,
     }),
+    SocialLoginModule,
   ],
   schemas: [ NO_ERRORS_SCHEMA ],
   providers: [
@@ -161,7 +186,11 @@ registerLocaleData(localeFr);
       multi: true
     },
     isLogged,
-    IsLogout
+    IsLogout,
+    {
+      provide: AuthServiceConfig,
+      useFactory: getAuthServiceConfigs
+    }
   ],
   bootstrap: [AppComponent],
   entryComponents: [

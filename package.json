@@ -24,6 +24,7 @@
     "@angular/platform-browser-dynamic": "^7.1.2",
     "@angular/router": "^7.1.2",
     "@ng-bootstrap/ng-bootstrap": "^4.0.0",
+    "angular-6-social-login": "^1.1.1",
     "angular-calendar": "^0.26.4",
     "angular-draggable-droppable": "4.0.2",
     "angular-resizable-element": "3.2.2",
