@@ -54,7 +54,7 @@
 .group {
   display: flex;
   flex-flow: row;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   padding: 0.9rem;
   outline: none !important;
@@ -73,6 +73,9 @@
 
   & > h4 {
     font-size: 1.1rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
 }
 

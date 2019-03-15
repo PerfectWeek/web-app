@@ -15,21 +15,28 @@ import {ProfileService} from "../../../core/services/profile.service";
 import {Router} from "@angular/router";
 import {MatDialog} from "@angular/material";
 import {GroupCreationDialog} from "../../../module/dialog/Group-creation-dialog/group-creation";
+import {BehaviorSubject} from "rxjs/Rx";
 
 @Component({
     selector: 'group-list',
     templateUrl: 'group_list.html',
     styleUrls: ['group_list.scss', '../../../../scss/themes/main.scss']
 })
-export class GroupListComponent implements OnInit {
+export class GroupListComponent implements OnInit, AfterViewInit {
 
-    userGroups: any[];
+    userGroups: any[] = [];
+
+    displayGroups: any[] = [];
+
+    public search$ = new BehaviorSubject<string>('');
 
     private user: ElementRef;
 
     @ViewChild('user') set content(user: ElementRef) {
         this.user = user;
     }
+
+    userImage = null;
 
     @ViewChildren('groups') groups: QueryList<ElementRef>;
 
@@ -48,15 +55,28 @@ export class GroupListComponent implements OnInit {
     }
 
     ngAfterViewInit() {
+        this.search$
+            .debounceTime(300)
+            .distinctUntilChanged()
+            .do(() => this.search())
+            .subscribe();
+
         this.user.nativeElement.className += ' group-focused';
         setTimeout(() => this.user.nativeElement.focus(), 0);
     }
 
     getGroups() {
         this.profileSrv.userProfile$.subscribe(user => {
+            this.requestSrv.get(`users/${user.pseudo}/image`, {}, {Authorization: ''})
+                .subscribe(ret => this.userImage = ret.image);
             this.requestSrv.get(`users/${user.pseudo}/groups`, {}, {Authorization: ''})
                 .subscribe(groups => {
                     this.userGroups = groups.groups;
+                    this.userGroups.forEach(group => {
+                        this.requestSrv.get(`groups/${group.id}/image`, {}, {Authorization: ""})
+                            .subscribe(ret => group['image'] = ret.image);
+                    });
+                    this.displayGroups = this.userGroups;
                 })
         });
     }
@@ -91,5 +111,10 @@ export class GroupListComponent implements OnInit {
         else {
             groups[pos_id].nativeElement.className += ' group-focused';
         }
+    }
+
+    search() {
+        this.displayGroups = this.userGroups
+            .filter(group => group.name.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) != -1);
     }
 }

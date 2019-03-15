@@ -20,6 +20,8 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
     user$ = this.profileSrv.userProfile$;
 
+    image = null;
+
     display_members: any[] = [];
 
     user_role: string;
@@ -48,37 +50,31 @@ export class GroupInfoComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
-        if (this.group_id === -1) {
-            this.user$.subscribe(user => {
-                this.group.name = user.pseudo;
-                this.group.description = "Regroupement de tous vos évènements";
-            })
-        }
-        else {
-            this.requestSrv.get(`groups/${this.group_id}`, {}, {Authorization: ""})
-                .subscribe(ret => {
-                    this.group.name = ret.group.name;
-                    this.group.description =
-                        (ret.group.description == "" || !ret.group.description) ? "Pas de description" : ret.group.description;
-                });
-        }
+        this.getInformationData();
     }
 
     ngOnChanges(changes: SimpleChanges) {
         this.group_id = changes.group_id.currentValue;
+        this.getInformationData();
+    }
+
+    getInformationData() {
         if (this.group_id === -1) {
             this.user$.subscribe(user => {
                 this.group.name = user.pseudo;
                 this.group.description = "Regroupement de tous vos évènements";
+                this.requestSrv.get(`users/${user.pseudo}/image`, {}, {Authorization: ''})
+                    .subscribe(ret => this.image = ret.image);
             })
         }
         else {
             this.requestSrv.get(`groups/${this.group_id}`, {}, {Authorization: ""})
                 .subscribe(ret => {
-                    console.log('ret => ', ret.group);
                     this.group.name = ret.group.name;
                     this.group.description =
                         (ret.group.description == "" || !ret.group.description) ? "Pas de description" : ret.group.description;
+                    this.requestSrv.get(`groups/${ret.group.id}/image`, {}, {Authorization: ''})
+                        .subscribe(ret => this.image = ret.image);
                 });
         }
     }
