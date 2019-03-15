@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -39,7 +40,7 @@
       if (response.status === 'connected') {
 	console.log('The user has logged in!');
 	var accessToken = response.authResponse.accessToken;
-	console.log("Faceebook Access Token" + accessToken);
+	console.log('Faceebook Access Token' + accessToken);
         FB.api('/me', function(response) {
 		console.log('Good to see you, ' + response.name + '.');
   
