@@ -1,0 +1,14 @@
+<div class="flex flex-r-centered">
+  <h2 mat-dialog-title>Ajout de membre</h2>
+</div>
+<mat-dialog-content style="white-space: pre-wrap; text-align: center">
+  <form [formGroup]="memberForm" class="form-row" style="padding: 15px; margin: 15px 0">
+    <mat-form-field>
+      <input matInput placeholder="Pseudo" formControlName="member" name="member" required>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions style="display: flex; justify-content: space-between">
+  <button class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
+  <button [disabled]="memberForm.invalid" class="mat-raised-button btn-secondary" (click)="checkExistance()">Confirmer</button>
+</mat-dialog-actions>

@@ -38,3 +38,11 @@
   flex-flow: row-reverse;
   justify-content: space-between;
 }
+
+.mat-menu-panel {
+  outline: 0!important;
+}
+
+.mat-menu-content:focus {
+  outline: 0!important;
+}

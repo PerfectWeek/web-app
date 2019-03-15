@@ -15,6 +15,8 @@ import {ProfileService} from "../../../core/services/profile.service";
 import {MatDialog} from "@angular/material";
 import {GroupCreationDialog} from "../../../module/dialog/Group-creation-dialog/group-creation";
 import {ChangeValueDialog} from "../../../module/dialog/Change -value/change-value";
+import {ConfirmDialog} from "../../../module/dialog/Confirm-dialog/Confirm-dialog";
+import {AddMemberDialog} from "../../../module/dialog/Add-member/add-member";
 
 @Component({
     selector: 'group-info',
@@ -29,7 +31,9 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
     @Output("group_modified") group_modified = new EventEmitter<number>();
 
-    user: any = {
+    @Output('left_group') left_group = new EventEmitter<number>();
+
+    user: {pseudo: string, description: string, email: string} = {
         pseudo: '',
         description: '',
         email: ''
@@ -44,26 +48,16 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
     image = null;
 
-    display_members: any[] = [];
-
     user_role: string;
 
-    modify: boolean = false;
-
-    group_members = [];
-
-    group_owner: null;
+    group_members: {pseudo: string, role: string, image: any}[] = [];
 
     roles: string[] = [
         "Admin",
         "Spectator"
     ];
 
-    new_members: string[] = [];
-
     new_member: string = '';
-
-    new_group_name: string;
 
     constructor(private requestSrv: RequestService,
                 private profileSrv: ProfileService,
@@ -81,32 +75,51 @@ export class GroupInfoComponent implements OnInit, OnChanges {
         this.getInformationData();
     }
 
+    getUserInformation() {
+        this.user$.subscribe(user => {
+            this.user.pseudo = user.pseudo;
+            this.user.email = user.email;
+            this.user.description = "Regroupement de tous vos évènements";
+            this.requestSrv.get(`users/${user.pseudo}/image`, {}, {Authorization: ''})
+                .subscribe(ret => {
+                    this.image = ret.image;
+                    this.ready = true;
+                });
+        })
+    }
+
+    getGroupInformation() {
+        this.requestSrv.get(`groups/${this.group_id}`, {}, {Authorization: ""})
+            .subscribe(ret => {
+                this.group.name = ret.group.name;
+                this.group.description =
+                    (ret.group.description == "" || !ret.group.description) ? "Pas de description" : ret.group.description;
+                this.requestSrv.get(`groups/${ret.group.id}/members`, {}, {Authorization: ''})
+                    .subscribe(ret => {
+                        this.group_members = ret.members;
+                        this.group_members.forEach((member, index) => {
+                            this.requestSrv.get(`users/${member.pseudo}/image`, {}, {Authorization: ''})
+                                .subscribe(ret => {
+                                    member.image = ret.image;
+                                    if (index === this.group_members.length - 1)
+                                        this.ready = true;
+                                });
+                        })
+                    });
+                this.requestSrv.get(`groups/${ret.group.id}/image`, {}, {Authorization: ''})
+                    .subscribe(ret => {
+                        this.image = ret.image;
+                    });
+            });
+    }
+
     getInformationData() {
         this.ready = false;
         if (this.group_id === -1) {
-            this.user$.subscribe(user => {
-                this.user.pseudo = user.pseudo;
-                this.user.email = user.email;
-                this.user.description = "Regroupement de tous vos évènements";
-                this.requestSrv.get(`users/${user.pseudo}/image`, {}, {Authorization: ''})
-                    .subscribe(ret => {
-                        this.image = ret.image;
-                        this.ready = true;
-                    });
-            })
+            this.getUserInformation();
         }
         else {
-            this.requestSrv.get(`groups/${this.group_id}`, {}, {Authorization: ""})
-                .subscribe(ret => {
-                    this.group.name = ret.group.name;
-                    this.group.description =
-                        (ret.group.description == "" || !ret.group.description) ? "Pas de description" : ret.group.description;
-                    this.requestSrv.get(`groups/${ret.group.id}/image`, {}, {Authorization: ''})
-                        .subscribe(ret => {
-                            this.image = ret.image;
-                            this.ready = true;
-                        });
-                });
+            this.getGroupInformation();
         }
     }
 
@@ -153,6 +166,74 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                         }
                         this.toastSrv.success(`Le ${fieldname} de ce groupe a bien été modifié`);
                     })
+            }
+        })
+    }
+
+    addMember() {
+        let dialogRef = this.dialog.open(AddMemberDialog, {
+            data: {members: this.group_members}
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result !== null) {
+                let users = [result];
+                this.requestSrv.post(`groups/${this.group_id}/add-members`,
+                    {users},
+                    {Authorization: ''})
+                    .subscribe(ret => {
+                        this.ready = false;
+                        this.group_members = ret.members;
+                        this.group_members.forEach((member, index) => {
+                            this.requestSrv.get(`users/${member.pseudo}/image`, {}, {Authorization: ''})
+                                .subscribe(ret => {
+                                    member.image = ret.image;
+                                    if (index === this.group_members.length - 1)
+                                        this.ready = true;
+                                });
+                        });
+                            this.toastSrv.success("User ajouté au groupe");
+                        },err => this.toastSrv.error("Une erreur est survenue lors de l'ajout du nouveau membre"))
+            }
+        })
+    }
+
+    leaveGroup() {
+        this.user$.subscribe(user => {
+            let dialogRef = this.dialog.open(ConfirmDialog, {
+                data: {
+                    title: 'Quitter le groupe',
+                    question: 'Voulez-vous vraiment quitter ce groupe ?'
+                }
+            });
+            dialogRef.afterClosed().subscribe(result => {
+                if (result === true)
+                    this.requestSrv.delete(`groups/${this.group_id}/members/${user.pseudo}`, {Authorization: ''})
+                        .subscribe(ret => {
+                            this.left_group.emit(this.group_id);
+                            this.toastSrv.success("Vous avez n'êtes désormais plus membre de ce groupe");
+                        }, ret => this.toastSrv.error("Une erreur est survenue. Vous n'avez pas pu quitter ce groupe"))
+            })
+        })
+    }
+
+    fireFromGroup(pseudo: string) {
+        this.user$.subscribe(user => {
+            if (this.group_members.find(member => member.pseudo === user.pseudo).role === 'Admin') {
+                let dialogRef = this.dialog.open(ConfirmDialog, {
+                    data: {
+                        title: 'Suppression du profil',
+                        question: 'Voulez-vous vraiment supprimer ce membre ?'
+                    }
+                });
+                dialogRef.afterClosed().subscribe(result => {
+                    if (result === true)
+                        this.requestSrv.delete(`groups/${this.group_id}/members/${pseudo}`, {Authorization: ''})
+                            .subscribe(ret => {
+                                this.toastSrv.success("Membre supprimé avec succès");
+                                this.group_members.splice(this.group_members.findIndex(member => member.pseudo === pseudo), 1);
+                            }, ret => this.toastSrv.error("Une erreur est survenue lors de la suppression d\'un membre"))
+                })
             }
         })
     }

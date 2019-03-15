@@ -47,8 +47,13 @@ export class MainViewComponent implements OnInit {
         }
     }
 
-    modifyGroupName(event) {
-        console.log('event => ', event);
-        this.group_list.modifyGroupName(event);
+    modifyGroupName(group_id) {
+        this.group_list.modifyGroupName(group_id);
+    }
+
+    leftGroup(group_id) {
+        this.group_list.getGroups();
+        this.group_list.ready.next(false);
+        this.group_list.user.nativeElement.click();
     }
 }

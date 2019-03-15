@@ -6,11 +6,11 @@
       <section class="group-header-info">
         <section *ngIf="group_id === -1">
           <h3 class="clickable-fields" (click)="changeUser(user.pseudo, 'pseudo')">{{user.pseudo}}</h3>
-          <p class="description">{{user.description}}</p>
+          <p class="description" title="{{user.description}}">{{user.description}}</p>
         </section>
         <section *ngIf="group_id > -1">
           <h3 class="clickable-fields" (click)="changeGroupBasicInfo(group.name, 'name')">{{group.name}}</h3>
-          <p *ngIf="group_id > -1" class="description clickable-fields" (click)="changeGroupBasicInfo(group.description, 'description')">{{group.description}}</p>
+          <p *ngIf="group_id > -1" title="{{group.description}}" class="description clickable-fields" (click)="changeGroupBasicInfo(group.description, 'description')">{{group.description}}</p>
         </section>
       </section>
     </section>
@@ -36,7 +36,16 @@
                 Membres
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <p class="clickable-fields" (click)="changeUser(user.email, 'email')">Email: {{user.email}}</p>
+            <p (click)="addMember()" class="add-member"><i class="fas fa-plus"></i> <span>Ajouter un membre</span></p>
+            <section *ngFor="let member of group_members, let i = index" class="group-member-container">
+              <img src="{{member.image}}">
+              <p class="group-member-pseudo">{{member.pseudo}}</p>
+              <i class="fas fa-ellipsis-h" [matMenuTriggerFor]="actions"></i>
+              <mat-menu #actions="matMenu">
+                <button *ngIf="member.pseudo === (user$ | async).pseudo" mat-menu-item (click)="leaveGroup()">Quitter le groupe</button>
+                <button *ngIf="member.pseudo !== (user$ | async).pseudo" mat-menu-item (click)="fireFromGroup(member.pseudo)">Virer du groupe</button>
+              </mat-menu>
+            </section>
           </mat-expansion-panel>
         </mat-accordion>
       </section>

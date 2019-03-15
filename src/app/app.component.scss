@@ -44,3 +44,13 @@
     align-items: center;
   }
 }
+
+@media screen and (max-width: map_get($widths, m) - 1px){
+  .background-logo-circle {
+    display: none;
+  }
+
+  .message {
+    width: 90% !important;
+  }
+}

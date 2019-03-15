@@ -66,8 +66,62 @@
       color: map_get($colors, desgrey);
     }
 
-    & mat-expansion-panel p {
-      font-size: 1rem;
+    & mat-expansion-panel {
+
+      & p {
+        font-size: 1rem;
+      }
+    }
+
+    & .group-member-container {
+      padding: 15px;
+      display: flex;
+      flex-flow: row;
+      flex-wrap: nowrap;
+      justify-content: start;
+      transition: background-color 0.7s, color 0.7s;
+
+      &:hover {
+        color: map_get($colors, secondary) !important;
+        background-color: map_get($colors, light);
+      }
+
+      & > img {
+        width: calc(1.1vw + 1.1vh);
+        height: calc(1.1vw + 1.1vh);
+        border-radius: 50%;
+      }
+
+      & > .group-member-pseudo {
+        padding-left: 1rem;
+        width: calc(85% - 1rem);
+      }
+
+      & i {
+        cursor: pointer;
+        color: map_get($colors, lightgrey) !important;
+      }
+    }
+
+    & .add-member {
+      cursor: pointer;
+      padding: 15px;
+
+      &:hover {
+        & > i {
+          color: map_get($colors, secondary);
+        }
+      }
+
+      & > span {
+        padding-left: 1rem;
+      }
+
+      & > i {
+        font-size: calc(1.1vw + 1.1vh);
+        color: map_get($colors, primary);
+        transition: color 0.7s;
+      }
     }
   }
 

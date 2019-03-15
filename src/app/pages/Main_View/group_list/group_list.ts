@@ -25,6 +25,8 @@ import {BehaviorSubject, Observable} from "rxjs/Rx";
 })
 export class GroupListComponent implements OnInit, AfterViewInit {
 
+    start: boolean = true;
+
     userGroups: any[] = [];
 
     displayGroups: any[] = [];
@@ -69,7 +71,8 @@ export class GroupListComponent implements OnInit, AfterViewInit {
 
         this.ready$
             .do((value) => {
-                if (value === true) {
+                if (value === true && this.start === true) {
+                    this.start = false;
                     let self = this;
                     setTimeout(function () {
                         self.user.nativeElement.className += ' group-focused';
@@ -105,6 +108,7 @@ export class GroupListComponent implements OnInit, AfterViewInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result !== null && result !== undefined) {
+                this.ready.next(false);
                 this.getGroups();
             }
         })
@@ -142,5 +146,10 @@ export class GroupListComponent implements OnInit, AfterViewInit {
             .subscribe(ret => {
                 (this.userGroups.find(group => group.id === group_id)).name = ret.group.name;
             })
+    }
+
+    leftGroup(group_id: number) {
+        this.ready.next(false);
+        this.getGroups();
     }
 }

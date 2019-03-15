@@ -28,6 +28,7 @@ import {
   MatButtonModule,
   MatListModule,
   MatIconModule,
+  MatMenuModule,
   MAT_LABEL_GLOBAL_OPTIONS,
   MAT_DATE_LOCALE, MatDialogRef, MatPaginatorIntl } from "@angular/material";
 import {CalendarModule, DateAdapter} from "angular-calendar";
@@ -74,6 +75,7 @@ import {GroupCreationDialog} from "./module/dialog/Group-creation-dialog/group-c
 import {CreateEventDialog} from "./module/dialog/CreateEvent-dialog/CreateEvent-dialog";
 import {ModifyEventDialog} from "./module/dialog/ModifyEvent-dialog/ModifyEvent";
 import {ChangeValueDialog} from "./module/dialog/Change -value/change-value";
+import {AddMemberDialog} from "./module/dialog/Add-member/add-member";
 
 
 //Guards
@@ -107,6 +109,7 @@ registerLocaleData(localeFr);
     GroupCreationDialog,
     ModifyEventDialog,
     ChangeValueDialog,
+    AddMemberDialog,
   ],
   imports: [
     CommonModule,
@@ -140,6 +143,7 @@ registerLocaleData(localeFr);
     MatChipsModule,
     MatButtonModule,
     MatListModule,
+    MatMenuModule,
     MatIconModule,
     ToastrModule.forRoot({
       timeOut: 10000,
@@ -179,6 +183,7 @@ registerLocaleData(localeFr);
     CreateEventDialog,
     ModifyEventDialog,
     ChangeValueDialog,
+    AddMemberDialog,
   ]
 })
 export class AppModule { }
