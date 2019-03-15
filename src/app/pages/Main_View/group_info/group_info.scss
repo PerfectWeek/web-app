@@ -1,8 +1,23 @@
 @import "~scss/variables";
 
-.group-info {
+.loader {
+  border-top-color: map_get($colors, secondary);
+}
+
+.group-info-component {
   width: 100%;
   height: 100%;
+
+  & .clickable-fields {
+    cursor: pointer;
+    transition: color 0.7s, background-color 0.7s;
+    padding: 5px;
+  }
+
+  & .clickable-fields:hover {
+    color: map_get($colors, secondary) !important;
+    background-color: map_get($colors, light);
+  }
 
   & > .group-name {
     width: 100%;
@@ -31,7 +46,7 @@
         width: 100%;
       }
 
-      & > .description {
+      & .description {
         font-size: 0.7rem;
         font-style: oblique;
         overflow: hidden;
@@ -40,6 +55,19 @@
         line-height: 0.7rem;
         color: map_get($colors, desgrey);
       }
+    }
+  }
+
+  .group-information {
+    padding: 15px;
+
+    & mat-panel-title {
+      font-style: oblique;
+      color: map_get($colors, desgrey);
+    }
+
+    & mat-expansion-panel p {
+      font-size: 1rem;
     }
   }
 

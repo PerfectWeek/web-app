@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, Input, OnInit, ViewChild} from "@angular/core";
 import {RequestService} from "../../core/services/request.service";
 
 @Component({
@@ -7,6 +7,8 @@ import {RequestService} from "../../core/services/request.service";
     styleUrls: ['main_view.scss', '../../../scss/themes/main.scss']
 })
 export class MainViewComponent implements OnInit {
+
+    @ViewChild('group_list') group_list;
 
     private _group_id: number = -1;
     private _calendar_id: number = -1;
@@ -43,5 +45,10 @@ export class MainViewComponent implements OnInit {
         else {
             this.calendar_id = group_id;
         }
+    }
+
+    modifyGroupName(event) {
+        console.log('event => ', event);
+        this.group_list.modifyGroupName(event);
     }
 }

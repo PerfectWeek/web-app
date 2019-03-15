@@ -1,9 +1,45 @@
-<section class="group-info">
-  <section class="group-name">
-    <img src="{{image}}" alt="Group's image" title="Group's image">
-    <section class="group-header-info">
-      <h3>{{group.name}}</h3>
-      <p class="description">{{group.description}}</p>
+<section class="loader" *ngIf="ready === false; else loaded"></section>
+<ng-template #loaded>
+  <section class="group-info-component">
+    <section class="group-name">
+      <img src="{{image}}" alt="Group's image" title="Group's image">
+      <section class="group-header-info">
+        <section *ngIf="group_id === -1">
+          <h3 class="clickable-fields" (click)="changeUser(user.pseudo, 'pseudo')">{{user.pseudo}}</h3>
+          <p class="description">{{user.description}}</p>
+        </section>
+        <section *ngIf="group_id > -1">
+          <h3 class="clickable-fields" (click)="changeGroupBasicInfo(group.name, 'name')">{{group.name}}</h3>
+          <p *ngIf="group_id > -1" class="description clickable-fields" (click)="changeGroupBasicInfo(group.description, 'description')">{{group.description}}</p>
+        </section>
+      </section>
+    </section>
+    <section class="group-information">
+      <section *ngIf="group_id === -1">
+        <mat-accordion>
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Données personnelles
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="clickable-fields" (click)="changeUser(user.email, 'email')">Email: {{user.email}}</p>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </section>
+
+      <section *ngIf="group_id > -1">
+        <mat-accordion>
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Membres
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="clickable-fields" (click)="changeUser(user.email, 'email')">Email: {{user.email}}</p>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </section>
     </section>
   </section>
-</section>
+</ng-template>

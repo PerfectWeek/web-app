@@ -8,6 +8,7 @@
   flex-wrap: nowrap;
 
   & > .left-view {
+    position: relative;
     width: 20%;
     min-width: 60px;
     height: 100%;
@@ -35,11 +36,12 @@
   }
 
   & > .center-view {
+    position: relative;
     width: 60%;
     height: 100%;
     min-width: 200px;
     overflow-y: auto;
-    &:hover::-webkit-scrollbar {
+    &::-webkit-scrollbar {
       margin-right: 1px;
       width: 0.4rem;
       border-radius: 5px;
@@ -47,7 +49,7 @@
       background-color: map_get($colors, lightgrey);
     }
 
-    &:hover::-webkit-scrollbar-thumb {
+    &::-webkit-scrollbar-thumb {
       border-radius: 5px;
       display: block;
       background-color: map_get($colors, secondary);
@@ -56,6 +58,7 @@
   }
 
   & > .rigth-view {
+    position: relative;
     width: 20%;
     height: 100%;
     min-width: 60px;

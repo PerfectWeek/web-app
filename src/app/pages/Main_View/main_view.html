@@ -1,11 +1,11 @@
 <div class="full-view">
     <section class="left-view">
-        <group-list (group_clicked)="goToGroup($event)"></group-list>
+        <group-list #group_list (group_clicked)="goToGroup($event)"></group-list>
     </section>
     <section class="center-view">
         <mwl-demo-component [in_calendar_id]="calendar_id"></mwl-demo-component>
     </section>
     <section class="rigth-view">
-        <group-info [group_id]="group_id"></group-info>
+        <group-info (group_modified)="modifyGroupName($event)" [group_id]="group_id"></group-info>
     </section>
 </div>

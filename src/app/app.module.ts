@@ -73,6 +73,7 @@ import { ConfirmDialog } from "./module/dialog/Confirm-dialog/Confirm-dialog";
 import {GroupCreationDialog} from "./module/dialog/Group-creation-dialog/group-creation";
 import {CreateEventDialog} from "./module/dialog/CreateEvent-dialog/CreateEvent-dialog";
 import {ModifyEventDialog} from "./module/dialog/ModifyEvent-dialog/ModifyEvent";
+import {ChangeValueDialog} from "./module/dialog/Change -value/change-value";
 
 
 //Guards
@@ -94,17 +95,18 @@ registerLocaleData(localeFr);
     ProfileComponent,
     GroupManagementComponent,
     CalendarComponent,
-    ConfirmDialog,
-    CreateEventDialog,
-    GroupCreationDialog,
-    ModifyEventDialog,
     GroupComponent,
     CalendarHeaderComponent,
     FormModalComponent,
     RegistrationConfirmationComponent,
     MainViewComponent,
     GroupListComponent,
-    GroupInfoComponent
+    GroupInfoComponent,
+    ConfirmDialog,
+    CreateEventDialog,
+    GroupCreationDialog,
+    ModifyEventDialog,
+    ChangeValueDialog,
   ],
   imports: [
     CommonModule,
@@ -176,6 +178,7 @@ registerLocaleData(localeFr);
     FormModalComponent,
     CreateEventDialog,
     ModifyEventDialog,
+    ChangeValueDialog,
   ]
 })
 export class AppModule { }

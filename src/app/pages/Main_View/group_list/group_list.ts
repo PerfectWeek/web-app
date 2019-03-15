@@ -1,4 +1,5 @@
 import {
+    AfterContentInit,
     AfterViewInit,
     Component,
     ElementRef,
@@ -15,7 +16,7 @@ import {ProfileService} from "../../../core/services/profile.service";
 import {Router} from "@angular/router";
 import {MatDialog} from "@angular/material";
 import {GroupCreationDialog} from "../../../module/dialog/Group-creation-dialog/group-creation";
-import {BehaviorSubject} from "rxjs/Rx";
+import {BehaviorSubject, Observable} from "rxjs/Rx";
 
 @Component({
     selector: 'group-list',
@@ -32,6 +33,10 @@ export class GroupListComponent implements OnInit, AfterViewInit {
 
     private user: ElementRef;
 
+    ready$: Observable<boolean>;
+
+    ready: BehaviorSubject<boolean>;
+
     @ViewChild('user') set content(user: ElementRef) {
         this.user = user;
     }
@@ -47,7 +52,8 @@ export class GroupListComponent implements OnInit, AfterViewInit {
                 private toastSrv: ToastrService,
                 private dialog: MatDialog,
                 private router: Router) {
-
+        this.ready = new BehaviorSubject<boolean>(false);
+        this.ready$ = this.ready.asObservable();
     }
 
     ngOnInit() {
@@ -61,8 +67,17 @@ export class GroupListComponent implements OnInit, AfterViewInit {
             .do(() => this.search())
             .subscribe();
 
-        this.user.nativeElement.className += ' group-focused';
-        setTimeout(() => this.user.nativeElement.focus(), 0);
+        this.ready$
+            .do((value) => {
+                if (value === true) {
+                    let self = this;
+                    setTimeout(function () {
+                        self.user.nativeElement.className += ' group-focused';
+                        self.user.nativeElement.focus();
+                    }, 10);
+                }
+            })
+            .subscribe();
     }
 
     getGroups() {
@@ -72,9 +87,13 @@ export class GroupListComponent implements OnInit, AfterViewInit {
             this.requestSrv.get(`users/${user.pseudo}/groups`, {}, {Authorization: ''})
                 .subscribe(groups => {
                     this.userGroups = groups.groups;
-                    this.userGroups.forEach(group => {
+                    this.userGroups.forEach((group, index) => {
                         this.requestSrv.get(`groups/${group.id}/image`, {}, {Authorization: ""})
-                            .subscribe(ret => group['image'] = ret.image);
+                            .subscribe(ret => {
+                                group['image'] = ret.image;
+                                if (index === this.userGroups.length - 1)
+                                    this.ready.next(true);
+                            });
                     });
                     this.displayGroups = this.userGroups;
                 })
@@ -116,5 +135,12 @@ export class GroupListComponent implements OnInit, AfterViewInit {
     search() {
         this.displayGroups = this.userGroups
             .filter(group => group.name.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) != -1);
+    }
+
+    modifyGroupName(group_id: number) {
+        this.requestSrv.get(`groups/${group_id}`, {}, {Authorization: ''})
+            .subscribe(ret => {
+                (this.userGroups.find(group => group.id === group_id)).name = ret.group.name;
+            })
     }
 }

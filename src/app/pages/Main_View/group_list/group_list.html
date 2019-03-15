@@ -1,17 +1,20 @@
-<section class="groups">
-    <section class="group-header">
-        <section class="group-search-bar">
-            <i class="fas fa-search"></i>
-            <input title="Rechercher un groupe" type="text" name="search" id="search" class="form-control" placeholder="Rechercher un groupe" matInput (keyup)="search$.next($event.target.value)">
+<section class="loader" *ngIf="(ready$ | async) === false; else loaded"></section>
+<ng-template #loaded>
+    <section class="groups">
+        <section class="group-header">
+            <section class="group-search-bar">
+                <i class="fas fa-search"></i>
+                <input title="Rechercher un groupe" type="text" name="search" id="search" class="form-control" placeholder="Rechercher un groupe" matInput (keyup)="search$.next($event.target.value)">
+            </section>
+            <a href="javascript:void()" (click)="createGroup()" title="Créer un nouveau groupe"><i class="far fa-edit"></i></a>
         </section>
-        <a href="javascript:void()" (click)="createGroup()" title="Créer un nouveau groupe"><i class="far fa-edit"></i></a>
-    </section>
-    <section tabindex="-1" #user class="group" (click)="sendGroup(-1, -1)">
-        <img src="{{userImage}}" alt="User's profile image" title="User's profile image">
-        <h4 *ngIf="profileSrv.userProfile$ | async, let user">{{user.pseudo}}</h4>
-    </section>
-    <section #groups *ngFor="let group of displayGroups; let idx = index" class="group" (click)="sendGroup(group.id, idx)" tabindex="{{idx}}">
-        <img src="{{group.image}}" alt="Group's image" title="Group's image">
-        <h4>{{group.name}}</h4>
-    </section>
+        <section tabindex="-1" #user class="group" (click)="sendGroup(-1, -1)">
+            <img src="{{userImage}}" alt="User's profile image" title="User's profile image">
+            <h4 *ngIf="profileSrv.userProfile$ | async, let user">{{user.pseudo}}</h4>
+        </section>
+        <section #groups *ngFor="let group of displayGroups; let idx = index" class="group" (click)="sendGroup(group.id, idx)" tabindex="{{idx}}">
+            <img src="{{group.image}}" alt="Group's image" title="Group's image">
+            <h4>{{group.name}}</h4>
+        </section>
 </section>
+</ng-template>
