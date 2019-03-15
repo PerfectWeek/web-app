@@ -1,23 +1,45 @@
 @import "~scss/variables";
 
 .group-info {
+  width: 100%;
+  height: 100%;
 
   & > .group-name {
+    width: 100%;
     border-bottom: 1px solid map_get($colors, lightgrey);
-    height: 5rem;
+    padding: 15px;
     line-height: 5rem;
     font-size: 1.5rem;
+    text-align: start;
     display: flex;
     flex-flow: row;
     flex-wrap: nowrap;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
 
     & > img {
-      margin-right: 1rem;
       width: calc(2.2vw + 2.2vh);
       height: calc(2.2vw + 2.2vh);
       border-radius: 50%;
+    }
+
+    & > .group-header-info {
+      padding-left: 1rem;
+      width: calc(85% - 1rem);
+
+      & > * {
+        width: 100%;
+      }
+
+      & > .description {
+        font-size: 0.7rem;
+        font-style: oblique;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        line-height: 0.7rem;
+        color: map_get($colors, desgrey);
+      }
     }
   }
 

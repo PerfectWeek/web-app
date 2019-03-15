@@ -1,6 +1,10 @@
 <section class="groups">
-    <section class="search-bar">
-
+    <section class="group-header">
+        <section class="group-search-bar">
+            <i class="fas fa-search"></i>
+            <input title="Rechercher un groupe" type="text" name="search" id="search" class="form-control" placeholder="Rechercher un groupe" matInput>
+        </section>
+        <a href="javascript:void()" (click)="createGroup()" title="Créer un nouveau groupe"><i class="far fa-edit"></i></a>
     </section>
     <section tabindex="-1" #user class="group" (click)="sendGroup(-1, -1)">
         <img src="/assets/Pictures/logo_circle.png" alt="User's profile image" title="User's profile image">

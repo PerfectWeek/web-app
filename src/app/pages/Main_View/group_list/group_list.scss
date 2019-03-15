@@ -1,9 +1,49 @@
 @import "~scss/variables";
 
-.search-bar {
+[placeholder], [placeholder-shown] {
+  text-overflow: ellipsis;
+}
+
+.group-header {
   padding: 15px;
-  height: 2rem;
-  line-height: 2rem;
+  text-align: center;
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  .group-search-bar {
+    width: 80%;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: map_get($colors, light) !important;
+    border-radius: 5px;
+
+    & > i {
+      padding-left: 8px;
+      color: map_get($colors, lightgrey);
+    }
+
+    & > input {
+      padding: 4px 8px;
+      background-color: map_get($colors, light);
+      border: none;
+      box-shadow: none;
+
+      &:focus {
+        outline: none !important;
+      }
+    }
+  }
+
+  & > a {
+    font-size: 2rem;
+    cursor: pointer;
+    color: map_get($colors, primary);
+  }
 }
 
 .groups {

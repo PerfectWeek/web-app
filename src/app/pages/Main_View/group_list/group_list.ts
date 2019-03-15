@@ -44,13 +44,7 @@ export class GroupListComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.profileSrv.userProfile$.subscribe(user => {
-            this.requestSrv.get(`users/${user.pseudo}/groups`, {}, {Authorization: ''})
-                .subscribe(groups => {
-                    this.userGroups = groups.groups;
-                    console.log('groups => ', groups.groups);
-                })
-        });
+        this.getGroups();
     }
 
     ngAfterViewInit() {
@@ -58,12 +52,21 @@ export class GroupListComponent implements OnInit {
         setTimeout(() => this.user.nativeElement.focus(), 0);
     }
 
+    getGroups() {
+        this.profileSrv.userProfile$.subscribe(user => {
+            this.requestSrv.get(`users/${user.pseudo}/groups`, {}, {Authorization: ''})
+                .subscribe(groups => {
+                    this.userGroups = groups.groups;
+                })
+        });
+    }
+
     createGroup() {
         let dialogRef = this.dialog.open(GroupCreationDialog, {});
 
         dialogRef.afterClosed().subscribe(result => {
             if (result !== null && result !== undefined) {
-                this.router.navigate([`/group/${result}`]);
+                this.getGroups();
             }
         })
     }
@@ -89,18 +92,4 @@ export class GroupListComponent implements OnInit {
             groups[pos_id].nativeElement.className += ' group-focused';
         }
     }
-
-    // goToCalendar(group) {
-    //     // console.log("GROUPE ", group);
-    //     this.requestSrv.get(`groups/${group.id}`, {}, {Authorization: ''})
-    //         .subscribe(ret => {
-    //             // console.log("THE OBJECT ",ret);
-    //             // console.log("TA MERDE LA PUTE ", ret.calendar.id);
-    //             this.router.navigate([`calendar/${ret.group.calendar_id}`]);
-    //         });
-    // }
-    // goToGroup(group, event) {
-    //     if (event.target.classList[1] !== 'fa-calendar-alt')
-    //         this.router.navigate([`group/${group.id}`]);
-    // }
 }

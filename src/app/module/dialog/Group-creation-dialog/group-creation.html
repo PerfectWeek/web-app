@@ -4,7 +4,7 @@
 <mat-dialog-content style="white-space: pre-wrap; text-align: center">
   <div>
     <form #groupForm="ngForm" (ngSubmit)="createGroup()" class="form-row" style="padding: 15px; margin: 15px 0">
-      <mat-form-field style="width: 33%">
+      <mat-form-field>
         <input matInput placeholder="Nom" [(ngModel)]="name" name="name" required>
       </mat-form-field>
 

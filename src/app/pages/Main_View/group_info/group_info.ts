@@ -57,9 +57,9 @@ export class GroupInfoComponent implements OnInit, OnChanges {
         else {
             this.requestSrv.get(`groups/${this.group_id}`, {}, {Authorization: ""})
                 .subscribe(ret => {
-                    console.log('ret => ', ret.group);
                     this.group.name = ret.group.name;
-                    this.group.description = ret.group.description;
+                    this.group.description =
+                        (ret.group.description == "" || !ret.group.description) ? "Pas de description" : ret.group.description;
                 });
         }
     }
@@ -77,7 +77,8 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                 .subscribe(ret => {
                     console.log('ret => ', ret.group);
                     this.group.name = ret.group.name;
-                    this.group.description = ret.group.description;
+                    this.group.description =
+                        (ret.group.description == "" || !ret.group.description) ? "Pas de description" : ret.group.description;
                 });
         }
     }
