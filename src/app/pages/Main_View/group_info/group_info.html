@@ -2,7 +2,10 @@
 <ng-template #loaded>
   <section class="group-info-component">
     <section class="group-name">
-      <img src="{{image}}" alt="Group's image" title="Group's image">
+      <label for="file-input">
+        <img src="{{image}}" alt="Image du groupe" title="Clique pour changer l'image">
+      </label>
+      <input id="file-input" type="file" accept=".jpg,.png,.jpeg" class="image-input" (change)="onFileChange($event)">
       <section class="group-header-info">
         <section *ngIf="group_id === -1">
           <h3 class="clickable-fields" (click)="changeUser(user.pseudo, 'pseudo')">{{user.pseudo}}</h3>

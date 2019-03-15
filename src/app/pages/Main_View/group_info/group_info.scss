@@ -32,7 +32,12 @@
     justify-content: start;
     align-items: center;
 
-    & > img {
+    & > input {
+      display: none;
+    }
+
+    & img {
+      cursor: pointer;
       width: calc(2.2vw + 2.2vh);
       height: calc(2.2vw + 2.2vh);
       border-radius: 50%;
@@ -124,5 +129,4 @@
       }
     }
   }
-
 }

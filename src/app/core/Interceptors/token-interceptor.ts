@@ -19,7 +19,7 @@ export class InterceptorToken implements HttpInterceptor {
               return this.authService.connection()
                 .switchMap(() => next.handle(this.fillToken(req)));
             } else {
-              return Observable.throw(err);
+              return Observable.throwError(err);
             }
           }
         });

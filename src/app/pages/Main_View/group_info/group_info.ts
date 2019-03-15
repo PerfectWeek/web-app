@@ -1,6 +1,6 @@
 import {
     AfterContentInit,
-    AfterViewInit,
+    AfterViewInit, ChangeDetectorRef,
     Component, EventEmitter,
     Input,
     OnChanges,
@@ -33,6 +33,8 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
     @Output('left_group') left_group = new EventEmitter<number>();
 
+    @Output("group_image_modified") group_image_modified = new EventEmitter<number>();
+
     user: {pseudo: string, description: string, email: string} = {
         pseudo: '',
         description: '',
@@ -62,6 +64,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
     constructor(private requestSrv: RequestService,
                 private profileSrv: ProfileService,
                 private dialog: MatDialog,
+                private cd: ChangeDetectorRef,
                 private toastSrv: ToastrService) {
 
     }
@@ -73,6 +76,38 @@ export class GroupInfoComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         this.group_id = changes.group_id.currentValue;
         this.getInformationData();
+    }
+
+    onFileChange(event) {
+
+        if (event.target.files && event.target.files.length == 1) {
+            const file = event.target.files[0];
+
+        if (this.group_id === -1)
+            this.user$.subscribe(user => {
+                this.requestSrv.postFile(`users/${user.pseudo}/upload-image`, file, {Authorization: ''})
+                    .do(() => {
+                        this.requestSrv.get(`users/${user.pseudo}/image`, {}, {Authorization: ''})
+                            .subscribe(ret => {
+                                this.group_image_modified.emit(-1);
+                                this.image = ret.image;
+                            });
+                        this.toastSrv.success("L'image a été uploadé avec succès");
+                        }, err => this.toastSrv.error("Une erreur est survenue lors de l'upload de l'image")
+                    ).subscribe();
+            });
+        else
+            this.requestSrv.postFile(`groups/${this.group_id}/upload-image`, file, {Authorization: ''})
+                .do(() => {
+                    this.toastSrv.success("L'image a été uploadé avec succès");
+                    this.requestSrv.get(`groups/${this.group_id}/image`, {}, {Authorization: ''})
+                        .subscribe(ret => {
+                            this.group_image_modified.emit(this.group_id);
+                            this.image = ret.image;
+                        });
+                    }, err => this.toastSrv.error("Une erreur est survenue lors de l'upload de l'image"))
+                .subscribe();
+        }
     }
 
     getUserInformation() {

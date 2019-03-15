@@ -57,6 +57,14 @@ export class RequestService {
     );
   }
 
+  postFile(url: string, file, headers?: any): Observable<any> {
+      let input = new FormData();
+      input.append("image", file);
+      return this.http.post(url, input, {
+        headers: headers
+      });
+  }
+
 
   put(url: string, body: any, headers?: any): Observable<any> {
     const httpHeaders = (RequestService.prepareHeader(headers)).append('Content-Type', 'application/x-www-form-urlencoded');

@@ -6,6 +6,6 @@
         <mwl-demo-component [in_calendar_id]="calendar_id"></mwl-demo-component>
     </section>
     <section class="rigth-view">
-        <group-info (left_group)="leftGroup($event)" (group_modified)="modifyGroupName($event)" [group_id]="group_id"></group-info>
+        <group-info (left_group)="GroupModification($event)" (group_image_modified)="imageModification($event)" (group_modified)="modifyGroupName($event)" [group_id]="group_id"></group-info>
     </section>
 </div>

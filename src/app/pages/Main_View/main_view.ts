@@ -51,9 +51,14 @@ export class MainViewComponent implements OnInit {
         this.group_list.modifyGroupName(group_id);
     }
 
-    leftGroup(group_id) {
+    GroupModification(group_id) {
         this.group_list.getGroups();
         this.group_list.ready.next(false);
         this.group_list.user.nativeElement.click();
+    }
+
+    imageModification(group_id) {
+        this.group_list.getGroups();
+        this.group_list.ready.next(false);
     }
 }
