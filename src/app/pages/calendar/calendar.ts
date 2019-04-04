@@ -100,7 +100,7 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("ngOnInit Calendar");
+    // console.log("ngOnInit Calendar");
     this.get_group_info();
   }
 
@@ -170,14 +170,14 @@ export class CalendarComponent implements OnInit {
         };
         for (const idx in ret.events) {
             // date_format: string = "yyyy-MM-ddThh:mm:ss";
-          console.log("recupéré en front\n",
-              "start", ret.events[idx].start_time, typeof ret.events[idx].start_time, "\n",
-              "end", ret.events[idx].end_time, typeof ret.events[idx].end_time, "\n");
-
-
-          console.log("utilisation de la fonction Date",
-              new Date(ret.events[idx].start_time), typeof new Date(ret.events[idx].start_time),
-              new Date(ret.events[idx].end_time), typeof new Date(ret.events[idx].end_time))
+          // console.log("recupéré en front\n",
+          //     "start", ret.events[idx].start_time, typeof ret.events[idx].start_time, "\n",
+          //     "end", ret.events[idx].end_time, typeof ret.events[idx].end_time, "\n");
+          //
+          //
+          // console.log("utilisation de la fonction Date",
+          //     new Date(ret.events[idx].start_time), typeof new Date(ret.events[idx].start_time),
+          //     new Date(ret.events[idx].end_time), typeof new Date(ret.events[idx].end_time))
 
           this.events.push({
             description: ret.events[idx].description,
@@ -208,7 +208,7 @@ export class CalendarComponent implements OnInit {
     this.requestSrv.get(`calendars/${this.calendar_id}`, {}, {Authorization: ''})
       .subscribe(ret => {
         this.calendar_name = ret.calendar.name;
-        console.log('aclendar_name => ', this.calendar_name)
+        // console.log('aclendar_name => ', this.calendar_name)
       });
   }
 
@@ -254,7 +254,7 @@ export class CalendarComponent implements OnInit {
                       newEnd,
                     }: CalendarEventTimesChangedEvent): void {
     let modified_event = this.events.find(current_event => current_event.id === event.id);
-    console.log(modified_event);
+    // console.log(modified_event);
     this.requestSrv.put(`events/${event.id}`, {
         start_time: formatDate(newStart, this.date_format, this.locale),
         end_time: formatDate(newEnd, this.date_format, this.locale),

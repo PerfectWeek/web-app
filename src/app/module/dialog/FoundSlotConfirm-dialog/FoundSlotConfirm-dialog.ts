@@ -5,6 +5,7 @@ import {ProfileService} from "../../../core/services/profile.service";
 import {RequestService} from "../../../core/services/request.service";
 import {DatePipe, formatDate} from "@angular/common";
 import {FoundSlotDialog} from '../FoundSlot-dialog/FoundSlot-dialog';
+import {st} from '@angular/core/src/render3';
 
 @Component({
     selector: 'FoundSlotConfirm-dialog',
@@ -71,9 +72,9 @@ export class FoundSlotConfirmDialog {
         for (const idx in this.data.slots.slots) {
             // console.log(typeof this.data.slots.slots[idx].start_time);
             // console.log(this.data.slots.slots[idx].start_time);
-            console.log("envoie a l'api pouet\n",
-                "start", this.data.slots.slots[idx].start_time, typeof this.data.slots.slots[idx].start_time, "\n",
-                "end", this.data.slots.slots[idx].end_time, typeof this.data.slots.slots[idx].end_time, "\n");
+            // console.log("envoie a l'api pouet\n",
+            //     "start", this.data.slots.slots[idx].start_time, typeof this.data.slots.slots[idx].start_time, "\n",
+            //     "end", this.data.slots.slots[idx].end_time, typeof this.data.slots.slots[idx].end_time, "\n");
 
             let begin = new DatePipe('fr').transform(
                 this.data.slots.slots[idx].start_time,
@@ -104,15 +105,15 @@ export class FoundSlotConfirmDialog {
         } else {
             route_id_calendar = this.data.calendar_id;
         }
-        console.log(this.finalChoose, this.data.slots.slots.length);
+        // console.log(this.finalChoose, this.data.slots.slots.length);
         if (this.finalChoose === this.data.slots.slots.length)
         {
             this.dialogRef.close();
             return;
         }
-        console.log("envoie a l'api RAW\n",
-            "start", this.data.slots.slots[this.finalChoose].start_time, typeof this.data.slots.slots[this.finalChoose].start_time, "\n",
-            "end", this.data.slots.slots[this.finalChoose].end_time, typeof this.data.slots.slots[this.finalChoose].end_time, "\n");
+        // console.log("envoie a l'api RAW\n",
+        //     "start", this.data.slots.slots[this.finalChoose].start_time, typeof this.data.slots.slots[this.finalChoose].start_time, "\n",
+        //     "end", this.data.slots.slots[this.finalChoose].end_time, typeof this.data.slots.slots[this.finalChoose].end_time, "\n");
 
 
         // let start = formatDate(this.data.slots.slots[this.finalChoose].start_time, this.date_format, 'fr');
@@ -134,8 +135,8 @@ export class FoundSlotConfirmDialog {
                     title: "trouver un creneau !!!",
                     description: "oui",
                     location: "ici",
-                    start: start,
-                    end: end,
+                    start: new Date(start),
+                    end: new Date(end),
                     color: '#FFFFFF',
                     draggable: true,
                     actions: this.data.actions,
@@ -145,9 +146,9 @@ export class FoundSlotConfirmDialog {
                     },
                     id: ret.event.id,
                 });
-                console.log("envoie a l'api\n",
-                    "start", start, typeof start, "\n",
-                    "end", end, typeof end, "\n");
+                // console.log("envoie a l'api\n",
+                //     "start", start, typeof start, "\n",
+                //     "end", end, typeof end, "\n");
 
                 this.data.refresh.next();
                 this.toastSrv.success("Evenement ajouté au groupe");

@@ -52,17 +52,17 @@ export class ModifyEventDialog {
     this.event = data.event;
     this.requestSrv.get(`events/${this.event.id}`, {}, {Authorization: ''})
         .subscribe(ret => {
-          console.log("la requete ciblé", ret);
+          // console.log("la requete ciblé", ret);
           this.event.description = ret.event.description;
           this.event.location = ret.event.location;
         },
         err => {
-          console.log("CA MARCHE PAS LA !")
+          // console.log("CA MARCHE PAS LA !");
         });
   }
 
   modifyEvent() {
-    console.log("\n\napres la modification, ", this.event);
+    // console.log("\n\napres la modification, ", this.event);
     this.requestSrv.put(`events/${this.event.id}`, {
       name: this.event.title,
       description: this.event.description,

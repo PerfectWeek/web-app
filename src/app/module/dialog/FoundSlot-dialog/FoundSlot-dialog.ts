@@ -64,7 +64,7 @@ export class FoundSlotDialog {
       this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
         .subscribe(ret => {
           this.calendars_list = ret.calendars;
-          console.log('CAL', this.calendars_list);
+          // console.log('CAL', this.calendars_list);
         });
     });
   }
@@ -83,6 +83,7 @@ export class FoundSlotDialog {
     });
     dialogConfirmRef.afterClosed().subscribe(result => {
       console.log(result);
+      this.data.refresh.next();
       if (result !== null && result !== undefined) {
         console.log("Réponse enregistré");
       }
@@ -100,10 +101,11 @@ export class FoundSlotDialog {
         {duration: this.heure * 60 + this.minute, location: this.location, min_time: this.start, max_time: this.end}, {Authorization: ''})
       .subscribe(ret => {
         //console.log(ret);
-        // this.data.refresh.next();
-        // this.toastSrv.success("Recherche de créneau en cours");
+        this.data.refresh.next();
+        this.toastSrv.success("Recherche de créneau en cours");
         this.dialogRef.close();
         this.ChooseSlot(route_id_calendar, ret);
+        this.data.refresh.next();
       },err => this.toastSrv.error("Une erreur est survenue lors de la recherche d'evenement"))
   }
 }

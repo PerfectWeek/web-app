@@ -60,7 +60,7 @@ export class CreateEventDialog {
       this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
         .subscribe(ret => {
           this.calendars_list = ret.calendars;
-          console.log('CAL', this.calendars_list);
+          // console.log('CAL', this.calendars_list);
         });
     });
   }
@@ -97,9 +97,9 @@ export class CreateEventDialog {
           },
           id: ret.event.id,
         });
-        console.log("envoie a l'api\n",
-            "start", this.start, typeof this.start, "\n",
-            "end", this.end, typeof this.end, "\n");
+        // console.log("envoie a l'api\n",
+        //     "start", this.start, typeof this.start, "\n",
+        //     "end", this.end, typeof this.end, "\n");
         this.data.refresh.next();
         this.toastSrv.success("Evenement ajouté au groupe");
         this.dialogRef.close();
