@@ -10,6 +10,7 @@ import {CommonModule, registerLocaleData} from "@angular/common";
 //External Modules
 import { ToastrModule } from 'ngx-toastr';
 import {
+  MatRadioModule,
   MatSelectModule,
   MatDialogModule,
   MatExpansionModule,
@@ -70,6 +71,9 @@ import { ConfirmDialog } from "./module/dialog/Confirm-dialog/Confirm-dialog";
 import {GroupCreationDialog} from "./module/dialog/Group-creation-dialog/group-creation";
 import {CreateEventDialog} from "./module/dialog/CreateEvent-dialog/CreateEvent-dialog";
 import {ModifyEventDialog} from "./module/dialog/ModifyEvent-dialog/ModifyEvent";
+import {FoundSlotDialog} from './module/dialog/FoundSlot-dialog/FoundSlot-dialog';
+
+//import {MatRadioModule} from '@angular/material/radio';
 
 
 //Guards
@@ -77,6 +81,7 @@ import { isLogged } from "./core/Guards/isLogged-guard";
 import { IsLogout } from "./core/Guards/isLogout-guard";
 
 import localeFr from '@angular/common/locales/fr';
+import {FoundSlotConfirmDialog} from './module/dialog/FoundSlotConfirm-dialog/FoundSlotConfirm-dialog';
 
 registerLocaleData(localeFr);
 
@@ -95,6 +100,8 @@ registerLocaleData(localeFr);
     CreateEventDialog,
     GroupCreationDialog,
     ModifyEventDialog,
+    FoundSlotDialog,
+    FoundSlotConfirmDialog,
     GroupComponent,
     CalendarHeaderComponent,
     FormModalComponent,
@@ -109,6 +116,7 @@ registerLocaleData(localeFr);
       useFactory: adapterFactory,
     }),
     BrowserModule,
+    MatRadioModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     RouterModule,
@@ -170,6 +178,8 @@ registerLocaleData(localeFr);
     FormModalComponent,
     CreateEventDialog,
     ModifyEventDialog,
+    FoundSlotDialog,
+    FoundSlotConfirmDialog,
   ]
 })
 export class AppModule { }

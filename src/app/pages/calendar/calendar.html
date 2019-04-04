@@ -40,8 +40,14 @@
         (click)="addEvent()">
         Ajouter un nouvel évènement
       </button>
+      <button
+              class="btn btn-primary pull-right"
+              (click)="foundSlots()">
+        Trouver un créneau
+      </button>
       <div class="clearfix"></div>
     </h3>
+
 
 
     <div [ngSwitch]="view">
