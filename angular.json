@@ -21,8 +21,10 @@
               "src/favicon.ico"
             ],
             "styles": [
-              "node_modules/angular-calendar/css/angular-calendar.css",
-              "node_modules/font-awesome/scss/font-awesome.scss",
+              "node_modules/@fullcalendar/core/main.css",
+              "node_modules/@fullcalendar/daygrid/main.css",
+              "node_modules/@fullcalendar/timegrid/main.css",
+              "node_modules/@fullcalendar/list/main.css",
               "src/scss/styles.scss"
             ],
             "scripts": [

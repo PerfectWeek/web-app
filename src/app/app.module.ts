@@ -31,10 +31,13 @@ import {
   MatIconModule,
   MAT_LABEL_GLOBAL_OPTIONS,
   MAT_DATE_LOCALE, MatDialogRef, MatPaginatorIntl } from "@angular/material";
-import {CalendarModule, DateAdapter} from "angular-calendar";
+
+// import {CalendarModule, DateAdapter} from "angular-calendar";
+
+
 import {NgbModalModule} from "@ng-bootstrap/ng-bootstrap";
 import {FlatpickrModule} from "angularx-flatpickr";
-import {adapterFactory} from "angular-calendar/date-adapters/date-fns";
+// import {adapterFactory} from "angular-calendar/date-adapters/date-fns";
 
 //Internal modules
 import { AppRoutingModule } from "./app-routing-module";
@@ -59,12 +62,14 @@ import { DashboardComponent } from "./pages/User/dashboard/dashboard";
 import { ProfileComponent } from "./pages/User/profile/profile";
 import { GroupManagementComponent } from "./pages/User/groups/group-management";
 import { GroupComponent } from "./pages/User/groups/group/group";
-import {CalendarHeaderComponent} from "./pages/calendar/demo-utils/calendar-header.component";
+// import {CalendarHeaderComponent} from "./pages/calendar/demo-utils/calendar-header.component";
 import {FormModalComponent} from "./pages/calendar/demo-utils/ModalForm/form-modal.component";
 import {RegistrationConfirmationComponent} from "./pages/Registration_Confirmation/registration-confirmation";
 import {CalendarComponent} from "./pages/calendar/calendar";
 import { Navbar } from "./module/Navbar/navbar";
 
+
+import { FullCalendarModule } from '@fullcalendar/angular'; // for FullCalendar!
 
 //Dialog
 import { ConfirmDialog } from "./module/dialog/Confirm-dialog/Confirm-dialog";
@@ -103,7 +108,7 @@ registerLocaleData(localeFr);
     FoundSlotDialog,
     FoundSlotConfirmDialog,
     GroupComponent,
-    CalendarHeaderComponent,
+    //  CalendarHeaderComponent,
     FormModalComponent,
     RegistrationConfirmationComponent,
   ],
@@ -111,10 +116,10 @@ registerLocaleData(localeFr);
     CommonModule,
     NgbModalModule,
     FlatpickrModule.forRoot(),
-    CalendarModule.forRoot({
-      provide: DateAdapter,
-      useFactory: adapterFactory,
-    }),
+    // CalendarModule.forRoot({
+    //   provide: DateAdapter,
+    //   useFactory: adapterFactory,
+    // }),
     BrowserModule,
     MatRadioModule,
     BrowserAnimationsModule,
@@ -141,6 +146,7 @@ registerLocaleData(localeFr);
     MatButtonModule,
     MatListModule,
     MatIconModule,
+    FullCalendarModule,
     ToastrModule.forRoot({
       timeOut: 10000,
       positionClass: 'toast-bottom-center',
