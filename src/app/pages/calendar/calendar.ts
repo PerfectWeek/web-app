@@ -11,6 +11,10 @@ import {RequestService} from '../../core/services/request.service';
 import {ProfileService} from '../../core/services/profile.service';
 import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';
+import {EventInput} from '@fullcalendar/core/structs/event';
+import {DatePipe, formatDate} from '@angular/common';
+import {Calendar} from '@fullcalendar/core/Calendar';
+import {CreateEventDialog} from '../../module/dialog/CreateEvent-dialog/CreateEvent-dialog';
 
 @Component({
   // selector: 'app-root',
@@ -22,84 +26,255 @@ import {Router} from '@angular/router';
 
 })
 export class CalendarComponent implements OnInit {
+// export class CalendarComponent {
   options: OptionsInput;
-  eventsModel: any;
-  @ViewChild('fullcalendar') fullcalendar: FullCalendarComponent;
+    @ViewChild('fullcalendar') calendarComponent: FullCalendarComponent; // the #calendar in the template
+    events: EventInput[] = [];
+    // calendarWeekends = true;
+    // calendarVisible = true;
+    // calendarPlugins = [dayGridPlugin, timeGridPlugin, interactionPlugin];
+    //
+    // toggleVisible() {
+    //     this.calendarVisible = !this.calendarVisible;
+    // }
+    //
+    // toggleWeekends() {
+    //     this.calendarWeekends = !this.calendarWeekends;
+    // }
+    //
+    // gotoPast() {
+    //     let calendarApi = this.calendarComponent.getApi();
+    //     calendarApi.gotoDate('2000-01-01'); // call a method on the Calendar object
+    // }
 
-  constructor(private modal: NgbModal, public dialog: MatDialog,
+    // handleDateClick(arg) {
+    //     if (confirm('Would you like to add an event to ' + arg.dateStr + ' ?')) {
+    //         this.events = this.events.concat({ // add new event data. must create new array
+    //             title: 'New Event',
+    //             start: arg.date,
+    //             allDay: arg.allDay
+    //         })
+    //     }
+    // }
+
+
+    constructor(private modal: NgbModal,
+              public dialog: MatDialog,
               private requestSrv: RequestService,
               private profileSrv: ProfileService,
               private toastSrv: ToastrService,
-              // private dialog: MatDialog,
               private router: Router) {
   }
 
+    // @ViewChild('calendar') fullcalendar: FullCalendarComponent; // the #calendar in the template
+    // calendarVisible = true;
+    // calendarPlugins = [dayGridPlugin, timeGridPlugin, interactionPlugin];
+    // calendarWeekends = true;
+    // calendarEvents: EventInput[] = [
+    //     { title: 'Event Now', start: new Date() }
+    // ];
+    //
+    // toggleVisible() {
+    //     this.calendarVisible = !this.calendarVisible;
+    // }
+    //
+    // toggleWeekends() {
+    //     this.calendarWeekends = !this.calendarWeekends;
+    // }
+    //
+    // gotoPast() {
+    //     let calendarApi = this.fullcalendar.getApi();
+    //     calendarApi.gotoDate('2000-01-01'); // call a method on the Calendar object
+    // }
+    //
+    // handleDateClick(arg) {
+    //     if (confirm('Would you like to add an event to ' + arg.dateStr + ' ?')) {
+    //         this.calendarEvents = this.calendarEvents.concat({ // add new event data. must create new array
+    //             title: 'New Event',
+    //             start: arg.date,
+    //             allDay: arg.allDay
+    //         })
+    //     }
+    // }
 
-  ngOnInit() {
-    this.options = {
-      editable: true,
-      // customButtons: {
-      //   myCustomButton: {
-      //     text: 'custom!',
-      //     click: function () {
-      //       alert('clicked the custom button!');
-      //     }
-      //   }
-      // },
-      header: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridMonth,timeGridDay,listMonth'
-      },
+    ngOnInit() {
+        this.get_group_info();
+          this.options = {
+            editable: true,
+            customButtons: {
+                addEventButton: {
+                    text: 'Ajouter un evenement',
+                    click: async() => { this.addEvent(); },
+                }
+            },
+            header: {
+              left: 'prev,next today',
+              center: 'title',
+              right: 'addEventButton,dayGridMonth,timeGridMonth,timeGridDay,listMonth'
+            },
 
-      plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
-      // events: 'https://fullcalendar.io/demo-events.json?overload-day',
-      locale: 'fr',
-      buttonIcons: false, // show the prev/next text
-      weekNumbers: true,
-      navLinks: true, // can click day/week names to navigate views
-      //editable: true,
-      eventLimit: true, // allow "more" link when too many events
-    };
-    eventsModel: this.get_calendar_events(1);
-  }
+              plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
+            // events: 'https://fullcalendar.io/demo-events.json?overload-day',
+                locale: 'fr',
+                buttonIcons: false, // show the prev/next text
+                weekNumbers: true,
+                navLinks: true, // can click day/week names to navigate views
+                eventLimit: true, // allow "more" link when too many events
+          };
+          // this.get_group_info();
+    }
+
+    getAPI() {
+        return this.calendarComponent.getApi();
+    }
+
+    locale: string = 'fr';
+    calendar_id: number = null;
+    calendar_name: string = null;
+    is_global_calendar: boolean = true;
+    date_format: string = "yyyy-MM-ddThh:mm:ss";
+    // date_format: string = "yyyy-MM-ddThh:mm:ss.SSS'Z'";
+
+    addevent(event) {
+        this.events = this.events.concat(event);
+    }
 
     get_calendar_events(calendar_id) {
-    let events = [];
-    this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''})
+        this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''})
       .subscribe(ret => {
-        // let random_color = {
-        //   primary: '#'+(Math.random() * 0xFFFFFF << 0).toString(16),
-        //   secondary: '#1C4891',
-        // };
         for (const idx in ret.events) {
-          events.push({
-            description: ret.events[idx].description,
-            location: ret.events[idx].location,
-            // id: ret.events[idx].id,
-            title: ret.events[idx].name,
-            // start: startOfDay(ret.events[idx].start_time),
-            // end: endOfDay(ret.events[idx].end_time),
-            start: new Date(ret.events[idx].start_time),
-            end: new Date(ret.events[idx].end_time),
-          });
+            this.addevent({
+                title: ret.events[idx].name,
+                start: ret.events[idx].start_time,
+                end: ret.events[idx].end_time,
+                id: ret.events[idx].id,
+            });
         }
       });
-    console.log("lol", events);
-    return events;
+  }
+
+  get_group_calendar(): void {
+    this.get_calendar_events(this.calendar_id);
+    this.requestSrv.get(`calendars/${this.calendar_id}`, {}, {Authorization: ''})
+      .subscribe(ret => {
+        this.calendar_name = ret.calendar.name;
+      });
+  }
+
+  get_global_calendar(): void {
+    this.profileSrv.userProfile$.subscribe(user => {
+      this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
+        .subscribe(ret => {
+          for (let idx in ret.calendars) {
+            this.get_calendar_events(ret.calendars[idx].calendar.id);
+          }
+        });
+    });
+  }
+
+  get_group_info() {
+    this.calendar_id = +(this.router.url.slice(this.router.url.lastIndexOf('/') + 1));
+    if (!Number.isNaN(this.calendar_id)) {
+      this.is_global_calendar = false;
+      this.get_group_calendar();
+    } else {
+      this.is_global_calendar = true;
+      this.get_global_calendar();
+    }
+  }
+
+      addEvent(): void {
+    let dialogRef = this.dialog.open(CreateEventDialog, {
+      data: {
+        calendar_id: this.calendar_id,
+        events: this.events,
+        is_global_calendar: this.is_global_calendar,
+        calendar_locale: this.locale,
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== null && result !== undefined) {
+        console.log("Event created");
+      }
+    });
+    // let dialogRef = this.dialog.open(CreateEventDialog, {
+    //   data: {
+    //     title: "Creation d'évenement",
+    //     //question: 'Voulez-vous vraiment supprimer votre profil ?'
+    //   }
+    // });
   }
 
 
+    // dayClicked({date, events}: { date: Date; events: CalendarEvent[] }): void {
+  //   if (isSameMonth(date, this.viewDate)) {
+  //     this.viewDate = date;
+  //     if (
+  //       (isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) ||
+  //       events.length === 0
+  //     ) {
+  //       this.activeDayIsOpen = false;
+  //     } else {
+  //       this.activeDayIsOpen = true;
+  //     }
+  //   }
+  // }
 
 
-  eventClick(model) {
-    console.log(model);
+
+
+    eventClick(model) {
+    console.log("EVENT CLICK", model);
   }
-  eventDragStop(model) {
-    console.log(model);
+    eventDragStop(event): void {
+        console.log(event);
+    }
+
+    eventDrop(event): void {
+    // console.log(event);
+    // console.log(event._instance);
+    // console.log(event._instance);
+    // console.log(this.events);
+
+    // console.log(formatDate(event._instance.range.start, this.date_format, this.locale));
+    // console.log(formatDate(event._instance.range.end, this.date_format, this.locale));
+    // console.log(event);
+    // console.log(this.events);
+    // console.log(event.event.id, "IDDDDDDD");
+    console.log(event);
+    let api = this.getAPI();
+    let modified_event = api.getEventById(event.event.id);
+    // console.log(Number(event.event.id));
+    // console.log("EVENT", this.events);
+    // console.log("APIVENT", api.getEvents());
+    // let tmp =
+    // console.log("lololol", api.isEventsUpdated);
+    // console.log("tmp", tmp.start);
+    console.log("THE END", formatDate(modified_event.end, this.date_format, this.locale));
+    this.requestSrv.put(`events/${event.event.id}`, {
+        start_time: formatDate(modified_event.start, this.date_format, this.locale),
+        end_time: formatDate(modified_event.end, this.date_format, this.locale),
+        // start_time: modified_event.start.toString(),
+        // end_time: modified_event.end.toString(),
+        location: "bah je sais pas",
+        description: "je sais toujours pas",
+        name: event.event.title,
+        type: "hobby",
+      },
+      {Authorization: ''})
+      .subscribe(ret => {
+        this.toastSrv.success("Evenement modifié");
+      });
+    // console.log("ALALAL", formatDate(modified_event.start.toString(), this.date_format, this.locale));
+    // console.log("DRAG", this.events);
   }
+
+  //   eventDragStop(event) {
+  //   // console.log("EVENTDRAGSTOP", model);
+  //       console.log(event.event.title);
+  // }
   dateClick(model) {
-    console.log(model);
+    console.log("DATE CLICK", model);
   }
   // updateHeader() {
   //   this.options.header = {
@@ -108,18 +283,30 @@ export class CalendarComponent implements OnInit {
   //     right: ''
   //   };
   // }
-  // updateEvents() {
-  //   this.eventsModel = [{
-  //     title: 'Updaten Event',
-  //     start: this.yearMonth + '-08',
-  //     end: this.yearMonth + '-10'
-  //   }];
-  // }
-  // get yearMonth(): string {
-  //   const dateObj = new Date();
-  //   return dateObj.getUTCFullYear() + '-' + (dateObj.getUTCMonth() + 1);
-  // }
+  //
+  updateEvents() {
+    // this.events = [{
+    //   title: 'Updaten Event',
+    //   //start: this.yearMonth + '+08',
+    //   start: "2019-04-20T08:00:00.000Z",
+    // }];
+    //   this.addevent({
+    //       title: 'Updaten Event',
+    //       //start: this.yearMonth + '+08',
+    //       start: "2019-04-20T08:00:00.000Z",
+    //   });
+    console.log(this.events);
+  }
+
+  get yearMonth(): string {
+    const dateObj = new Date();
+    return dateObj.getUTCFullYear() + '-' + (dateObj.getUTCMonth() + 1);
+  }
+
 }
+
+
+
 
 // import { Calendar } from '@fullcalendar/core';
 // import dayGridPlugin from '@fullcalendar/daygrid';

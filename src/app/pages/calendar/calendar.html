@@ -1,15 +1,71 @@
-<div id='calendar'>
+<!--<div class='app'>-->
+
+<!--    <div class='app-top'>-->
+<!--        <button (click)='toggleVisible()'>toggle visible</button>-->
+<!--        <button (click)='toggleWeekends()'>toggle weekends</button>-->
+<!--        <button (click)='gotoPast()'>go to a date in the past</button>-->
+<!--        (also, click a date/time to add an event)-->
+<!--    </div>-->
+
+<!--    <div class='app-calendar' *ngIf="calendarVisible">-->
+<!--        <full-calendar-->
+<!--            #fullcalendar-->
+<!--            defaultView="dayGridMonth"-->
+<!--            [header]="{-->
+<!--        left: 'prev,next today',-->
+<!--        center: 'title',-->
+<!--        right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'-->
+<!--      }"-->
+<!--            [plugins]="calendarPlugins"-->
+<!--            [weekends]="calendarWeekends"-->
+<!--            [events]="calendarEvents"-->
+<!--            (dateClick)="handleDateClick($event)"-->
+<!--        ></full-calendar>-->
+<!--    </div>-->
+<!--</div>-->
+
+<button (click)="updateEvents()" id="updateEvents">Update events</button>
+<button (click)="gotoPast()" id="updateHeader">Update header</button>
 <full-calendar
         *ngIf="options"
         #fullcalendar
         [editable]="true"
-        [events]="eventsModel"
+        [events]="events"
         [header]="options.header"
+        [customButtons]="options.customButtons"
         (dateClick)="dateClick($event)"
         (eventDragStop)="eventDragStop($event)"
+        (eventDrop)="eventDrop($event)"
         [plugins]="options.plugins"
+        (eventClick)="eventClick($event)"
 ></full-calendar>
-</div>
+<router-outlet></router-outlet>
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<div id='calendar'>-->
+<!--<full-calendar-->
+<!--        *ngIf="options"-->
+<!--        #fullcalendar-->
+<!--        [editable]="true"-->
+<!--        [events]="events"-->
+<!--        [header]="options.header"-->
+<!--        (dateClick)="dateClick($event)"-->
+<!--        (eventDragStop)="eventDragStop($event)"-->
+<!--        [plugins]="options.plugins"-->
+<!--&gt;</full-calendar>-->
+<!--</div>-->
+
+
 <!--<router-outlet></router-outlet>-->
 
 

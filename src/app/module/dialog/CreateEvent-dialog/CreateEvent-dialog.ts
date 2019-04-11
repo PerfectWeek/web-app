@@ -49,6 +49,13 @@ export class CreateEventDialog {
   calendars_list: any;
   date_format: string = "yyyy-MM-ddThh:mm:ss";
 
+  eventType: string = null;
+  eventTypes: any = [{value: "party", viewValue: "Fête"},
+    {value: "work", viewValue: "Travail"},
+    {value: "hobby", viewValue: "Hobby"},
+    {value: "workout", viewValue: "Entrainement"}];
+
+
   @ViewChild('userInput') userInput;
 
   constructor(private requestSrv: RequestService,
@@ -78,29 +85,23 @@ export class CreateEventDialog {
       name: this.name,
       description: this.description,
       location: this.location,
+      type: this.eventType,
       start_time: formatDate(this.start, this.date_format, this.data.calendar_locale),//.toLocaleDateString(),
       end_time: formatDate(this.end, this.date_format, this.data.calendar_locale)//.toLocaleDateString()
     }, {Authorization: ''})
       .subscribe(ret => {
-        this.data.events.push({
+        this.data.events = this.data.events.concat({
           title: this.name,
           description: this.description,
           location: this.location,
+          type: this.eventType,
           start: this.start,
           end: this.end,
-          color: this.color,
-          draggable: true,
-          actions: this.data.actions,
-          resizable: {
-            beforeStart: true,
-            afterEnd: true
-          },
           id: ret.event.id,
         });
         // console.log("envoie a l'api\n",
         //     "start", this.start, typeof this.start, "\n",
         //     "end", this.end, typeof this.end, "\n");
-        this.data.refresh.next();
         this.toastSrv.success("Evenement ajouté au groupe");
         this.dialogRef.close();
       },err => this.toastSrv.error("Une erreur est survenue lors de l'ajout du nouvel evenement"))

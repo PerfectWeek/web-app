@@ -40,6 +40,15 @@
                required>
       </mat-form-field>
 
+      <mat-select placeholder="Type" required
+                  [(ngModel)]="eventType"
+                  name="eventType">
+        <mat-option *ngFor="let type of eventTypes" [value]="type.value">
+          {{type.viewValue}}
+        </mat-option>
+      </mat-select>
+
+
       <mat-form-field style="width: 5%">
         <input matInput
                type="color"
