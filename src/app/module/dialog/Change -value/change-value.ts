@@ -46,13 +46,11 @@ export class ChangeValueDialog {
     constructor(private fb: FormBuilder,
                 public dialogRef: MatDialogRef<ChangeValueDialog>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
-        console.log('data => ', data);
         this.value = data.value;
         if (data.fieldname === 'email')
             this.valueForm = this.initEmailForm();
         else
             this.valueForm = this.initValueForm();
-        console.log(this.valueForm['value']);
     }
 
     initValueForm() {

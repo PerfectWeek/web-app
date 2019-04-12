@@ -151,6 +151,7 @@ export class GroupListComponent implements OnInit, AfterViewInit {
         console.log('\nSearch by input value');
         this.pageIndex = 0;
 
+        this.displayGroups = [];
         this.displayGroups = this.userGroups
             .filter(group => group.name.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) != -1);
         this.profileSrv.userProfile$.subscribe(user => {
