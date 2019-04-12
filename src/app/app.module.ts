@@ -18,6 +18,7 @@ import {
 //External Modules
 import { ToastrModule } from 'ngx-toastr';
 import {
+  MatRadioModule,
   MatSelectModule,
   MatDialogModule,
   MatExpansionModule,
@@ -84,6 +85,9 @@ import {CreateEventDialog} from "./module/dialog/CreateEvent-dialog/CreateEvent-
 import {ModifyEventDialog} from "./module/dialog/ModifyEvent-dialog/ModifyEvent";
 import {ChangeValueDialog} from "./module/dialog/Change -value/change-value";
 import {AddMemberDialog} from "./module/dialog/Add-member/add-member";
+import {FoundSlotDialog} from './module/dialog/FoundSlot-dialog/FoundSlot-dialog';
+
+//import {MatRadioModule} from '@angular/material/radio';
 
 
 //Guards
@@ -91,6 +95,7 @@ import { isLogged } from "./core/Guards/isLogged-guard";
 import { IsLogout } from "./core/Guards/isLogout-guard";
 
 import localeFr from '@angular/common/locales/fr';
+import {FoundSlotConfirmDialog} from './module/dialog/FoundSlotConfirm-dialog/FoundSlotConfirm-dialog';
 
 registerLocaleData(localeFr);
 
@@ -132,6 +137,12 @@ export function getAuthServiceConfigs() {
     CreateEventDialog,
     GroupCreationDialog,
     ModifyEventDialog,
+    FoundSlotDialog,
+    FoundSlotConfirmDialog,
+    GroupComponent,
+    CalendarHeaderComponent,
+    FormModalComponent,
+    RegistrationConfirmationComponent,
     ChangeValueDialog,
     AddMemberDialog,
   ],
@@ -144,6 +155,7 @@ export function getAuthServiceConfigs() {
       useFactory: adapterFactory,
     }),
     BrowserModule,
+    MatRadioModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     RouterModule,
@@ -211,6 +223,8 @@ export function getAuthServiceConfigs() {
     FormModalComponent,
     CreateEventDialog,
     ModifyEventDialog,
+    FoundSlotDialog,
+    FoundSlotConfirmDialog,
     ChangeValueDialog,
     AddMemberDialog,
   ]

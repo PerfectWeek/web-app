@@ -1,0 +1,91 @@
+<div class="flex flex-r-centered">
+  <h2 mat-dialog-title>Trouver un créneau libre</h2>
+</div>
+<mat-dialog-content style="white-space: pre-wrap; text-align: center">
+  <div>
+    <form #groupForm="ngForm" (ngSubmit)="FoundSlot()" class="form-row" style="padding: 15px; margin: 15px 0">
+
+      <mat-select placeholder="Groupe"
+      *ngIf="data.is_global_calendar == true"
+      style="width: 100%"
+      [(ngModel)]="dialog_calendar_id"
+      name="dialog_calendar_id" required>
+      <mat-option *ngFor="let calendar of calendars_list" [value]="calendar.calendar.id">
+      {{calendar.calendar.name}}
+      </mat-option>
+      </mat-select>
+
+      <mat-form-field style="width: 100%">
+        <input matInput
+               placeholder="Lieux"
+               name="location"
+               [(ngModel)]="location"
+               required>
+      </mat-form-field>
+
+      <div layout-gt-sm="row">
+        Durée
+      <mat-form-field>
+        <input matInput
+               [(ngModel)]="heure"
+               name="heure"
+               type="number"
+               placeholder="Heure"
+               min="0"
+               max="24"
+               maxlength="2"
+               required>
+      </mat-form-field>
+
+        <mat-form-field>
+          <input matInput
+                 [(ngModel)]="minute"
+                 name="minute"
+                 type="number"
+                 placeholder="Minute"
+                 min="0"
+                 max="60"
+                 maxlength="2"
+                 required>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field style="width: 100%">
+        <input  matInput
+                class="form-control"
+                type="text"
+                mwlFlatpickr
+                [(ngModel)]="start"
+                [altInput]="true"
+                [convertModelValue]="true"
+                [enableTime]="true"
+                name="start"
+                dateFormat="Y-m-dTH:i"
+                altFormat="F j, Y H:i"
+                placeholder="Date minimum de debut"
+                required>
+      </mat-form-field>
+      <mat-form-field style="width: 100%">
+        <input  matInput
+                class="form-control"
+                type="text"
+                mwlFlatpickr
+                [(ngModel)]="end"
+                [altInput]="true"
+                [convertModelValue]="true"
+                [enableTime]="true"
+                name="end"
+                dateFormat="Y-m-dTH:i"
+                altFormat="F j, Y H:i"
+                placeholder="Date maximum de fin"
+                required>
+      </mat-form-field>
+
+    </form>
+  </div>
+</mat-dialog-content>
+<br>
+<mat-dialog-actions style="display: flex; justify-content: space-between">
+  <button class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
+  <button [disabled]="groupForm.valid === false" class="mat-raised-button btn-secondary" (click)="FoundSlot()">Confirmer</button>
+</mat-dialog-actions>

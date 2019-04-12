@@ -27,3 +27,16 @@
     background-color: map_get($colors, aquamarine) !important;
   }
 }
+
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle{
+  border-color: #1C4891;
+}
+
+.mat-radio-button.mat-accent .mat-radio-inner-circle{
+  color:#5ABC95;
+  background-color:#5ABC95;
+}
+
+.mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
+  background-color:rgba(255, 37, 37, .26);
+}

@@ -1,13 +1,14 @@
 import {Component, Inject, ViewChild} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {ToastrService} from "ngx-toastr";
 import {ProfileService} from "../../../core/services/profile.service";
 import {RequestService} from "../../../core/services/request.service";
 import {DatePipe, formatDate} from "@angular/common";
+import {FoundSlotConfirmDialog} from '../FoundSlotConfirm-dialog/FoundSlotConfirm-dialog';
 
 @Component({
-  selector: 'createEvent-creation-dialog',
-  templateUrl: 'CreateEvent-dialog.html',
+  selector: 'FoundSlot-dialog',
+  templateUrl: 'FoundSlot-dialog.html',
   styles: ['.mat-raised-button {\n' +
   '  box-sizing: border-box;\n' +
   '  position: relative;\n' +
@@ -35,14 +36,14 @@ import {DatePipe, formatDate} from "@angular/common";
   '  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);\n' +
   '}']
 })
-export class CreateEventDialog {
+export class FoundSlotDialog {
 
   name: string = null;
-  description: string = null;
   location: string = null;
-  color: any;
   start: Date;
   end: Date;
+  minute: number;
+  heure: number;
 
   dialog_calendar_id: string = null;
   user: any = null;
@@ -54,7 +55,10 @@ export class CreateEventDialog {
   constructor(private requestSrv: RequestService,
               private profileSrv: ProfileService,
               private toastSrv: ToastrService,
-              public dialogRef: MatDialogRef<CreateEventDialog>,
+              public dialogRef: MatDialogRef<FoundSlotDialog>,
+
+              public dialog: MatDialog,
+
               @Inject(MAT_DIALOG_DATA) public data: any) {
     this.profileSrv.userProfile$.subscribe(user => {
       this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
@@ -66,43 +70,42 @@ export class CreateEventDialog {
   }
 
 
-  createEvent() {
+  ChooseSlot(route_id_calendar, slots) {
+    // Open a New modal for choose a slot
+    let dialogConfirmRef = this.dialog.open(FoundSlotConfirmDialog, {
+      data: {
+        calendar_id: route_id_calendar,
+        slots: slots,
+        events: this.data.events,
+        refresh: this.data.refresh,
+        actions: this.data.actions,
+      }
+    });
+    dialogConfirmRef.afterClosed().subscribe(result => {
+      console.log(result);
+      this.data.refresh.next();
+      if (result !== null && result !== undefined) {
+        console.log("Réponse enregistré");
+      }
+    });
+  }
+
+  FoundSlot() {
     let route_id_calendar;
     if (this.dialog_calendar_id != null) {
       route_id_calendar = this.dialog_calendar_id;
     } else {
       route_id_calendar = this.data.calendar_id;
     }
-
-    this.requestSrv.post(`calendars/${route_id_calendar}/events`,{
-      name: this.name,
-      description: this.description,
-      location: this.location,
-      start_time: formatDate(this.start, this.date_format, this.data.calendar_locale),//.toLocaleDateString(),
-      end_time: formatDate(this.end, this.date_format, this.data.calendar_locale)//.toLocaleDateString()
-    }, {Authorization: ''})
+    this.requestSrv.get(`calendars/${route_id_calendar}/assistant/find-best-slots`,
+        {duration: this.heure * 60 + this.minute, location: this.location, min_time: this.start, max_time: this.end}, {Authorization: ''})
       .subscribe(ret => {
-        this.data.events.push({
-          title: this.name,
-          description: this.description,
-          location: this.location,
-          start: this.start,
-          end: this.end,
-          color: this.color,
-          draggable: true,
-          actions: this.data.actions,
-          resizable: {
-            beforeStart: true,
-            afterEnd: true
-          },
-          id: ret.event.id,
-        });
-        // console.log("envoie a l'api\n",
-        //     "start", this.start, typeof this.start, "\n",
-        //     "end", this.end, typeof this.end, "\n");
+        //console.log(ret);
         this.data.refresh.next();
-        this.toastSrv.success("Evenement ajouté au groupe");
+        this.toastSrv.success("Recherche de créneau en cours");
         this.dialogRef.close();
-      },err => this.toastSrv.error("Une erreur est survenue lors de l'ajout du nouvel evenement"))
+        this.ChooseSlot(route_id_calendar, ret);
+        this.data.refresh.next();
+      },err => this.toastSrv.error("Une erreur est survenue lors de la recherche d'evenement"))
   }
 }
