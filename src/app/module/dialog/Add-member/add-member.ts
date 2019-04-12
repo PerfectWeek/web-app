@@ -187,7 +187,7 @@ export class AddMemberDialog {
     // Add the selected user to the list of selected users and reset the input search value
     selected(event) {
         this.selectedUsers.push(event.option.viewValue);
-        let input = document.getElementById('UserInput').value = ''; // value exists as we are getting an input
+        let input = (<any>(document.getElementById('UserInput'))).value = ''; // value exists as we are getting an input
         this.userCtrl.setValue(null);
     }
 
