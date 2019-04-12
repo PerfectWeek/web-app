@@ -79,6 +79,15 @@
   }
 }
 
+.group-not-found {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-flow: row;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
 .group-focused {
   background-color: map_get($colors, light);
   outline: none;

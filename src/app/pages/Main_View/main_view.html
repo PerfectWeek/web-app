@@ -1,5 +1,5 @@
 <div class="full-view">
-    <section class="left-view">
+    <section #left_view (scroll)="scrolling($event)" class="left-view" id="left-view">
         <group-list #group_list (group_clicked)="goToGroup($event)"></group-list>
     </section>
     <section class="center-view">

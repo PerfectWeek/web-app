@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from "@angular/core";
+import {Component, Input, OnInit, ViewChild, HostListener, AfterViewInit} from "@angular/core";
 import {RequestService} from "../../core/services/request.service";
 
 @Component({
@@ -6,9 +6,12 @@ import {RequestService} from "../../core/services/request.service";
     templateUrl: 'main_view.html',
     styleUrls: ['main_view.scss', '../../../scss/themes/main.scss']
 })
-export class MainViewComponent implements OnInit {
+export class MainViewComponent implements OnInit, AfterViewInit {
 
     @ViewChild('group_list') group_list;
+    @ViewChild('left_view') left_view;
+
+    scroll_pos_prev: number;
 
     private _group_id: number = -1;
     private _calendar_id: number = -1;
@@ -37,6 +40,10 @@ export class MainViewComponent implements OnInit {
 
     }
 
+    ngAfterViewInit() {
+        this.scroll_pos_prev = this.left_view.nativeElement.scrollTop;
+    }
+
     goToGroup(group_id) {
         this.group_id = group_id;
         if (group_id != -1)
@@ -60,5 +67,21 @@ export class MainViewComponent implements OnInit {
     imageModification(group_id) {
         this.group_list.getGroups();
         this.group_list.ready.next(false);
+    }
+
+    scrolling(event) {
+        let height = this.left_view.nativeElement.scrollHeight;
+        let pos = this.left_view.nativeElement.scrollTop;
+        let end = this.left_view.nativeElement.offsetHeight;
+        let self = this;
+
+        setTimeout(function () {
+            if (self.scroll_pos_prev < pos) {
+                if (height - pos === end) {
+                    self.group_list.scrollGroupSearch();
+                }
+            }
+            self.scroll_pos_prev = pos;
+        }, 500);
     }
 }
