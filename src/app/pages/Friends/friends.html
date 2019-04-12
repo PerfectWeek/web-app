@@ -1,19 +1,31 @@
 
-<button class="btn-primary pull-right mr-4 fas fa-user-plus" style="padding:0.5%;margin:0.2%;" (click)="addFriend()">  Add Friends</button>
+<button class="btn-primary pull-right mr-4 fas fa-user-plus" style="padding:0.5%;margin:10px;" (click)="addFriend()">Add Friends</button>
 
-<h2 style="font-style:roboto;" class="icon-color">Mes Ami(e)s</h2>
-<ul class="list-group">
-  <li *ngFor="let friend of friends" class="list-group-item">
+<h2 class="icon-color title" >Mes Amis</h2>
+<div class="pull-right">
+  Tu as {{nb}} demande d'amis en attente.
+  <li *ngFor="let friend of rqst" class="list-group-item">
     <ul class="list-group">
+      {{friend.name}}<br>
+      <label class="pull-right">
+	<button class="btn-success fas fa-check" (click)="moveRequestToFriend(friend)"></button>
+	<button class="btn-danger fas fa-times" (click)="deleteRequest(friend)"></button>
+      </label>
+    </ul>
+  </li>
+</div>
+<ul class="list-group friend">
+  <li *ngFor="let friend of friends" class="list-group-item">
+    <ul class="list-group friend-box">
       <li href="#" class="list-group-item text-left doge">
 	<img class="img-thumbnail bouge" src="https://bootdey.com/img/Content/User_for_snippets.png">
 	<label class="name text-center">
 	  {{friend.name}}<br>
 	</label>
-	<label class="pull-right my-2 mr-4">
+	<label class="pull-right my-2 mr-1">
 	  <a  class="far fa-eye right mr-2 icon-color big-icon" title="View Profile"></a>
 	  <br>
-	  <a  class="far fa-comments mr-2 icon-color big-icon"  title="Send message"></a>
+	  <a  class="far fa-calendar-plus mr-2 icon-color big-icon"  title="Send message"></a>
 	  <br>
 	  <a  class="far fa-trash-alt mr-2 icon-color big-icon" href="javascript:;" title="Delete this friend" (click)="deleteFriend(friend)"></a>
 	</label>
@@ -21,4 +33,3 @@
     </ul>
   </li>
 </ul>
-

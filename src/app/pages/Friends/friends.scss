@@ -8,7 +8,11 @@
   border:2px solid #DDDDDD;
   font-weight:bold;
   color:#FFFFFF;
+  width: 550px;
+  margin-left: auto;
+  margin-right: auto;
 }
+
 .list-group-item img {
     height:80px; 
     width:80px;
@@ -31,5 +35,19 @@
     font-size: 130%;
 }
 .doge{
-    background-image: linear-gradient(to right, map_get($colors, secondary), map_get($colors, primary));
+    background-image: linear-gradient(to right, map_get($colors, light), map_get($colors, light));
+}
+.friend-box{
+    width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.friend{
+    width: 550px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.title{
+    padding:10px;
+    text-align:center;
 }
