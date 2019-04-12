@@ -56,7 +56,7 @@ export class GroupCreationDialog implements AfterViewInit {
   separatorKeysCodes: number[] = [ENTER, COMMA];
 
   user: any = null;
-  selectedUsers: any[] = [];
+  selectedUsers: string[] = [];
   userCtrl: FormControl = new FormControl();
 
   filteredUsers: BehaviorSubject<User[]>;
@@ -86,6 +86,28 @@ export class GroupCreationDialog implements AfterViewInit {
         .subscribe();
   }
 
+    addUser(event) {
+      const input = event.input;
+      const value = event.value;
+      this.requestSrv.get(`users/${value}`, {}, {Authorization: ''})
+        .subscribe(ret => {
+          let id: number = -1;
+          this.selectedUsers.forEach((atm_user, index) => {
+            if (atm_user === value)
+              id = index;
+          });
+          if (id != -1)
+            this.selectedUsers.splice(id, 1);
+          else
+            this.selectedUsers.push(value);
+          },
+          err => {
+              this.toastSrv.error(err.message, 'Une erreur est survenue')
+            });
+      input.value = '';
+    }
+
+
   search() {
     console.log("\nNumber of users returned per request => ", this.pageSize);
     console.log("Starting at matching user => ", this.pageIndex, " * ", this.pageSize);
@@ -93,11 +115,9 @@ export class GroupCreationDialog implements AfterViewInit {
     console.log("Searching users for value => ", this.search$.getValue().toLowerCase());
 
     this.filteredUsers.next([]);
-    this.profileSrv.userProfile$.subscribe(user => {
-        if (user.pseudo.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) !== -1) {
-            let users = this.filteredUsers.getValue();
-            users.push(user);
-            this.filteredUsers.next(users);
+    this.profileSrv.userProfile$.subscribe(currentUser => {
+        if (currentUser.pseudo.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) !== -1) {
+            this.filterCurrentUser(currentUser);
         }
     });
 
@@ -111,51 +131,83 @@ export class GroupCreationDialog implements AfterViewInit {
     //     "=":    this.search$.getValue().toLowerCase()
     // }, {Authorization: ''})
     //     .subscribe(ret => {
-    //         ret.groups.forEach(group => this.displayGroups.push(group));
-    // this.profileSrv.userProfile$.subscribe(user => {
-    //     user.pseudo.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) !== -1 ? this.displayUser = true : this.displayUser = false;
-    // });
+    //         this.filterUsers(ret.users);
     //     }, err => {
     //         this.toastSrv.error(err.error.message, 'Une erreur est survenue');
     //     });
   }
 
+  filterUsers(users) {
+    for (let user of users) {
+        let is_in: boolean = false;
+
+        for (let selected of this.selectedUsers)
+          if (user.pseudo === selected) {
+            is_in = true;
+            break;
+          }
+
+        if (is_in === true)
+          break;
+
+        let users = this.filteredUsers.getValue();
+        users.push(user);
+        this.filteredUsers.next(users);
+      }
+  }
+
+  filterCurrentUser(currentUser) {
+    for (let user of this.selectedUsers)
+        if (currentUser.pseudo === user)
+          return;
+
+    let users = this.filteredUsers.getValue();
+    users.push(currentUser);
+    this.filteredUsers.next(users);
+  }
+
+  // Add the selected user to the list of selected users and reset the input search value
   selected(event) {
-      this.selectedUsers.push(event.option.viewValue);
-      let input = document.getElementById('UserInput').value = '';
-      this.userCtrl.setValue(null);
+    this.selectedUsers.push(event.option.viewValue);
+    let input = document.getElementById('UserInput').value = ''; // value exists as we are getting an input
+    this.userCtrl.setValue(null);
   }
 
   removeUser(user) {
-    const index = this.selectedUsers.indexOf(user);
+    const index = this.selectedUsers.indexOf(user); // Getting the index of the user we want to remove
 
     if (index >= 0)
-      this.selectedUsers.splice(index, 1);
+      this.selectedUsers.splice(index, 1); // Removing the user from our array of selected users
   }
 
   createGroup() {
+    // Checking to see if the user creating the group is in the group member list
     this.profileSrv.userProfile$.subscribe(user => {
       let id = -1;
       this.selectedUsers.forEach((pseudo, index) => {
         if (pseudo === user.pseudo)
           id = index;
       });
+
       if (id === -1)
-        this.selectedUsers.push(user.pseudo);
+        this.selectedUsers.push(user.pseudo); // Adding the user creating the group to the group member list if he isn't in it
+
+      // Setting the request body attributes and values
       let body = {name: this.name};
       this.selectedUsers.forEach((user, index) => {
         body[`members[${index}]`] = user;
       });
+
+      // Request post to the API to create a new group
       this.requestSrv.post('groups', body, {Authorization: ''}).subscribe(ret => {
           this.toastSrv.success(`Votre groupe ${ret.group.name} a bien été créé`);
           this.dialogRef.close(ret.group.id);
           return true;
         },
         err => {
-          this.toastSrv.error(err.error.message, 'Une erreur est survenue');
+          this.toastSrv.error(err.error.message, 'Une erreur est survenue'); // Display an error message if an error occurs
           return false;
         });
     }, (error) => {console.log('error => ', error)});
   }
-
 }

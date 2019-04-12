@@ -6,6 +6,9 @@ import {ToastrService} from "ngx-toastr";
 import {ProfileService} from "../../../core/services/profile.service";
 import {RequestService} from "../../../core/services/request.service";
 import {Router} from "@angular/router";
+import {MatAutocomplete} from "@angular/material";
+import {User} from "../../../core/models/User";
+import {BehaviorSubject, Observable} from "rxjs/Rx";
 
 @Component({
     selector: 'add-member',
@@ -39,31 +42,163 @@ import {Router} from "@angular/router";
 })
 export class AddMemberDialog {
 
-    memberForm: FormGroup = null;
+    members: string[] = [];
 
-    constructor(private fb: FormBuilder,
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    sortingBy: string = "pseudo";
+
+    selectable: boolean = true;
+    removable: boolean = true;
+    visible: boolean = true;
+    addOnBlur: boolean = false;
+    separatorKeysCodes: number[] = [ENTER, COMMA];
+
+    user: any = null;
+    selectedUsers: string[] = [];
+    userCtrl: FormControl = new FormControl();
+
+    filteredUsers: BehaviorSubject<User[]>;
+    filteredUsers$: Observable<User[]>;
+
+    @ViewChild('users') users: MatAutocomplete;
+
+    public search$ = new BehaviorSubject<string>('');
+
+    constructor(private requestSrv: RequestService,
+                private profileSrv: ProfileService,
                 private toastSrv: ToastrService,
-                private requestSrv: RequestService,
+                private router: Router,
                 public dialogRef: MatDialogRef<AddMemberDialog>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
-            this.memberForm = this.initMemberForm();
+        data.members.forEach(member => this.members.push(member.pseudo));
+        this.filteredUsers = new BehaviorSubject<User[]>([]);
+        this.filteredUsers$ = this.filteredUsers.asObservable();
     }
 
-    initMemberForm() {
-        return this.fb.group({
-            member: ['', Validators.required]
+
+
+    ngAfterViewInit() {
+        this.search$
+            .debounceTime(300)
+            .distinctUntilChanged()
+            .do(() => this.search())
+            .subscribe();
+    }
+
+    addUser(event) {
+        const input = event.input;
+        const value = event.value;
+
+        for (let member of this.members)
+            if (value === member) {
+                input.value = '';
+                this.toastSrv.error('Cet utilisateur est déjà membre du groupe');
+                return;
+            }
+
+        this.requestSrv.get(`users/${value}`, {}, {Authorization: ''})
+            .subscribe(ret => {
+                    let id: number = -1;
+                    this.selectedUsers.forEach((atm_user, index) => {
+                        if (atm_user === value)
+                            id = index;
+                    });
+                    if (id != -1)
+                        this.selectedUsers.splice(id, 1);
+                    else
+                        this.selectedUsers.push(value);
+                },
+                err => {
+                    this.toastSrv.error(err.message, 'Une erreur est survenue')
+                });
+        input.value = '';
+    }
+
+
+    search() {
+        console.log("\nNumber of users returned per request => ", this.pageSize);
+        console.log("Starting at matching user => ", this.pageIndex, " * ", this.pageSize);
+        console.log("Sorting users by => ", this.sortingBy);
+        console.log("Searching users for value => ", this.search$.getValue().toLowerCase());
+
+        this.filteredUsers.next([]);
+        this.profileSrv.userProfile$.subscribe(currentUser => {
+            if (currentUser.pseudo.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) !== -1) {
+                this.filterCurrentUser(currentUser);
+            }
         });
+
+
+        /* To be implemented when the routes will be up api wise*/
+
+        // this.requestSrv.get(`users`, {
+        //     _limit: this.pageSize,
+        //     _start: this.pageIndex,
+        //     _sort:  this.sortingBy,
+        //     "=":    this.search$.getValue().toLowerCase()
+        // }, {Authorization: ''})
+        //     .subscribe(ret => {
+        //         this.filterUsers(ret.users);
+        //     }, err => {
+        //         this.toastSrv.error(err.error.message, 'Une erreur est survenue');
+        //     });
     }
 
-    checkExistance() {
-        if (this.data.members.find(member => member.pseudo === this.memberForm.value.member)) {
-            this.toastSrv.error("Cet utilisateur fait déjà parti de ce groupe");
-            return null;
+    filterUsers(users) {
+        for (let user of users) {
+            let is_in: boolean = false;
+
+            for (let member of this.members)
+                if (user.pseudo === member) {
+                    is_in = true;
+                    break;
+                }
+
+            for (let selected of this.selectedUsers)
+                if (user.pseudo === selected) {
+                    is_in = true;
+                    break;
+                }
+
+            if (is_in === true)
+                break;
+
+            let users = this.filteredUsers.getValue();
+            users.push(user);
+            this.filteredUsers.next(users);
         }
-        this.requestSrv.get(`users/${this.memberForm.value.member}`, {}, {Authorization: ''})
-            .do(() => {
-                this.dialogRef.close(this.memberForm.value.member);
-            }, err => this.toastSrv.error("Cet utilisateur n'existe pas"))
-            .subscribe()
+    }
+
+    filterCurrentUser(currentUser) {
+        for (let member of this.members)
+            if (currentUser.pseudo === member)
+                return;
+
+        for (let user of this.selectedUsers)
+            if (currentUser.pseudo === user)
+                return;
+
+        let users = this.filteredUsers.getValue();
+        users.push(currentUser);
+        this.filteredUsers.next(users);
+    }
+
+    // Add the selected user to the list of selected users and reset the input search value
+    selected(event) {
+        this.selectedUsers.push(event.option.viewValue);
+        let input = document.getElementById('UserInput').value = ''; // value exists as we are getting an input
+        this.userCtrl.setValue(null);
+    }
+
+    removeUser(user) {
+        const index = this.selectedUsers.indexOf(user); // Getting the index of the user we want to remove
+
+        if (index >= 0)
+            this.selectedUsers.splice(index, 1); // Removing the user from our array of selected users
+    }
+
+    addMember() {
+        this.dialogRef.close(this.selectedUsers);
     }
 }

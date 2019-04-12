@@ -24,6 +24,7 @@
                  [matChipInputFor]="userList"
                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                  [matChipInputAddOnBlur]="addOnBlur"
+                 (matChipInputTokenEnd)="addUser($event)"
                  (keyup)="search$.next($event.target.value)">
         </mat-chip-list>
         <mat-autocomplete #users="matAutocomplete" (optionSelected)="selected($event)">
