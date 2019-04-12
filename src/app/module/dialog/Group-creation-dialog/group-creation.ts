@@ -1,4 +1,4 @@
-import {Component, Inject, ViewChild} from "@angular/core";
+import {AfterViewInit, Component, ElementRef, Inject, ViewChild} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FormControl} from "@angular/forms";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
@@ -6,6 +6,10 @@ import {ToastrService} from "ngx-toastr";
 import {ProfileService} from "../../../core/services/profile.service";
 import {RequestService} from "../../../core/services/request.service";
 import {Router} from "@angular/router";
+import {BehaviorSubject, Observable} from "rxjs/Rx";
+import {User} from "../../../core/models/User";
+import {MatAutocomplete} from "@angular/material";
+import {startWith} from "rxjs/internal/operators";
 
 @Component({
   selector: 'group-creation-dialog',
@@ -37,9 +41,13 @@ import {Router} from "@angular/router";
   '  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);\n' +
   '}']
 })
-export class GroupCreationDialog {
+export class GroupCreationDialog implements AfterViewInit {
 
   name: string = null;
+
+  pageIndex: number = 0;
+  pageSize: number = 10;
+  sortingBy: string = "pseudo";
 
   selectable: boolean = true;
   removable: boolean = true;
@@ -50,36 +58,72 @@ export class GroupCreationDialog {
   user: any = null;
   selectedUsers: any[] = [];
   userCtrl: FormControl = new FormControl();
-  userFiltered: any[] = [];
-  @ViewChild('userInput') userInput;
+
+  filteredUsers: BehaviorSubject<User[]>;
+  filteredUsers$: Observable<User[]>;
+
+  @ViewChild('users') users: MatAutocomplete;
+
+  public search$ = new BehaviorSubject<string>('');
 
   constructor(private requestSrv: RequestService,
               private profileSrv: ProfileService,
               private toastSrv: ToastrService,
               private router: Router,
               public dialogRef: MatDialogRef<GroupCreationDialog>,
-              @Inject(MAT_DIALOG_DATA) public data: any) {}
+              @Inject(MAT_DIALOG_DATA) public data: any) {
+    this.filteredUsers = new BehaviorSubject<User[]>([]);
+    this.filteredUsers$ = this.filteredUsers.asObservable();
+  }
 
-  addUser(event) {
-    const input = event.input;
-    const value = event.value;
-    this.requestSrv.get(`users/${value}`, {}, {Authorization: ''})
-      .subscribe(ret => {
-          let id: number = -1;
-          this.selectedUsers.forEach((atm_user, index) => {
-            if (atm_user.pseudo === value)
-              id = index;
-          });
-          if (id != -1)
-            this.selectedUsers.splice(id, 1);
-          else
-            this.selectedUsers.push(value);
 
-        },
-        err => {
-          this.toastSrv.error(err.error.message, 'Une erreur est survenue')
-        });
-    input.value = '';
+
+  ngAfterViewInit() {
+    this.search$
+        .debounceTime(300)
+        .distinctUntilChanged()
+        .do(() => this.search())
+        .subscribe();
+  }
+
+  search() {
+    console.log("\nNumber of users returned per request => ", this.pageSize);
+    console.log("Starting at matching user => ", this.pageIndex, " * ", this.pageSize);
+    console.log("Sorting users by => ", this.sortingBy);
+    console.log("Searching users for value => ", this.search$.getValue().toLowerCase());
+
+    this.filteredUsers.next([]);
+    this.profileSrv.userProfile$.subscribe(user => {
+        if (user.pseudo.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) !== -1) {
+            let users = this.filteredUsers.getValue();
+            users.push(user);
+            this.filteredUsers.next(users);
+        }
+    });
+
+
+    /* To be implemented when the routes will be up api wise*/
+
+    // this.requestSrv.get(`users`, {
+    //     _limit: this.pageSize,
+    //     _start: this.pageIndex,
+    //     _sort:  this.sortingBy,
+    //     "=":    this.search$.getValue().toLowerCase()
+    // }, {Authorization: ''})
+    //     .subscribe(ret => {
+    //         ret.groups.forEach(group => this.displayGroups.push(group));
+    // this.profileSrv.userProfile$.subscribe(user => {
+    //     user.pseudo.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) !== -1 ? this.displayUser = true : this.displayUser = false;
+    // });
+    //     }, err => {
+    //         this.toastSrv.error(err.error.message, 'Une erreur est survenue');
+    //     });
+  }
+
+  selected(event) {
+      this.selectedUsers.push(event.option.viewValue);
+      let input = document.getElementById('UserInput').value = '';
+      this.userCtrl.setValue(null);
   }
 
   removeUser(user) {
