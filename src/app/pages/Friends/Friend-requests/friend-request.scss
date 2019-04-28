@@ -51,10 +51,12 @@
     flex-flow: row;
     flex-wrap: nowrap;
     justify-content: space-between;
+    border-bottom: 1px solid map_get($colors, lightgrey);
 
-    &:nth-child(even) {
-      background-color: map_get($colors, light);
+    &:last-child {
+      border-bottom: none !important;
     }
+
 
     & > .request-data {
       display: flex;
