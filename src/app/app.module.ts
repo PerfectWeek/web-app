@@ -77,6 +77,9 @@ import { GroupListComponent } from "./pages/Main_View/group_list/group_list";
 import {GroupInfoComponent} from "./pages/Main_View/group_info/group_info";
 import { Navbar } from "./module/Navbar/navbar";
 import { FriendsComponent } from './pages/Friends/friends';
+import {FriendRequestComponent} from "./pages/Friends/Friend-requests/friend-request";
+import {FriendListComponent} from "./pages/Friends/Friend-list/friend-list";
+import {PublicProfileComponent} from "./pages/User/profile/public/public";
 
 //Dialog
 import { ConfirmDialog } from "./module/dialog/Confirm-dialog/Confirm-dialog";
@@ -86,6 +89,8 @@ import {ModifyEventDialog} from "./module/dialog/ModifyEvent-dialog/ModifyEvent"
 import {ChangeValueDialog} from "./module/dialog/Change -value/change-value";
 import {AddMemberDialog} from "./module/dialog/Add-member/add-member";
 import {FoundSlotDialog} from './module/dialog/FoundSlot-dialog/FoundSlot-dialog';
+import {FoundSlotConfirmDialog} from './module/dialog/FoundSlotConfirm-dialog/FoundSlotConfirm-dialog';
+import {FriendInvitationDialog} from "./module/dialog/Friend-Invitation/invitation";
 
 //import {MatRadioModule} from '@angular/material/radio';
 
@@ -95,7 +100,6 @@ import { isLogged } from "./core/Guards/isLogged-guard";
 import { IsLogout } from "./core/Guards/isLogout-guard";
 
 import localeFr from '@angular/common/locales/fr';
-import {FoundSlotConfirmDialog} from './module/dialog/FoundSlotConfirm-dialog/FoundSlotConfirm-dialog';
 
 registerLocaleData(localeFr);
 
@@ -133,6 +137,10 @@ export function getAuthServiceConfigs() {
     MainViewComponent,
     GroupListComponent,
     GroupInfoComponent,
+    PublicProfileComponent,
+    FriendsComponent,
+    FriendRequestComponent,
+    FriendListComponent,
     ConfirmDialog,
     CreateEventDialog,
     GroupCreationDialog,
@@ -144,8 +152,8 @@ export function getAuthServiceConfigs() {
     FormModalComponent,
     RegistrationConfirmationComponent,
     ChangeValueDialog,
-      AddMemberDialog,
-      FriendsComponent
+    AddMemberDialog,
+    FriendInvitationDialog,
   ],
   imports: [
     CommonModule,
@@ -228,6 +236,7 @@ export function getAuthServiceConfigs() {
     FoundSlotConfirmDialog,
     ChangeValueDialog,
     AddMemberDialog,
+    FriendInvitationDialog,
   ]
 })
 export class AppModule { }

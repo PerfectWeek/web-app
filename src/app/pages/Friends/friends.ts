@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import { Friends } from '../../core/models/Friends';
 import { User } from '../../core/models/User';
 import {ProfileService} from '../../core/services/profile.service';
+import {Router} from "@angular/router";
+import {RequestService} from "../../core/services/request.service";
 
 
 @Component({
@@ -9,62 +11,52 @@ import {ProfileService} from '../../core/services/profile.service';
     templateUrl: 'friends.html',
     styleUrls: ['friends.scss']
 })
-export class FriendsComponent {
+export class FriendsComponent implements AfterViewInit {
     user : User;
-    
+    request_scroll_pos_prev: number;
+    list_scroll_pos_prev: number;
+
+    @ViewChild('Requests') request;
+    @ViewChild('Request_Component') request_component;
+
+    @ViewChild('List') list;
+    @ViewChild('List_Component') list_component;
+
     friends: Friends[] = [
-	{ name: 'Winston DuPuy'},
-	{ name: 'Damien-de tres tres loi au bout du monde' },
-	{ name: 'Mehdi Bento'},
-	{ name: 'Henry Salvador'},
-	{ name: 'Seb'},
+        {name: 'Julius Gaius César', image: 'assets/Pictures/bread.jpg'},
+        {name: 'Hannibal', image: 'assets/Pictures/bread.jpg'},
+        {name: 'Publius Cornelius Scipio Africanus', image: 'assets/Pictures/bread.jpg'},
+        {name: 'Arthur Pendragon', image: 'assets/Pictures/bread.jpg'},
+        {name: 'Cú Chulainn', image: 'assets/Pictures/bread.jpg'},
+        {name: 'Oda Nobunaga', image: 'assets/Pictures/bread.jpg'},
+        {name: 'Le Général Pépin', image: 'assets/Pictures/bread.jpg'},
+        {name: 'Le Général Franco', image: 'assets/Pictures/bread.jpg'},
+        {name: 'Stalin', image: 'assets/Pictures/bread.jpg'},
+        {name: 'Mao Tse-Tung', image: 'assets/Pictures/bread.jpg'},
     ];
 
-    rqst: Friends[] = [
-	{ name: 'Amin Boule Blanche'},
-	{ name: 'Rotaru'},
-	{ name: 'Reitaru Uzumaki'},
-	{ name: 'underscore i'},
-	{ name: 'Guillaume BEUNARD'},
-	{ name: 'GIAUMRE BAIGNOIRE'},
-	{ name: 'Mathias Alphabet Arabe'},
-	{ name: 'Julien de la Montagne'},
-    ]
+    constructor() {
 
-    nb: number;
-    
-    x: Friends = {name: "Christian"};
-    constructor(private profileSrv: ProfileService) {
-	
+	}
+
+    ngAfterViewInit() {
+        this.request_scroll_pos_prev = this.request.nativeElement.scrollTop;
+        this.list_scroll_pos_prev = this.list.nativeElement.scrollTop;
     }
 
-    ngOnInit() {
-	this.nb = Object.keys(this.rqst).length;
-	this.profileSrv.userProfile$.subscribe(user => {
-	    this.user = user;
-	}, (error) => {console.log('error => ', error)});
-    }
-    
-    deleteFriend(fr: Friends) {
-	//const index: number = this.friends.indexOf(fr);
-	//console.log("INDEX : " + index);
-	this.friends = this.friends.filter(item => item !== fr);
-	console.log("function deleteFriend called");
-    }
+    scrolling(type: string, event) {
+        let height = this[`${type}`].nativeElement.scrollHeight;
+        let pos = this[`${type}`].nativeElement.scrollTop;
+        let end = this[`${type}`].nativeElement.offsetHeight;
+        let self = this;
 
-    addFriend() {
-	this.friends.push(this.x);
-	console.log("function addFriend called");
-    }
-
-    deleteRequest(fr: Friends){
-	this.nb = this.nb - 1;
-	this.rqst = this.rqst.filter(item => item !== fr);
-	console.log("function deleteRequest called");
-    }
-
-    moveRequestToFriend(fr: Friends){
-	this.friends.push(fr);
-	this.deleteRequest(fr);
+        setTimeout(function () {
+            if (self[`${type}_scroll_pos_prev`] < pos) {
+                if (height - pos === end) {
+                    self[`${type}_component`].scrollSearch();
+                }
+            }
+            self[`${type}_scroll_pos_prev`] = pos;
+        }, 500);
     }
 }

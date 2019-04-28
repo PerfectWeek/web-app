@@ -1,18 +1,19 @@
-import {Component, Inject, ViewChild} from "@angular/core";
+import {AfterViewInit, Component, ElementRef, Inject, ViewChild} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormControl} from "@angular/forms";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {ToastrService} from "ngx-toastr";
 import {ProfileService} from "../../../core/services/profile.service";
 import {RequestService} from "../../../core/services/request.service";
 import {Router} from "@angular/router";
-import {MatAutocomplete} from "@angular/material";
-import {User} from "../../../core/models/User";
 import {BehaviorSubject, Observable} from "rxjs/Rx";
+import {User} from "../../../core/models/User";
+import {MatAutocomplete} from "@angular/material";
+import {startWith} from "rxjs/internal/operators";
 
 @Component({
-    selector: 'add-member',
-    templateUrl: 'add-member.html',
+    selector: 'friend-invitation-dialog',
+    templateUrl: 'invitation.html',
     styles: ['.mat-raised-button {\n' +
     '  box-sizing: border-box;\n' +
     '  position: relative;\n' +
@@ -40,9 +41,7 @@ import {BehaviorSubject, Observable} from "rxjs/Rx";
     '  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);\n' +
     '}']
 })
-export class AddMemberDialog {
-
-    members: string[] = [];
+export class FriendInvitationDialog implements AfterViewInit {
 
     pageIndex: number = 0;
     pageSize: number = 10;
@@ -69,9 +68,8 @@ export class AddMemberDialog {
                 private profileSrv: ProfileService,
                 private toastSrv: ToastrService,
                 private router: Router,
-                public dialogRef: MatDialogRef<AddMemberDialog>,
+                public dialogRef: MatDialogRef<FriendInvitationDialog>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
-        data.members.forEach(member => this.members.push(member.pseudo));
         this.filteredUsers = new BehaviorSubject<User[]>([]);
         this.filteredUsers$ = this.filteredUsers.asObservable();
     }
@@ -89,14 +87,6 @@ export class AddMemberDialog {
     addUser(event) {
         const input = event.input;
         const value = event.value;
-
-        for (let member of this.members)
-            if (value === member) {
-                input.value = '';
-                this.toastSrv.error('Cet utilisateur est déjà membre du groupe');
-                return;
-            }
-
         this.requestSrv.get(`users/${value}`, {}, {Authorization: ''})
             .subscribe(ret => {
                     let id: number = -1;
@@ -149,12 +139,6 @@ export class AddMemberDialog {
         for (let user of users) {
             let is_in: boolean = false;
 
-            for (let member of this.members)
-                if (user.pseudo === member) {
-                    is_in = true;
-                    break;
-                }
-
             for (let selected of this.selectedUsers)
                 if (user.pseudo === selected) {
                     is_in = true;
@@ -171,10 +155,6 @@ export class AddMemberDialog {
     }
 
     filterCurrentUser(currentUser) {
-        for (let member of this.members)
-            if (currentUser.pseudo === member)
-                return;
-
         for (let user of this.selectedUsers)
             if (currentUser.pseudo === user)
                 return;
@@ -198,7 +178,35 @@ export class AddMemberDialog {
             this.selectedUsers.splice(index, 1); // Removing the user from our array of selected users
     }
 
-    addMember() {
-        this.dialogRef.close(this.selectedUsers);
+    sendInvitations() {
+        this.profileSrv.userProfile$.subscribe(user => {
+            let id = -1;
+            this.selectedUsers.forEach((pseudo, index) => {
+                if (pseudo === user.pseudo)
+                    id = index;
+            });
+
+            if (id === -1)
+                this.selectedUsers.push(user.pseudo);
+
+            // Setting the request body attributes and values
+            let body = {};
+            this.selectedUsers.forEach((user, index) => {
+                body[`users[${index}]`] = user;
+            });
+
+            return false;
+
+            //     this.requestSrv.post('userrelationship/invite', body, {Authorization: ''}).subscribe(ret => {
+            //             this.toastSrv.success(`Invitations envoyées`);
+            //             this.dialogRef.close();
+            //             return true;
+            //         },
+            //         err => {
+            //             this.toastSrv.error(err.error.message, 'Une erreur est survenue'); // Display an error message if an error occurs
+            //             return false;
+            //         });
+            // }, (error) => {console.log('error => ', error)});
+        })
     }
 }

@@ -128,7 +128,7 @@ export class GroupCreationDialog implements AfterViewInit {
     //     _limit: this.pageSize,
     //     _start: this.pageIndex,
     //     _sort:  this.sortingBy,
-    //     "=":    this.search$.getValue().toLowerCase()
+    //     _contains:    this.search$.getValue().toLowerCase()
     // }, {Authorization: ''})
     //     .subscribe(ret => {
     //         this.filterUsers(ret.users);

@@ -47,6 +47,8 @@ export class GroupListComponent implements OnInit, AfterViewInit {
 
     sortingBy: string = "name";
 
+    input: any;
+
     @ViewChild('user') set content(user: ElementRef) {
         this.user = user;
     }
@@ -149,6 +151,7 @@ export class GroupListComponent implements OnInit, AfterViewInit {
 
     search() {
         console.log('\nSearch by input value');
+        this.input = this.search$.getValue().toLowerCase();
         this.pageIndex = 0;
 
         this.displayGroups = [];
@@ -201,7 +204,7 @@ export class GroupListComponent implements OnInit, AfterViewInit {
         //     _limit: this.pageSize,
         //     _start: this.pageIndex,
         //     _sort:  this.sortingBy,
-        //     "=":    this.search$.getValue().toLowerCase()
+        //     _contains:    this.search$.getValue().toLowerCase()
         // }, {Authorization: ''})
         //     .subscribe(ret => {
         //         ret.groups.forEach(group => this.displayGroups.push(group));
