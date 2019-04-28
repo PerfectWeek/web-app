@@ -1,0 +1,53 @@
+@import "~scss/variables";
+
+.list-content{
+ min-height:300px;
+}
+.list-content .list-group .title{
+  background:#5bc0de;
+  border:2px solid #DDDDDD;
+  font-weight:bold;
+  color:#FFFFFF;
+  width: 550px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.list-group-item img {
+    height:80px; 
+    width:80px;
+}
+
+.bouge{
+    margin-top: 6px;
+}
+.name {
+    color:#1C4891;
+}
+      
+.icon-color{
+    color: #5ABC95 !important;
+}
+.text-center{
+    margin: 1%;
+}
+.big-icon{
+    font-size: 130%;
+}
+.doge{
+    background-image: linear-gradient(to right, map_get($colors, light), map_get($colors, light));
+}
+.friend-box{
+    width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.friend{
+    width: 550px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.title{
+    padding:10px;
+    text-align:center;
+}

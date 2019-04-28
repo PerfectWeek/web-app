@@ -11,6 +11,8 @@ import {isLogged} from './core/Guards/isLogged-guard';
 import {IsLogout} from './core/Guards/isLogout-guard';
 import {GroupComponent} from './pages/User/groups/group/group';
 import {GroupManagementComponent} from './pages/User/groups/group-management';
+import {FriendsComponent} from './pages/Friends/friends';
+
 
 import {CalendarComponent} from './pages/calendar/calendar';
 import {RegistrationConfirmationComponent} from "./pages/Registration_Confirmation/registration-confirmation";
@@ -26,7 +28,9 @@ const routes: Routes = [
   { path: 'group/:id', component: GroupComponent, canActivate: [isLogged] },
   { path: 'calendar/:id', component: CalendarComponent, canActivate: [ isLogged ] },
   { path: 'profile', component: ProfileComponent, canActivate: [isLogged] },
-  { path: 'groups', component: GroupManagementComponent, canActivate: [isLogged] },
+    { path: 'groups', component: GroupManagementComponent, canActivate: [isLogged] },
+    { path: 'friends', component: FriendsComponent, canActivate: [isLogged] },
+
   { path: '**', component: NotFoundComponent }
 ];
 

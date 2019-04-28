@@ -76,7 +76,7 @@ import {MainViewComponent} from "./pages/Main_View/main_view";
 import { GroupListComponent } from "./pages/Main_View/group_list/group_list";
 import {GroupInfoComponent} from "./pages/Main_View/group_info/group_info";
 import { Navbar } from "./module/Navbar/navbar";
-
+import { FriendsComponent } from './pages/Friends/friends';
 
 //Dialog
 import { ConfirmDialog } from "./module/dialog/Confirm-dialog/Confirm-dialog";
@@ -144,7 +144,8 @@ export function getAuthServiceConfigs() {
     FormModalComponent,
     RegistrationConfirmationComponent,
     ChangeValueDialog,
-    AddMemberDialog,
+      AddMemberDialog,
+      FriendsComponent
   ],
   imports: [
     CommonModule,
