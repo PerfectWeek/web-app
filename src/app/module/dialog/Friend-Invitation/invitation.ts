@@ -209,4 +209,8 @@ export class FriendInvitationDialog implements AfterViewInit {
             // }, (error) => {console.log('error => ', error)});
         })
     }
+
+    inviteFriend() {
+
+    }
 }
