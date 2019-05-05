@@ -1,32 +1,102 @@
 @import "~scss/variables";
 
-nav {
-  height: $navbar-height;
-  padding: $navbar-padding;
-}
-
-.navbar-dark .navbar-nav .nav-link {
-  color: rgba(255, 255, 255, 1);
-}
-
-.bg-light {
-  background-image: linear-gradient(to right, map_get($colors, primary), map_get($colors, secondary));
-}
-
-.navbar-collapse.collapse.show.bg-light[_ngcontent-c1] {
-  background-image: linear-gradient(to right, map_get($colors, primary), map_get($colors, secondary)) !important;
-}
-
-.navbar-collapse.bg-light {
-  background-color: transparent !important;
-  background-image: none !important;
-}
-
+//nav {
+//  height: $navbar-height;
+//  padding: $navbar-padding;
+//}
+//
+//.navbar-dark .navbar-nav .nav-link {
+//  color: rgba(255, 255, 255, 1);
+//}
+//
+//.bg-light {
+//  background-image: linear-gradient(to right, map_get($colors, primary), map_get($colors, secondary));
+//}
+//
+//.navbar-collapse.collapse.show.bg-light[_ngcontent-c1] {
+//  background-image: linear-gradient(to right, map_get($colors, primary), map_get($colors, secondary)) !important;
+//}
+//
+//.navbar-collapse.bg-light {
+//  background-color: transparent !important;
+//  background-image: none !important;
+//}
+//
 .navbar-brand > img {
   filter: brightness(0) invert(1);
 }
+//
+//.dropdown-item > i {
+//  width: 20px;
+//  margin-right: 10px;
+//}
 
-.dropdown-item > i {
-  width: 20px;
-  margin-right: 10px;
+.navbar-default {
+  background-image: linear-gradient(to right, map_get($colors, primary), map_get($colors, secondary));
+  border-color: #E7E7E7;
+}
+/* Title */
+.navbar-default .navbar-brand {
+  color: #FFF;
+}
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+  color: #FFF;
+}
+/* Link */
+.navbar-default .navbar-nav > li > a {
+  color: #FFF;
+}
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+  color: #FFF;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  color: #FFF;
+  background-image: linear-gradient(to right, map_get($colors, primary), map_get($colors, secondary));
+}
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+  color: #FFF;
+  background-image: linear-gradient(to right, map_get($colors, primary), map_get($colors, secondary));
+}
+/* Caret */
+.navbar-default .navbar-nav > .dropdown > a .caret {
+  border-top-color: #FFF;
+  border-bottom-color: #FFF;
+}
+.navbar-default .navbar-nav > .dropdown > a:hover .caret,
+.navbar-default .navbar-nav > .dropdown > a:focus .caret {
+  border-top-color: #FFF;
+  border-bottom-color: #FFF;
+}
+.navbar-default .navbar-nav > .open > a .caret,
+.navbar-default .navbar-nav > .open > a:hover .caret,
+.navbar-default .navbar-nav > .open > a:focus .caret {
+  border-top-color: #FFF;
+  border-bottom-color: #FFF;
+}
+/* Mobile version */
+.navbar-default .navbar-toggler {
+  position: relative;
+  border-color: #FFF;
+}
+
+.navbar-default .navbar-toggler .fa-bars {
+  position: absolute;
+  top: 25%;
+  left: 35%;
+  color: #FFF;
+}
+@media (max-width: 767px) {
+  .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+    color: #FFF;
+  }
+  .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
+  .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+    color: #FFF;
+  }
 }

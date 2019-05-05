@@ -1,0 +1,21 @@
+@import "~scss/variables";
+
+@media screen and (max-width: map_get($widths, l)) {
+
+  .form-container-sm {
+    & > form {
+      width: 50%;
+    }
+  }
+
+  .buttons-spaced-reversed {
+    flex-flow: column;
+    & > button {
+      margin: 5px 0;
+    }
+
+    & > div {
+      margin: 5px auto;
+    }
+  }
+}

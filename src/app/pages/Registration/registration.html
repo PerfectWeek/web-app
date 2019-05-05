@@ -34,12 +34,17 @@
               <p class="error-message" *ngIf="registrationForm.get('confirmPassword').invalid && registrationForm.get('confirmPassword').touched">Les 2 mots de passe ne sont pas identiques.</p>
             </div>
           </div>
-
           <div class="buttons-spaced-reversed">
+            <div class="g-signin2" data-size="large" data-longtitle="true" data-onsuccess="onSignIn"></div>
+            <div class="fb-login-button" data-size="large" data-button-type="login_with" data-auto-logout-link="false" data-use-continue-as="false" onlogin="facebookLogin()"></div>
+          </div>
+          <br>
+          <div class="buttons-spaced-reversed" style="">
             <button [disabled]="registrationForm.invalid" class="btn btn-secondary" mat-raised-button>S'inscrire</button>
             <button class="btn-primary" (click)="router.navigate(['/login'])" mat-raised-button>Déjà inscrit ?</button>
           </div>
         </form>
+	
       </div>
     </div>
   </div>
