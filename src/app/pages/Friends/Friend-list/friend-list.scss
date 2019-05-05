@@ -53,6 +53,7 @@
       margin: 10px;
 
       & > .friend-header {
+        height: calc(6vw + 6vh);
         display: flex;
         flex-flow: row;
         flex-wrap: nowrap;
@@ -63,19 +64,8 @@
         background-color: map_get($colors, light);
 
         & > img {
-          border-radius: 50%;
-          border: 1px solid white;
-          width: calc(3vw + 3vh);
-          height: calc(3vw + 3vh);
-          margin-left: 1rem;
-        }
-
-        & > i {
-          cursor: pointer;
-        }
-
-        & > i:hover {
-          filter: saturate(2);
+          width: 100%;
+          height: 100%;
         }
       }
 
@@ -83,9 +73,10 @@
         display: flex;
         flex-flow: row;
         flex-wrap: nowrap;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
         padding: 5px;
+
 
         & > h4 {
           font-size: 1.1rem;
@@ -98,6 +89,18 @@
             cursor: pointer;
             filter: saturate(2);
           }
+        }
+
+        & > button {
+          padding: 0 !important;
+          margin-left: 5rem;
+        }
+        & > i {
+          cursor: pointer;
+        }
+
+        & > i:hover {
+          filter: saturate(2);
         }
       }
     }

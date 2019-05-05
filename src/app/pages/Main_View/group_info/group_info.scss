@@ -12,6 +12,7 @@
     cursor: pointer;
     transition: color 0.7s, background-color 0.7s;
     padding: 5px;
+    word-wrap: break-word;
   }
 
   & .clickable-fields:hover {

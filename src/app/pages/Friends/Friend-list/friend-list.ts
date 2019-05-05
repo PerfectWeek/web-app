@@ -11,7 +11,7 @@ import {ConfirmDialog} from "../../../module/dialog/Confirm-dialog/Confirm-dialo
 @Component({
     selector: 'friend-list',
     templateUrl: 'friend-list.html',
-    styleUrls: ['friend-list.scss']
+    styleUrls: ['friend-list.scss', '../../../../scss/themes/main.scss']
 })
 export class FriendListComponent implements OnInit, AfterViewInit {
     user: User;

@@ -1,64 +1,9 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'mwl-demo-utils-calendar-header',
-  template: `
-    <div class="row text-center" style="display: flex; flex-flow: row; justify-content: space-evenly">
-      <div class="col-md-6">
-        <div class="btn-group">
-          <div
-            class="btn btn-primary"
-            mwlCalendarPreviousView
-            [view]="view"
-            [(viewDate)]="viewDate"
-            (viewDateChange)="viewDateChange.next(viewDate)">
-            Précédent
-          </div>
-          <div
-            class="btn btn-outline-secondary"
-            mwlCalendarToday
-            [(viewDate)]="viewDate"
-            (viewDateChange)="viewDateChange.next(viewDate)">
-            Aujourd'hui
-          </div>
-          <div
-            class="btn btn-primary"
-            mwlCalendarNextView
-            [view]="view"
-            [(viewDate)]="viewDate"
-            (viewDateChange)="viewDateChange.next(viewDate)">
-            Suivant
-          </div>
-        </div>
-      </div>
-      <div class="col-md-1">
-        <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):locale }}</h3>
-      </div>
-      <div class="col-md-5">
-        <div class="btn-group">
-          <div
-            class="btn btn-primary"
-            (click)="viewChange.emit('month')"
-            [class.active]="view === 'month'">
-            Mois
-          </div>
-          <div
-            class="btn btn-primary"
-            (click)="viewChange.emit('week')"
-            [class.active]="view === 'week'">
-            Semaine
-          </div>
-          <div
-            class="btn btn-primary"
-            (click)="viewChange.emit('day')"
-            [class.active]="view === 'day'">
-            Jour
-          </div>
-        </div>
-      </div>
-    </div>
-    <br>
-  `
+    selector: 'mwl-demo-utils-calendar-header',
+    templateUrl: "calendar-header.component.html",
+    styleUrls: ['calendar-header.component.scss']
 })
 export class CalendarHeaderComponent {
   @Input()

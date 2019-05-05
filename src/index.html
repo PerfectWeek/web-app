@@ -8,65 +8,65 @@
   <base href="/">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google-signin-client_id" content="801780005342-ot6i9l8t9t2lo3fcg0o9co4q8m80ns3d.apps.googleusercontent.com">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
   <link href="https://unpkg.com/angular-calendar@0.26.4/css/angular-calendar.css" rel="stylesheet">
   <link href="https://unpkg.com/flatpickr@4.5.2/dist/flatpickr.css" rel="stylesheet">
 
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  <script>
+      function onSignIn(googleUser) {
+          var tok = googleUser.getAuthResponse().access_token;
+          console.log("Google User Token : " + googleUser.Zi.access_token);
+      }
+  </script>
+
+  <script async defer src="https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v3.2&appId=2107497569541133&autoLogAppEvents=1"></script>
+
+  <script>
+      function facebookLogin() {
+          var FB = window.FB;
+          var scopes = 'email,user_likes,public_profile';
+
+          FB.login(function(response) {
+              if (response.status === 'connected') {
+                  console.log('The user has logged in!');
+                  var accessToken = response.authResponse.accessToken;
+                  console.log('Facebook Access Token' + accessToken);
+                  FB.api('/me', function(response) {
+                      console.log('Good to see you, ' + response.name + '.');
+
+                  });
+              }
+          }, { scope: scopes });
+      }
+
+      window.fbAsyncInit = function() {
+          FB.init({
+              appId      : '2107497569541133',
+              cookie     : true,
+              xfbml      : true,
+              version    : 'v3.2'
+          });
+      };
+
+      (function(d, s, id){
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) {return;}
+          js = d.createElement(s); js.id = id;
+          js.src = "//connect.facebook.net/en_US/sdk.js";
+          fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+
+  </script>
+
+  <script type="text/javascript" src="runtime.js"></script><script type="text/javascript" src="polyfills.js"></script><script type="text/javascript" src="styles.js"></script><script type="text/javascript" src="scripts.js"></script><script type="text/javascript" src="vendor.js"></script><script type="text/javascript" src="main.js"></script>
 </head>
 <body>
-
   <app-root></app-root>
-  
-  <script src="https://apis.google.com/js/platform.js" async defer></script>
-  <script>
-    function onSignIn(googleUser) {
-    var tok = googleUser.getAuthResponse().access_token;
-    console.log("Google User Token : " + googleUser.Zi.access_token);
-    }
-  </script>
-  
-<script async defer src="https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v3.2&appId=2107497569541133&autoLogAppEvents=1"></script>
-  
-<script>
-  function facebookLogin() {
-    var FB = window.FB;
-    var scopes = 'email,user_likes,public_profile';
-  
-  FB.login(function(response) {
-      if (response.status === 'connected') {
-	console.log('The user has logged in!');
-	var accessToken = response.authResponse.accessToken;
-	console.log('Faceebook Access Token' + accessToken);
-        FB.api('/me', function(response) {
-		console.log('Good to see you, ' + response.name + '.');
-  
-        });
-      }
-  }, { scope: scopes });
-  }
- 
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '2107497569541133',
-      cookie     : true,
-      xfbml      : true,
-      version    : 'v3.2'
-  });
-  };
- 
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "//connect.facebook.net/en_US/sdk.js";
-  fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));
-
-</script>
-  
-<script type="text/javascript" src="runtime.js"></script><script type="text/javascript" src="polyfills.js"></script><script type="text/javascript" src="styles.js"></script><script type="text/javascript" src="scripts.js"></script><script type="text/javascript" src="vendor.js"></script><script type="text/javascript" src="main.js"></script></body>
+</body>
 </html>
