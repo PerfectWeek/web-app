@@ -1,0 +1,9 @@
+<section class="centered-full-container">
+  <section class="friend-requests" #Requests (scroll)="scrolling('request', $event)" id="Requests">
+    <friend-requests #Request_Component></friend-requests>
+  </section>
+
+  <section class="friend-list" #List (scroll)="scrolling('list', $event)" id="List">
+    <friend-list #List_Component></friend-list>
+  </section>
+</section>

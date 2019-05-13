@@ -8,6 +8,7 @@
 @import "form";
 @import "buttons";
 @import "flex";
+@import "loader";
 
 .mat-tab-label-content {
   font-size: 22px;
@@ -36,4 +37,32 @@
   display: flex;
   flex-flow: row-reverse;
   justify-content: space-between;
+}
+
+.mat-menu-panel {
+  outline: 0!important;
+}
+
+.mat-menu-content:focus {
+  outline: 0!important;
+}
+
+.centered-full-container {
+  width: 100%;
+  display: flex;
+  flex-flow: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+
+.centered-medium-container {
+  width: 70%;
+  display: flex;
+  flex-flow: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.mat-menu-content {
+  padding: 0 !important;
 }

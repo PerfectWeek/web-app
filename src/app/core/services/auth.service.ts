@@ -17,7 +17,7 @@ import {Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
 
 @Injectable()
-export class AuthService {
+export class AutthService {
   get logged(): boolean {
     return this._logged;
   }
@@ -112,7 +112,7 @@ export class AuthService {
     }
   }
 
-  logout() {
+    logout() {
     localStorage.removeItem('user_pseudo');
     this.logged = false;
     this.clearData();

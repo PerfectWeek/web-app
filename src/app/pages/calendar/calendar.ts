@@ -1,4 +1,13 @@
-import {Component, ChangeDetectionStrategy, ViewChild, TemplateRef, OnInit} from '@angular/core';
+import {
+    Component,
+    ChangeDetectionStrategy,
+    ViewChild,
+    TemplateRef,
+    OnInit,
+    Input,
+    OnChanges,
+    SimpleChanges, SimpleChange
+} from '@angular/core';
 import { startOfDay, endOfDay, subDays, addDays, endOfMonth, isSameDay, isSameMonth, addHours } from 'date-fns';
 import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -18,9 +27,10 @@ import {FormModalComponent} from "./demo-utils/ModalForm/form-modal.component";
 import {MatDialog} from "@angular/material";
 import {CreateEventDialog} from "../../module/dialog/CreateEvent-dialog/CreateEvent-dialog";
 import {CustomEventTitleFormatter} from "./demo-utils/custom-event-title-formatter.provider";
-import {formatDate} from "@angular/common";
+import {DatePipe, formatDate} from '@angular/common';
 import {ModifyEventDialog} from "../../module/dialog/ModifyEvent-dialog/ModifyEvent";
 import {ConfirmDialog} from "../../module/dialog/Confirm-dialog/Confirm-dialog";
+import {FoundSlotDialog} from '../../module/dialog/FoundSlot-dialog/FoundSlot-dialog';
 
 const colors: any = {
   red: {
@@ -67,9 +77,11 @@ export class PerfectWeekCalendarEvent implements CalendarEvent {
     }
   ]
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnChanges {
   @ViewChild('modalContent')
   modalContent: TemplateRef<any>;
+
+  @Input('in_calendar_id') in_calendar_id: number = null;
 
   // FRENCH CALENDAR
   locale: string = 'fr';
@@ -88,8 +100,7 @@ export class CalendarComponent implements OnInit {
   };
 
   is_global_calendar: boolean = true;
-  date_format: string = "yyyy-MM-ddThh:mm:ss";
-
+  date_format: string = "yyyy-MM-ddThh:mm:ss.SSS'Z'";
   // private modal: NgbModal,
   constructor(private modal: NgbModal, public dialog: MatDialog,
               private requestSrv: RequestService,
@@ -99,9 +110,30 @@ export class CalendarComponent implements OnInit {
               private router: Router) {
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    this.events = [];
+    this.in_calendar_id = changes.in_calendar_id.currentValue;
+    (this.in_calendar_id === -1) ? this.get_global_calendar() : this.getInGroupCalendar();
+  }
+
   ngOnInit(): void {
-    console.log("ngOnInit Calendar");
+    // console.log("ngOnInit Calendar");
     this.get_group_info();
+      this.events = [];
+    if (this.in_calendar_id) {
+        (this.in_calendar_id === -1) ? this.get_global_calendar() : this.getInGroupCalendar();
+    }
+    else
+      this.get_group_info();
+  }
+
+  getInGroupCalendar() {
+      this.get_calendar_events(this.in_calendar_id);
+      this.requestSrv.get(`calendars/${this.in_calendar_id}`, {}, {Authorization: ''})
+          .subscribe(ret => {
+              this.calendar_name = ret.calendar.name;
+              console.log('calendar_name => ', this.calendar_name)
+          });
   }
 
   actions: CalendarEventAction[] = [
@@ -130,64 +162,77 @@ export class CalendarComponent implements OnInit {
   calendar_id: number = null;
   calendar_name: string = null;
 
-  get_calendar_events(calendar_id): void {
-    this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''})
-      .subscribe(resp => {
-        let random_color = {
-          primary: '#' + (Math.random() * 0xFFFFFF << 0).toString(16),
-          secondary: '#1C4891',
-        };
-        for (const idx in resp.events) {
-          this.requestSrv.get(`events/${resp.events[idx].id}`, {}, {Authorization: ''})
-            .subscribe(ret => {
-              this.events.push({
-                description: ret.event.description,
-                location: ret.event.location,
-                id: ret.event.id,
-                title: ret.event.name,
-                start: startOfDay(ret.event.start_time),
-                end: endOfDay(ret.event.end_time),
-                color: random_color,
-                draggable: true,
-                actions: this.actions,
-                resizable: {
-                  beforeStart: true,
-                  afterEnd: true
-                }
-              });
-              this.refresh.next();
-            });
-        }
-      });
-  }
-
   // get_calendar_events(calendar_id): void {
   //   this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''})
-  //     .subscribe(ret => {
+  //     .subscribe(resp => {
   //       let random_color = {
-  //         primary: '#'+(Math.random() * 0xFFFFFF << 0).toString(16),
+  //         primary: '#' + (Math.random() * 0xFFFFFF << 0).toString(16),
   //         secondary: '#1C4891',
   //       };
-  //       for (const idx in ret.events) {
-  //         this.events.push({
-  //           description: ret.events[idx].description,
-  //           location: ret.events[idx].location,
-  //           id: ret.events[idx].id,
-  //           title: ret.events[idx].name,
-  //           start: startOfDay(ret.events[idx].start_time),
-  //           end: endOfDay(ret.events[idx].end_time),
-  //           color: random_color,
-  //           draggable: true,
-  //           actions: this.actions,
-  //           resizable: {
-  //             beforeStart: true,
-  //             afterEnd: true
-  //           }
-  //         });
-  //         this.refresh.next();
+  //       for (const idx in resp.events) {
+  //         this.requestSrv.get(`events/${resp.events[idx].id}`, {}, {Authorization: ''})
+  //           .subscribe(ret => {
+  //             this.events.push({
+  //               description: ret.event.description,
+  //               location: ret.event.location,
+  //               id: ret.event.id,
+  //               title: ret.event.name,
+  //               start: startOfDay(ret.event.start_time),
+  //               end: endOfDay(ret.event.end_time),
+  //               color: random_color,
+  //               draggable: true,
+  //               actions: this.actions,
+  //               resizable: {
+  //                 beforeStart: true,
+  //                 afterEnd: true
+  //               }
+  //             });
+  //             this.refresh.next();
+  //           });
   //       }
   //     });
   // }
+
+  get_calendar_events(calendar_id): void {
+    this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''})
+      .subscribe(ret => {
+        let random_color = {
+          primary: '#'+(Math.random() * 0xFFFFFF << 0).toString(16),
+          secondary: '#1C4891',
+        };
+        for (const idx in ret.events) {
+            // date_format: string = "yyyy-MM-ddThh:mm:ss";
+          // console.log("recupéré en front\n",
+          //     "start", ret.events[idx].start_time, typeof ret.events[idx].start_time, "\n",
+          //     "end", ret.events[idx].end_time, typeof ret.events[idx].end_time, "\n");
+          //
+          //
+          // console.log("utilisation de la fonction Date",
+          //     new Date(ret.events[idx].start_time), typeof new Date(ret.events[idx].start_time),
+          //     new Date(ret.events[idx].end_time), typeof new Date(ret.events[idx].end_time))
+
+          this.events.push({
+            description: ret.events[idx].description,
+            location: ret.events[idx].location,
+            id: ret.events[idx].id,
+            title: ret.events[idx].name,
+            // start: startOfDay(ret.events[idx].start_time),
+            // end: endOfDay(ret.events[idx].end_time),
+            start: new Date(ret.events[idx].start_time),
+            end: new Date(ret.events[idx].end_time),
+
+            color: random_color,
+            draggable: true,
+            actions: this.actions,
+            resizable: {
+              beforeStart: true,
+              afterEnd: true
+            }
+          });
+          this.refresh.next();
+        }
+      });
+  }
 
 
   get_group_calendar(): void {
@@ -195,7 +240,7 @@ export class CalendarComponent implements OnInit {
     this.requestSrv.get(`calendars/${this.calendar_id}`, {}, {Authorization: ''})
       .subscribe(ret => {
         this.calendar_name = ret.calendar.name;
-        console.log('aclendar_name => ', this.calendar_name)
+        console.log('calendar_name => ', this.calendar_name)
       });
   }
 
@@ -241,7 +286,7 @@ export class CalendarComponent implements OnInit {
                       newEnd,
                     }: CalendarEventTimesChangedEvent): void {
     let modified_event = this.events.find(current_event => current_event.id === event.id);
-    console.log(modified_event);
+    // console.log(modified_event);
     this.requestSrv.put(`events/${event.id}`, {
         start_time: formatDate(newStart, this.date_format, this.locale),
         end_time: formatDate(newEnd, this.date_format, this.locale),
@@ -266,6 +311,8 @@ export class CalendarComponent implements OnInit {
 
   // modify all fields
   eventModification(event): void {
+
+    //console.log("tout les info a propos de l'event", event);
     let dialogRef = this.dialog.open(ModifyEventDialog, {
       data: {
         event,
@@ -299,10 +346,9 @@ export class CalendarComponent implements OnInit {
         calendar_locale: this.locale,
       }
     });
-
     dialogRef.afterClosed().subscribe(result => {
       if (result !== null && result !== undefined) {
-        console.log("Event created")
+        console.log("Event created");
       }
     });
 
@@ -314,7 +360,26 @@ export class CalendarComponent implements OnInit {
     // });
   }
 
-  createEvent(): void {
+    foundSlots(): void {
+        let dialogRef = this.dialog.open(FoundSlotDialog, {
+            data: {
+                calendar_id: this.calendar_id,
+                actions: this.actions,
+                events: this.events,
+                refresh: this.refresh,
+                is_global_calendar: this.is_global_calendar,
+                calendar_locale: this.locale,
+            }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result !== null && result !== undefined) {
+                console.log("Creneau trouvé");
+            }
+        });
+    }
+
+
+    createEvent(): void {
     //this.addEvent();
     //this.handleEvent('Create event', event);
     this.modal.open(FormModalComponent, {size: 'lg'});

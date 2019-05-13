@@ -1,6 +1,3 @@
-<meta name="google-signin-client_id" content="801780005342-ot6i9l8t9t2lo3fcg0o9co4q8m80ns3d.apps.googleusercontent.com">
-<script src="https://apis.google.com/js/platform.js" async defer></script>
-
 <div style="background-color: white">
   <div class="background-logo-circle"></div>
   <div class="background-logo-name"></div>
@@ -40,13 +37,11 @@
 
           <div class="buttons-spaced-reversed">
             <button [disabled]="registrationForm.invalid" class="btn btn-secondary" mat-raised-button>S'inscrire</button>
-            <button class="btn-primary" (click)="router.navigate(['/login'])" mat-raised-button>Déjà ?</button>
-	    <!--	    <button  onclick="facebookLogin()">Login with Facebook</button> -->
-	    <div class="fb-login-button" data-size="small" data-button-type="login_with" data-auto-logout-link="false" data-use-continue-as="false" onlogin="facebookLogin()"></div>
-	    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+            <button class="btn-primary" (click)="router.navigate(['/login'])" mat-raised-button>Déjà inscrit ?</button>
+	    <button (click)="signInWithFB()" mat-raised-button><img src="assets/Pictures/facebook.png" width="40" height="40" style="padding: 6px;margin-left: -15px;">  Facebook</button>
+            <button (click)="signInGoogle()" mat-raised-button><img src="assets/Pictures/google.png" width="40" height="40" style="padding: 6px;margin-left: -12px;">  Google</button>
           </div>
-        </form>
-	
+        </form>	
       </div>
     </div>
   </div>

@@ -1,0 +1,11 @@
+<div class="full-view">
+    <section #left_view (scroll)="scrolling($event)" class="left-view" id="left-view">
+        <group-list #group_list (group_clicked)="goToGroup($event)"></group-list>
+    </section>
+    <section class="center-view">
+        <mwl-demo-component [in_calendar_id]="calendar_id"></mwl-demo-component>
+    </section>
+    <section class="rigth-view">
+        <group-info (left_group)="GroupModification($event)" (group_image_modified)="imageModification($event)" (group_modified)="modifyGroupName($event)" [group_id]="group_id"></group-info>
+    </section>
+</div>

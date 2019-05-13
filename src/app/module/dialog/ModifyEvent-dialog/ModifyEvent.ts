@@ -50,9 +50,19 @@ export class ModifyEventDialog {
               public dialogRef: MatDialogRef<ModifyEventDialog>,
               @Inject(MAT_DIALOG_DATA) public data: any) {
     this.event = data.event;
+    this.requestSrv.get(`events/${this.event.id}`, {}, {Authorization: ''})
+        .subscribe(ret => {
+          // console.log("la requete ciblé", ret);
+          this.event.description = ret.event.description;
+          this.event.location = ret.event.location;
+        },
+        err => {
+          // console.log("CA MARCHE PAS LA !");
+        });
   }
 
   modifyEvent() {
+    // console.log("\n\napres la modification, ", this.event);
     this.requestSrv.put(`events/${this.event.id}`, {
       name: this.event.title,
       description: this.event.description,

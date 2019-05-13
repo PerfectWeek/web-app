@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthService} from '../../core/services/auth.service';
+import {AutthService} from '../../core/services/auth.service';
 import {Router} from '@angular/router';
 import {ProfileService} from '../../core/services/profile.service';
 
@@ -14,7 +14,7 @@ export class Navbar implements OnInit {
 
   userProfile$ = this.profileSrv.userProfile$;
 
-  constructor(private authSrv: AuthService,
+  constructor(private authSrv: AutthService,
               private router: Router,
               private profileSrv: ProfileService) {
 
@@ -24,8 +24,10 @@ export class Navbar implements OnInit {
 
   }
 
-  logout() {
-    this.authSrv.logout();
+    logout() {
+	
+	console.log(localStorage.getItem('user_pseudo'));
+	this.authSrv.logout();
   }
 
 }

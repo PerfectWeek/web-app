@@ -1,0 +1,64 @@
+@import "~scss/variables";
+
+.centered-full-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: row;
+  flex-wrap: nowrap;
+
+  & >.friend-requests {
+    position: relative;
+    width: 20%;
+    min-width: 60px;
+    height: 100%;
+    overflow-y: auto;
+    border-right: 1px solid map_get($colors, lightgrey);
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &:hover::-webkit-scrollbar {
+      margin-right: 1px;
+      width: 0.4rem;
+      border-radius: 5px;
+      display: block;
+      background-color: map_get($colors, lightgrey);
+    }
+
+    &:hover::-webkit-scrollbar-thumb {
+      border-radius: 5px;
+      display: block;
+      background-color: map_get($colors, secondary);
+      outline: 1px solid map_get($colors, primary);
+    }
+  }
+
+  & >.friend-list {
+    width: 80%;
+    position: relative;
+    height: 100%;
+    overflow-y: auto;
+    border-right: 1px solid map_get($colors, lightgrey);
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &:hover::-webkit-scrollbar {
+      margin-right: 1px;
+      width: 0.4rem;
+      border-radius: 5px;
+      display: block;
+      background-color: map_get($colors, lightgrey);
+    }
+
+    &:hover::-webkit-scrollbar-thumb {
+      border-radius: 5px;
+      display: block;
+      background-color: map_get($colors, secondary);
+      outline: 1px solid map_get($colors, primary);
+    }
+  }
+}

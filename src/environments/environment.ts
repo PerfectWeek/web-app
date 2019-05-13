@@ -5,6 +5,8 @@
 
 export const environment = {
   production: false,
+  // url: "http://localhost:9090/",
+  // apiEndpoint: 'http://localhost:9090/',
   url: "https://perfect-week-test.herokuapp.com/",
   apiEndpoint: 'https://perfect-week-test.herokuapp.com/',
   appName: 'PerfectWeek',

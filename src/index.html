@@ -22,51 +22,9 @@
   <app-root></app-root>
   
   <script src="https://apis.google.com/js/platform.js" async defer></script>
-  <script>
-    function onSignIn(googleUser) {
-    var tok = googleUser.getAuthResponse().access_token;
-    console.log("Google User Token : " + googleUser.Zi.access_token);
-    }
-  </script>
   
 <script async defer src="https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v3.2&appId=2107497569541133&autoLogAppEvents=1"></script>
   
-<script>
-  function facebookLogin() {
-    var FB = window.FB;
-    var scopes = 'email,user_likes,public_profile';
-  
-  FB.login(function(response) {
-      if (response.status === 'connected') {
-	console.log('The user has logged in!');
-	var accessToken = response.authResponse.accessToken;
-	console.log('Faceebook Access Token' + accessToken);
-        FB.api('/me', function(response) {
-		console.log('Good to see you, ' + response.name + '.');
-  
-        });
-      }
-  }, { scope: scopes });
-  }
- 
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '2107497569541133',
-      cookie     : true,
-      xfbml      : true,
-      version    : 'v3.2'
-  });
-  };
- 
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "//connect.facebook.net/en_US/sdk.js";
-  fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));
-
-</script>
   
 <script type="text/javascript" src="runtime.js"></script><script type="text/javascript" src="polyfills.js"></script><script type="text/javascript" src="styles.js"></script><script type="text/javascript" src="scripts.js"></script><script type="text/javascript" src="vendor.js"></script><script type="text/javascript" src="main.js"></script></body>
 </html>

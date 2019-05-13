@@ -1,0 +1,38 @@
+<!--<section class="loader" *ngIf="(ready$ | async) === false; else loaded">-->
+  <!--<ng-template #loaded>-->
+    <section class="friends">
+      <section class="friends-header">
+        <section class="friends-search-bar">
+          <i class="fas fa-search"></i>
+          <input title="Rechercher un ami" type="text" name="search" id="search" class="form-control" placeholder="Rechercher un ami" matInput (keyup)="search$.next($event.target.value)">
+        </section>
+      </section>
+      <section class="friend-list">
+        <section class="friend" *ngFor="let friend of displayFriends; let id = index">
+          <section class="friend-header">
+            <img src="../../../assets/Pictures/bread.jpg" alt="Friend's profile picture" title="Friend's profile picture">
+            <button mat-button [matMenuTriggerFor]="Actions"><i class="fas fa-ellipsis-h"></i></button>
+            <mat-menu #Actions="matMenu">
+              <button mat-menu-item title="Supprimer de mes amis" (click)="removeFriend(friend, id)">Supprimer de mes amis</button>
+            </mat-menu>
+          </section>
+          <section class="friend-name">
+            <h4 (click)="goToUserProfil(friend)" title="{{friend.name}}">{{friend.name}}</h4>
+          </section>
+        </section>
+        <section class="friend" *ngFor="let friend of displayFriends; let id = index">
+          <section class="friend-header">
+            <img src="../../../assets/Pictures/bread.jpg" alt="Friend's profile picture" title="Friend's profile picture">
+            <button mat-button [matMenuTriggerFor]="Actions"><i class="fas fa-ellipsis-h"></i></button>
+            <mat-menu #Actions="matMenu">
+              <button mat-menu-item title="Supprimer de mes amis" (click)="removeFriend(friend, id)">Supprimer de mes amis</button>
+            </mat-menu>
+          </section>
+          <section class="friend-name">
+            <h4 (click)="goToUserProfil(friend)" title="{{friend.name}}">{{friend.name}}</h4>
+          </section>
+        </section>
+      </section>
+    </section>
+  <!--</ng-template>-->
+<!--</section>-->

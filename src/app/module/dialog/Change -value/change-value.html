@@ -1,0 +1,17 @@
+<div class="flex flex-r-centered">
+  <h2 mat-dialog-title>Modification de votre {{data.fieldname}}</h2>
+</div>
+<mat-dialog-content style="white-space: pre-wrap; text-align: center">
+  <form [formGroup]="valueForm" class="form-row" style="padding: 15px; margin: 15px 0">
+    <div class="input-error-message">
+      <mat-form-field>
+        <input matInput placeholder="{{data.fieldname}}" formControlName="value" name="value" required>
+      </mat-form-field>
+      <p class="error-message" *ngIf="data.fieldname === 'email' && valueForm.get('value').invalid && valueForm.get('value').touched">Veuillez entrer un format valide.</p>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions style="display: flex; justify-content: space-between">
+  <button class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
+  <button [disabled]="valueForm.invalid" class="mat-raised-button btn-secondary" [mat-dialog-close]="valueForm['value']">Confirmer</button>
+</mat-dialog-actions>

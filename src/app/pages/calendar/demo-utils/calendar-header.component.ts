@@ -3,8 +3,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'mwl-demo-utils-calendar-header',
   template: `
-    <div class="row text-center">
-      <div class="col-md-4">
+    <div class="row text-center" style="display: flex; flex-flow: row; justify-content: space-evenly">
+      <div class="col-md-6">
         <div class="btn-group">
           <div
             class="btn btn-primary"
@@ -31,10 +31,10 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-1">
         <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):locale }}</h3>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-5">
         <div class="btn-group">
           <div
             class="btn btn-primary"
