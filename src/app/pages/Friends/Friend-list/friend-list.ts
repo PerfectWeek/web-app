@@ -135,7 +135,7 @@ export class FriendListComponent implements OnInit, AfterViewInit {
 
         /* To be implemented when the routes will be up api wise*/
 
-        // this.displayGroups = [];
+        // this.displayFriends = [];
         // this.requestSrv.get(`userrelationships`, {
         //     _limit: this.pageSize,
         //     _start: this.pageIndex,
