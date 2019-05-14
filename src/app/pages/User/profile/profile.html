@@ -1,8 +1,11 @@
 <div class="main-full-component">
-  <div class="main-container">
-    <h1 style="text-align: center">Mon Profil</h1>
+  <section class="main-container" style="box-shadow: none !important;">
+    <h3 style="text-align: center">Mon Profil</h3>
+  </section>
+  <div class="profile-image">
+    <img src="{{image}}" alt="Profile image" title="Profile image">
   </div>
-  <div class="main-container">
+  <div class="main-container" id="Profile-data-container">
     <div class="profile-container" *ngIf="user && modifying === false">
       <div>
         <h6><strong><i class="fas fa-user"></i> Pseudo</strong></h6>
@@ -24,12 +27,10 @@
       <mat-form-field class="col-12">
         <input matInput type="text" name="email" [(ngModel)]="email" id="modify_email" class="form-control" placeholder="Email" pattern="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$" required>
       </mat-form-field>
-        <div style="display: flex; flex-flow: row-reverse; margin: 5px 0; justify-content: space-between">
-          <div class="buttons-spaced">
-            <button mat-raised-button type="button" class="btn-primary" (click)="modifying = false; pseudo = null; email = null">Annuler</button>
-            <button mat-raised-button type="button" class="btn-secondary" type="submit" [disabled]="checkInfoFormat() === true" (click)="modifyProfile()">Modifier</button>
-          </div>
-          <button mat-raised-button type="button" class="btn-danger" (click)="deleteProfile()">Supprimer le profil</button>
+        <div class="buttons-spaced" style="display: flex; flex-flow: row; justify-content: space-evenly; align-items: center">
+          <button mat-raised-button type="button" class="btn-danger" (click)="deleteProfile()">Supprimer</button>
+          <button mat-raised-button type="button" class="btn-primary" (click)="modifying = false; pseudo = null; email = null">Annuler</button>
+          <button mat-raised-button type="button" class="btn-secondary" type="submit" [disabled]="checkInfoFormat() === true" (click)="modifyProfile()">Modifier</button>
         </div>
       </form>
     </div>
@@ -39,4 +40,11 @@
       <button mat-raised-button type="button" class="btn-danger" *ngIf="modifying === false" (click)="deleteProfile()">Supprimer le profil</button>
     </div>
   </div>
+
+  <section class="main-container">
+    <section class="buttons-spaced-reversed">
+      <div class="g-signin2" data-size="large" data-longtitle="true" data-onsuccess="onSignIn"></div>
+      <div class="fb-login-button" data-size="large" data-button-type="login_with" data-auto-logout-link="false" data-use-continue-as="false" onlogin="facebookLogin()"></div>
+    </section>
+</section>
 </div>

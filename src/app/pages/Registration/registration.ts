@@ -21,7 +21,7 @@ export class RegistrationComponent {
     return this.fb.group({
       pseudo: [null, Validators.required],
       email: [null, Validators.compose([Validators.email, Validators.pattern("^\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$"), Validators.required])],
-      password: [null, Validators.compose([Validators.pattern("^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$"), Validators.minLength(8), Validators.required])],
+      password: [null, Validators.compose([Validators.pattern("^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+).{8,}$"), Validators.minLength(8), Validators.required])],
       confirmPassword: [null, Validators.required]
     },
       {

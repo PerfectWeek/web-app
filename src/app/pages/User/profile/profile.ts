@@ -24,6 +24,8 @@ export class ProfileComponent implements OnInit {
   pseudo: string = null;
   email: string = null;
 
+  image: any = null;
+
   constructor(private route: ActivatedRoute,
               private requestSrv: RequestService,
               private toastSrv: ToastrService,
@@ -36,6 +38,10 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.profileSrv.userProfile$.subscribe(user => {
       this.user = user;
+        this.requestSrv.get(`users/${user.pseudo}/image`, {}, {Authorization: ''})
+            .subscribe(ret => {
+                this.image = ret.image;
+            });
     }, (error) => {console.log('error => ', error)});
   }
 

@@ -3,7 +3,7 @@
   <div class="background-logo-name"></div>
   <div class="main-full-component" style="background-color: transparent; z-index: 2">
     <div class="main-container">
-      <div class="form-container-sm">
+      <div class="form-container-sm flex-column">
         <form [formGroup]="registrationForm" (ngSubmit)="submit()">
           <p class="h3 text-center mb-4">Inscription</p>
 
@@ -24,7 +24,7 @@
                 <input type="password" formControlName="password" id="password" class="form-control" matInput placeholder="Mot de Passe" required>
               </mat-form-field>
               <p class="error-message" *ngIf="registrationForm.get('password').invalid && registrationForm.get('password').errors.minlength">Le mot de passe doit faire minimum 8 caractères.</p>
-              <p class="error-message" *ngIf="registrationForm.get('password').invalid && registrationForm.get('password').errors.pattern">Le mot de passe doit comprendre au moins une lettre et un chiffre et n'accepte pas les charactères spéciaux.</p>
+              <p class="error-message" *ngIf="registrationForm.get('password').invalid && registrationForm.get('password').errors.pattern">Le mot de passe doit comprendre au moins une lettre et un chiffre.</p>
             </div>
 
             <div class="input-error-message">
@@ -34,17 +34,20 @@
               <p class="error-message" *ngIf="registrationForm.get('confirmPassword').invalid && registrationForm.get('confirmPassword').touched">Les 2 mots de passe ne sont pas identiques.</p>
             </div>
           </div>
-          <div class="buttons-spaced-reversed">
-            <div class="g-signin2" data-size="large" data-longtitle="true" data-onsuccess="onSignIn"></div>
-            <div class="fb-login-button" data-size="large" data-button-type="login_with" data-auto-logout-link="false" data-use-continue-as="false" onlogin="facebookLogin()"></div>
-          </div>
           <br>
           <div class="buttons-spaced-reversed" style="">
             <button [disabled]="registrationForm.invalid" class="btn btn-secondary" mat-raised-button>S'inscrire</button>
             <button class="btn-primary" (click)="router.navigate(['/login'])" mat-raised-button>Déjà inscrit ?</button>
           </div>
         </form>
-	
+
+        <form style="margin-top: 15px">
+          <section class="buttons-spaced-reversed">
+            <div class="g-signin2" data-size="large" data-longtitle="true" data-onsuccess="onSignIn"></div>
+            <div class="fb-login-button" data-size="large" data-button-type="login_with" data-auto-logout-link="false" data-use-continue-as="false" onlogin="facebookLogin()"></div>
+          </section>
+        </form>
+
       </div>
     </div>
   </div>

@@ -6,12 +6,14 @@ import {User} from "../../../../core/models/User";
 @Component({
     selector: 'public-profile',
     templateUrl: 'public.html',
-    styleUrls: ['public.scss', '../../../../../scss/themes/main.scss']
+    styleUrls: ['public.scss', '../profile.scss', '../../../../../scss/themes/main.scss']
 })
 export class PublicProfileComponent implements OnInit, OnDestroy {
     user_id: number;
     user: User;
     private sub: any;
+
+    image: any = null;
 
     constructor(private route: ActivatedRoute,
                 private requestSrv: RequestService) {
@@ -23,12 +25,21 @@ export class PublicProfileComponent implements OnInit, OnDestroy {
             .subscribe(params => {
                 this.requestSrv.get(`users/${params.name}`, {}, {Authorization: ''})
                     .subscribe(ret => {
-                        this.user.pseudo = ret.user.pseudo;
+                        this.user = ret.user;
+                        this.requestSrv.get(`users/${ret.user.pseudo}/image`, {}, {Authorization: ''})
+                            .subscribe(ret => this.image = ret.image);
                     });
             });
     }
 
     ngOnDestroy() {
         this.sub.unsubscribe();
+    }
+
+    sendInvitation() {
+        // this.requestSrv.post('userrelationships/invite', {
+        //     user: this.user.id
+        // }).subscribe();
+        console.log(`Inviting ${this['user']["pseudo"]}`);
     }
 }

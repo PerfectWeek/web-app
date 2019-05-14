@@ -103,21 +103,21 @@ import localeFr from '@angular/common/locales/fr';
 
 registerLocaleData(localeFr);
 
-export function getAuthServiceConfigs() {
-  let config = new AuthServiceConfig(
-      [
-        {
-          id: FacebookLoginProvider.PROVIDER_ID,
-          provider: new FacebookLoginProvider("Your-Facebook-app-id")
-        },
-	{
-          id: GoogleLoginProvider.PROVIDER_ID,
-          provider: new GoogleLoginProvider("Your-Google-Client-Id")
-        },
-      ]
-  );
-  return config;
-}
+// export function getAuthServiceConfigs() {
+//   let config = new AuthServiceConfig(
+//       [
+//         {
+//           id: FacebookLoginProvider.PROVIDER_ID,
+//           provider: new FacebookLoginProvider("Your-Facebook-app-id")
+//         },
+// 	{
+//           id: GoogleLoginProvider.PROVIDER_ID,
+//           provider: new GoogleLoginProvider("Your-Google-Client-Id")
+//         },
+//       ]
+//   );
+//   return config;
+// }
 
 @NgModule({
   declarations: [
@@ -220,10 +220,10 @@ export function getAuthServiceConfigs() {
     },
     isLogged,
     IsLogout,
-    {
-      provide: AuthServiceConfig,
-      useFactory: getAuthServiceConfigs
-    }
+    // {
+    //   provide: AuthServiceConfig,
+    //   useFactory: getAuthServiceConfigs
+    // }
   ],
   bootstrap: [AppComponent],
   entryComponents: [

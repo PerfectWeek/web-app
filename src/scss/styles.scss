@@ -22,6 +22,18 @@
   margin-bottom: 10px;
 }
 
+#provider-signin {
+  width: 40%;
+  padding: 15px;
+  box-shadow: 0 0 6px 2px rgba(50, 50, 50, .25);
+  z-index: 1;
+  background-color: rgba(255, 255, 255, .85);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .main-full-page {
   height: $main-full-page-height;
   margin-top: $main-full-page-margin;
@@ -65,4 +77,17 @@
 
 .mat-menu-content {
   padding: 0 !important;
+}
+
+@media screen and (max-width: map_get($widths, l)) {
+  .buttons-spaced-reversed {
+    flex-flow: column;
+    & > button {
+      margin: 5px 0;
+    }
+
+    & > div {
+      margin: 5px auto;
+    }
+  }
 }
