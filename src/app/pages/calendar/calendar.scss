@@ -1,26 +1,3 @@
-//.title-and-logo {
-//  justify-content: center;
-//}
-//
-//#perfectweek_logo {
-//  width: 100px;
-//  height: auto;
-//}
-//
-//h3 {
-//  margin: 0 0 10px;
-//}
-//
-////AMINNNNNNNNNNNN CA MARCHE PASSSSSSSSSSSSSSSSS
-////.cal-day-badge ng-star-inserted
-//.cal-day-badge .ng-star-inserted {
-//  color: #5ABC95;
-//}
-//
-//pre {
-//  background-color: #f5f5f5;
-//  padding: 15px;
-//}
 html, body {
   margin: 0;
   padding: 0;
@@ -28,15 +5,21 @@ html, body {
   font-size: 14px;
 }
 
-//#top {
-//  background: #eee;
-//  border-bottom: 1px solid #ddd;
-//  padding: 0 10px;
-//  line-height: 40px;
-//  font-size: 12px;
-//}
-
 #calendar {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 40px auto;
+}
+
+.removebtn {
+  color: black;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 13px;
+  height: 13px;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 10px;
+  cursor: pointer;
+  background-color: #FFF
 }
