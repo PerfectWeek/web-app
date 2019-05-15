@@ -7,13 +7,17 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import {CommonModule, registerLocaleData} from "@angular/common";
 
-//SocialMediaLogin
+//Google Api Modules
 import {
-    SocialLoginModule,
-    AuthServiceConfig,
-    GoogleLoginProvider,
-    FacebookLoginProvider,
-} from "angular-6-social-login";
+    GoogleApiModule,
+    GoogleApiService,
+    GoogleAuthService,
+    NgGapiClientConfig,
+    NG_GAPI_CONFIG,
+    GoogleApiConfig
+} from "ng-gapi";
+import { UserService } from './pages/Registration/UserService';
+import { SheetResource } from './pages/Registration/SheetResource';
 
 //External Modules
 import { ToastrModule } from 'ngx-toastr';
@@ -103,21 +107,17 @@ import localeFr from '@angular/common/locales/fr';
 
 registerLocaleData(localeFr);
 
-// export function getAuthServiceConfigs() {
-//   let config = new AuthServiceConfig(
-//       [
-//         {
-//           id: FacebookLoginProvider.PROVIDER_ID,
-//           provider: new FacebookLoginProvider("Your-Facebook-app-id")
-//         },
-// 	{
-//           id: GoogleLoginProvider.PROVIDER_ID,
-//           provider: new GoogleLoginProvider("Your-Google-Client-Id")
-//         },
-//       ]
-//   );
-//   return config;
-// }
+let gapiClientConfig: NgGapiClientConfig = {
+    client_id: "801780005342-ot6i9l8t9t2lo3fcg0o9co4q8m80ns3d.apps.googleusercontent.com",
+    discoveryDocs: ["https://analyticsreporting.googleapis.com/$discovery/rest?version=v4"],
+    ux_mode: "popup",
+    scope: [
+        "https://www.googleapis.com/auth/calendar",
+	"https://www.googleapis.com/auth/userinfo.email",
+	"https://www.googleapis.com/auth/userinfo.profile"
+    ].join(" ")
+};
+
 
 @NgModule({
   declarations: [
@@ -189,13 +189,17 @@ registerLocaleData(localeFr);
     MatButtonModule,
     MatListModule,
     MatMenuModule,
+      MatIconModule,
+      GoogleApiModule.forRoot({
+	  provide: NG_GAPI_CONFIG,
+	  useValue: gapiClientConfig
+      }),
     MatIconModule,
     ToastrModule.forRoot({
       timeOut: 10000,
       positionClass: 'toast-bottom-center',
       preventDuplicates: true,
     }),
-    SocialLoginModule,
   ],
   schemas: [ NO_ERRORS_SCHEMA ],
   providers: [
@@ -219,11 +223,9 @@ registerLocaleData(localeFr);
       multi: true
     },
     isLogged,
-    IsLogout,
-    // {
-    //   provide: AuthServiceConfig,
-    //   useFactory: getAuthServiceConfigs
-    // }
+      IsLogout,
+      UserService,
+      SheetResource
   ],
   bootstrap: [AppComponent],
   entryComponents: [

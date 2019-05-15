@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Observable } from "rxjs/Observable";
 import { TokenService } from "../services/token.service";
-import { AuthService } from "../services/auth.service";
+import { AutthService } from "../services/auth.service";
 import 'rxjs/add/operator/retryWhen';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/throw';
@@ -35,7 +35,7 @@ export class InterceptorToken implements HttpInterceptor {
   }
 
   constructor(private tokenSrv: TokenService,
-              private authService: AuthService) {
+              private authService: AutthService) {
 
   }
 

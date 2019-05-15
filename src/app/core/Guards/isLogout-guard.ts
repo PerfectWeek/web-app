@@ -1,12 +1,12 @@
 import {Injectable} from "@angular/core";
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from "@angular/router";
-import {AuthService} from "../services/auth.service";
+import {AutthService} from "../services/auth.service";
 import {ToastrService} from "ngx-toastr";
 
 @Injectable()
 export class IsLogout implements CanActivate {
 
-  constructor(private authSrv: AuthService,
+  constructor(private authSrv: AutthService,
               private toastSrv: ToastrService,
               private router: Router) {
   }

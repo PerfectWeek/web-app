@@ -5,7 +5,7 @@ import {User} from "../../../core/models/User";
 import {RequestService} from "../../../core/services/request.service";
 import {ProfileService} from "../../../core/services/profile.service";
 import {ToastrService} from "ngx-toastr";
-import {AuthService} from "../../../core/services/auth.service";
+import {AutthService} from "../../../core/services/auth.service";
 import {MatDialog} from "@angular/material";
 import {ConfirmDialog} from "../../../module/dialog/Confirm-dialog/Confirm-dialog";
 import {filter, switchMap} from "rxjs/operators";
@@ -29,7 +29,7 @@ export class ProfileComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private requestSrv: RequestService,
               private toastSrv: ToastrService,
-              private authSrv: AuthService,
+              private authSrv: AutthService,
               public dialog: MatDialog,
               private profileSrv: ProfileService) {
 
