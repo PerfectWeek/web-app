@@ -120,4 +120,23 @@ export class ProfileComponent implements OnInit {
     bindGoogle() {
         this.userSrv.bind();
     }
+
+    onFileChange(event) {
+
+        if (event.target.files && event.target.files.length == 1) {
+            const file = event.target.files[0];
+
+            this.profileSrv.userProfile$.subscribe(user => {
+                this.requestSrv.postFile(`users/${user.pseudo}/upload-image`, file, {Authorization: ''})
+                    .do(() => {
+                            this.requestSrv.get(`users/${user.pseudo}/image`, {}, {Authorization: ''})
+                                .subscribe(ret => {
+                                    this.image = ret.image;
+                                });
+                            this.toastSrv.success("L'image a été uploadé avec succès");
+                        }, err => this.toastSrv.error("Une erreur est survenue lors de l'upload de l'image")
+                    ).subscribe();
+            });
+        }
+    }
 }

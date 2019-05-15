@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {OptionsInput} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -26,10 +26,12 @@ import {ModifyEventDialog} from '../../module/dialog/ModifyEvent-dialog/ModifyEv
     templateUrl: 'calendar.html',
 
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnChanges {
     options: OptionsInput;
     @ViewChild('fullcalendar') calendarComponent: FullCalendarComponent; // the #calendar in the template
     events: EventInput[] = [];
+
+    @Input('in_calendar_id') in_calendar_id = null;
 
     constructor(private modal: NgbModal,
                 public dialog: MatDialog,
@@ -44,8 +46,31 @@ export class CalendarComponent implements OnInit {
     calendar_name: string = null;
     is_global_calendar: boolean = true;
 
+    ngOnChanges(changes: SimpleChanges) {
+        console.log('calendar_id => ', this.in_calendar_id);
+        this.events = [];
+        this.in_calendar_id = changes.in_calendar_id.currentValue;
+        if (this.in_calendar_id === -1) {
+            this.get_global_calendar();
+            this.is_global_calendar = true;
+        }
+        else {
+            console.log('group');
+            this.is_global_calendar = false;
+            this.get_in_group_calendar()
+            console.log('events => ', this.events);
+        }
+    }
+
     ngOnInit() {
-        this.get_group_info();
+        console.log('calendar_id => ', this.in_calendar_id);
+        this.events = [];
+        // this.get_group_info();
+        // if (this.in_calendar_id) {
+        //     (this.in_calendar_id === -1) ? this.get_global_calendar() : this.getInGroupCalendar();
+        // }
+        // else
+        //     this.get_group_info();
         this.options = {
             editable: true,
             customButtons: {
@@ -95,10 +120,12 @@ export class CalendarComponent implements OnInit {
 
     get_calendar_events(calendar_id) {
         const calAPI = this.getAPI();
+        calAPI.removeAllEvents();
         this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''})
             .subscribe(ret => {
                 const backgroundColor_ = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
                 const borderColor_ = '#1C4891';
+                console.log("ret => ", ret);
                 for (const idx in ret.events) {
                     calAPI.addEvent({
                         id: ret.events[idx].id,
@@ -112,6 +139,14 @@ export class CalendarComponent implements OnInit {
             });
     }
 
+    get_in_group_calendar(): void {
+        this.get_calendar_events(this.in_calendar_id);
+        this.requestSrv.get(`calendars/${this.in_calendar_id}`, {}, {Authorization: ''})
+            .subscribe(ret => {
+                this.calendar_name = ret.calendar.name;
+            });
+    }
+
     get_group_calendar(): void {
         this.get_calendar_events(this.calendar_id);
         this.requestSrv.get(`calendars/${this.calendar_id}`, {}, {Authorization: ''})
@@ -121,6 +156,7 @@ export class CalendarComponent implements OnInit {
     }
 
     get_global_calendar(): void {
+        console.log('GLOBAL');
         this.profileSrv.userProfile$.subscribe(user => {
             this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
                 .subscribe(ret => {
@@ -146,7 +182,7 @@ export class CalendarComponent implements OnInit {
         const calAPI_ = this.getAPI();
         const dialogRef = this.dialog.open(CreateEventDialog, {
             data: {
-                calendar_id: this.calendar_id,
+                calendar_id: this.in_calendar_id ? this.in_calendar_id : this.calendar_id,
                 calAPI: calAPI_,
                 is_global_calendar: this.is_global_calendar,
                 calendar_locale: this.locale,
@@ -199,7 +235,7 @@ export class CalendarComponent implements OnInit {
         const calAPI_ = this.getAPI();
         const dialogRef = this.dialog.open(FoundSlotDialog, {
             data: {
-                calendar_id: this.calendar_id,
+                calendar_id: this.in_calendar_id ? this.in_calendar_id : this.calendar_id,
                 calAPI: calAPI_,
                 is_global_calendar: this.is_global_calendar,
                 calendar_locale: this.locale,

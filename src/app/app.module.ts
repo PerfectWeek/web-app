@@ -108,11 +108,12 @@ import {isLogged} from './core/Guards/isLogged-guard';
 import {IsLogout} from './core/Guards/isLogout-guard';
 
 import localeFr from '@angular/common/locales/fr';
+import {environment} from "../environments/environment";
 
 registerLocaleData(localeFr);
 
 let gapiClientConfig: NgGapiClientConfig = {
-    client_id: "801780005342-ot6i9l8t9t2lo3fcg0o9co4q8m80ns3d.apps.googleusercontent.com",
+    client_id: environment.google_client_id,
     discoveryDocs: ["https://analyticsreporting.googleapis.com/$discovery/rest?version=v4"],
     ux_mode: "popup",
     scope: [

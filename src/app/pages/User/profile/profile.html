@@ -2,9 +2,10 @@
   <section class="main-container" style="box-shadow: none !important;">
     <h3 style="text-align: center">Mon Profil</h3>
   </section>
-  <div class="profile-image">
-    <img src="{{image}}" alt="Profile image" title="Profile image">
-  </div>
+  <label class="profile-image" for="file-input">
+    <img src="{{image}}" alt="Profile image and button to change the image" title="Cliquez pour changer l'image">
+  </label>
+  <input id="file-input" type="file" accept=".jpg,.png,.jpeg" class="image-input" (change)="onFileChange($event)" style="display: none">
   <div class="main-container" id="Profile-data-container">
     <div class="profile-container" *ngIf="user && modifying === false">
       <div>
