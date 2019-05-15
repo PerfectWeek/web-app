@@ -8,7 +8,7 @@ import GoogleAuth = gapi.auth2.GoogleAuth;
 import {ProfileService} from "../../core/services/profile.service";
 import {TokenService} from "../../core/services/token.service";
 import {RequestService} from "../../core/services/request.service";
-import {AutthService} from "../../core/services/auth.service";
+import {AuthService} from "../../core/services/auth.service";
 import {ToastrService} from "ngx-toastr";
 import {Router} from "@angular/router";
 
@@ -22,7 +22,7 @@ export class UserService {
     constructor(private googleAuthService: GoogleAuthService,
                 private requestSrv: RequestService,
                 private profileSrv: ProfileService,
-                private authSrv: AutthService,
+                private authSrv: AuthService,
                 private tokenSrv: TokenService,
                 public router: Router,
                 private ngZone: NgZone) {

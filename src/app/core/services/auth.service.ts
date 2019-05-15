@@ -17,7 +17,7 @@ import {Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
 
 @Injectable()
-export class AutthService {
+export class AuthService {
   get logged(): boolean {
     return this._logged;
   }

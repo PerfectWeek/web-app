@@ -18,19 +18,11 @@
           </div>
 
           <div class="buttons-spaced-reversed">
-	    <button (click)="signInWithFB()" mat-raised-button><img src="assets/Pictures/facebook.pn
-g" width="40" height="40" style="padding: 6px;margin-left: -15px;">  Facebook</button>
+	          <button (click)="signInWithFB()" mat-raised-button><img src="assets/Pictures/facebook.png" width="40" height="40" style="padding: 6px;margin-left: -15px;">  Facebook</button>
             <button (click)="signInGoogle()" mat-raised-button><img src="assets/Pictures/google.png" width="40" height="40" style="padding: 6px;margin-left: -12px;">  Google</button>
             <button [disabled]="connectionForm.invalid" class="btn btn-secondary" mat-raised-button>Se connecter</button>
             <button class="btn-primary" (click)="router.navigate(['/registration'])" mat-raised-button>Pas encore inscrit ?</button>
           </div>
-        </form>
-
-        <form style="margin-top: 15px">
-          <section class="buttons-spaced-reversed">
-            <div class="g-signin2" data-size="large" data-longtitle="true" data-onsuccess="onSignIn"></div>
-            <div class="fb-login-button" data-size="large" data-button-type="login_with" data-auto-logout-link="false" data-use-continue-as="false" onlogin="facebookLogin()"></div>
-          </section>
         </form>
 
       </div>

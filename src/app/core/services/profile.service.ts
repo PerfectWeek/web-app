@@ -5,7 +5,7 @@ import {ToastrService} from "ngx-toastr";
 import {filter, switchMap, tap} from "rxjs/operators";
 import {ReplaySubject} from "rxjs/ReplaySubject";
 import {Observable} from "rxjs/Observable";
-import {AutthService} from "./auth.service";
+import {AuthService} from "./auth.service";
 import {Subscription} from "rxjs/Subscription";
 
 @Injectable()
@@ -24,7 +24,7 @@ export class ProfileService {
 
   constructor(private requestSrv: RequestService,
               private toastSrv: ToastrService,
-              private authSrv: AutthService) {
+              private authSrv: AuthService) {
     if (localStorage.getItem('user_pseudo')) {
       let pseudo = localStorage.getItem('user_pseudo');
       this.subscription = this.authSrv.isLogged().pipe(

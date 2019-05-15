@@ -25,13 +25,17 @@
     border-bottom: 1px solid map_get($colors, lightgrey);
     padding: 15px;
     line-height: 5rem;
-    font-size: 1.5rem;
+    font-size: 1.5rem !important;
     text-align: start;
     display: flex;
     flex-flow: row;
     flex-wrap: nowrap;
     justify-content: flex-start;
     align-items: center;
+
+    & h3 {
+
+    }
 
     & > input {
       display: none;

@@ -25,23 +25,23 @@ export class RegistrationComponent {
 
     registrationForm: FormGroup;
 
-  initRegistrationForm() {
-    return this.fb.group({
-      pseudo: [null, Validators.required],
-      email: [null, Validators.compose([Validators.email, Validators.pattern("^\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$"), Validators.required])],
-      password: [null, Validators.compose([Validators.pattern("^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+).{8,}$"), Validators.minLength(8), Validators.required])],
-      confirmPassword: [null, Validators.required]
-    },
-      {
-        validator: PasswordValidation.MatchPassword
-      });
-  }
+    initRegistrationForm() {
+        return this.fb.group({
+                pseudo: [null, Validators.required],
+                email: [null, Validators.compose([Validators.email, Validators.pattern("^\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$"), Validators.required])],
+                password: [null, Validators.compose([Validators.pattern("^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+).{8,}$"), Validators.minLength(8), Validators.required])],
+                confirmPassword: [null, Validators.required]
+            },
+            {
+                validator: PasswordValidation.MatchPassword
+            });
+    }
 
     constructor(private fb: FormBuilder,
                 private toastSrv: ToastrService,
                 private requestSrv: RequestService,
                 private profileSrv: ProfileService,
-                private authSrv: AutthService,
+                private authSrv: AuthService,
                 private tokenSrv: TokenService,
                 public router: Router,
                 private userService: UserService,
@@ -80,25 +80,23 @@ export class RegistrationComponent {
 
     signInWithFB(): void {
         let self = this;
-        this.ngZone.run(() => {
-            FB.login(function (response) {
-                console.log(response);
-                if (response.status === 'connected') {
-                    console.log(response["authResponse"]["accessToken"]);
-                    self.requestSrv.get("auth/providers/facebook/callback", {
-                        access_token: response["authResponse"]["accessToken"],
-                        refresh_token: ""
-                    }, {})
-                        .subscribe((resu) => {
-                            self.tokenSrv.token = resu["token"];
-                            localStorage.setItem('user_pseudo', resu["user"]["pseudo"]);
-                            self.authSrv.logged = true;
-                            self.profileSrv.fetchUser$(resu["user"]["pseudo"]).subscribe(() => self.router.navigate(['/dashboard']));
-                        })
-                } else {
-                }
-            }, {scope: 'email,user_events'});
-        });
+        FB.login(function (response) {
+            console.log(response);
+            if (response.status === 'connected') {
+                console.log(response["authResponse"]["accessToken"]);
+                self.requestSrv.get("auth/providers/facebook/callback", {
+                    access_token: response["authResponse"]["accessToken"],
+                    refresh_token: ""
+                }, {})
+                    .subscribe((resu) => {
+                        self.tokenSrv.token = resu["token"];
+                        localStorage.setItem('user_pseudo', resu["user"]["pseudo"]);
+                        self.authSrv.logged = true;
+                        self.profileSrv.fetchUser$(resu["user"]["pseudo"]).subscribe(() => self.ngZone.run(() => self.router.navigate(['/dashboard'])));
+                    })
+            } else {
+            }
+        }, {scope: 'email,user_events'});
     }
 
     public isLoggedIn(): boolean {

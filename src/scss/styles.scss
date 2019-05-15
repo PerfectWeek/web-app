@@ -79,7 +79,7 @@
   padding: 0 !important;
 }
 
-@media screen and (max-width: map_get($widths, l)) {
+@media screen and (max-width: map_get($widths, xl)) {
   .buttons-spaced-reversed {
     flex-flow: column;
     & > button {

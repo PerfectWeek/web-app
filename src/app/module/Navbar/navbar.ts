@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AutthService} from '../../core/services/auth.service';
+import {AuthService} from '../../core/services/auth.service';
 import {Router} from '@angular/router';
 import {ProfileService} from '../../core/services/profile.service';
 
@@ -14,7 +14,7 @@ export class Navbar implements OnInit {
 
   userProfile$ = this.profileSrv.userProfile$;
 
-  constructor(private authSrv: AutthService,
+  constructor(private authSrv: AuthService,
               private router: Router,
               private profileSrv: ProfileService) {
 
