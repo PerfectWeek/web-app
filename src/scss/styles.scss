@@ -4,6 +4,11 @@
 @import '~bootstrap/dist/css/bootstrap.min.css';
 @import "~@angular/material/prebuilt-themes/indigo-pink";
 
+@import '~@fullcalendar/core/main.css';
+@import '~@fullcalendar/daygrid/main.css';
+@import '~@fullcalendar/timegrid/main.css';
+
+
 @import "variables";
 @import "form";
 @import "buttons";
@@ -77,6 +82,25 @@
 
 .mat-menu-content {
   padding: 0 !important;
+}
+
+//FullCalendar
+
+.fc.fc-ltr.fc-bootstrap {
+
+  .fc-toolbar.fc-header-toolbar {
+    display: flex !important;
+    flex-flow: row !important;
+    flex-wrap: wrap !important;
+
+    & > .fc-right {
+      & > .btn-group {
+        display: flex !important;
+        flex-flow: row !important;
+        flex-wrap: wrap !important;
+      }
+    }
+  }
 }
 
 @media screen and (max-width: map_get($widths, xl)) {

@@ -14,7 +14,7 @@
   width: 40%;
 }
 
-@media screen and (max-width: map_get($widths, l)) {
+@media screen and (max-width: map_get($widths, xl)) {
   #Day {
     min-width: 500px;
   }
@@ -28,7 +28,7 @@
   }
 }
 
-@media screen and (max-width: map_get($widths, m)) {
+@media screen and (max-width: map_get($widths, l)) {
   #Day {
     min-width: 350px;
   }
