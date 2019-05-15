@@ -11,7 +11,6 @@ export class RequestService {
     for (const key in value) {
       httpHeader = httpHeader.append(key, value[key]);
     }
-
     return httpHeader;
   }
 

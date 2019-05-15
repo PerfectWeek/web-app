@@ -24,8 +24,10 @@ export class Navbar implements OnInit {
 
   }
 
-  logout() {
-    this.authSrv.logout();
+    logout() {
+	
+	console.log(localStorage.getItem('user_pseudo'));
+	this.authSrv.logout();
   }
 
 }

@@ -25,13 +25,17 @@
     border-bottom: 1px solid map_get($colors, lightgrey);
     padding: 15px;
     line-height: 5rem;
-    font-size: 1.5rem;
+    font-size: 1.5rem !important;
     text-align: start;
     display: flex;
     flex-flow: row;
     flex-wrap: nowrap;
     justify-content: flex-start;
     align-items: center;
+
+    & h3 {
+      font-size: 1.5rem;
+    }
 
     & > input {
       display: none;
@@ -127,6 +131,26 @@
         font-size: calc(1.1vw + 1.1vh);
         color: map_get($colors, primary);
         transition: color 0.7s;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: map_get($widths, xl)) {
+  .group-info-component {
+    & > .group-name {
+      & h3 {
+        font-size: 1.2rem;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: map_get($widths, l)) {
+  .group-info-component {
+    & > .group-name {
+      & h3 {
+        font-size: 0.9rem;
       }
     }
   }

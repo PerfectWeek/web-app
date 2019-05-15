@@ -44,7 +44,7 @@ export class AddMemberDialog {
 
     members: string[] = [];
 
-    pageIndex: number = 0;
+    pageIndex: number = 1;
     pageSize: number = 10;
     sortingBy: string = "pseudo";
 
@@ -75,7 +75,6 @@ export class AddMemberDialog {
         this.filteredUsers = new BehaviorSubject<User[]>([]);
         this.filteredUsers$ = this.filteredUsers.asObservable();
     }
-
 
 
     ngAfterViewInit() {
@@ -117,43 +116,22 @@ export class AddMemberDialog {
 
 
     search() {
-        console.log("\nNumber of users returned per request => ", this.pageSize);
-        console.log("Starting at matching user => ", this.pageIndex, " * ", this.pageSize);
-        console.log("Sorting users by => ", this.sortingBy);
-        console.log("Searching users for value => ", this.search$.getValue().toLowerCase());
-
         this.filteredUsers.next([]);
-        this.profileSrv.userProfile$.subscribe(currentUser => {
-            if (currentUser.pseudo.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) !== -1) {
-                this.filterCurrentUser(currentUser);
-            }
-        });
-
-
-        /* To be implemented when the routes will be up api wise*/
-
-        // this.requestSrv.get(`users`, {
-        //     _limit: this.pageSize,
-        //     _start: this.pageIndex,
-        //     _sort:  this.sortingBy,
-        //     _contains:    this.search$.getValue().toLowerCase()
-        // }, {Authorization: ''})
-        //     .subscribe(ret => {
-        //         this.filterUsers(ret.users);
-        //     }, err => {
-        //         this.toastSrv.error(err.error.message, 'Une erreur est survenue');
-        //     });
+        this.requestSrv.get(`search/users`, {
+            page_size: this.pageSize,
+            page_number: this.pageIndex,
+            q:    this.search$.getValue()
+        }, {Authorization: ''})
+            .subscribe(ret => this.filterUsers(ret.users), err => {
+                this.toastSrv.error(err.error.message, 'Une erreur est survenue');
+            });
     }
 
     filterUsers(users) {
+        let self = this;
+        let in_users: User[] = [];
         for (let user of users) {
             let is_in: boolean = false;
-
-            for (let member of this.members)
-                if (user.pseudo === member) {
-                    is_in = true;
-                    break;
-                }
 
             for (let selected of this.selectedUsers)
                 if (user.pseudo === selected) {
@@ -163,11 +141,13 @@ export class AddMemberDialog {
 
             if (is_in === true)
                 break;
-
-            let users = this.filteredUsers.getValue();
-            users.push(user);
-            this.filteredUsers.next(users);
+            in_users.push(user);
         }
+        let idx = in_users.findIndex(function (user) {
+            return self.profileSrv.user.pseudo === user.pseudo;
+        });
+        idx !== -1 ? in_users.splice(idx, 1) : null;
+        this.filteredUsers.next(in_users);
     }
 
     filterCurrentUser(currentUser) {

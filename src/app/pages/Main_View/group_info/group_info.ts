@@ -160,6 +160,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
     changeUser(value: string, fieldname: string) {
         this.user$.subscribe(user => {
+
             let dialogRef = this.dialog.open(ChangeValueDialog, {
                 data: {fieldname: fieldname, value: value}
             });

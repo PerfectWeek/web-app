@@ -24,7 +24,7 @@
                 <input type="password" formControlName="password" id="password" class="form-control" matInput placeholder="Mot de Passe" required>
               </mat-form-field>
               <p class="error-message" *ngIf="registrationForm.get('password').invalid && registrationForm.get('password').errors.minlength">Le mot de passe doit faire minimum 8 caractères.</p>
-              <p class="error-message" *ngIf="registrationForm.get('password').invalid && registrationForm.get('password').errors.pattern">Le mot de passe doit comprendre au moins une lettre et un chiffre et n'accepte pas les charactères spéciaux.</p>
+              <p class="error-message" *ngIf="registrationForm.get('password').invalid && registrationForm.get('password').errors.pattern">Le mot de passe doit comprendre au moins une lettre et un chiffre.</p>
             </div>
 
             <div class="input-error-message">
@@ -34,17 +34,14 @@
               <p class="error-message" *ngIf="registrationForm.get('confirmPassword').invalid && registrationForm.get('confirmPassword').touched">Les 2 mots de passe ne sont pas identiques.</p>
             </div>
           </div>
+
           <div class="buttons-spaced-reversed">
-            <div class="g-signin2" data-size="large" data-longtitle="true" data-onsuccess="onSignIn"></div>
-            <div class="fb-login-button" data-size="large" data-button-type="login_with" data-auto-logout-link="false" data-use-continue-as="false" onlogin="facebookLogin()"></div>
-          </div>
-          <br>
-          <div class="buttons-spaced-reversed" style="">
-            <button [disabled]="registrationForm.invalid" class="btn btn-secondary" mat-raised-button>S'inscrire</button>
-            <button class="btn-primary" (click)="router.navigate(['/login'])" mat-raised-button>Déjà inscrit ?</button>
+            <button [disabled]="registrationForm.invalid" class="btn btn-secondary" mat-raised-button type="submit">S'inscrire</button>
+            <button class="btn-primary" (click)="router.navigate(['/login'])" mat-raised-button type="button">Déjà inscrit ?</button>
+            <button (click)="signInWithFB()" mat-raised-button><img src="assets/Pictures/facebook.png" width="40" height="40" style="padding: 6px;margin-left: -15px;" type="button">  Facebook</button>
+            <button (click)="signInGoogle()" mat-raised-button><img src="assets/Pictures/google.png" width="40" height="40" style="padding: 6px;margin-left: -12px;" type="button">  Google</button>
           </div>
         </form>
-	
       </div>
     </div>
   </div>

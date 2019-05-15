@@ -21,8 +21,6 @@
               "src/favicon.ico"
             ],
             "styles": [
-              "node_modules/angular-calendar/css/angular-calendar.css",
-              "node_modules/font-awesome/scss/font-awesome.scss",
               "src/scss/styles.scss"
             ],
             "scripts": [

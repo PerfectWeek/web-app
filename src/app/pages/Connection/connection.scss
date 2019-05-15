@@ -12,15 +12,4 @@
       width: 50%;
     }
   }
-
-  .buttons-spaced-reversed {
-    flex-flow: column;
-    & > button {
-      margin: 5px 0;
-    }
-
-    & > div {
-      margin: 5px auto;
-    }
-  }
 }

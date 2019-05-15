@@ -58,15 +58,12 @@ export class FriendRequestComponent implements OnInit, AfterViewInit {
         }, (error) => {console.log('error => ', error)});
         this.getRequests();
         this.ready.next(true);
+
+        this.displayRequests = [];
+        this.displayRequests = this.friendRequests;
     }
 
     ngAfterViewInit() {
-        this.search$
-            .debounceTime(300)
-            .distinctUntilChanged()
-            .do(() => this.search())
-            .subscribe();
-
         this.ready$
             .do((value) => {
                 if (value === true && this.start === true) {
@@ -120,39 +117,6 @@ export class FriendRequestComponent implements OnInit, AfterViewInit {
        // 	this.friendRequests.splice(index, 1);
        // });
        this.friendRequests.splice(index, 1);
-    }
-
-    search() {
-        console.log('\nSearch by input value');
-        this.pageIndex = 0;
-        this.input = this.search$.getValue().toLowerCase();
-
-        this.displayRequests = [];
-        this.displayRequests = this.friendRequests
-            .filter(group => group.name.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) != -1);
-
-        console.log("Number of requests returned per request => ", this.pageSize);
-        console.log("Starting at request => ", this.pageIndex, " * ", this.pageSize);
-        console.log("Sorting requests by => ", this.sortingBy);
-        console.log("Searching requests for value => ", this.search$.getValue().toLowerCase());
-
-
-        /* To be implemented when the routes will be up api wise*/
-
-        // this.displayGroups = [];
-        // this.requestSrv.get(`userrelationships`, {
-        //     _limit: this.pageSize,
-        //     _start: this.pageIndex,
-        //     _sort:  this.sortingBy,
-        //     "=":    this.search$.getValue().toLowerCase()
-        // }, {Authorization: ''})
-        //     .subscribe(ret => {
-        // console.log('ret => ', ret);
-        //         ret.relations.forEach(request => this.displayRequests.push(request));
-        //     }, err => {
-        //         this.toastSrv.error(err.error.message, 'Une erreur est survenue');
-        //     });
-
     }
 
     scrollSearch() {

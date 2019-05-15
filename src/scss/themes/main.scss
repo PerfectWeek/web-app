@@ -1,6 +1,6 @@
 @import "~scss/variables";
 
-.main-container {
+.main-container, %main-container {
   width: 85%;
   box-shadow: 0 0 10px 4px rgba(50, 50, 50, .20);
   padding: 15px;

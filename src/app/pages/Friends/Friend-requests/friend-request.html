@@ -5,11 +5,7 @@
 <ng-template #loaded>
   <section class="requests">
     <section class="request-header">
-      <section class="request-search-bar">
-        <i class="fas fa-search"></i>
-        <input title="Rechercher une requête de demande d'ami" type="text" name="search" id="search" class="form-control" placeholder="Rechercher une requête d'ami" matInput (keyup)="search$.next($event.target.value)">
-      </section>
-      <a href="javascript:void(0)" (click)="createInvitation()" title="Faire une nouvelle demande d'ami"><i class="far fa-edit"></i></a>
+      <button mat-button class="btn-secondary" (click)="createInvitation()" title="Faire une nouvelle demande d'ami"><i class="fas fa-plus"></i> Nouvelle demande</button>
     </section>
     <section *ngFor="let request of displayRequests; let id = index" class="friend-request">
       <section class="request-data">
