@@ -1,421 +1,218 @@
-import {
-    Component,
-    ChangeDetectionStrategy,
-    ViewChild,
-    TemplateRef,
-    OnInit,
-    Input,
-    OnChanges,
-    SimpleChanges, SimpleChange
-} from '@angular/core';
-import { startOfDay, endOfDay, subDays, addDays, endOfMonth, isSameDay, isSameMonth, addHours } from 'date-fns';
-import { Subject } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {
-  CalendarEvent,
-  CalendarEventAction,
-  CalendarEventTimesChangedEvent, CalendarEventTitleFormatter,
-  CalendarView,
-  DAYS_OF_WEEK
-} from 'angular-calendar';
-
-import {RequestService} from "../../core/services/request.service";
-import {ToastrService} from "ngx-toastr";
-import {Router} from "@angular/router";
-import {ProfileService} from "../../core/services/profile.service";
-import {FormModalComponent} from "./demo-utils/ModalForm/form-modal.component";
-import {MatDialog} from "@angular/material";
-import {CreateEventDialog} from "../../module/dialog/CreateEvent-dialog/CreateEvent-dialog";
-import {CustomEventTitleFormatter} from "./demo-utils/custom-event-title-formatter.provider";
-import {DatePipe, formatDate} from '@angular/common';
-import {ModifyEventDialog} from "../../module/dialog/ModifyEvent-dialog/ModifyEvent";
-import {ConfirmDialog} from "../../module/dialog/Confirm-dialog/Confirm-dialog";
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {OptionsInput} from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import listPlugin from '@fullcalendar/list';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import {FullCalendarComponent} from '@fullcalendar/angular';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {MatDialog} from '@angular/material';
+import {RequestService} from '../../core/services/request.service';
+import {ProfileService} from '../../core/services/profile.service';
+import {ToastrService} from 'ngx-toastr';
+import {Router} from '@angular/router';
+import {EventInput} from '@fullcalendar/core/structs/event';
+import {CreateEventDialog} from '../../module/dialog/CreateEvent-dialog/CreateEvent-dialog';
+import frLocale from '@fullcalendar/core/locales/fr';
+import esLocale from '@fullcalendar/core/locales/es';
+import bootstrapPlugin from '@fullcalendar/bootstrap';
 import {FoundSlotDialog} from '../../module/dialog/FoundSlot-dialog/FoundSlot-dialog';
-
-const colors: any = {
-  red: {
-    primary: '#ad2121',
-    secondary: '#FAE3E3'
-  },
-  blue: {
-    primary: '#1e90ff',
-    secondary: '#D1E8FF'
-  },
-  yellow: {
-    primary: '#e3bc08',
-    secondary: '#FDF1BA'
-  },
-  perfectweek: {
-    primary: '#5ABC95',
-    secondary: '#1C4891',
-    //secondary: '#FDF1BA'
-  }
-};
-
-export class PerfectWeekCalendarEvent implements CalendarEvent {
-  public id: number;
-  public description: string;
-  public location: string;
-  public title: string;
-  public start: Date;
-  public end: Date;
-  public color: any;
-  public draggable: boolean;
-  public actions: CalendarEventAction[];
-  public resizable: any;
-}
+import {ConfirmDialog} from '../../module/dialog/Confirm-dialog/Confirm-dialog';
+import {ModifyEventDialog} from '../../module/dialog/ModifyEvent-dialog/ModifyEvent';
 
 @Component({
-  selector: 'mwl-demo-component',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['calendar.scss', '../../../scss/themes/main.scss'],
-  templateUrl: 'calendar.html',
-  providers: [
-    {
-      provide: CalendarEventTitleFormatter,
-      useClass: CustomEventTitleFormatter
-    }
-  ]
+    selector: 'mwl-demo-component',
+    styleUrls: ['../../../scss/themes/main.scss', 'calendar.scss'],
+    templateUrl: 'calendar.html',
+
 })
-export class CalendarComponent implements OnInit, OnChanges {
-  @ViewChild('modalContent')
-  modalContent: TemplateRef<any>;
+export class CalendarComponent implements OnInit {
+    options: OptionsInput;
+    @ViewChild('fullcalendar') calendarComponent: FullCalendarComponent; // the #calendar in the template
+    events: EventInput[] = [];
 
-  @Input('in_calendar_id') in_calendar_id: number = null;
-
-  // FRENCH CALENDAR
-  locale: string = 'fr';
-  weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
-  weekendDays: number[] = [DAYS_OF_WEEK.FRIDAY, DAYS_OF_WEEK.SATURDAY];
-
-  view: CalendarView = CalendarView.Month;
-
-  CalendarView = CalendarView;
-
-  viewDate: Date = new Date();
-
-  modalData: {
-    action: string;
-    event: CalendarEvent;
-  };
-
-  is_global_calendar: boolean = true;
-  date_format: string = "yyyy-MM-ddThh:mm:ss.SSS'Z'";
-  // private modal: NgbModal,
-  constructor(private modal: NgbModal, public dialog: MatDialog,
-              private requestSrv: RequestService,
-              private profileSrv: ProfileService,
-              private toastSrv: ToastrService,
-              // private dialog: MatDialog,
-              private router: Router) {
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    this.events = [];
-    this.in_calendar_id = changes.in_calendar_id.currentValue;
-    (this.in_calendar_id === -1) ? this.get_global_calendar() : this.getInGroupCalendar();
-  }
-
-  ngOnInit(): void {
-    // console.log("ngOnInit Calendar");
-    this.get_group_info();
-      this.events = [];
-    if (this.in_calendar_id) {
-        (this.in_calendar_id === -1) ? this.get_global_calendar() : this.getInGroupCalendar();
+    constructor(private modal: NgbModal,
+                public dialog: MatDialog,
+                private requestSrv: RequestService,
+                private profileSrv: ProfileService,
+                private toastSrv: ToastrService,
+                private router: Router) {
     }
-    else
-      this.get_group_info();
-  }
 
-  getInGroupCalendar() {
-      this.get_calendar_events(this.in_calendar_id);
-      this.requestSrv.get(`calendars/${this.in_calendar_id}`, {}, {Authorization: ''})
-          .subscribe(ret => {
-              this.calendar_name = ret.calendar.name;
-              console.log('calendar_name => ', this.calendar_name)
-          });
-  }
+    locale: string = 'fr';
+    calendar_id: number = null;
+    calendar_name: string = null;
+    is_global_calendar: boolean = true;
 
-  actions: CalendarEventAction[] = [
-    {
-      label: '<i class="fa fa-fw fa-pencil"></i>',
-      onClick: ({event}: { event: CalendarEvent }): void => {
-        this.eventModification(event);
-        //this.handleEvent('Edited', event);
-      }
-    },
-    {
-      label: '<i class="fa fa-fw fa-times"></i>',
-      onClick: ({event}: { event: CalendarEvent }): void => {
-        //this.events = this.events.filter(iEvent => iEvent !== event);
-        //this.handleEvent('Deleted', event);
-        this.deleteEvent(event);
-      }
-    }
-  ];
-
-  refresh: Subject<any> = new Subject();
-
-  events: PerfectWeekCalendarEvent[] = [];
-
-  activeDayIsOpen: boolean = true;
-  calendar_id: number = null;
-  calendar_name: string = null;
-
-  // get_calendar_events(calendar_id): void {
-  //   this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''})
-  //     .subscribe(resp => {
-  //       let random_color = {
-  //         primary: '#' + (Math.random() * 0xFFFFFF << 0).toString(16),
-  //         secondary: '#1C4891',
-  //       };
-  //       for (const idx in resp.events) {
-  //         this.requestSrv.get(`events/${resp.events[idx].id}`, {}, {Authorization: ''})
-  //           .subscribe(ret => {
-  //             this.events.push({
-  //               description: ret.event.description,
-  //               location: ret.event.location,
-  //               id: ret.event.id,
-  //               title: ret.event.name,
-  //               start: startOfDay(ret.event.start_time),
-  //               end: endOfDay(ret.event.end_time),
-  //               color: random_color,
-  //               draggable: true,
-  //               actions: this.actions,
-  //               resizable: {
-  //                 beforeStart: true,
-  //                 afterEnd: true
-  //               }
-  //             });
-  //             this.refresh.next();
-  //           });
-  //       }
-  //     });
-  // }
-
-  get_calendar_events(calendar_id): void {
-    this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''})
-      .subscribe(ret => {
-        let random_color = {
-          primary: '#'+(Math.random() * 0xFFFFFF << 0).toString(16),
-          secondary: '#1C4891',
+    ngOnInit() {
+        this.get_group_info();
+        this.options = {
+            editable: true,
+            customButtons: {
+                addEventButton: {
+                    text: 'Ajouter un evenement',
+                    click: async () => {
+                        this.addEvent();
+                    },
+                },
+                FoundSlotButton: {
+                    text: 'Trouver un créneau',
+                    click: async () => {
+                        this.foundSlots();
+                    },
+                }
+            },
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'FoundSlotButton,addEventButton,dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+            },
+            plugins: [bootstrapPlugin, interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
+            locales: [esLocale, frLocale],
+            locale: frLocale,
+            buttonIcons: false,
+            weekNumbers: true,
+            navLinks: true,
+            eventLimit: true,
+            themeSystem: 'bootstrap',
         };
-        for (const idx in ret.events) {
-            // date_format: string = "yyyy-MM-ddThh:mm:ss";
-          // console.log("recupéré en front\n",
-          //     "start", ret.events[idx].start_time, typeof ret.events[idx].start_time, "\n",
-          //     "end", ret.events[idx].end_time, typeof ret.events[idx].end_time, "\n");
-          //
-          //
-          // console.log("utilisation de la fonction Date",
-          //     new Date(ret.events[idx].start_time), typeof new Date(ret.events[idx].start_time),
-          //     new Date(ret.events[idx].end_time), typeof new Date(ret.events[idx].end_time))
+    }
 
-          this.events.push({
-            description: ret.events[idx].description,
-            location: ret.events[idx].location,
-            id: ret.events[idx].id,
-            title: ret.events[idx].name,
-            // start: startOfDay(ret.events[idx].start_time),
-            // end: endOfDay(ret.events[idx].end_time),
-            start: new Date(ret.events[idx].start_time),
-            end: new Date(ret.events[idx].end_time),
-
-            color: random_color,
-            draggable: true,
-            actions: this.actions,
-            resizable: {
-              beforeStart: true,
-              afterEnd: true
+    deleteEvent(elem): void {
+        const dialogRef = this.dialog.open(ConfirmDialog, {
+            data: {
+                title: 'Suppression d\'evenement',
+                question: 'Voulez-vous vraiment supprimer cette evenement ?'
             }
-          });
-          this.refresh.next();
-        }
-      });
-  }
-
-
-  get_group_calendar(): void {
-    this.get_calendar_events(this.calendar_id);
-    this.requestSrv.get(`calendars/${this.calendar_id}`, {}, {Authorization: ''})
-      .subscribe(ret => {
-        this.calendar_name = ret.calendar.name;
-        console.log('calendar_name => ', this.calendar_name)
-      });
-  }
-
-  get_global_calendar(): void {
-    this.profileSrv.userProfile$.subscribe(user => {
-      this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
-        .subscribe(ret => {
-          for (let idx in ret.calendars) {
-            this.get_calendar_events(ret.calendars[idx].calendar.id);
-          }
         });
-    });
-  }
-
-  get_group_info() {
-    this.calendar_id = +(this.router.url.slice(this.router.url.lastIndexOf('/') + 1));
-    if (!Number.isNaN(this.calendar_id)) {
-      this.is_global_calendar = false;
-      this.get_group_calendar();
-    } else {
-      this.is_global_calendar = true;
-      this.get_global_calendar();
+        dialogRef.afterClosed().subscribe(result => {
+        });
     }
-  }
 
-  dayClicked({date, events}: { date: Date; events: CalendarEvent[] }): void {
-    if (isSameMonth(date, this.viewDate)) {
-      this.viewDate = date;
-      if (
-        (isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) ||
-        events.length === 0
-      ) {
-        this.activeDayIsOpen = false;
-      } else {
-        this.activeDayIsOpen = true;
-      }
+    getAPI() {
+        return this.calendarComponent.getApi();
     }
-  }
 
-  eventTimesChanged({
-                      event,
-                      newStart,
-                      newEnd,
-                    }: CalendarEventTimesChangedEvent): void {
-    let modified_event = this.events.find(current_event => current_event.id === event.id);
-    // console.log(modified_event);
-    this.requestSrv.put(`events/${event.id}`, {
-        start_time: formatDate(newStart, this.date_format, this.locale),
-        end_time: formatDate(newEnd, this.date_format, this.locale),
-        location: modified_event.location,
-        description: modified_event.description,
-        name: modified_event.title
-      },
-      {Authorization: ''})
-      .subscribe(ret => {
-        event.start = newStart;
-        event.end = newEnd;
-        this.refresh.next();
-        this.toastSrv.success("Evenement modifié");
-      });
-  }
+    get_calendar_events(calendar_id) {
+        const calAPI = this.getAPI();
+        this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''})
+            .subscribe(ret => {
+                const backgroundColor_ = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
+                const borderColor_ = '#1C4891';
+                for (const idx in ret.events) {
+                    calAPI.addEvent({
+                        id: ret.events[idx].id,
+                        title: ret.events[idx].name,
+                        end: ret.events[idx].end_time,
+                        start: ret.events[idx].start_time,
+                        backgroundColor: backgroundColor_,
+                        borderColor: borderColor_,
+                    });
+                }
+            });
+    }
 
-  handleEvent(action: string, event: CalendarEvent): void {
-    //this.modalData = { event, action };
-    //this.modal.open(this.modalContent, { size: 'lg' });
-    //this.modal.open(FormModalComponent, { size: 'lg' });
-  }
+    get_group_calendar(): void {
+        this.get_calendar_events(this.calendar_id);
+        this.requestSrv.get(`calendars/${this.calendar_id}`, {}, {Authorization: ''})
+            .subscribe(ret => {
+                this.calendar_name = ret.calendar.name;
+            });
+    }
 
-  // modify all fields
-  eventModification(event): void {
+    get_global_calendar(): void {
+        this.profileSrv.userProfile$.subscribe(user => {
+            this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
+                .subscribe(ret => {
+                    for (let idx in ret.calendars) {
+                        this.get_calendar_events(ret.calendars[idx].calendar.id);
+                    }
+                });
+        });
+    }
 
-    //console.log("tout les info a propos de l'event", event);
-    let dialogRef = this.dialog.open(ModifyEventDialog, {
-      data: {
-        event,
-        calendar_locale: this.locale,
-        refresh: this.refresh,
-      }
-    });
-    // let modified_event = this.events.find(current_event => current_event.id === event.id);
-    // console.log(modified_event);
-    // this.requestSrv.put(`events/${event.id}`, {start_time: formatDate(newStart, this.date_format, this.locale),
-    //     end_time: formatDate(newEnd, this.date_format, this.locale),
-    //     location: modified_event.location,
-    //     description: modified_event.description,
-    //     name: modified_event.title},
-    //   {Authorization: ''})
-    //   .subscribe(ret => {
-    //     event.start = newStart;
-    //     event.end = newEnd;
-    //     this.refresh.next();
-    //   });
-  }
+    get_group_info() {
+        this.calendar_id = +(this.router.url.slice(this.router.url.lastIndexOf('/') + 1));
+        if (!Number.isNaN(this.calendar_id)) {
+            this.is_global_calendar = false;
+            this.get_group_calendar();
+        } else {
+            this.is_global_calendar = true;
+            this.get_global_calendar();
+        }
+    }
 
-  addEvent(): void {
-    let dialogRef = this.dialog.open(CreateEventDialog, {
-      data: {
-        calendar_id: this.calendar_id,
-        actions: this.actions,
-        events: this.events,
-        refresh: this.refresh,
-        is_global_calendar: this.is_global_calendar,
-        calendar_locale: this.locale,
-      }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result !== null && result !== undefined) {
-        console.log("Event created");
-      }
-    });
-
-    // let dialogRef = this.dialog.open(CreateEventDialog, {
-    //   data: {
-    //     title: "Creation d'évenement",
-    //     //question: 'Voulez-vous vraiment supprimer votre profil ?'
-    //   }
-    // });
-  }
-
-    foundSlots(): void {
-        let dialogRef = this.dialog.open(FoundSlotDialog, {
+    addEvent(): void {
+        const calAPI_ = this.getAPI();
+        const dialogRef = this.dialog.open(CreateEventDialog, {
             data: {
                 calendar_id: this.calendar_id,
-                actions: this.actions,
-                events: this.events,
-                refresh: this.refresh,
+                calAPI: calAPI_,
                 is_global_calendar: this.is_global_calendar,
                 calendar_locale: this.locale,
             }
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result !== null && result !== undefined) {
-                console.log("Creneau trouvé");
+                console.log('Event created');
             }
         });
     }
 
-
-    createEvent(): void {
-    //this.addEvent();
-    //this.handleEvent('Create event', event);
-    this.modal.open(FormModalComponent, {size: 'lg'});
-    this.refresh.next();
-  }
-
-  deleteEvent(elem): void {
-    let dialogRef = this.dialog.open(ConfirmDialog, {
-      data: {
-        title: "Suppression d'evenement",
-        question: 'Voulez-vous vraiment supprimer cette evenement ?'
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === true) {
-        let event_id;
-
-        if (typeof elem === 'number') {
-          event_id = elem;
-        } else {
-          event_id = elem.id;
-        }
-
-        this.requestSrv.delete(`events/${event_id}`, {Authorization: ''})
-          .subscribe(ret => {
-            this.toastSrv.success("Evenement Supprimé");
-
-            if (typeof elem === 'number') {
-              this.events.splice(elem, 1);
-            } else {
-              this.events = this.events.filter(iEvent => iEvent !== elem);
+    eventClick(event) {
+        const calAPI = this.getAPI();
+        const dialogRef = this.dialog.open(ModifyEventDialog, {
+            data: {
+                event,
+                calendar_locale: this.locale,
+                calAPI
             }
-            this.refresh.next();
-          }, ret => this.toastSrv.error("Une erreur est survenue lors de la suppression de l'evenement"))
-      }
-    });
-  }
+        });
+    }
+
+    eventDragStop(event): void {
+        console.log(event);
+    }
+
+    eventDrop(event): void {
+        const api = this.getAPI();
+        const modified_event = api.getEventById(event.event.id);
+        this.requestSrv.get(`events/${event.event.id}`, {}, {Authorization: ''})
+            .subscribe(resp => {
+                this.requestSrv.put(`events/${event.event.id}`, {
+                        name: event.event.title,
+                        type: resp.event.type,
+                        location: resp.event.location,
+                        visibility: resp.event.visibility,
+                        description: resp.event.description,
+                        start_time: modified_event.start.toISOString(),
+                        end_time: modified_event.end.toISOString(),
+                    },
+                    {Authorization: ''})
+                    .subscribe(ret => {
+                        this.toastSrv.success('Evenement modifié');
+                    });
+            });
+    }
+
+    foundSlots(): void {
+        const calAPI_ = this.getAPI();
+        const dialogRef = this.dialog.open(FoundSlotDialog, {
+            data: {
+                calendar_id: this.calendar_id,
+                calAPI: calAPI_,
+                is_global_calendar: this.is_global_calendar,
+                calendar_locale: this.locale,
+            }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result !== null && result !== undefined) {
+                console.log('Creneau trouvé');
+            }
+        });
+    }
+
+    dateClick(model) {
+        console.log('DATE CLICK', model);
+    }
 }

@@ -3,20 +3,23 @@
 </div>
 <mat-dialog-content style="white-space: pre-wrap; text-align: center">
     <div>
-    <form #groupForm="ngForm" (ngSubmit)="FoundSlotConfirm()" class="form-row" style="padding: 15px; margin: 15px 0">
-        <mat-radio-group required [(ngModel)]="finalChoose" name="finalChoose" class="example-radio-group"
-                         style="display: inline-flex; flex-direction: column;">
-            <mat-radio-button style="margin-left: 16px; .mat-radio-outer-circle{border-color: #5ABC95;}"
-                              class="example-radio-button"
-                              *ngFor="let slot of slot_formated; index as i" [value]="i">
-                {{slot}}
-            </mat-radio-button>
-        </mat-radio-group>
-    </form>
+        <form #groupForm="ngForm" (ngSubmit)="FoundSlotConfirm()" class="form-row"
+              style="padding: 15px; margin: 15px 0">
+            <mat-radio-group required [(ngModel)]="finalChoose" name="finalChoose" class="example-radio-group"
+                             style="display: inline-flex; flex-direction: column;">
+                <mat-radio-button style="margin-left: 16px; .mat-radio-outer-circle{border-color: #5ABC95;}"
+                                  class="example-radio-button"
+                                  *ngFor="let slot of slot_formated; index as i" [value]="i">
+                    {{slot}}
+                </mat-radio-button>
+            </mat-radio-group>
+        </form>
     </div>
 </mat-dialog-content>
 <br>
 <mat-dialog-actions style="display: flex; justify-content: space-between">
     <button class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
-    <button [disabled]="groupForm.valid === false" class="mat-raised-button btn-secondary" (click)="FoundSlotConfirm()">Confirmer</button>
+    <button [disabled]="groupForm.valid === false" class="mat-raised-button btn-secondary" (click)="FoundSlotConfirm()">
+        Confirmer
+    </button>
 </mat-dialog-actions>

@@ -1,11 +1,9 @@
-import {Component, Inject, ViewChild} from "@angular/core";
+import {Component, Inject, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {ToastrService} from "ngx-toastr";
-import {ProfileService} from "../../../core/services/profile.service";
-import {RequestService} from "../../../core/services/request.service";
-import {DatePipe, formatDate} from "@angular/common";
-import {FoundSlotDialog} from '../FoundSlot-dialog/FoundSlot-dialog';
-import {st} from '@angular/core/src/render3';
+import {ToastrService} from 'ngx-toastr';
+import {ProfileService} from '../../../core/services/profile.service';
+import {RequestService} from '../../../core/services/request.service';
+import {DatePipe, formatDate} from '@angular/common';
 
 @Component({
     selector: 'FoundSlotConfirm-dialog',
@@ -38,22 +36,10 @@ import {st} from '@angular/core/src/render3';
     '}']
 })
 export class FoundSlotConfirmDialog {
-
-    // name: string = null;
-    // location: string = null;
-    // start: Date;
-    // end: Date;
-    // minute: number;
-    // heure: number;
-    //
-    // dialog_calendar_id: string = null;
-    // user: any = null;
-    date_format: string = "yyyy-MM-ddThh:mm:ss";
-    finalChoose: string = null;
     calendars_list: any;
+    finalChoose: string = null;
     slot_formated: string[] = [];
     dialog_calendar_id: string = null;
-    // date_format: string = "yyyy-MM-ddThh:mm:ss";
 
     @ViewChild('userInput') userInput;
 
@@ -66,93 +52,58 @@ export class FoundSlotConfirmDialog {
             this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
                 .subscribe(ret => {
                     this.calendars_list = ret.calendars;
-                    // console.log('CAL', this.calendars_list);
                 });
         });
         for (const idx in this.data.slots.slots) {
-            // console.log(typeof this.data.slots.slots[idx].start_time);
-            // console.log(this.data.slots.slots[idx].start_time);
-            // console.log("envoie a l'api pouet\n",
-            //     "start", this.data.slots.slots[idx].start_time, typeof this.data.slots.slots[idx].start_time, "\n",
-            //     "end", this.data.slots.slots[idx].end_time, typeof this.data.slots.slots[idx].end_time, "\n");
-
-            let begin = new DatePipe('fr').transform(
+            const begin = new DatePipe('fr').transform(
                 this.data.slots.slots[idx].start_time,
-                "E d MMM H:mm",
+                'E d MMM H:mm',
                 'fr');
-
-            let end = new DatePipe('fr').transform(
+            const end = new DatePipe('fr').transform(
                 this.data.slots.slots[idx].end_time,
-                "E d MMM H:mm",
+                'E d MMM H:mm',
                 'fr');
-
-            let final_str = begin + "\n" + end;
-            // console.log(typeof final_str);
-            // console.log(final_str);
+            const final_str = begin + '\n' + end;
             this.slot_formated.push(final_str);
         }
-        this.slot_formated.push("Aucun de ces choix");
+        this.slot_formated.push('Aucun de ces choix');
     }
 
-
     FoundSlotConfirm() {
-        // console.log('final choose',
-        //     this.data.slots.slots[this.finalChoose].start_time,
-        //     this.data.slots.slots[this.finalChoose].end_time);
         let route_id_calendar;
         if (this.dialog_calendar_id != null) {
             route_id_calendar = this.dialog_calendar_id;
         } else {
             route_id_calendar = this.data.calendar_id;
         }
-        // console.log(this.finalChoose, this.data.slots.slots.length);
-        if (this.finalChoose === this.data.slots.slots.length)
-        {
+        if (this.finalChoose === this.data.slots.slots.length) {
             this.dialogRef.close();
             return;
         }
-        // console.log("envoie a l'api RAW\n",
-        //     "start", this.data.slots.slots[this.finalChoose].start_time, typeof this.data.slots.slots[this.finalChoose].start_time, "\n",
-        //     "end", this.data.slots.slots[this.finalChoose].end_time, typeof this.data.slots.slots[this.finalChoose].end_time, "\n");
-
-
-        // let start = formatDate(this.data.slots.slots[this.finalChoose].start_time, this.date_format, 'fr');
-        // let end = formatDate(this.data.slots.slots[this.finalChoose].end_time, this.date_format, 'fr')
-
-        let start = this.data.slots.slots[this.finalChoose].start_time;
-        let end = this.data.slots.slots[this.finalChoose].end_time;
-
-
-        this.requestSrv.post(`calendars/${route_id_calendar}/events`,{
-            name: "trouver un creneau !!!",
-            description: "oui",
-            location: "ici",
+        const start = this.data.slots.slots[this.finalChoose].start_time;
+        const end = this.data.slots.slots[this.finalChoose].end_time;
+        this.requestSrv.post(`calendars/${route_id_calendar}/events`, {
+            name: this.data.event.name,
+            type: this.data.event.type,
+            location: this.data.event.location,
+            description: this.data.event.description,
+            visibility: this.data.event.visibility,
             start_time: start,
             end_time: end
         }, {Authorization: ''})
             .subscribe(ret => {
-                this.data.events.push({
-                    title: "trouver un creneau !!!",
-                    description: "oui",
-                    location: "ici",
+                this.data.calAPI_.addEvent({
+                    id: ret.event.id,
+                    type: this.data.event.type,
+                    title: this.data.event.name,
+                    visibility: this.data.event.visibility,
+                    location: this.data.event.location,
+                    description: this.data.event.description,
                     start: new Date(start),
                     end: new Date(end),
-                    color: '#FFFFFF',
-                    draggable: true,
-                    actions: this.data.actions,
-                    resizable: {
-                        beforeStart: true,
-                        afterEnd: true
-                    },
-                    id: ret.event.id,
                 });
-                // console.log("envoie a l'api\n",
-                //     "start", start, typeof start, "\n",
-                //     "end", end, typeof end, "\n");
-
-                this.data.refresh.next();
-                this.toastSrv.success("Evenement ajouté au groupe");
+                this.toastSrv.success('Evenement ajouté au groupe');
                 this.dialogRef.close();
-            },err => this.toastSrv.error("Une erreur est survenue lors de l'ajout du nouvel evenement"))
+            }, err => this.toastSrv.error('Une erreur est survenue lors de l\'ajout du nouvel evenement'));
     }
 }
