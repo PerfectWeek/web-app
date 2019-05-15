@@ -43,7 +43,7 @@ import {startWith} from "rxjs/internal/operators";
 })
 export class FriendInvitationDialog implements AfterViewInit {
 
-    pageIndex: number = 0;
+    pageIndex: number = 1;
     pageSize: number = 10;
     sortingBy: string = "pseudo";
 
@@ -108,8 +108,9 @@ export class FriendInvitationDialog implements AfterViewInit {
     search() {
         this.filteredUsers.next([]);
         this.requestSrv.get(`search/users`, {
-            limit: this.pageSize,
-            q: this.search$.getValue(),
+            page_size: this.pageSize,
+            page_number: this.pageIndex,
+            q:    this.search$.getValue()
         }, {Authorization: ''})
             .subscribe(ret => this.filterUsers(ret.users), err => {
                 this.toastSrv.error(err.error.message, 'Une erreur est survenue');

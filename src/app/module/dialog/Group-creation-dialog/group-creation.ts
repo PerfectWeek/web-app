@@ -45,7 +45,7 @@ export class GroupCreationDialog implements AfterViewInit {
 
   name: string = null;
 
-  pageIndex: number = 0;
+  pageIndex: number = 1;
   pageSize: number = 10;
   sortingBy: string = "pseudo";
 
@@ -111,7 +111,8 @@ export class GroupCreationDialog implements AfterViewInit {
   search() {
     this.filteredUsers.next([]);
     this.requestSrv.get(`search/users`, {
-        limit: this.pageSize,
+        page_size: this.pageSize,
+        page_number: this.pageIndex,
         q:    this.search$.getValue()
     }, {Authorization: ''})
         .subscribe(ret => this.filterUsers(ret.users), err => {
