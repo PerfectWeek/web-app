@@ -24,6 +24,7 @@ export class UserService {
                 private profileSrv: ProfileService,
                 private authSrv: AuthService,
                 private tokenSrv: TokenService,
+                private toastSrv: ToastrService,
                 public router: Router,
                 private ngZone: NgZone) {
     }
@@ -46,11 +47,18 @@ export class UserService {
 
     public signIn() {
         this.googleAuthService.getAuth().subscribe((auth) => {
+            console.log('auth => ', auth);
             auth.signIn().then(res => this.signInSuccessHandler(res), err => this.signInErrorHandler(err));
         });
     }
 
-    //TODO: Rework
+    public bind() {
+        this.googleAuthService.getAuth().subscribe((auth) => {
+            console.log('auth => ', auth);
+            auth.signIn().then(res => this.bindingSuccessHandler(res), err => this.signInErrorHandler(err));
+        });
+    }
+
     public signOut(): void {
         this.googleAuthService.getAuth().subscribe((auth) => {
             try {
@@ -72,7 +80,7 @@ export class UserService {
             console.log(this.user);
             sessionStorage.setItem(
                 UserService.SESSION_STORAGE_KEY, res.getAuthResponse().access_token
-             );
+            );
             this.requestSrv.get("auth/providers/google/callback",{
                 access_token: this.getToken(),
                 refresh_token: ""
@@ -86,7 +94,23 @@ export class UserService {
         });
     }
 
+    public bindingSuccessHandler(res: GoogleUser) {
+        this.ngZone.run(() => {
+            this.user = res;
+            console.log(this.user);
+            sessionStorage.setItem(
+                UserService.SESSION_STORAGE_KEY, res.getAuthResponse().access_token
+             );
+            this.requestSrv.put(`users/${this.profileSrv.user.pseudo}/providers/google`,{
+                access_token: this.getToken(),
+                refresh_token: ""
+            }, {Authorization: ''})
+                .subscribe((resu) => this.toastSrv.success('Vous avez connecté votre compte Google avec succès'));
+        });
+    }
+
     public signInErrorHandler(err) {
+        this.toastSrv.error('Une erreur est survenue lors de la connection à Google');
         console.warn(err);
     }
 

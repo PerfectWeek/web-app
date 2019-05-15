@@ -81,9 +81,7 @@ export class RegistrationComponent {
     signInWithFB(): void {
         let self = this;
         FB.login(function (response) {
-            console.log(response);
             if (response.status === 'connected') {
-                console.log(response["authResponse"]["accessToken"]);
                 self.requestSrv.get("auth/providers/facebook/callback", {
                     access_token: response["authResponse"]["accessToken"],
                     refresh_token: ""
