@@ -94,6 +94,22 @@
   outline: none;
 }
 
+@media only screen and (max-width: map_get($widths, xl)) {
+  .group-header {
+    & > a {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+@media only screen and (max-width: map_get($widths, l)) {
+  .group-header {
+    & > a {
+      font-size: 1rem;
+    }
+  }
+}
+
 @media only screen and (max-width: map_get($widths, m)) {
   .group {
     & > img {
