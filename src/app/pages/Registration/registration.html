@@ -38,10 +38,10 @@
           <div class="buttons-spaced-reversed">
             <button [disabled]="registrationForm.invalid" class="btn btn-secondary" mat-raised-button>S'inscrire</button>
             <button class="btn-primary" (click)="router.navigate(['/login'])" mat-raised-button>Déjà inscrit ?</button>
-	    <button (click)="signInWithFB()" mat-raised-button><img src="assets/Pictures/facebook.png" width="40" height="40" style="padding: 6px;margin-left: -15px;">  Facebook</button>
-            <button (click)="signInGoogle()" mat-raised-button><img src="assets/Pictures/google.png" width="40" height="40" style="padding: 6px;margin-left: -12px;">  Google</button>
+	          <button (click)="signInWithFB()" mat-raised-button><img src="assets/Pictures/facebook.png" width="40" height="40" style="padding: 6px;margin-left: -15px;" type="button">  Facebook</button>
+            <button (click)="signInGoogle()" mat-raised-button><img src="assets/Pictures/google.png" width="40" height="40" style="padding: 6px;margin-left: -12px;" type="button">  Google</button>
           </div>
-        </form>	
+        </form>
       </div>
     </div>
   </div>

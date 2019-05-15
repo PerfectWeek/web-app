@@ -1,5 +1,8 @@
 @import "variables";
 
+[type=button], button {
+  -webkit-appearance: none;
+}
 
 .btn-danger {
   background-color: map_get($colors, danger);

@@ -5,6 +5,13 @@ import {
 } from "ng-gapi/lib/GoogleAuthService";
 import GoogleUser = gapi.auth2.GoogleUser;
 import GoogleAuth = gapi.auth2.GoogleAuth;
+import {ProfileService} from "../../core/services/profile.service";
+import {TokenService} from "../../core/services/token.service";
+import {RequestService} from "../../core/services/request.service";
+import {AutthService} from "../../core/services/auth.service";
+import {ToastrService} from "ngx-toastr";
+import {Router} from "@angular/router";
+
 declare var FB: any;
 
 @Injectable()
@@ -13,6 +20,11 @@ export class UserService {
     private user: GoogleUser = undefined;
 
     constructor(private googleAuthService: GoogleAuthService,
+                private requestSrv: RequestService,
+                private profileSrv: ProfileService,
+                private authSrv: AutthService,
+                private tokenSrv: TokenService,
+                public router: Router,
                 private ngZone: NgZone) {
     }
 
@@ -33,12 +45,11 @@ export class UserService {
     }
 
     public signIn() {
-	console.log("par ici");
         this.googleAuthService.getAuth().subscribe((auth) => {
             auth.signIn().then(res => this.signInSuccessHandler(res), err => this.signInErrorHandler(err));
         });
     }
-    
+
     //TODO: Rework
     public signOut(): void {
         this.googleAuthService.getAuth().subscribe((auth) => {
@@ -55,17 +66,27 @@ export class UserService {
         return !_.isEmpty(sessionStorage.getItem(UserService.SESSION_STORAGE_KEY));
     }
 
-    private signInSuccessHandler(res: GoogleUser) {
+    public signInSuccessHandler(res: GoogleUser) {
         this.ngZone.run(() => {
             this.user = res;
-	    console.log(this.user);
+            console.log(this.user);
             sessionStorage.setItem(
                 UserService.SESSION_STORAGE_KEY, res.getAuthResponse().access_token
-            );
+             );
+            this.requestSrv.get("auth/providers/google/callback",{
+                access_token: this.getToken(),
+                refresh_token: ""
+            }, {})
+                .subscribe((resu) => {
+                    this.tokenSrv.token = resu["token"];
+                    localStorage.setItem('user_pseudo', resu["user"]["pseudo"]);
+                    this.authSrv.logged = true;
+                    this.profileSrv.fetchUser$(resu["user"]["pseudo"]).subscribe(() => this.router.navigate(['/dashboard']));
+                })
         });
     }
 
-    private signInErrorHandler(err) {
+    public signInErrorHandler(err) {
         console.warn(err);
     }
 
