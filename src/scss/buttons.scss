@@ -1,7 +1,7 @@
 @import "variables";
 
-[type=button], button {
-  -webkit-appearance: none;
+[type=submit], [type=reset], [type=button], button {
+  -webkit-appearance: none !important;
 }
 
 .btn-danger {

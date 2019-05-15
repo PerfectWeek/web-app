@@ -28,6 +28,8 @@ main {
 
     a:hover {
       background-color: map_get($colors, secondary);
+      color: white;
+      text-decoration: none;
     }
   }
 
