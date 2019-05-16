@@ -116,20 +116,41 @@ export class GroupListComponent implements OnInit, AfterViewInit {
         });
     }
 
+    formatBody(body) {
+        let field = 'members';
+        let end = '"role":"actor"}';
+        let str = 'members": [';
+        for (let key in body) {
+            if (key.toString().indexOf(field) != -1) {
+                str += JSON.stringify(body[key]) + ',';
+            }
+        }
+        str = str.slice(0, str.length - 1);
+        str += ']';
+        let result = JSON.stringify(body);
+        return (result.substring(0, result.indexOf('members[0]')) + str + result.substring(result.lastIndexOf(end) + end.length));
+    }
+
     createGroup() {
         let dialogRef = this.dialog.open(GroupCreationDialog, {});
 
         dialogRef.afterClosed().subscribe(result => {
             if (result !== null && result !== undefined) {
-                this.ready.next(false);
-                this.getGroups();
+                this.requestSrv.postJSON('groups', this.formatBody(result), {Authorization: ''}).subscribe(ret => {
+                        this.toastSrv.success(`Votre groupe ${ret.group.name} a bien été créé`);
+                        this.ready.next(false);
+                        this.getGroups();
+                    },
+                    err => {
+                        this.toastSrv.error(err.error.message, 'Une erreur est survenue'); // Display an error message if an error occurs
+                    });
             }
         })
     }
 
     private removeClass(element, className: string) {
         let cn = element.className;
-        let rxp = new RegExp( "("+className+")", "g" );
+        let rxp = new RegExp("(" + className + ")", "g");
         cn = cn.replace(rxp, '');
         element.className = cn;
     }
@@ -196,7 +217,6 @@ export class GroupListComponent implements OnInit, AfterViewInit {
         console.log("Searching groups for value => ", this.search$.getValue().toLowerCase());
 
         let tmp = this.displayGroups;
-        tmp.forEach(group => this.displayGroups.push(group));
 
         /* To be implemented when the routes will be up api wise*/
 

@@ -127,7 +127,7 @@ export class ProfileComponent implements OnInit {
             const file = event.target.files[0];
 
             this.profileSrv.userProfile$.subscribe(user => {
-                this.requestSrv.postFile(`users/${user.pseudo}/upload-image`, file, {Authorization: ''})
+                this.requestSrv.postImage(`users/${user.pseudo}/upload-image`, file, {Authorization: ''})
                     .do(() => {
                             this.requestSrv.get(`users/${user.pseudo}/image`, {}, {Authorization: ''})
                                 .subscribe(ret => {

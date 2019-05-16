@@ -24,6 +24,24 @@
 
       <ul class="navbar-nav ml-auto" data-toggle="collapse" data-target=".navbar-collapse.show">
         <li class="nav-item">
+          <a class="nav-link" href="javascript:void(0)" mat-button [matMenuTriggerFor]="Invitations">
+            <i class="nav-link" class="fas fa-envelope"> Invitations</i>
+          </a>
+
+          <mat-menu #Invitations="matMenu">
+            <button mat-menu-item [matMenuTriggerFor]="Friends">Amis</button>
+            <button mat-menu-item [matMenuTriggerFor]="Groups">Groupes</button>
+          </mat-menu>
+
+          <mat-menu #Friends="matMenu" >
+
+          </mat-menu>
+
+          <mat-menu #Groups="matMenu">
+            <button mat-menu-item (click)="answerRequest(invitation)" *ngFor="let invitation of groupInvitations">{{invitation.name}}</button>
+          </mat-menu>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" routerLink="/profile"><i class="fas fa-user"></i> Mon profil</a>
         </li>	
         <li class="nav-item">

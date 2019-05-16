@@ -100,6 +100,7 @@ import {ChangeValueDialog} from "./module/dialog/Change -value/change-value";
 import {AddMemberDialog} from "./module/dialog/Add-member/add-member";
 import {FriendInvitationDialog} from "./module/dialog/Friend-Invitation/invitation";
 import {FoundSlotConfirmDialog} from './module/dialog/FoundSlotConfirm-dialog/FoundSlotConfirm-dialog';
+import {AcceptInvitationDialog} from "./module/dialog/Accept-invitation-dialog/accept-invitation";
 //import {MatRadioModule} from '@angular/material/radio';
 
 
@@ -154,6 +155,7 @@ let gapiClientConfig: NgGapiClientConfig = {
         ChangeValueDialog,
         AddMemberDialog,
         FriendInvitationDialog,
+        AcceptInvitationDialog,
     ],
     imports: [
         CommonModule,
@@ -235,6 +237,7 @@ let gapiClientConfig: NgGapiClientConfig = {
         ChangeValueDialog,
         AddMemberDialog,
         FriendInvitationDialog,
+        AcceptInvitationDialog,
     ]
 })
 export class AppModule {

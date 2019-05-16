@@ -22,6 +22,11 @@
 //  background-image: none !important;
 //}
 //
+
+.navbar {
+  z-index: 999;
+}
+
 .navbar-brand > img {
   filter: brightness(0) invert(1);
 }
