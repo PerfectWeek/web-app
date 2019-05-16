@@ -52,7 +52,7 @@ export class FoundSlotDialog {
 
     eventTypes: any = [{value: 'party', viewValue: 'Fête'},
         {value: 'work', viewValue: 'Travail'},
-        {value: 'hobby', viewValue: 'Hobby'},
+        {value: 'hobby', viewValue: 'Loisir'},
         {value: 'workout', viewValue: 'Entrainement'}];
 
     eventVisibilities: any = [{value: 'public', viewValue: 'Publique'},
@@ -79,6 +79,7 @@ export class FoundSlotDialog {
     ChooseSlot(route_id_calendar, slots, event) {
         // Open a New modal for choose a slot
         const dialogConfirmRef = this.dialog.open(FoundSlotConfirmDialog, {
+            width: '1000px',
             data: {
                 calendar_id: route_id_calendar,
                 slots,
@@ -97,6 +98,10 @@ export class FoundSlotDialog {
     FoundSlot() {
         const start = this.start.toISOString();
         const end = this.end.toISOString();
+        // const start = '2019-05-09T00:00:00.000Z';
+        // const end = '2019-05-09T19:23:00.000Z';
+
+        console.log(start, end);
         let route_id_calendar;
         if (this.dialog_calendar_id != null) {
             route_id_calendar = this.dialog_calendar_id;
@@ -125,6 +130,17 @@ export class FoundSlotDialog {
                     minute: this.minute,
                     heure: this.heure,
                 });
+                // this.ChooseSlot(route_id_calendar, slots, {
+                //     name: 'oui',
+                //     type: 'hobby',
+                //     location: 'oui',
+                //     visibility: 'oui',
+                //     description: 'oui',
+                //     start: this.start,
+                //     end: this.end,
+                //     minute: 1,
+                //     heure: 1,
+                // });
             }, err => this.toastSrv.error('Une erreur est survenue lors de la recherche d\'evenement'));
     }
 }

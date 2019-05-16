@@ -51,7 +51,7 @@ export class CreateEventDialog {
 
     eventTypes: any = [{value: 'party', viewValue: 'Fête'},
         {value: 'work', viewValue: 'Travail'},
-        {value: 'hobby', viewValue: 'Hobby'},
+        {value: 'hobby', viewValue: 'Loisir'},
         {value: 'workout', viewValue: 'Entrainement'}];
 
     eventVisibilities: any = [{value: 'public', viewValue: 'Publique'},
@@ -67,6 +67,7 @@ export class CreateEventDialog {
         this.profileSrv.userProfile$.subscribe(user => {
             this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
                 .subscribe(ret => {
+                    console.log(ret.calendars);
                     this.calendars_list = ret.calendars;
                 });
         });

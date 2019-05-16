@@ -1,0 +1,18 @@
+<div id="best-slot-calendar">
+<full-calendar
+        *ngIf="options"
+        #fullcalendar
+        [editable]="false"
+        [events]="events"
+        [plugins]="options.plugins"
+        [locale]="options.locale"
+        [scrollTime]="cursor"
+        [height]="570"
+        [header]="{
+                left: 'prev,next today',
+                center: 'title',
+                right: 'timeGridWeek,timeGridDay'
+            }"
+        [themeSystem]="options.themeSystem">
+</full-calendar>
+</div>

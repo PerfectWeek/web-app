@@ -19,6 +19,7 @@ import bootstrapPlugin from '@fullcalendar/bootstrap';
 import {FoundSlotDialog} from '../../module/dialog/FoundSlot-dialog/FoundSlot-dialog';
 import {ConfirmDialog} from '../../module/dialog/Confirm-dialog/Confirm-dialog';
 import {ModifyEventDialog} from '../../module/dialog/ModifyEvent-dialog/ModifyEvent';
+import {Calendar} from '@fullcalendar/core/Calendar';
 
 @Component({
     selector: 'mwl-demo-component',
@@ -28,8 +29,15 @@ import {ModifyEventDialog} from '../../module/dialog/ModifyEvent-dialog/ModifyEv
 })
 export class CalendarComponent implements OnInit {
     options: OptionsInput;
-    @ViewChild('fullcalendar') calendarComponent: FullCalendarComponent; // the #calendar in the template
+    @ViewChild('fullcalendar') calendarComponent: FullCalendarComponent;
     events: EventInput[] = [];
+
+    locale: 'fr';
+    calendar_id: number = null;
+    calendar_name: string = null;
+    is_global_calendar: boolean = true;
+    api: Calendar;
+
 
     constructor(private modal: NgbModal,
                 public dialog: MatDialog,
@@ -37,15 +45,12 @@ export class CalendarComponent implements OnInit {
                 private profileSrv: ProfileService,
                 private toastSrv: ToastrService,
                 private router: Router) {
+        // this.api = this.getAPI();
+        console.log('CONSTUCTEUR');
     }
 
-    locale: string = 'fr';
-    calendar_id: number = null;
-    calendar_name: string = null;
-    is_global_calendar: boolean = true;
-
     ngOnInit() {
-        this.get_group_info();
+        console.log('NGONINIT');
         this.options = {
             editable: true,
             customButtons: {
@@ -76,6 +81,13 @@ export class CalendarComponent implements OnInit {
             eventLimit: true,
             themeSystem: 'bootstrap',
         };
+        setTimeout(() => {
+            //console.log('avant');
+            this.api = this.calendarComponent.getApi();
+            //console.log('apres');
+            this.get_group_info();
+        }, 500);
+
     }
 
     deleteEvent(elem): void {
@@ -94,13 +106,14 @@ export class CalendarComponent implements OnInit {
     }
 
     get_calendar_events(calendar_id) {
-        const calAPI = this.getAPI();
         this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''})
             .subscribe(ret => {
-                const backgroundColor_ = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
+                const hexa = ["#e06868", "#ff906a", "#f2db09", "#3d8fdc", "#45c4d9", "#cae602", "#ffd39b", "#c0e2e1", "#ccffff", "#9c6eb2"];
+                const backgroundColor_ = hexa[Math.floor(Math.random() * hexa.length)];
+                //const backgroundColor_ = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
                 const borderColor_ = '#1C4891';
                 for (const idx in ret.events) {
-                    calAPI.addEvent({
+                    this.api.addEvent({
                         id: ret.events[idx].id,
                         title: ret.events[idx].name,
                         end: ret.events[idx].end_time,
@@ -108,6 +121,7 @@ export class CalendarComponent implements OnInit {
                         backgroundColor: backgroundColor_,
                         borderColor: borderColor_,
                     });
+
                 }
             });
     }
@@ -124,8 +138,11 @@ export class CalendarComponent implements OnInit {
         this.profileSrv.userProfile$.subscribe(user => {
             this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
                 .subscribe(ret => {
+                    // console.log("les changement de la team api qui casse les couilles");
+                    // console.log(ret);
                     for (let idx in ret.calendars) {
                         this.get_calendar_events(ret.calendars[idx].calendar.id);
+                        //this.get_calendar_events(ret.calendars[idx].id);
                     }
                 });
         });
@@ -143,11 +160,10 @@ export class CalendarComponent implements OnInit {
     }
 
     addEvent(): void {
-        const calAPI_ = this.getAPI();
         const dialogRef = this.dialog.open(CreateEventDialog, {
             data: {
                 calendar_id: this.calendar_id,
-                calAPI: calAPI_,
+                calAPI: this.api,
                 is_global_calendar: this.is_global_calendar,
                 calendar_locale: this.locale,
             }
@@ -160,12 +176,11 @@ export class CalendarComponent implements OnInit {
     }
 
     eventClick(event) {
-        const calAPI = this.getAPI();
         const dialogRef = this.dialog.open(ModifyEventDialog, {
             data: {
                 event,
                 calendar_locale: this.locale,
-                calAPI
+                calAPI: this.api
             }
         });
     }
@@ -196,11 +211,10 @@ export class CalendarComponent implements OnInit {
     }
 
     foundSlots(): void {
-        const calAPI_ = this.getAPI();
         const dialogRef = this.dialog.open(FoundSlotDialog, {
             data: {
                 calendar_id: this.calendar_id,
-                calAPI: calAPI_,
+                calAPI: this.api,
                 is_global_calendar: this.is_global_calendar,
                 calendar_locale: this.locale,
             }

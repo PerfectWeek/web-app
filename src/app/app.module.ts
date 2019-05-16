@@ -88,8 +88,16 @@ import {IsLogout} from './core/Guards/isLogout-guard';
 
 import localeFr from '@angular/common/locales/fr';
 import {FoundSlotConfirmDialog} from './module/dialog/FoundSlotConfirm-dialog/FoundSlotConfirm-dialog';
+import {BestSlotCalendarComponent} from './pages/calendar/BestSlotCalendar/best-slot-calendar';
+import {SWIPER_CONFIG, SwiperConfigInterface, SwiperModule} from 'ngx-swiper-wrapper';
+//import {FlexLayoutModule} from '@angular/flex-layout';
 
 registerLocaleData(localeFr);
+
+const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
+    direction: 'horizontal',
+    slidesPerView: 'auto'
+};
 
 @NgModule({
     declarations: [
@@ -102,6 +110,7 @@ registerLocaleData(localeFr);
         ProfileComponent,
         GroupManagementComponent,
         CalendarComponent,
+        BestSlotCalendarComponent,
         ConfirmDialog,
         CreateEventDialog,
         GroupCreationDialog,
@@ -114,6 +123,8 @@ registerLocaleData(localeFr);
         RegistrationConfirmationComponent,
     ],
     imports: [
+        //FlexLayoutModule,
+        SwiperModule,
         CommonModule,
         NgbModalModule,
         FlatpickrModule.forRoot(),
@@ -156,6 +167,10 @@ registerLocaleData(localeFr);
         TokenService,
         AuthService,
         ProfileService,
+        {
+            provide: SWIPER_CONFIG,
+            useValue: DEFAULT_SWIPER_CONFIG
+        },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: InterceptorUrl,
