@@ -1,0 +1,21 @@
+<section class="main-container">
+  <h3 style="text-align: center">Mes Invitations</h3>
+</section>
+<section class="loader" *ngIf="(ready$ | async) === false; else loaded"></section>
+<ng-template #loaded>
+  <section class="requests">
+    <section class="request-header">
+      <button mat-button class="btn-secondary" (click)="createInvitation()" title="Faire une nouvelle demande d'ami"><i class="fas fa-plus"></i> Nouvelle demande</button>
+    </section>
+    <section *ngFor="let request of displayRequests; let id = index" class="friend-request">
+      <section class="request-data">
+        <img src="{{request.image}}" alt="user's profile image" (click)="goToUserProfil(request)">
+        <h4 (click)="goToUserProfil(request)" title="{{request.name}}"><strong>{{request.name}}</strong></h4>
+      </section>
+      <section class="request-actions">
+        <i class="fas fa-check" (click)="acceptRequest(request, id)"></i>
+        <i class="fas fa-times" (click)="declineRequest(request, id)"></i>
+      </section>
+    </section>
+  </section>
+</ng-template>

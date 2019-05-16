@@ -1,4 +1,4 @@
-import {Component, Inject, ViewChild} from "@angular/core";
+import {AfterViewInit, Component, ElementRef, Inject, ViewChild} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FormControl} from "@angular/forms";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
@@ -6,6 +6,10 @@ import {ToastrService} from "ngx-toastr";
 import {ProfileService} from "../../../core/services/profile.service";
 import {RequestService} from "../../../core/services/request.service";
 import {Router} from "@angular/router";
+import {BehaviorSubject, Observable} from "rxjs/Rx";
+import {User} from "../../../core/models/User";
+import {MatAutocomplete} from "@angular/material";
+import {startWith} from "rxjs/internal/operators";
 
 @Component({
   selector: 'group-creation-dialog',
@@ -37,9 +41,13 @@ import {Router} from "@angular/router";
   '  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);\n' +
   '}']
 })
-export class GroupCreationDialog {
+export class GroupCreationDialog implements AfterViewInit {
 
   name: string = null;
+
+  pageIndex: number = 1;
+  pageSize: number = 10;
+  sortingBy: string = "pseudo";
 
   selectable: boolean = true;
   removable: boolean = true;
@@ -48,70 +56,135 @@ export class GroupCreationDialog {
   separatorKeysCodes: number[] = [ENTER, COMMA];
 
   user: any = null;
-  selectedUsers: any[] = [];
+  selectedUsers: string[] = [];
   userCtrl: FormControl = new FormControl();
-  userFiltered: any[] = [];
-  @ViewChild('userInput') userInput;
+
+  filteredUsers: BehaviorSubject<User[]>;
+  filteredUsers$: Observable<User[]>;
+
+  @ViewChild('users') users: MatAutocomplete;
+
+  public search$ = new BehaviorSubject<string>('');
 
   constructor(private requestSrv: RequestService,
               private profileSrv: ProfileService,
               private toastSrv: ToastrService,
               private router: Router,
               public dialogRef: MatDialogRef<GroupCreationDialog>,
-              @Inject(MAT_DIALOG_DATA) public data: any) {}
+              @Inject(MAT_DIALOG_DATA) public data: any) {
+    this.filteredUsers = new BehaviorSubject<User[]>([]);
+    this.filteredUsers$ = this.filteredUsers.asObservable();
+  }
 
-  addUser(event) {
-    const input = event.input;
-    const value = event.value;
-    this.requestSrv.get(`users/${value}`, {}, {Authorization: ''})
-      .subscribe(ret => {
+
+
+  ngAfterViewInit() {
+    this.search$
+        .debounceTime(300)
+        .distinctUntilChanged()
+        .do(() => this.search())
+        .subscribe();
+  }
+
+    addUser(event) {
+      const input = event.input;
+      const value = event.value;
+      this.requestSrv.get(`users/${value}`, {}, {Authorization: ''})
+        .subscribe(ret => {
           let id: number = -1;
           this.selectedUsers.forEach((atm_user, index) => {
-            if (atm_user.pseudo === value)
+            if (atm_user === value)
               id = index;
           });
           if (id != -1)
             this.selectedUsers.splice(id, 1);
           else
             this.selectedUsers.push(value);
+          },
+          err => {
+              this.toastSrv.error(err.message, 'Une erreur est survenue')
+            });
+      input.value = '';
+    }
 
-        },
-        err => {
-          this.toastSrv.error(err.error.message, 'Une erreur est survenue')
+
+  search() {
+    this.filteredUsers.next([]);
+    this.requestSrv.get(`search/users`, {
+        page_size: this.pageSize,
+        page_number: this.pageIndex,
+        q:    this.search$.getValue()
+    }, {Authorization: ''})
+        .subscribe(ret => this.filterUsers(ret.users), err => {
+            this.toastSrv.error(err.error.message, 'Une erreur est survenue');
         });
-    input.value = '';
+  }
+
+  filterUsers(users) {
+      let self = this;
+      let in_users: User[] = [];
+      for (let user of users) {
+          let is_in: boolean = false;
+
+          for (let selected of this.selectedUsers)
+              if (user.pseudo === selected) {
+                  is_in = true;
+                  break;
+              }
+
+          if (is_in === true)
+              break;
+          in_users.push(user);
+      }
+      let idx = in_users.findIndex(function (user) {
+          return self.profileSrv.user.pseudo === user.pseudo;
+      });
+      idx !== -1 ? in_users.splice(idx, 1) : null;
+      this.filteredUsers.next(in_users);
+  }
+
+  // Add the selected user to the list of selected users and reset the input search value
+  selected(event) {
+    this.selectedUsers.push(event.option.viewValue);
+    let input = (<any>(document.getElementById('UserInput'))).value = ''; // value exists as we are getting an input
+    this.userCtrl.setValue(null);
   }
 
   removeUser(user) {
-    const index = this.selectedUsers.indexOf(user);
+    const index = this.selectedUsers.indexOf(user); // Getting the index of the user we want to remove
 
     if (index >= 0)
-      this.selectedUsers.splice(index, 1);
+      this.selectedUsers.splice(index, 1); // Removing the user from our array of selected users
   }
 
   createGroup() {
+    // Checking to see if the user creating the group is in the group member list
     this.profileSrv.userProfile$.subscribe(user => {
       let id = -1;
       this.selectedUsers.forEach((pseudo, index) => {
         if (pseudo === user.pseudo)
           id = index;
       });
+
       if (id === -1)
-        this.selectedUsers.push(user.pseudo);
+        this.selectedUsers.push(user.pseudo); // Adding the user creating the group to the group member list if he isn't in it
+
+      // Setting the request body attributes and values
       let body = {name: this.name};
       this.selectedUsers.forEach((user, index) => {
         body[`members[${index}]`] = user;
       });
+
+      // Request post to the API to create a new group
       this.requestSrv.post('groups', body, {Authorization: ''}).subscribe(ret => {
           this.toastSrv.success(`Votre groupe ${ret.group.name} a bien été créé`);
           this.dialogRef.close(ret.group.id);
           return true;
         },
         err => {
-          this.toastSrv.error(err.error.message, 'Une erreur est survenue');
+          this.toastSrv.error(err.error.message, 'Une erreur est survenue'); // Display an error message if an error occurs
           return false;
         });
     }, (error) => {console.log('error => ', error)});
   }
-
 }

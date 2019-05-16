@@ -2,6 +2,7 @@
     <full-calendar
             *ngIf="options"
             #fullcalendar
+            defaultView="dayGridMonth"
             [editable]="true"
             [events]="events"
             [header]="options.header"
@@ -14,5 +15,4 @@
             [locale]="options.locale"
             [themeSystem]="options.themeSystem"
     ></full-calendar>
-    <router-outlet></router-outlet>
 </div>

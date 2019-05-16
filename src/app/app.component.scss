@@ -1,0 +1,54 @@
+@import "~scss/variables";
+
+.too-small {
+  z-index: 5;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: white;
+  display: none;
+
+  & > .message {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+    text-align: center;
+    box-shadow: 0 0 10px 4px rgba(50, 50, 50, .20);
+    padding: 15px;
+
+    h2 {
+      padding: 15px;
+      font-size: 1.5rem;
+    }
+  }
+
+  & > .background-logo-circle {
+    position: fixed;
+    top: calc(50% - (15.5vw + 15.5vh));
+    left: calc(50% - (15.5vw + 15.5vh));
+    z-index: 1;
+    width: calc(31vw + 31vh);
+    height: calc(31vw + 31vh);
+  }
+}
+
+@media screen and (max-width: map_get($widths, m) - 50) {
+  .too-small {
+    z-index: 1000;
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
+  }
+  .background-logo-circle {
+    display: none;
+  }
+
+  .message {
+    width: 90% !important;
+  }
+}

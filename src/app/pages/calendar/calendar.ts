@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {OptionsInput} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -27,10 +27,12 @@ import {Calendar} from '@fullcalendar/core/Calendar';
     templateUrl: 'calendar.html',
 
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnChanges {
     options: OptionsInput;
     @ViewChild('fullcalendar') calendarComponent: FullCalendarComponent;
     events: EventInput[] = [];
+
+    @Input('in_calendar_id') in_calendar_id = null;
 
     locale: 'fr';
     calendar_id: number = null;
@@ -45,12 +47,33 @@ export class CalendarComponent implements OnInit {
                 private profileSrv: ProfileService,
                 private toastSrv: ToastrService,
                 private router: Router) {
-        // this.api = this.getAPI();
-        console.log('CONSTUCTEUR');
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        console.log('calendar_id => ', this.in_calendar_id);
+        this.events = [];
+        this.in_calendar_id = changes.in_calendar_id.currentValue;
+        if (this.in_calendar_id === -1) {
+            this.get_global_calendar();
+            this.is_global_calendar = true;
+        }
+        else {
+            console.log('group');
+            this.is_global_calendar = false;
+            this.get_in_group_calendar()
+            console.log('events => ', this.events);
+        }
     }
 
     ngOnInit() {
-        console.log('NGONINIT');
+        console.log('calendar_id => ', this.in_calendar_id);
+        this.events = [];
+        // this.get_group_info();
+        // if (this.in_calendar_id) {
+        //     (this.in_calendar_id === -1) ? this.get_global_calendar() : this.getInGroupCalendar();
+        // }
+        // else
+        //     this.get_group_info();
         this.options = {
             editable: true,
             customButtons: {
@@ -85,7 +108,7 @@ export class CalendarComponent implements OnInit {
             //console.log('avant');
             this.api = this.calendarComponent.getApi();
             //console.log('apres');
-            this.get_group_info();
+            //this.get_group_info();
         }, 500);
 
     }
@@ -106,12 +129,15 @@ export class CalendarComponent implements OnInit {
     }
 
     get_calendar_events(calendar_id) {
+        const calAPI = this.getAPI();
+        calAPI.removeAllEvents();
         this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''})
             .subscribe(ret => {
                 const hexa = ["#e06868", "#ff906a", "#f2db09", "#3d8fdc", "#45c4d9", "#cae602", "#ffd39b", "#c0e2e1", "#ccffff", "#9c6eb2"];
                 const backgroundColor_ = hexa[Math.floor(Math.random() * hexa.length)];
                 //const backgroundColor_ = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
                 const borderColor_ = '#1C4891';
+                console.log("ret => ", ret);
                 for (const idx in ret.events) {
                     this.api.addEvent({
                         id: ret.events[idx].id,
@@ -121,8 +147,15 @@ export class CalendarComponent implements OnInit {
                         backgroundColor: backgroundColor_,
                         borderColor: borderColor_,
                     });
-
                 }
+            });
+    }
+
+    get_in_group_calendar(): void {
+        this.get_calendar_events(this.in_calendar_id);
+        this.requestSrv.get(`calendars/${this.in_calendar_id}`, {}, {Authorization: ''})
+            .subscribe(ret => {
+                this.calendar_name = ret.calendar.name;
             });
     }
 
@@ -135,14 +168,12 @@ export class CalendarComponent implements OnInit {
     }
 
     get_global_calendar(): void {
+        console.log('GLOBAL');
         this.profileSrv.userProfile$.subscribe(user => {
             this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
                 .subscribe(ret => {
-                    // console.log("les changement de la team api qui casse les couilles");
-                    // console.log(ret);
                     for (let idx in ret.calendars) {
                         this.get_calendar_events(ret.calendars[idx].calendar.id);
-                        //this.get_calendar_events(ret.calendars[idx].id);
                     }
                 });
         });
@@ -162,7 +193,9 @@ export class CalendarComponent implements OnInit {
     addEvent(): void {
         const dialogRef = this.dialog.open(CreateEventDialog, {
             data: {
-                calendar_id: this.calendar_id,
+                calendar_id: this.in_calendar_id ? this.in_calendar_id : this.calendar_id,
+                // calAPI: calAPI_,
+                // calendar_id: this.calendar_id,
                 calAPI: this.api,
                 is_global_calendar: this.is_global_calendar,
                 calendar_locale: this.locale,
@@ -213,7 +246,9 @@ export class CalendarComponent implements OnInit {
     foundSlots(): void {
         const dialogRef = this.dialog.open(FoundSlotDialog, {
             data: {
-                calendar_id: this.calendar_id,
+                calendar_id: this.in_calendar_id ? this.in_calendar_id : this.calendar_id,
+                // calAPI: calAPI_,
+                // calendar_id: this.calendar_id,
                 calAPI: this.api,
                 is_global_calendar: this.is_global_calendar,
                 calendar_locale: this.locale,

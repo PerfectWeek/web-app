@@ -1,0 +1,119 @@
+@import "~scss/variables";
+
+.main-container {
+  margin-top: 60px;
+  box-shadow: none !important;
+}
+
+.friends {
+  width: 100%;
+
+  .friends-header {
+    width: 100%;
+    padding: 15px;
+    text-align: center;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    border-bottom: map_get($colors, lightgrey) solid 1px;
+
+    .friends-search-bar {
+      width: 50%;
+      margin: 15px;
+      display: flex;
+      flex-flow: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      background-color: map_get($colors, light) !important;
+      border-radius: 5px;
+
+      & > i {
+        padding-left: 8px;
+        color: map_get($colors, lightgrey);
+      }
+
+      & > input {
+        padding: 4px 8px;
+        background-color: map_get($colors, light);
+        border: none;
+        box-shadow: none;
+
+        &:focus {
+          outline: none !important;
+        }
+      }
+    }
+  }
+
+  & > .friend-list {
+    width: 100%;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+
+    & > .friend {
+      width: 28%;
+      display: flex;
+      flex-flow: column;
+      flex-wrap: nowrap;
+      border: 1px solid map_get($colors, light);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+      margin: 10px;
+
+      & > .friend-header {
+        height: calc(3.5vw + 3.5vh);
+        display: flex;
+        flex-flow: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        padding: 5px;
+        border-bottom: 1px solid map_get($colors, lightgrey);
+        background-color: map_get($colors, light);
+
+        & > img {
+          width: calc(3vw + 3vh);
+          height: calc(3vw + 3vh);
+          border-radius: 100%;
+        }
+      }
+
+      & > .friend-name {
+        display: flex;
+        flex-flow: row;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px;
+
+
+        & > h4 {
+          font-size: 1rem;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+          color: map_get($colors, secondary);
+
+          &:hover {
+            cursor: pointer;
+            filter: saturate(2);
+          }
+        }
+
+        & > button {
+          padding: 0 !important;
+          margin-left: 1rem;
+        }
+        & > i {
+          cursor: pointer;
+        }
+
+        & > i:hover {
+          filter: saturate(2);
+        }
+      }
+    }
+  }
+}

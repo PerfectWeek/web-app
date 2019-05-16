@@ -4,7 +4,7 @@
 <mat-dialog-content style="white-space: pre-wrap; text-align: center">
   <div>
     <form #groupForm="ngForm" (ngSubmit)="createGroup()" class="form-row" style="padding: 15px; margin: 15px 0">
-      <mat-form-field style="width: 33%">
+      <mat-form-field>
         <input matInput placeholder="Nom" [(ngModel)]="name" name="name" required>
       </mat-form-field>
 
@@ -18,11 +18,20 @@
             <mat-icon matChipRemove *ngIf="removable">x</mat-icon>
           </mat-chip>
           <input placeholder="Nouvel utilisateur"
+                 id="UserInput"
+                 #UserInput
+                 [matAutocomplete]="users"
                  [matChipInputFor]="userList"
                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                  [matChipInputAddOnBlur]="addOnBlur"
-                 (matChipInputTokenEnd)="addUser($event)">
+                 (matChipInputTokenEnd)="addUser($event)"
+                 (keyup)="search$.next($event.target.value)">
         </mat-chip-list>
+        <mat-autocomplete #users="matAutocomplete" (optionSelected)="selected($event)">
+          <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+            {{user.pseudo}}
+          </mat-option>
+        </mat-autocomplete>
       </mat-form-field>
     </form>
   </div>
@@ -30,5 +39,7 @@
 <br>
 <mat-dialog-actions style="display: flex; justify-content: space-between">
   <button class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
-  <button [disabled]="groupForm.valid === false || selectedUsers.length < 1" class="mat-raised-button btn-secondary" (click)="createGroup()">Confirmer</button>
+  <button [disabled]="groupForm.valid === false || selectedUsers.length < 1" class="mat-raised-button btn-secondary"
+          (click)="createGroup()">Confirmer
+  </button>
 </mat-dialog-actions>

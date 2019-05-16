@@ -1,9 +1,11 @@
+@import "variables";
+
 .form-container-sm {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: $main-full-page-height;
 
   form {
     width: 40%;
@@ -58,7 +60,7 @@ div.input-error-message {
 
 .background-logo-name {
   position: fixed;
-  top: calc(25% - (2.5vw + 2.5vh));
+  top: calc(25% - (6.5vw + 6.5vh));
   left: calc(50% - (10vw + 10vh));
   background: url("../assets/Pictures/logo_name.png");
   background-size: cover;
@@ -84,4 +86,3 @@ div.input-error-message {
 @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
-

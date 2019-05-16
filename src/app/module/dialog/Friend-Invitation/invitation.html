@@ -1,0 +1,37 @@
+<div class="flex flex-r-centered">
+  <h2 mat-dialog-title>Invitation d'ami</h2>
+</div>
+<mat-dialog-content style="white-space: pre-wrap; text-align: center">
+  <form #groupForm="ngForm" class="form-row" style="padding: 15px; margin: 15px 0">
+    <mat-form-field style="width: 100%">
+      <mat-chip-list #userList>
+        <mat-chip *ngFor="let user of selectedUsers"
+                  [selectable]="selectable"
+                  [removable]="removable"
+                  (removed)="removeUser(user)">
+          {{user}}
+          <mat-icon matChipRemove *ngIf="removable">x</mat-icon>
+        </mat-chip>
+        <input placeholder="Nouvel utilisateur"
+               id="UserInput"
+               #UserInput
+               [matAutocomplete]="users"
+               [matChipInputFor]="userList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               [matChipInputAddOnBlur]="addOnBlur"
+               (matChipInputTokenEnd)="addUser($event)"
+               (keyup)="search$.next($event.target.value)">
+      </mat-chip-list>
+      <mat-autocomplete #users="matAutocomplete" (optionSelected)="selected($event)">
+        <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+          {{user.pseudo}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<br>
+<mat-dialog-actions style="display: flex; justify-content: space-between">
+  <button class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
+  <button [disabled]="groupForm.valid === false || selectedUsers.length < 1" class="mat-raised-button btn-secondary" (click)="sendInvitations()">Confirmer</button>
+</mat-dialog-actions>

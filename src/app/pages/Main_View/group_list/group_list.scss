@@ -1,0 +1,123 @@
+@import "~scss/variables";
+
+[placeholder], [placeholder-shown] {
+  text-overflow: ellipsis;
+}
+
+.group-header {
+  padding: 15px;
+  text-align: center;
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  .group-search-bar {
+    width: 80%;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: map_get($colors, light) !important;
+    border-radius: 5px;
+
+    & > i {
+      padding-left: 8px;
+      color: map_get($colors, lightgrey);
+    }
+
+    & > input {
+      padding: 4px 8px;
+      background-color: map_get($colors, light);
+      border: none;
+      box-shadow: none;
+
+      &:focus {
+        outline: none !important;
+      }
+    }
+  }
+
+  & > a {
+    font-size: 2rem;
+    cursor: pointer;
+    color: map_get($colors, primary);
+  }
+}
+
+.groups {
+  width: 100%;
+  height: 100%;
+}
+
+.group {
+  display: flex;
+  flex-flow: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  padding: 0.9rem;
+  outline: none !important;
+
+  &:hover {
+    cursor: pointer;
+    background-color: map_get($colors, light);
+  }
+
+  & > img {
+    margin-right: 1rem;
+    width: calc(2.2vw + 2.2vh);
+    height: calc(2.2vw + 2.2vh);
+    border-radius: 50%;
+  }
+
+  & > h4 {
+    font-size: 1.1rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+
+.group-not-found {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-flow: row;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 15px;
+}
+
+.group-focused {
+  background-color: map_get($colors, light);
+  outline: none;
+}
+
+@media only screen and (max-width: map_get($widths, xl)) {
+  .group-header {
+    & > a {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+@media only screen and (max-width: map_get($widths, l)) {
+  .group-header {
+    & > a {
+      font-size: 1rem;
+    }
+  }
+}
+
+@media only screen and (max-width: map_get($widths, m)) {
+  .group {
+    & > img {
+      display: none;
+    }
+
+    & > h4 {
+      font-size: 0.9rem;
+    }
+  }
+}

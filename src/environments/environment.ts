@@ -4,10 +4,11 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false,
-  // url: "http://localhost:9090/",
-  // apiEndpoint: 'http://localhost:9090/',
-  url: "https://perfect-week-test.herokuapp.com/",
-  apiEndpoint: 'https://perfect-week-test.herokuapp.com/',
-  appName: 'PerfectWeek',
+    production: false,
+    // url: "http://localhost:9090/",
+    // apiEndpoint: 'http://localhost:9090/',
+    url: "https://perfect-week-test.herokuapp.com/",
+    apiEndpoint: 'https://perfect-week-test.herokuapp.com/',
+    appName: 'PerfectWeek',
+    google_client_id: '801780005342-ot6i9l8t9t2lo3fcg0o9co4q8m80ns3d.apps.googleusercontent.com',
 };

@@ -1,4 +1,6 @@
-.main-container {
+@import "~scss/variables";
+
+.main-container, %main-container {
   width: 85%;
   box-shadow: 0 0 10px 4px rgba(50, 50, 50, .20);
   padding: 15px;
@@ -7,3 +9,14 @@
   height: fit-content;
 }
 
+@media screen and (max-width: map_get($widths, l)) {
+  .main-container {
+  width: 90%;
+  }
+}
+
+@media screen and (max-width: map_get($widths, m)) {
+  .main-container {
+    width: 100%;
+  }
+}

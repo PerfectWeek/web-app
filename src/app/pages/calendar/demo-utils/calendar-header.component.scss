@@ -1,0 +1,43 @@
+@import "~scss/variables";
+
+#Day {
+  width: 50%;
+  min-width: 300px;
+}
+
+#Title {
+  width: 10%;
+  min-width: 50px;
+}
+
+#View {
+  width: 40%;
+}
+
+@media screen and (max-width: map_get($widths, xl)) {
+  #Day {
+    min-width: 500px;
+  }
+
+  #Title {
+    min-width: 175px;
+  }
+
+  #View {
+    min-width: 500px;
+  }
+}
+
+@media screen and (max-width: map_get($widths, l)) {
+  #Day {
+    min-width: 350px;
+  }
+
+  #Title {
+    min-width: 100px;
+  }
+
+  #View {
+    min-width: 350px;
+  }
+}

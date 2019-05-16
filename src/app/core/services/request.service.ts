@@ -11,7 +11,6 @@ export class RequestService {
     for (const key in value) {
       httpHeader = httpHeader.append(key, value[key]);
     }
-
     return httpHeader;
   }
 
@@ -55,6 +54,14 @@ export class RequestService {
         headers: httpHeaders
       }
     );
+  }
+
+  postFile(url: string, file, headers?: any): Observable<any> {
+      let input = new FormData();
+      input.append("image", file);
+      return this.http.post(url, input, {
+        headers: headers
+      });
   }
 
 
