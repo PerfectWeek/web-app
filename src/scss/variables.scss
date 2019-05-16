@@ -24,8 +24,8 @@ $widths: (
 );
 
 $navbar-height: 4rem;
-$navbar-padding: 2rem;
+$navbar-padding: .5rem;
 
 
-$main-full-page-margin: #{$navbar-height};
-$main-full-page-height: calc(100vh - #{$navbar-height});
+$main-full-page-margin: #{$navbar-height + $navbar-padding};
+$main-full-page-height: calc(100vh - #{$navbar-height + $navbar-padding});

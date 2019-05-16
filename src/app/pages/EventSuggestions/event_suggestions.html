@@ -1,0 +1,34 @@
+<div class="full-view">
+    <section class="left-view">
+
+        <mat-card>
+            <mat-card-title> Decouvrir </mat-card-title>
+            <mat-card-subtitle> Selection d'evenements pour le calendrier: </mat-card-subtitle>
+            <mat-form-field>
+                <mat-label>Selectionnez un calendrier</mat-label>
+                <mat-select [(ngModel)]="focusedCalendar" ng-model="test" (change)="getSuggestions()">
+                    <mat-option *ngFor="let c of calendars" [value]="c">{{c.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+         </mat-card>
+
+        <ul class="event-list">
+            <li *ngFor="let e of suggestions" [value]="e" (click)="previewEvent(e)">
+                <mat-card class="card">
+                    <img mat-card-image src="{{e.image}}" alt="Event image">
+                    <mat-card-title>{{e.name}}</mat-card-title>
+                    <mat-card-subtitle>{{e.description}}</mat-card-subtitle>
+                    <div class="date">{{e.start_time.toLocaleDateString('fr-FR', this.options)}}</div>
+                </mat-card>
+            </li>
+        </ul>
+    </section>
+
+    <section class="center-view">
+        <mwl-demo-component #calendar [in_calendar_id]="calendar_id"></mwl-demo-component>
+    </section>
+
+    <section class="right-view">
+        olala
+    </section>
+</div>

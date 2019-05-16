@@ -5,7 +5,6 @@
             defaultView="dayGridMonth"
             [editable]="true"
             [events]="events"
-            [header]="options.header"
             [customButtons]="options.customButtons"
             (dateClick)="dateClick($event)"
             (eventDragStop)="eventDragStop($event)"
@@ -14,5 +13,10 @@
             (eventClick)="eventClick($event)"
             [locale]="options.locale"
             [themeSystem]="options.themeSystem"
+            [header]="{
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+            }"
     ></full-calendar>
 </div>
