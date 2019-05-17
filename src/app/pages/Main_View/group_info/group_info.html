@@ -46,7 +46,12 @@
               <i class="fas fa-ellipsis-h" [matMenuTriggerFor]="actions"></i>
               <mat-menu #actions="matMenu">
                 <button *ngIf="member.pseudo === (user$ | async).pseudo" mat-menu-item (click)="leaveGroup()">Quitter le groupe</button>
-                <button *ngIf="member.pseudo !== (user$ | async).pseudo" mat-menu-item (click)="fireFromGroup(member.pseudo)">Virer du groupe</button>
+                <section *ngIf="member.pseudo !== (user$ | async).pseudo">
+                  <button *ngIf="isAdmin === true" mat-menu-item (click)="fireFromGroup(member.pseudo)">Supprimer du groupe</button>
+                  <button mat-menu-item (click)="goToProfile(member.pseudo)">Accéder à son profil</button>
+                  <mat-delimiter></mat-delimiter>
+                  <button mat-menu-item (click)="addFriend(member.pseudo)">L'ajouter en ami</button>
+                </section>
               </mat-menu>
             </section>
           </mat-expansion-panel>

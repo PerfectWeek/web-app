@@ -17,6 +17,7 @@ import {GroupCreationDialog} from "../../../module/dialog/Group-creation-dialog/
 import {ChangeValueDialog} from "../../../module/dialog/Change -value/change-value";
 import {ConfirmDialog} from "../../../module/dialog/Confirm-dialog/Confirm-dialog";
 import {AddMemberDialog} from "../../../module/dialog/Add-member/add-member";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'group-info',
@@ -52,6 +53,8 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
     user_role: string;
 
+    isAdmin: boolean = false;
+
     group_members: { pseudo: string, role: string, image: any }[] = [];
 
     roles: string[] = [
@@ -64,6 +67,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
     constructor(private requestSrv: RequestService,
                 private profileSrv: ProfileService,
                 private dialog: MatDialog,
+                private router: Router,
                 private cd: ChangeDetectorRef,
                 private toastSrv: ToastrService) {
 
@@ -133,6 +137,8 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                     .subscribe(ret => {
                         this.group_members = ret.members;
                         this.group_members.forEach((member, index) => {
+                            if (member.pseudo === this.profileSrv.user.pseudo)
+                                this.isAdmin = member.role === 'admin';
                             this.requestSrv.get(`users/${member.pseudo}/image`, {}, {Authorization: ''})
                                 .subscribe(ret => {
                                     member.image = ret.image;
@@ -272,5 +278,15 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                 })
             }
         })
+    }
+
+    goToProfile(pseudo) {
+        this.router.navigate([`profile/${pseudo}`]);
+    }
+
+    addFriend(pseudo) {
+        this.requestSrv.post(`users/${pseudo}/friend-invite`, {}, {Authorization: ''})
+            .subscribe(() => this.toastSrv.info("La demande d'ami a été envoyée"),
+                err => this.toastSrv.warning('Vous avez déjà demandé cette personne en ami'))
     }
 }
