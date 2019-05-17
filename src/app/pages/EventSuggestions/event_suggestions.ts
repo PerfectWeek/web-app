@@ -1,4 +1,5 @@
-import {Component, Input, OnInit, ViewChild, HostListener, AfterViewInit} from "@angular/core";
+import {Component, OnInit, ViewChild, Inject} from "@angular/core";
+import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {RequestService} from "../../core/services/request.service";
 import {ProfileService} from "../../core/services/profile.service";
 
@@ -11,9 +12,9 @@ import {ProfileService} from "../../core/services/profile.service";
 export class EventSuggestionsComponent implements OnInit {
 
     private suggestions: any[] = [];
-    private calendars: any[] = [];
 
     private focusedCalendar: any = null;
+    private focusedEvent: any = null;
 
     private _calendar_id: number = -1;
 
@@ -21,6 +22,8 @@ export class EventSuggestionsComponent implements OnInit {
     private max_date: Date = new Date(new Date().setMonth(this.min_date.getMonth() + 1)); // OMG IT IS HORRIBLE
 
     private options: any = { weekday: 'short', month: 'short', day: 'numeric' };
+    private options_full: any = { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric' };
+
 
     private type_to_theme: any = {
         party: 'nightlife',
@@ -49,13 +52,14 @@ export class EventSuggestionsComponent implements OnInit {
         this.profileSrv.userProfile$.subscribe(user => {
             this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
                 .subscribe(calendars => {
-                    this.calendars = calendars.calendars.map((c:any) => { return c.calendar; });
+                    this.focusedCalendar = calendars.calendars[0].calendar;
+                    this.getSuggestions()
                 })
         });
     }
 
     getSuggestions() {
-        console.log(this.min_date, this.max_date);
+        this._calendar_id = this.focusedCalendar.id;
         this.requestSrv.get(`calendars/${this.focusedCalendar.id}/assistant/get-event-suggestions`, {
             min_time: this.min_date.toISOString(),
             max_time: this.max_date.toISOString(),
@@ -80,11 +84,39 @@ export class EventSuggestionsComponent implements OnInit {
             })
     }
 
+    joinEvent(id) {
+        this.requestSrv.post(`events/${id}/join`, {}, {Authorization: ''})
+            .subscribe(response => {
+                console.log(response);
+        })
+    }
+
     generateEventImage(type) {
-        return `https://lorempixel.com/400/200/${this.type_to_theme[type]}/${Math.floor((Math.random() * 1000 % 10))}`;
+        return `https://lorempixel.com/600/300/${this.type_to_theme[type]}/${Math.floor((Math.random() * 1000 % 10))}`;
+    }
+
+    getAPI() {
+        return this.calendar.calendarComponent.getApi();
+    }
+
+    closeEventPreview(api) {
+        this.focusedEvent[0].remove()
     }
 
     previewEvent(event) {
-        console.log(this.calendar);
+        const api = this.getAPI();
+
+        if (this.focusedEvent) {
+            this.closeEventPreview(api);
+        }
+        this.focusedEvent = [api.addEvent({
+            id: event.id,
+            title: event.name,
+            end: event.end_time,
+            start: event.start_time,
+            backgroundColor: 'orange',
+            borderColor: 'orange',
+        }), event];
     }
+
 }
