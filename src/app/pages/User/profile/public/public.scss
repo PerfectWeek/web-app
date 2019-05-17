@@ -3,3 +3,11 @@
 .profile-image {
   justify-content: space-between !important;
 }
+
+.btn-danger {
+  color: black !important;
+
+  &:hover {
+    color: white !important;
+  }
+}

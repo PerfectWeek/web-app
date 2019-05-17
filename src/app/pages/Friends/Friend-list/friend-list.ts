@@ -88,16 +88,21 @@ export class FriendListComponent implements OnInit, AfterViewInit {
     getFriends() {
         this.requestSrv.get(`friends`, {}, {Authorization: ''})
             .subscribe(response => {
-                this.friends = response.friends;
-                this.displayFriends = response.friends;
-                this.ready.next(true);
+                response.friends.forEach((friend, index) => {
+                    this.requestSrv.get(`users/${friend.pseudo}/image`, {}, {Authorization: ''})
+                        .subscribe(ret => {
+                            this.friends.push({name: friend.pseudo, image: ret.image});
+                        });
+                    this.displayFriends = this.friends;
+                    this.ready.next(true);
+                });
             }, err => {
                 this.toastSrv.error(err.error.message, 'Une erreur est survenue');
             });
     }
 
     goToUserProfile(friend) {
-        this.router.navigate(["profile", friend.pseudo]);
+        this.router.navigate(["profile", friend.name]);
     }
 
     removeFriend(friend, index) {

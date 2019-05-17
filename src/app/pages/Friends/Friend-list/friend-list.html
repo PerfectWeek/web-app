@@ -1,41 +1,43 @@
-<section class="loader" *ngIf="(ready$ | async) === false; else loaded"></section>
-<ng-template #loaded>
-  <section class="main-container">
-    <h1 style="text-align: center">Mes Amis</h1>
-  </section>
-  <section class="friends">
-    <section class="friends-header">
-      <section class="friends-search-bar">
-        <input title="Rechercher un Utilisateur" type="text" name="searchUser" id="search-user" class="form-control" placeholder="Rechercher un Utilisateur" #UserSearchInput matInput
-               id="UserInput"
-               [matAutocomplete]="users"
-               (keyup)="searchUser$.next($event.target.value)">
-        <mat-autocomplete #users="matAutocomplete" (optionSelected)="selectedUser($event)">
-          <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
-            {{user.pseudo}}
-          </mat-option>
-        </mat-autocomplete>
-      </section>
-      <section class="friends-search-bar">
-        <input title="Rechercher un ami" type="text" name="search" id="search-friend" class="form-control" placeholder="Rechercher un ami" matInput (keyup)="searchFriend$.next($event.target.value)">
-      </section>
+<section class="main-container">
+  <h1 style="text-align: center">Mes Amis</h1>
+</section>
+<section class="friends">
+  <section class="friends-header">
+    <section class="friends-search-bar">
+      <input title="Rechercher un Utilisateur" type="text" name="searchUser" id="search-user" class="form-control"
+             placeholder="Rechercher un Utilisateur" #UserSearchInput matInput
+             id="UserInput"
+             [matAutocomplete]="users"
+             (keyup)="searchUser$.next($event.target.value)">
+      <mat-autocomplete #users="matAutocomplete" (optionSelected)="selectedUser($event)">
+        <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+          {{user.pseudo}}
+        </mat-option>
+      </mat-autocomplete>
     </section>
-    <section class="friend-list">
-      <section  *ngIf="displayFriends?.length > 0; else noFriends" style="width: 100%; display: flex; flex-flow: row; flex-wrap: wrap; justify-content: space-evenly">
+  </section>
+  <section class="friend-list">
+    <section class="loader" *ngIf="(ready$ | async) === false; else loaded"></section>
+    <ng-template #loaded>
+      <section *ngIf="displayFriends?.length > 0; else noFriends"
+               style="width: 100%; display: flex; flex-flow: row; flex-wrap: wrap; justify-content: space-evenly">
         <section class="friend" *ngFor="let friend of displayFriends; let id = index">
-          <section class="friend-header">
-            <img src="../../../assets/Pictures/bread.jpg" alt="Friend's profile picture" title="Friend's profile picture">
-          </section>
-          <section class="friend-name">
-            <h4 (click)="goToUserProfile(friend)" title="{{friend.pseudo}}">{{friend.pseudo}}</h4>
+          <section (click)="goToUserProfile(friend)">
+            <section class="friend-header">
+              <img src="{{friend.image}}" alt="Friend's profile picture"
+                   title="Friend's profile picture">
+            </section>
+            <section class="friend-name">
+              <h4 title="{{friend.name}}">{{friend.name}}</h4>
+            </section>
           </section>
         </section>
       </section>
-      <ng-template #noFriends>
-        <section class="no-friends-notification">
-          <h2>Vous n'avez aucun ami pour le moment</h2>
-        </section>
-      </ng-template>
-    </section>
+    </ng-template>
+    <ng-template #noFriends>
+      <section class="no-friends-notification">
+        <h2>Vous n'avez aucun ami pour le moment</h2>
+      </section>
+    </ng-template>
   </section>
-</ng-template>
+</section>
