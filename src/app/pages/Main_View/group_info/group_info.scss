@@ -105,6 +105,9 @@
       & > .group-member-pseudo {
         padding-left: 1rem;
         width: calc(85% - 1rem);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       & i {
@@ -136,21 +139,54 @@
   }
 }
 
-@media screen and (max-width: map_get($widths, xl)) {
+
+@media screen and (max-width: map_get($widths, l)) {
+
   .group-info-component {
-    & > .group-name {
+
+    .add-member span {
+      display: none;
+    }
+
+    & .group-name {
       & h3 {
-        font-size: 1.2rem;
+        font-size: 0.9rem !important;
+      }
+    }
+
+    .group-information {
+      & .group-member-container {
+        padding: 7px !important;
+
+        & img {
+          display: none;
+        }
       }
     }
   }
 }
 
-@media screen and (max-width: map_get($widths, l)) {
+@media screen and (max-width: map_get($widths, m)) {
+
   .group-info-component {
-    & > .group-name {
+
+    .add-member span {
+      display: none;
+    }
+
+    & .group-name {
       & h3 {
-        font-size: 0.9rem;
+        font-size: 0.9rem !important;
+      }
+    }
+
+    .group-information {
+      & .group-member-container {
+        padding: 0 !important;
+
+        & img {
+          display: none;
+        }
       }
     }
   }

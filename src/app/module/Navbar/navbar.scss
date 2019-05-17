@@ -1,27 +1,42 @@
 @import "~scss/variables";
 
-//nav {
-//  height: $navbar-height;
-//  padding: $navbar-padding;
-//}
-//
-//.navbar-dark .navbar-nav .nav-link {
-//  color: rgba(255, 255, 255, 1);
-//}
-//
-//.bg-light {
-//  background-image: linear-gradient(to right, map_get($colors, primary), map_get($colors, secondary));
-//}
-//
-//.navbar-collapse.collapse.show.bg-light[_ngcontent-c1] {
-//  background-image: linear-gradient(to right, map_get($colors, primary), map_get($colors, secondary)) !important;
-//}
-//
-//.navbar-collapse.bg-light {
-//  background-color: transparent !important;
-//  background-image: none !important;
-//}
-//
+#UserInput {
+  color: white !important;
+}
+
+.navbar {
+  /deep/ .mat-form-field-underline, /deep/ .mat-input-ripple.mat-form-field-ripple {
+    background-color: white !important;
+    outline: transparent !important;
+  }
+
+  .placeholder {
+    color: white !important;
+    border-bottom-color: white !important;
+  }
+
+  .mat-focused .placeholder {
+    color: white !important;
+    border-bottom-color: white !important;
+  }
+
+  /deep/ .mat-focused {
+    caret-color: white !important;
+  }
+
+  /deep/ .mat-input-container {
+    caret-color: white !important;
+  }
+
+  /deep/ .dropdown {
+    align-self: center;
+  }
+}
+
+.navbar {
+  z-index: 999;
+}
+
 .navbar-brand > img {
   filter: brightness(0) invert(1);
 }
@@ -91,7 +106,7 @@
   left: 35%;
   color: #FFF;
 }
-@media (max-width: 767px) {
+@media screen and (max-width: map_get($widths, m)) {
   .navbar-default .navbar-nav .open .dropdown-menu > li > a {
     color: #FFF;
   }
@@ -99,4 +114,11 @@
   .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
     color: #FFF;
   }
+
+  .navbar {
+    /deep/ .dropdown {
+      align-self: start;
+    }
+  }
+
 }

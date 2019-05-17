@@ -1,7 +1,7 @@
 @import "variables";
 
-[type=button], button {
-  -webkit-appearance: none;
+[type=submit], [type=reset], [type=button], button {
+  -webkit-appearance: none !important;
 }
 
 .btn-danger {
@@ -29,6 +29,11 @@
   &:hover, &:active {
     background-color: map_get($colors, aquamarine) !important;
   }
+}
+
+.btn-transparent {
+  background-color: transparent;
+  color: white !important;
 }
 
 .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle{

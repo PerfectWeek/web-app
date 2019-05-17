@@ -14,7 +14,7 @@
                     [selectable]="selectable"
                     [removable]="removable"
                     (removed)="removeUser(user)">
-            {{user}}
+            {{user.name}}
             <mat-icon matChipRemove *ngIf="removable">x</mat-icon>
           </mat-chip>
           <input placeholder="Nouvel utilisateur"

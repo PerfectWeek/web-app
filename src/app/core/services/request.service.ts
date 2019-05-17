@@ -46,6 +46,16 @@ export class RequestService {
 
   }
 
+  postJSON(url: string, body: any, headers?: any): Observable<any> {
+      const httpHeaders = (RequestService.prepareHeader(headers)).append('Content-Type', 'application/json');
+
+      return this.http.post(url, body, {
+              headers: httpHeaders
+          }
+      );
+
+  }
+
   post(url: string, body: any, headers?: any): Observable<any> {
     const httpHeaders = (RequestService.prepareHeader(headers)).append('Content-Type', 'application/x-www-form-urlencoded');
     const params = RequestService.prepareParams(body);
@@ -56,7 +66,7 @@ export class RequestService {
     );
   }
 
-  postFile(url: string, file, headers?: any): Observable<any> {
+  postImage(url: string, file, headers?: any): Observable<any> {
       let input = new FormData();
       input.append("image", file);
       return this.http.post(url, input, {

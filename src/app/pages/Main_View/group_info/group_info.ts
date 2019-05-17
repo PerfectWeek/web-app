@@ -17,6 +17,7 @@ import {GroupCreationDialog} from "../../../module/dialog/Group-creation-dialog/
 import {ChangeValueDialog} from "../../../module/dialog/Change -value/change-value";
 import {ConfirmDialog} from "../../../module/dialog/Confirm-dialog/Confirm-dialog";
 import {AddMemberDialog} from "../../../module/dialog/Add-member/add-member";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'group-info',
@@ -35,7 +36,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
     @Output("group_image_modified") group_image_modified = new EventEmitter<number>();
 
-    user: {pseudo: string, description: string, email: string} = {
+    user: { pseudo: string, description: string, email: string } = {
         pseudo: '',
         description: '',
         email: ''
@@ -52,7 +53,9 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
     user_role: string;
 
-    group_members: {pseudo: string, role: string, image: any}[] = [];
+    isAdmin: boolean = false;
+
+    group_members: { pseudo: string, role: string, image: any }[] = [];
 
     roles: string[] = [
         "Admin",
@@ -64,6 +67,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
     constructor(private requestSrv: RequestService,
                 private profileSrv: ProfileService,
                 private dialog: MatDialog,
+                private router: Router,
                 private cd: ChangeDetectorRef,
                 private toastSrv: ToastrService) {
 
@@ -83,30 +87,30 @@ export class GroupInfoComponent implements OnInit, OnChanges {
         if (event.target.files && event.target.files.length == 1) {
             const file = event.target.files[0];
 
-        if (this.group_id === -1)
-            this.user$.subscribe(user => {
-                this.requestSrv.postFile(`users/${user.pseudo}/upload-image`, file, {Authorization: ''})
+            if (this.group_id === -1)
+                this.user$.subscribe(user => {
+                    this.requestSrv.postImage(`users/${user.pseudo}/upload-image`, file, {Authorization: ''})
+                        .do(() => {
+                                this.requestSrv.get(`users/${user.pseudo}/image`, {}, {Authorization: ''})
+                                    .subscribe(ret => {
+                                        this.group_image_modified.emit(-1);
+                                        this.image = ret.image;
+                                    });
+                                this.toastSrv.success("L'image a été uploadé avec succès");
+                            }, err => this.toastSrv.error("Une erreur est survenue lors de l'upload de l'image")
+                        ).subscribe();
+                });
+            else
+                this.requestSrv.postImage(`groups/${this.group_id}/upload-image`, file, {Authorization: ''})
                     .do(() => {
-                        this.requestSrv.get(`users/${user.pseudo}/image`, {}, {Authorization: ''})
+                        this.toastSrv.success("L'image a été uploadé avec succès");
+                        this.requestSrv.get(`groups/${this.group_id}/image`, {}, {Authorization: ''})
                             .subscribe(ret => {
-                                this.group_image_modified.emit(-1);
+                                this.group_image_modified.emit(this.group_id);
                                 this.image = ret.image;
                             });
-                        this.toastSrv.success("L'image a été uploadé avec succès");
-                        }, err => this.toastSrv.error("Une erreur est survenue lors de l'upload de l'image")
-                    ).subscribe();
-            });
-        else
-            this.requestSrv.postFile(`groups/${this.group_id}/upload-image`, file, {Authorization: ''})
-                .do(() => {
-                    this.toastSrv.success("L'image a été uploadé avec succès");
-                    this.requestSrv.get(`groups/${this.group_id}/image`, {}, {Authorization: ''})
-                        .subscribe(ret => {
-                            this.group_image_modified.emit(this.group_id);
-                            this.image = ret.image;
-                        });
                     }, err => this.toastSrv.error("Une erreur est survenue lors de l'upload de l'image"))
-                .subscribe();
+                    .subscribe();
         }
     }
 
@@ -133,6 +137,8 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                     .subscribe(ret => {
                         this.group_members = ret.members;
                         this.group_members.forEach((member, index) => {
+                            if (member.pseudo === this.profileSrv.user.pseudo)
+                                this.isAdmin = member.role === 'admin';
                             this.requestSrv.get(`users/${member.pseudo}/image`, {}, {Authorization: ''})
                                 .subscribe(ret => {
                                     member.image = ret.image;
@@ -166,7 +172,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
             });
 
             dialogRef.afterClosed().subscribe(result => {
-                if (result != null && result.value != user[`${fieldname}`]) {
+                if (result != null && result.value != user[`${fieldname}`]) {
                     let user_pseudo = user.pseudo;
                     user[`${fieldname}`] = result.value;
                     this.requestSrv.put(`users/${user_pseudo}`, {
@@ -212,7 +218,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result !== null) {
+            if (result !== null && result != undefined) {
                 let users = [result];
                 this.requestSrv.post(`groups/${this.group_id}/add-members`,
                     {users},
@@ -228,8 +234,8 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                                         this.ready = true;
                                 });
                         });
-                            this.toastSrv.success("User ajouté au groupe");
-                        },err => this.toastSrv.error("Une erreur est survenue lors de l'ajout du nouveau membre"))
+                        this.toastSrv.success("User ajouté au groupe");
+                    }, err => this.toastSrv.error("Une erreur est survenue lors de l'ajout du nouveau membre"))
             }
         })
     }
@@ -272,5 +278,15 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                 })
             }
         })
+    }
+
+    goToProfile(pseudo) {
+        this.router.navigate([`profile/${pseudo}`]);
+    }
+
+    addFriend(pseudo) {
+        this.requestSrv.post(`users/${pseudo}/friend-invite`, {}, {Authorization: ''})
+            .subscribe(() => this.toastSrv.info("La demande d'ami a été envoyée"),
+                err => this.toastSrv.warning('Vous avez déjà demandé cette personne en ami'))
     }
 }

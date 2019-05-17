@@ -1,10 +1,15 @@
 <div id="calendar">
+    <div *ngIf="displayOnly === false" class="button_layout" fxLayout="row">
+        <button class="mat-raised-button btn-secondary" (click)="foundSlots()">Trouver un créneau</button>
+        <button style="margin-left: 5px" class="mat-raised-button btn-secondary" (click)="addEvent()">Ajouter un évènement</button>
+    </div>
     <full-calendar
             *ngIf="options"
             #fullcalendar
             defaultView="dayGridMonth"
-            [editable]="true"
+            [editable]="!displayOnly"
             [events]="events"
+            [header]="options.header"
             [customButtons]="options.customButtons"
             (dateClick)="dateClick($event)"
             (eventDragStop)="eventDragStop($event)"
@@ -13,10 +18,6 @@
             (eventClick)="eventClick($event)"
             [locale]="options.locale"
             [themeSystem]="options.themeSystem"
-            [header]="{
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
-            }"
+            (eventResize)="eventResize($event)"
     ></full-calendar>
 </div>

@@ -1,6 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import "~ngx-toastr/toastr.css";
 @import '~bootstrap/dist/css/bootstrap.min.css';
 @import "~@angular/material/prebuilt-themes/indigo-pink";
 
@@ -8,6 +7,7 @@
 @import '~@fullcalendar/daygrid/main.css';
 @import '~@fullcalendar/timegrid/main.css';
 
+@import "~ngx-toastr/toastr.css";
 
 @import "variables";
 @import "form";
@@ -44,6 +44,7 @@
   margin-top: $main-full-page-margin;
   width: 100%;
   background-color: rgba(255, 255, 255, 0.9);
+  overflow: hidden;
 }
 
 .main-full-component {
@@ -64,6 +65,10 @@
   outline: 0!important;
 }
 
+.mat-menu-item.mat-menu-item-submenu-trigger.mat-menu-item-highlighted {
+  outline: none !important;
+}
+
 .centered-full-container {
   width: 100%;
   display: flex;
@@ -82,6 +87,27 @@
 
 .mat-menu-content {
   padding: 0 !important;
+}
+
+#toast-container > div {
+  opacity: 1;
+}
+.toast {
+  font-size: initial !important;
+  border: initial !important;
+  backdrop-filter: blur(0) !important;
+}
+.toast-success {
+  background-color: #51A351 !important;
+}
+.toast-error {
+  background-color: #BD362F !important;
+}
+.toast-info {
+  background-color: #2F96B4 !important;
+}
+.toast-warning {
+  background-color: #F89406 !important;
 }
 
 //FullCalendar
@@ -113,5 +139,11 @@
     & > div {
       margin: 5px auto;
     }
+  }
+}
+
+@media screen and (max-width: map_get($widths, m)) {
+  .mat-expansion-panel-body {
+    padding: 0 !important;
   }
 }

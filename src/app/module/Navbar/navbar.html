@@ -22,8 +22,33 @@
         <li class="nav-item"><a class="nav-link" routerLink="dashboard">Dashboard</a></li>
         <li class="nav-item"><a class="nav-link" routerLink="event-suggestions">Evenements</a></li>
       </ul>
+      <form class="form-inline">
+        <mat-form-field style="width: 100%">
+          <input #UserSearchInput matInput class="nav-item"
+                 id="UserInput"
+                 [matAutocomplete]="users"
+                 (keyup)="searchUser$.next($event.target.value)">
+          <mat-placeholder class="placeholder">Rechercher un utilisateur</mat-placeholder>
+          <mat-autocomplete #users="matAutocomplete" (optionSelected)="selectedUser($event)">
+            <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+              {{user.pseudo}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
 
       <ul class="navbar-nav ml-auto" data-toggle="collapse" data-target=".navbar-collapse.show">
+        <div class="dropdown">
+          <button class="btn btn-transparent dropdown-toggle" type="button" id="Invitations" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mes invitations</button>
+          <div class="dropdown-menu" aria-labelledby="Invitations">
+            <h6 class="dropdown-header">Invitations à un groupe</h6>
+            <a class="dropdown-item" href="javascript:void(0)" (click)="answerRequest(invitation, 'group')" *ngFor="let invitation of groupInvitations.slice(0, 5)">{{invitation.name}}</a>
+            <div class="dropdown-divider"></div>
+            <h6 class="dropdown-header">demandes d'ami</h6>
+            <a class="dropdown-item" href="javascript:void(0)" (click)="answerRequest(invitation, 'friend')" *ngFor="let invitation of friendInvitations.slice(0, 5)">{{invitation.from_user.pseudo}}</a>
+          </div>
+        </div>
+
         <li class="nav-item">
           <a class="nav-link" routerLink="/profile"><i class="fas fa-user"></i> Mon profil</a>
         </li>

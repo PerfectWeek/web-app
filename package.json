@@ -45,6 +45,7 @@
     "jquery": "^3.3.1",
     "ngx-duration-picker": "^3.0.2",
     "ng-gapi": "0.0.73",
+    "ngx-swiper-wrapper": "^7.2.1",
     "ngx-toastr": "^8.10.2",
     "node-sass": "^4.11.0",
     "npm": "^6.7.0",

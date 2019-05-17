@@ -1,10 +1,11 @@
 import {Component, Inject} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {ChangeValueDialog} from "../Change -value/change-value";
+import {FormBuilder} from "@angular/forms";
 
 @Component({
-    selector: 'change-value',
-    templateUrl: 'change-value.html',
+    selector: 'accept-invitation',
+    templateUrl: 'accept-invitation.html',
     styles: ['.mat-raised-button {\n' +
     '  box-sizing: border-box;\n' +
     '  position: relative;\n' +
@@ -32,31 +33,16 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
     '  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);\n' +
     '}']
 })
-export class ChangeValueDialog {
+export class AcceptInvitationDialog {
 
-    valueForm: FormGroup = null;
+    title: string = '';
 
-    value: string = null;
-
-    constructor(private fb: FormBuilder,
-                public dialogRef: MatDialogRef<ChangeValueDialog>,
+    constructor(public dialogRef: MatDialogRef<AcceptInvitationDialog>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.value = data.value;
-        if (data.fieldname === 'email')
-            this.valueForm = this.initEmailForm();
-        else
-            this.valueForm = this.initValueForm();
-    }
-
-    initValueForm() {
-        return this.fb.group({
-            value: [this.value, Validators.required]
-        });
-    }
-
-    initEmailForm() {
-        return this.fb.group({
-            value: [this.value, Validators.compose([Validators.email, Validators.pattern("^\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$"), Validators.required])]
-        });
+        console.log('data => ', data);
+        if (data.type === 'group')
+            this.title = `Voulez-vous accepter l\'invitation au groupe ${data.body.group_name} ?`;
+        else if (data.type === 'friend')
+            this.title = `Voulez-vous accepter la demande d'ami de ${data.body.from_user.pseudo} ?`;
     }
 }

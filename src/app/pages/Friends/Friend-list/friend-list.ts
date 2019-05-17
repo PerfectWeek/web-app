@@ -7,6 +7,7 @@ import {MatDialog} from "@angular/material";
 import {Friends} from "../../../core/models/Friends";
 import {User} from "../../../core/models/User";
 import {ConfirmDialog} from "../../../module/dialog/Confirm-dialog/Confirm-dialog";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
     selector: 'friend-list',
@@ -18,7 +19,7 @@ export class FriendListComponent implements OnInit, AfterViewInit {
 
     start: boolean = true;
 
-    public search$ = new BehaviorSubject<string>('');
+    public searchFriend$ = new BehaviorSubject<string>('');
 
     ready$: Observable<boolean>;
 
@@ -34,22 +35,11 @@ export class FriendListComponent implements OnInit, AfterViewInit {
 
     input: any;
 
-    friends: Friends[] = [
-        {name: 'max', image: 'assets/Pictures/bread.jpg'},
-        {name: 'Julius Gaius César', image: 'assets/Pictures/bread.jpg'},
-        {name: 'Hannibal', image: 'assets/Pictures/bread.jpg'},
-        {name: 'Publius Cornelius Scipio Africanus', image: 'assets/Pictures/bread.jpg'},
-        {name: 'Arthur Pendragon', image: 'assets/Pictures/bread.jpg'},
-        {name: 'Cú Chulainn', image: 'assets/Pictures/bread.jpg'},
-        {name: 'Oda Nobunaga', image: 'assets/Pictures/bread.jpg'},
-        {name: 'Le Général Pépin', image: 'assets/Pictures/bread.jpg'},
-        {name: 'Le Général Franco', image: 'assets/Pictures/bread.jpg'},
-        {name: 'Stalin', image: 'assets/Pictures/bread.jpg'},
-        {name: 'Mao Tse-Tung', image: 'assets/Pictures/bread.jpg'},
-    ];
+    friends: Friends[] = [];
 
     constructor(private profileSrv: ProfileService,
                 private requestSrv: RequestService,
+                private toastSrv: ToastrService,
                 private router: Router,
                 private dialog: MatDialog) {
         this.ready = new BehaviorSubject<boolean>(false);
@@ -65,10 +55,10 @@ export class FriendListComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.search$
+        this.searchFriend$
             .debounceTime(300)
             .distinctUntilChanged()
-            .do(() => this.search())
+            .do(() => this.searchFriend())
             .subscribe();
 
         this.ready$
@@ -81,22 +71,18 @@ export class FriendListComponent implements OnInit, AfterViewInit {
     }
 
     getFriends() {
-        // this.requestSrv.get(`userrelationships`, {
-        //     _limit: this.pageSize,
-        //     _start: this.pageIndex,
-        //     _sort:  this.sortingBy,
-        //     _contains:    this.search$.getValue().toLowerCase()
-        // }, {Authorization: ''})
-        //     .subscribe(ret => {
-        //         ret.relations.forEach(friend => this.displayRequests.push(frend));
-        //         this.ready.next(true);
-        //     }, err => {
-        //         this.toastSrv.error(err.error.message, 'Une erreur est survenue');
-        //     });
+        this.requestSrv.get(`friends`, {}, {Authorization: ''})
+            .subscribe(response => {
+                this.friends = response.friends;
+                this.displayFriends = response.friends;
+                this.ready.next(true);
+            }, err => {
+                this.toastSrv.error(err.error.message, 'Une erreur est survenue');
+            });
     }
 
-    goToUserProfil(friend) {
-        this.router.navigate(["profile", friend.name]);
+    goToUserProfile(friend) {
+        this.router.navigate(["profile", friend.pseudo]);
     }
 
     removeFriend(friend, index) {
@@ -118,20 +104,13 @@ export class FriendListComponent implements OnInit, AfterViewInit {
         });
     }
 
-    search() {
-        console.log('\nSearch by input value');
+    searchFriend() {
         this.pageIndex = 0;
-        this.input = this.search$.getValue().toLowerCase();
+        this.input = this.searchFriend$.getValue().toLowerCase();
 
         this.displayFriends = [];
         this.displayFriends = this.friends
-            .filter(friend => friend.name.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) != -1);
-
-        console.log("Number of friends returned per request => ", this.pageSize);
-        console.log("Starting at friend => ", this.pageIndex, " * ", this.pageSize);
-        console.log("Sorting friends by => ", this.sortingBy);
-        console.log("Searching friend for value => ", this.search$.getValue().toLowerCase());
-
+            .filter((friend: any) => friend.pseudo.toLowerCase().indexOf(this.searchFriend$.getValue().toLowerCase()) != -1);
 
         /* To be implemented when the routes will be up api wise*/
 
@@ -140,7 +119,7 @@ export class FriendListComponent implements OnInit, AfterViewInit {
         //     _limit: this.pageSize,
         //     _start: this.pageIndex,
         //     _sort:  this.sortingBy,
-        //     "=":    this.search$.getValue().toLowerCase()
+        //     "=":    this.searchFriend$.getValue().toLowerCase()
         // }, {Authorization: ''})
         //     .subscribe(ret => {
         // console.log('ret => ', ret);
@@ -152,13 +131,7 @@ export class FriendListComponent implements OnInit, AfterViewInit {
     }
 
     scrollSearch() {
-        console.log('\nAfter Scroll Search');
         ++this.pageIndex;
-        console.log("Number of friends returned per request => ", this.pageSize);
-        console.log("Starting at friend => ", this.pageIndex, " * ", this.pageSize);
-        console.log("Sorting friends by => ", this.sortingBy);
-        console.log("Searching friend for value => ", this.search$.getValue().toLowerCase());
-
         let tmp = this.displayFriends;
         tmp.forEach(group => this.displayFriends.push(group));
 
@@ -168,7 +141,7 @@ export class FriendListComponent implements OnInit, AfterViewInit {
         //     _limit: this.pageSize,
         //     _start: this.pageIndex,
         //     _sort:  this.sortingBy,
-        //     _contains:    this.search$.getValue().toLowerCase()
+        //     _contains:    this.searchFriend$.getValue().toLowerCase()
         // }, {Authorization: ''})
         //     .subscribe(ret => {
         //         ret.relations.forEach(requests => this.displayRequests.push(request));

@@ -2,6 +2,8 @@ import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RequestService} from "../../../../core/services/request.service";
 import {User} from "../../../../core/models/User";
+import {ProfileService} from "../../../../core/services/profile.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
     selector: 'public-profile',
@@ -16,6 +18,9 @@ export class PublicProfileComponent implements OnInit, OnDestroy {
     image: any = null;
 
     constructor(private route: ActivatedRoute,
+                private profileSrv: ProfileService,
+                private toastSrv: ToastrService,
+                private router: Router,
                 private requestSrv: RequestService) {
 
     }
@@ -23,6 +28,10 @@ export class PublicProfileComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params
             .subscribe(params => {
+                this.profileSrv.userProfile$.subscribe(current_user => {
+                    if (params.name === current_user.pseudo)
+                        this.router.navigate(['profile']);
+                });
                 this.requestSrv.get(`users/${params.name}`, {}, {Authorization: ''})
                     .subscribe(ret => {
                         this.user = ret.user;
@@ -37,9 +46,9 @@ export class PublicProfileComponent implements OnInit, OnDestroy {
     }
 
     sendInvitation() {
-        // this.requestSrv.post('userrelationships/invite', {
-        //     user: this.user.id
-        // }).subscribe();
-        console.log(`Inviting ${this['user']["pseudo"]}`);
+        console.log('user pseudo', this.user.pseudo);
+        this.requestSrv.post(`users/${this.user.pseudo}/friend-invite`, {}, {Authorization: ''}).subscribe((response => {
+            this.toastSrv.success("L'invitation a bien été envoyée");
+        }));
     }
 }

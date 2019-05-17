@@ -56,7 +56,7 @@ export class GroupCreationDialog implements AfterViewInit {
   separatorKeysCodes: number[] = [ENTER, COMMA];
 
   user: any = null;
-  selectedUsers: string[] = [];
+  selectedUsers: {name: string, role: string}[] = [];
   userCtrl: FormControl = new FormControl();
 
   filteredUsers: BehaviorSubject<User[]>;
@@ -93,13 +93,13 @@ export class GroupCreationDialog implements AfterViewInit {
         .subscribe(ret => {
           let id: number = -1;
           this.selectedUsers.forEach((atm_user, index) => {
-            if (atm_user === value)
+            if (atm_user.name === value)
               id = index;
           });
           if (id != -1)
             this.selectedUsers.splice(id, 1);
           else
-            this.selectedUsers.push(value);
+            this.selectedUsers.push({name: value, role: "admin"});
           },
           err => {
               this.toastSrv.error(err.message, 'Une erreur est survenue')
@@ -127,7 +127,7 @@ export class GroupCreationDialog implements AfterViewInit {
           let is_in: boolean = false;
 
           for (let selected of this.selectedUsers)
-              if (user.pseudo === selected) {
+              if (user.pseudo === selected.name) {
                   is_in = true;
                   break;
               }
@@ -145,7 +145,7 @@ export class GroupCreationDialog implements AfterViewInit {
 
   // Add the selected user to the list of selected users and reset the input search value
   selected(event) {
-    this.selectedUsers.push(event.option.viewValue);
+    this.selectedUsers.push({name: event.option.viewValue, role: "actor"});
     let input = (<any>(document.getElementById('UserInput'))).value = ''; // value exists as we are getting an input
     this.userCtrl.setValue(null);
   }
@@ -159,32 +159,10 @@ export class GroupCreationDialog implements AfterViewInit {
 
   createGroup() {
     // Checking to see if the user creating the group is in the group member list
-    this.profileSrv.userProfile$.subscribe(user => {
-      let id = -1;
-      this.selectedUsers.forEach((pseudo, index) => {
-        if (pseudo === user.pseudo)
-          id = index;
-      });
-
-      if (id === -1)
-        this.selectedUsers.push(user.pseudo); // Adding the user creating the group to the group member list if he isn't in it
-
-      // Setting the request body attributes and values
       let body = {name: this.name};
       this.selectedUsers.forEach((user, index) => {
-        body[`members[${index}]`] = user;
+          body[`members[${index}]`] = user;
       });
-
-      // Request post to the API to create a new group
-      this.requestSrv.post('groups', body, {Authorization: ''}).subscribe(ret => {
-          this.toastSrv.success(`Votre groupe ${ret.group.name} a bien été créé`);
-          this.dialogRef.close(ret.group.id);
-          return true;
-        },
-        err => {
-          this.toastSrv.error(err.error.message, 'Une erreur est survenue'); // Display an error message if an error occurs
-          return false;
-        });
-    }, (error) => {console.log('error => ', error)});
+      this.dialogRef.close(body);
   }
 }

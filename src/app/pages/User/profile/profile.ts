@@ -11,6 +11,7 @@ import {TokenService} from '../../../core/services/token.service';
 import {MatDialog} from "@angular/material";
 import {ConfirmDialog} from "../../../module/dialog/Confirm-dialog/Confirm-dialog";
 import {filter, switchMap} from "rxjs/operators";
+import {CreateEventDialog} from '../../../module/dialog/CreateEvent-dialog/CreateEvent-dialog';
 
 declare var FB: any;
 
@@ -122,12 +123,11 @@ export class ProfileComponent implements OnInit {
     }
 
     onFileChange(event) {
-
         if (event.target.files && event.target.files.length == 1) {
             const file = event.target.files[0];
 
             this.profileSrv.userProfile$.subscribe(user => {
-                this.requestSrv.postFile(`users/${user.pseudo}/upload-image`, file, {Authorization: ''})
+                this.requestSrv.postImage(`users/${user.pseudo}/upload-image`, file, {Authorization: ''})
                     .do(() => {
                             this.requestSrv.get(`users/${user.pseudo}/image`, {}, {Authorization: ''})
                                 .subscribe(ret => {

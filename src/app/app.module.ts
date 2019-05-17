@@ -42,6 +42,7 @@ import {
     MatListModule,
     MatMenuModule,
     MatIconModule,
+    MatDividerModule,
     MAT_LABEL_GLOBAL_OPTIONS,
     MAT_DATE_LOCALE, MatDialogRef, MatPaginatorIntl
 } from '@angular/material';
@@ -74,8 +75,6 @@ import {ConnectionComponent} from './pages/Connection/connection';
 import {NotFoundComponent} from './pages/NotFound/not-found';
 import {DashboardComponent} from './pages/User/dashboard/dashboard';
 import {ProfileComponent} from './pages/User/profile/profile';
-import {GroupManagementComponent} from './pages/User/groups/group-management';
-import {GroupComponent} from './pages/User/groups/group/group';
 // import {CalendarHeaderComponent} from "./pages/calendar/demo-utils/calendar-header.component";
 import {FormModalComponent} from './pages/calendar/demo-utils/ModalForm/form-modal.component';
 import {RegistrationConfirmationComponent} from './pages/Registration_Confirmation/registration-confirmation';
@@ -101,6 +100,7 @@ import {ChangeValueDialog} from "./module/dialog/Change -value/change-value";
 import {AddMemberDialog} from "./module/dialog/Add-member/add-member";
 import {FriendInvitationDialog} from "./module/dialog/Friend-Invitation/invitation";
 import {FoundSlotConfirmDialog} from './module/dialog/FoundSlotConfirm-dialog/FoundSlotConfirm-dialog';
+import {AcceptInvitationDialog} from "./module/dialog/Accept-invitation-dialog/accept-invitation";
 //import {MatRadioModule} from '@angular/material/radio';
 
 
@@ -110,8 +110,16 @@ import {IsLogout} from './core/Guards/isLogout-guard';
 
 import localeFr from '@angular/common/locales/fr';
 import {environment} from "../environments/environment";
+import {BestSlotCalendarComponent} from './pages/calendar/BestSlotCalendar/best-slot-calendar';
+import {SWIPER_CONFIG, SwiperConfigInterface, SwiperModule} from 'ngx-swiper-wrapper';
+//import {FlexLayoutModule} from '@angular/flex-layout';
 
 registerLocaleData(localeFr);
+
+const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
+    direction: 'horizontal',
+    slidesPerView: 'auto'
+};
 
 let gapiClientConfig: NgGapiClientConfig = {
     client_id: environment.google_client_id,
@@ -134,9 +142,8 @@ let gapiClientConfig: NgGapiClientConfig = {
         NotFoundComponent,
         DashboardComponent,
         ProfileComponent,
-        GroupManagementComponent,
         CalendarComponent,
-        GroupComponent,
+        BestSlotCalendarComponent,
         FormModalComponent,
         RegistrationConfirmationComponent,
         MainViewComponent,
@@ -156,8 +163,11 @@ let gapiClientConfig: NgGapiClientConfig = {
         ChangeValueDialog,
         AddMemberDialog,
         FriendInvitationDialog,
+        AcceptInvitationDialog,
     ],
     imports: [
+        //FlexLayoutModule,
+        SwiperModule,
         CommonModule,
         NgbModalModule,
         FlatpickrModule.forRoot(),
@@ -188,6 +198,7 @@ let gapiClientConfig: NgGapiClientConfig = {
         MatListModule,
         MatMenuModule,
         MatIconModule,
+        MatDividerModule,
         FullCalendarModule,
         GoogleApiModule.forRoot({
             provide: NG_GAPI_CONFIG,
@@ -205,6 +216,10 @@ let gapiClientConfig: NgGapiClientConfig = {
         TokenService,
         AuthService,
         ProfileService,
+        {
+            provide: SWIPER_CONFIG,
+            useValue: DEFAULT_SWIPER_CONFIG
+        },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: InterceptorUrl,
@@ -237,6 +252,7 @@ let gapiClientConfig: NgGapiClientConfig = {
         ChangeValueDialog,
         AddMemberDialog,
         FriendInvitationDialog,
+        AcceptInvitationDialog,
     ]
 })
 export class AppModule {
