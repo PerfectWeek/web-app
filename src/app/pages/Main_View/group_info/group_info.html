@@ -14,6 +14,7 @@
         <section *ngIf="group_id > -1">
           <h3 [disabled]="isAdmin !== true" class="clickable-fields" (click)="changeGroupBasicInfo(group.name, 'name')">{{group.name}}</h3>
           <p [disabled]="isAdmin !== true" *ngIf="group_id > -1" title="{{group.description}}" class="description clickable-fields" (click)="changeGroupBasicInfo(group.description, 'description')">{{group.description}}</p>
+          <p class="description">Vous êtes un {{userRole}}</p>
         </section>
       </section>
     </section>
