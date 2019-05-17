@@ -13,6 +13,7 @@ import {GoogleAuthService} from 'ng-gapi';
 import {UserService} from './UserService';
 import {GoogleApiService} from 'ng-gapi';
 import {SheetResource} from './SheetResource';
+import {environment} from "../../../environments/environment";
 
 declare var FB: any;
 
@@ -104,7 +105,7 @@ export class RegistrationComponent {
     ngOnInit() {
         (window as any).fbAsyncInit = function () {
             FB.init({
-                appId: '2107497569541133',
+                appId: environment.facebook_client_id,
                 cookie: true,
                 xfbml: true,
                 version: 'v3.1'
