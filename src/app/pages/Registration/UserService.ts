@@ -11,6 +11,7 @@ import {RequestService} from "../../core/services/request.service";
 import {AuthService} from "../../core/services/auth.service";
 import {ToastrService} from "ngx-toastr";
 import {Router} from "@angular/router";
+import {User} from "../../core/models/User";
 
 declare var FB: any;
 
@@ -88,6 +89,7 @@ export class UserService {
                     this.tokenSrv.token = resu["token"];
                     localStorage.setItem('user_pseudo', resu["user"]["pseudo"]);
                     this.authSrv.logged = true;
+                    this.authSrv.auth = {email: resu["user"]["email"], pseudo: resu["user"]["pseudo"]};
                     this.profileSrv.fetchUser$(resu["user"]["pseudo"]).subscribe(() => this.router.navigate(['/dashboard']));
                 })
         });

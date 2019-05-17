@@ -86,7 +86,6 @@ import {EventSuggestionsComponent} from "./pages/EventSuggestions/event_suggesti
 import {GroupListComponent} from "./pages/Main_View/group_list/group_list";
 import {GroupInfoComponent} from "./pages/Main_View/group_info/group_info";
 import {FriendsComponent} from './pages/Friends/friends';
-import {FriendRequestComponent} from "./pages/Friends/Friend-requests/friend-request";
 import {FriendListComponent} from "./pages/Friends/Friend-list/friend-list";
 import {PublicProfileComponent} from "./pages/User/profile/public/public";
 
@@ -152,7 +151,6 @@ let gapiClientConfig: NgGapiClientConfig = {
         GroupInfoComponent,
         PublicProfileComponent,
         FriendsComponent,
-        FriendRequestComponent,
         FriendListComponent,
         ConfirmDialog,
         CreateEventDialog,

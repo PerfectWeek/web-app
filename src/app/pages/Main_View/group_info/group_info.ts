@@ -190,6 +190,8 @@ export class GroupInfoComponent implements OnInit, OnChanges {
     }
 
     changeGroupBasicInfo(value: string, fieldname: string) {
+        if (this.isAdmin !== true)
+            return;
         let dialogRef = this.dialog.open(ChangeValueDialog, {
             data: {fieldname: fieldname, value: value}
         });
@@ -206,7 +208,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                         if (fieldname === 'name') {
                             this.group_modified.emit(ret.group.id);
                         }
-                        this.toastSrv.success(`Le ${fieldname} de ce groupe a bien été modifié`);
+                        this.toastSrv.success(`Le ${fieldname === 'name' ? 'nom' : fieldname} de ce groupe a bien été modifié`);
                     })
             }
         })

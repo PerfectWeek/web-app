@@ -1,38 +1,5 @@
 @import "~scss/variables";
 
-#UserInput {
-  color: white !important;
-}
-
-.navbar {
-  /deep/ .mat-form-field-underline, /deep/ .mat-input-ripple.mat-form-field-ripple {
-    background-color: white !important;
-    outline: transparent !important;
-  }
-
-  .placeholder {
-    color: white !important;
-    border-bottom-color: white !important;
-  }
-
-  .mat-focused .placeholder {
-    color: white !important;
-    border-bottom-color: white !important;
-  }
-
-  /deep/ .mat-focused {
-    caret-color: white !important;
-  }
-
-  /deep/ .mat-input-container {
-    caret-color: white !important;
-  }
-
-  /deep/ .dropdown {
-    align-self: center;
-  }
-}
-
 .navbar {
   z-index: 999;
 }

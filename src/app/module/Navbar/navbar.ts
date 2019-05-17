@@ -19,13 +19,6 @@ export class Navbar implements OnInit, AfterViewInit {
 
     isLogged$ = this.authSrv.isLogged();
 
-    @ViewChild('UserSearchInput') userSearchInput: ElementRef;
-
-    public searchUser$ = new BehaviorSubject<string>('');
-
-    filteredUsers: BehaviorSubject<User[]>;
-    filteredUsers$: Observable<User[]>;
-
     userProfile$ = this.profileSrv.userProfile$;
 
     groupInvitations: GroupInvitation[] = [];
@@ -40,8 +33,6 @@ export class Navbar implements OnInit, AfterViewInit {
                 private toastSrv: ToastrService,
                 private requestSrv: RequestService,
                 private profileSrv: ProfileService) {
-        this.filteredUsers = new BehaviorSubject<User[]>([]);
-        this.filteredUsers$ = this.filteredUsers.asObservable();
         this.invitations$ = this.profileSrv.invitationsSubject.asObservable();
         if (localStorage.getItem('user_pseudo') != null)
             this.profileSrv.getInvitations();
@@ -52,39 +43,11 @@ export class Navbar implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.searchUser$
-            .debounceTime(300)
-            .distinctUntilChanged()
-            .do(() => this.searchUser())
-            .subscribe();
-
         this.invitations$
             .do(invitations => {
                 this.groupInvitations = invitations.group_invitations;
                 this.friendInvitations = invitations.friend_invitations;
             }).subscribe();
-    }
-
-    searchUser() {
-        if (localStorage.getItem('user_pseudo') == null)
-            return;
-        this.filteredUsers.next([]);
-        this.requestSrv.get(`search/users`, {
-            page_size: 10,
-            page_number: 1,
-            q:    this.searchUser$.getValue()
-        }, {Authorization: ''})
-            .subscribe(response => {
-                this.filteredUsers.next(response.users);
-                }, err => {
-                this.toastSrv.error(err.error.message, 'Une erreur est survenue');
-            });
-    }
-
-    selectedUser(event) {
-        this.userSearchInput.nativeElement.value = '';
-        this.searchUser$.next('');
-        this.router.navigate([`profile/${event.option.viewValue}`]);
     }
 
     handleGroupRequest(invitation, result) {
@@ -127,9 +90,7 @@ export class Navbar implements OnInit, AfterViewInit {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            console.log('result => ', result);
             if (result !== null && result !== undefined) {
-                console.log('result => ', result);
                 if (type === 'group')
                     this.handleGroupRequest(invitation, result);
                 else

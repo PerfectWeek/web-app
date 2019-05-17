@@ -6,7 +6,17 @@
   <section class="friends">
     <section class="friends-header">
       <section class="friends-search-bar">
-        <i class="fas fa-search"></i>
+        <input title="Rechercher un Utilisateur" type="text" name="searchUser" id="search-user" class="form-control" placeholder="Rechercher un Utilisateur" #UserSearchInput matInput
+               id="UserInput"
+               [matAutocomplete]="users"
+               (keyup)="searchUser$.next($event.target.value)">
+        <mat-autocomplete #users="matAutocomplete" (optionSelected)="selectedUser($event)">
+          <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+            {{user.pseudo}}
+          </mat-option>
+        </mat-autocomplete>
+      </section>
+      <section class="friends-search-bar">
         <input title="Rechercher un ami" type="text" name="search" id="search-friend" class="form-control" placeholder="Rechercher un ami" matInput (keyup)="searchFriend$.next($event.target.value)">
       </section>
     </section>

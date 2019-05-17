@@ -46,11 +46,19 @@
       width: calc(2.2vw + 2.2vh);
       height: calc(2.2vw + 2.2vh);
       border-radius: 50%;
+
+      &:disabled {
+        cursor: default !important;
+      }
     }
 
     & > .group-header-info {
       padding-left: 1rem;
       width: calc(85% - 1rem);
+
+      & h3:disabled, & p:disabled {
+        cursor: default !important;
+      }
 
       & > * {
         width: 100%;
