@@ -79,21 +79,26 @@ export class FoundSlotDialog {
 
     ChooseSlot(route_id_calendar, slots, event) {
         // Open a New modal for choose a slot
-        const dialogConfirmRef = this.dialog.open(FoundSlotConfirmDialog, {
-            width: '1000px',
-            data: {
-                calendar_id: route_id_calendar,
-                slots,
-                event,
-                calAPI_: this.data.calAPI
-            }
-        });
-        dialogConfirmRef.afterClosed().subscribe(result => {
-            console.log(result);
-            if (result !== null && result !== undefined) {
-                console.log('Réponse enregistré');
-            }
-        });
+        if (slots.slots.length !== 0) {
+            const dialogConfirmRef = this.dialog.open(FoundSlotConfirmDialog, {
+                width: '1000px',
+                data: {
+                    calendar_id: route_id_calendar,
+                    slots,
+                    event,
+                    calAPI_: this.data.calAPI
+                }
+            });
+            dialogConfirmRef.afterClosed().subscribe(result => {
+                console.log(result);
+                if (result !== null && result !== undefined) {
+                    console.log('Réponse enregistré');
+                }
+            });
+        }
+        else {
+            this.toastSrv.error("Vous n'avez pas de créneaux disponible.");
+        }
     }
 
     FoundSlot() {

@@ -80,7 +80,7 @@ export class BestSlotCalendarComponent implements OnInit {
     get_calendar_events(calendar_id) {
         this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''})
             .subscribe(ret => {
-                const hexa = ["#e06868", "#ff906a", "#f2db09", "#3d8fdc", "#45c4d9", "#cae602", "#ffd39b", "#c0e2e1", "#ccffff", "#9c6eb2"];
+                const hexa = ["#3d8fdc"];
                 const backgroundColor_ = hexa[Math.floor(Math.random() * hexa.length)];
                 // const backgroundColor_ = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
                 const borderColor_ = '#1C4891';

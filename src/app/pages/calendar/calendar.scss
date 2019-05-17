@@ -5,8 +5,14 @@ html, body {
   font-size: 14px;
 }
 
+.button_layout {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
 #calendar {
-  max-width: 900px;
+  max-width: 950px;
   margin: 40px auto;
 }
 

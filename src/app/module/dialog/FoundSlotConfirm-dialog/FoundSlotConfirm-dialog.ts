@@ -75,9 +75,14 @@ export class FoundSlotConfirmDialog {
 
     FoundSlotConfirm() {
         const route_id_calendar = (this.dialog_calendar_id != null) ? this.dialog_calendar_id : this.data.calendar_id;
-        if (this.index === this.data.slots.slots.length) {
-            this.dialogRef.close();
-            return;
+
+        // if (this.index === this.data.slots.slots.length) {
+        //     this.toastSrv.error("Vous n'avez pas de créneaux disponible.");
+        //     this.dialogRef.close();
+        //     return;
+        // }
+        if (this.index === undefined) {
+            this.index = 0;
         }
         const start = this.data.slots.slots[this.index].start_time;
         const end = this.data.slots.slots[this.index].end_time;
