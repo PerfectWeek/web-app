@@ -28,6 +28,15 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
     ready: boolean = false;
 
+    rolesfr: {'admin': string, 'outsider': string, 'spectator': string, 'actor': string}  = {
+        "admin": "administrateur",
+        "spectator": 'spectateur',
+        "actor": 'membre',
+        "outsider": 'non-membre'
+    };
+
+    userRole: string = '';
+
     @Input("group_id") group_id: number = null;
 
     @Output("group_modified") group_modified = new EventEmitter<number>();
@@ -137,8 +146,10 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                     .subscribe(ret => {
                         this.group_members = ret.members;
                         this.group_members.forEach((member, index) => {
-                            if (member.pseudo === this.profileSrv.user.pseudo)
+                            if (member.pseudo === this.profileSrv.user.pseudo) {
+                                this.userRole = this.rolesfr[`${member.role}`];
                                 this.isAdmin = member.role === 'admin';
+                            }
                             this.requestSrv.get(`users/${member.pseudo}/image`, {}, {Authorization: ''})
                                 .subscribe(ret => {
                                     member.image = ret.image;
