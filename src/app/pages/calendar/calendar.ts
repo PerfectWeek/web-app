@@ -47,7 +47,6 @@ export class CalendarComponent implements OnInit, OnChanges {
     is_global_calendar: boolean = true;
 
     ngOnChanges(changes: SimpleChanges) {
-        console.log('calendar_id => ', this.in_calendar_id);
         this.events = [];
         this.in_calendar_id = changes.in_calendar_id.currentValue;
         if (this.in_calendar_id === -1) {
@@ -55,10 +54,8 @@ export class CalendarComponent implements OnInit, OnChanges {
             this.is_global_calendar = true;
         }
         else {
-            console.log('group');
             this.is_global_calendar = false;
             this.get_in_group_calendar()
-            console.log('events => ', this.events);
         }
     }
 
