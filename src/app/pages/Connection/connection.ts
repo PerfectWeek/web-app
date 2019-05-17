@@ -40,7 +40,8 @@ export class ConnectionComponent {
     }
 
     submit() {
-        console.log(/\((.*)\)/.exec(new Date().toString())[1]);
+        if (this.connectionForm.invalid)
+            return ;
         this.authSrv.newConnection(this.connectionForm.value)
             .do(
                 ((data: any) => {

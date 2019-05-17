@@ -55,6 +55,8 @@ export class RegistrationComponent {
     }
 
     submit() {
+        if (this.registrationForm.invalid)
+            return;
         const user: User = this.registrationForm.value;
         delete (<any>user).confirmPassword;
         this.requestSrv.post('users', user)
