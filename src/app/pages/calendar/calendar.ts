@@ -38,6 +38,7 @@ export class CalendarComponent implements OnInit, OnChanges {
     calendar_id: number = null;
     calendar_name: string = null;
     is_global_calendar: boolean = true;
+    //@Input('addEventCallback') addEventCallback;
     api: Calendar;
 
 
@@ -50,7 +51,11 @@ export class CalendarComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        console.log('calendar_id => ', this.in_calendar_id);
+        console.log("ON CHANGE");
+        //console.log('calendar_id => ', this.in_calendar_id);
+        this.calendar_id = +(this.router.url.slice(this.router.url.lastIndexOf('/') + 1));
+        //console.log("lolol", this.calendar_id);
+        this.is_global_calendar = (!Number.isNaN(this.calendar_id)) ? false : true;
         this.events = [];
         this.in_calendar_id = changes.in_calendar_id.currentValue;
         if (this.in_calendar_id === -1) {
@@ -80,6 +85,7 @@ export class CalendarComponent implements OnInit, OnChanges {
                 addEventButton: {
                     text: 'Ajouter un evenement',
                     click: async () => {
+                        //this.addEventCallback();
                         this.addEvent();
                     },
                 },
@@ -93,7 +99,12 @@ export class CalendarComponent implements OnInit, OnChanges {
             header: {
                 left: 'prev,next today',
                 center: 'title',
-                right: 'FoundSlotButton,addEventButton,dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
+                // right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+            },
+            footer: {
+                right: 'FoundSlotButton,addEventButton',
+                center: '',
             },
             plugins: [bootstrapPlugin, interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
             locales: [esLocale, frLocale],
@@ -179,19 +190,21 @@ export class CalendarComponent implements OnInit, OnChanges {
         });
     }
 
-    get_group_info() {
-        this.calendar_id = +(this.router.url.slice(this.router.url.lastIndexOf('/') + 1));
-        if (!Number.isNaN(this.calendar_id)) {
-            this.is_global_calendar = false;
-            this.get_group_calendar();
-        } else {
-            this.is_global_calendar = true;
-            this.get_global_calendar();
-        }
-    }
+    // get_group_info() {
+    //     this.calendar_id = +(this.router.url.slice(this.router.url.lastIndexOf('/') + 1));
+    //     this.is_global_calendar = (!Number.isNaN(this.calendar_id)) ? false : true;
+    //     // if (!Number.isNaN(this.calendar_id)) {
+    //     //     this.is_global_calendar = false;
+    //     //     this.get_group_calendar();
+    //     // } else {
+    //     //     this.is_global_calendar = true;
+    //     //     this.get_global_calendar();
+    //     // }
+    // }
 
     addEvent(): void {
         const dialogRef = this.dialog.open(CreateEventDialog, {
+            width: '650px',
             data: {
                 calendar_id: this.in_calendar_id ? this.in_calendar_id : this.calendar_id,
                 // calAPI: calAPI_,
@@ -210,6 +223,7 @@ export class CalendarComponent implements OnInit, OnChanges {
 
     eventClick(event) {
         const dialogRef = this.dialog.open(ModifyEventDialog, {
+            width: '650px',
             data: {
                 event,
                 calendar_locale: this.locale,
@@ -245,6 +259,7 @@ export class CalendarComponent implements OnInit, OnChanges {
 
     foundSlots(): void {
         const dialogRef = this.dialog.open(FoundSlotDialog, {
+            width: "650px",
             data: {
                 calendar_id: this.in_calendar_id ? this.in_calendar_id : this.calendar_id,
                 // calAPI: calAPI_,

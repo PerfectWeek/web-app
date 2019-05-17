@@ -67,6 +67,8 @@ export class BestSlotCalendarComponent implements OnInit {
                 start: this.slot.start_time,
                 end: this.slot.end_time,
                 title: this.temp_event.name,
+                backgroundColor: '#FAA401',
+                borderColor: '#1C4891',
             });
             this.api.updateSize();
             this.api.gotoDate(this.slot.start_time);

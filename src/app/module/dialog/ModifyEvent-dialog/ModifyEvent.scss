@@ -1,0 +1,15 @@
+.profile-image {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  min-height: calc(7.5vw + 7.5vh);
+
+  & > img {
+    cursor: pointer;
+    border-radius: 50%;
+    width: calc(5vw + 5vh);
+    height: calc(5vw + 5vh);
+  }
+}

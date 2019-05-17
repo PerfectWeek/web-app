@@ -5,8 +5,9 @@
     <div>
         <form #groupForm="ngForm" (ngSubmit)="createEvent()" class="form-row" style="padding: 15px; margin: 15px 0">
 
+            <mat-form-field style="width: 100%"
+                            *ngIf="data.is_global_calendar == true">
             <mat-select placeholder="Groupe"
-                        *ngIf="data.is_global_calendar == true"
                         style="width: 100%"
                         [(ngModel)]="dialog_calendar_id"
                         name="dialog_calendar_id" required>
@@ -14,11 +15,11 @@
                     {{calendar.calendar.name}}
                 </mat-option>
             </mat-select>
+            </mat-form-field>
 
             <mat-form-field style="width: 100%">
-                <mat-label>Nom de l'évenement</mat-label>
                 <input matInput
-                       placeholder="Bowling entre amis"
+                       placeholder="Nom de l'évenement"
                        [(ngModel)]="name"
                        name="name"
                        required>
@@ -40,7 +41,7 @@
                        required>
             </mat-form-field>
 
-            <div layout="row" style="width: 100%" layout-align="center center">
+            <div class="my_layout" fxLayout="row" style="width: 100%">
                 <mat-form-field>
                     <mat-select placeholder="Visibilité" required
                                 [(value)]="eventVisibility"
@@ -60,17 +61,18 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
+
+                <mat-form-field style="width: 8%;">
+                    <mat-label>Couleur: </mat-label>
+                    <input matInput
+                            type="color"
+                           name="color"
+                           [(ngModel)]="color">
+                </mat-form-field>
             </div>
 
-            <mat-form-field style="width: 5%">
-                <input matInput
-                       type="color"
-                       name="color"
-                       [(ngModel)]="color">
-            </mat-form-field>
-
-            <div fxLayout="row" style="width: 100%" fxLayoutGap="50px" fxLayoutAlign="space-around center">
-                <mat-form-field fxFlex>
+            <div class="my_layout" fxLayout="row">
+                <mat-form-field>
                     <input matInput
                            class="form-control"
                            type="text"
@@ -86,7 +88,7 @@
                            required>
                 </mat-form-field>
 
-                <mat-form-field fxFlex>
+                <mat-form-field>
                     <input matInput
                            class="form-control"
                            type="text"
