@@ -21,6 +21,20 @@
       <ul class="navbar-nav mr-auto" data-toggle="collapse" data-target=".navbar-collapse.show">
         <li class="nav-item"><a class="nav-link" routerLink="dashboard">Dashboard</a></li>
       </ul>
+      <form class="form-inline">
+        <mat-form-field style="width: 100%">
+          <input #UserSearchInput matInput class="nav-item"
+                 id="UserInput"
+                 [matAutocomplete]="users"
+                 (keyup)="searchUser$.next($event.target.value)">
+          <mat-placeholder class="placeholder">Rechercher un utilisateur</mat-placeholder>
+          <mat-autocomplete #users="matAutocomplete" (optionSelected)="selectedUser($event)">
+            <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+              {{user.pseudo}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
 
       <ul class="navbar-nav ml-auto" data-toggle="collapse" data-target=".navbar-collapse.show">
         <li class="nav-item">
@@ -34,11 +48,11 @@
           </mat-menu>
 
           <mat-menu #Friends="matMenu" >
-
+            <button mat-menu-item (click)="answerRequest(invitation, 'friend')" *ngFor="let invitation of friendInvitations.slice(0, 5)">{{invitation.from_user.pseudo}}</button>
           </mat-menu>
 
           <mat-menu #Groups="matMenu">
-            <button mat-menu-item (click)="answerRequest(invitation)" *ngFor="let invitation of groupInvitations">{{invitation.name}}</button>
+            <button mat-menu-item (click)="answerRequest(invitation, 'group')" *ngFor="let invitation of groupInvitations.slice(0, 5)">{{invitation.name}}</button>
           </mat-menu>
         </li>
         <li class="nav-item">

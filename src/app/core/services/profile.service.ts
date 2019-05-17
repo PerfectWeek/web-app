@@ -61,6 +61,13 @@ export class ProfileService {
                 this.invitations.group_invitations = response.pending_invites;
                 this.invitationsSubject.next(this.invitations);
             });
+
+        this.requestSrv.get('friend-invites', {}, {Authorization: ''})
+            .subscribe(response => {
+                this.invitations.friend_invitations = response.friend_requests;
+                this.invitationsSubject.next(this.invitations);
+                console.log('friend invitations => ', this.invitations.friend_invitations);
+            });
     }
 
     public fetchUser$(pseudo): Observable<User> {

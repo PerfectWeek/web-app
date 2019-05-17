@@ -53,6 +53,16 @@
     flex-wrap: wrap;
     justify-content: space-evenly;
 
+    & > .no-friends-notification {
+      width: 100%;
+      display: flex;
+      flex-flow: row;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+      margin: 15px 0;
+    }
+
     & > .friend {
       width: 28%;
       display: flex;

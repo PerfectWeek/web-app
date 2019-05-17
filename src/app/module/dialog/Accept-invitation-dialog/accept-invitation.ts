@@ -41,6 +41,8 @@ export class AcceptInvitationDialog {
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         console.log('data => ', data);
         if (data.type === 'group')
-            this.title = `Voulez-vous accepter l\'invitation au groupe ${data.group_name}`;
+            this.title = `Voulez-vous accepter l\'invitation au groupe ${data.body.group_name} ?`;
+        else if (data.type === 'friend')
+            this.title = `Voulez-vous accepter la demande d'ami de ${data.body.from_user.pseudo} ?`;
     }
 }

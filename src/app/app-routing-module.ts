@@ -20,7 +20,7 @@ import {MainViewComponent} from "./pages/Main_View/main_view";
 import {PublicProfileComponent} from "./pages/User/profile/public/public";
 
 const routes: Routes = [
-  { path: '', redirectTo: '/connection', pathMatch: 'full' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'registration', component: RegistrationComponent, canActivate: [ IsLogout ] },
   { path: 'auth/validate-email/:id', component: RegistrationConfirmationComponent, canActivate: [IsLogout] },
   { path: 'login', component: ConnectionComponent, canActivate: [ IsLogout ] },

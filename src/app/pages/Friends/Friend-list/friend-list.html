@@ -1,29 +1,31 @@
-<!--<section class="loader" *ngIf="(ready$ | async) === false; else loaded">-->
-  <!--<ng-template #loaded>-->
-<section class="main-container">
-  <h1 style="text-align: center">Mes Amis</h1>
-</section>
-<section class="friends">
-  <section class="friends-header">
-    <section class="friends-search-bar">
-      <i class="fas fa-search"></i>
-      <input title="Rechercher un ami" type="text" name="search" id="search" class="form-control" placeholder="Rechercher un ami" matInput (keyup)="search$.next($event.target.value)">
-    </section>
+<section class="loader" *ngIf="(ready$ | async) === false; else loaded"></section>
+<ng-template #loaded>
+  <section class="main-container">
+    <h1 style="text-align: center">Mes Amis</h1>
   </section>
-  <section class="friend-list">
-    <section class="friend" *ngFor="let friend of displayFriends; let id = index">
-      <section class="friend-header">
-        <img src="../../../assets/Pictures/bread.jpg" width="100%" height="100%" alt="Friend's profile picture" title="Friend's profile picture">
-      </section>
-      <section class="friend-name">
-        <h4 (click)="goToUserProfil(friend)" title="{{friend.name}}">{{friend.name}}</h4>
-        <button mat-button [matMenuTriggerFor]="Actions"><i class="fas fa-ellipsis-h"></i></button>
-        <mat-menu #Actions="matMenu">
-          <button mat-menu-item title="Supprimer de mes amis" (click)="removeFriend(friend, id)">Supprimer de mes amis</button>
-        </mat-menu>
+  <section class="friends">
+    <section class="friends-header">
+      <section class="friends-search-bar">
+        <i class="fas fa-search"></i>
+        <input title="Rechercher un ami" type="text" name="search" id="search-friend" class="form-control" placeholder="Rechercher un ami" matInput (keyup)="searchFriend$.next($event.target.value)">
       </section>
     </section>
+    <section class="friend-list">
+      <section  *ngIf="displayFriends?.length > 0; else noFriends">
+        <section class="friend" *ngFor="let friend of displayFriends; let id = index">
+          <section class="friend-header">
+            <img src="../../../assets/Pictures/bread.jpg" width="100%" height="100%" alt="Friend's profile picture" title="Friend's profile picture">
+          </section>
+          <section class="friend-name">
+            <h4 (click)="goToUserProfile(friend)" title="{{friend.name}}">{{friend.name}}</h4>
+          </section>
+        </section>
+      </section>
+      <ng-template #noFriends>
+        <section class="no-friends-notification">
+          <h2>Vous n'avez aucun ami pour le moment</h2>
+        </section>
+      </ng-template>
+    </section>
   </section>
-</section>
-  <!--</ng-template>-->
-<!--</section>-->
+</ng-template>
