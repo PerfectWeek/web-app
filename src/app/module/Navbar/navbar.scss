@@ -27,6 +27,10 @@
   /deep/ .mat-input-container {
     caret-color: white !important;
   }
+
+  /deep/ .dropdown {
+    align-self: center;
+  }
 }
 
 .navbar {
@@ -102,7 +106,7 @@
   left: 35%;
   color: #FFF;
 }
-@media (max-width: 767px) {
+@media screen and (max-width: map_get($widths, m)) {
   .navbar-default .navbar-nav .open .dropdown-menu > li > a {
     color: #FFF;
   }
@@ -110,4 +114,11 @@
   .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
     color: #FFF;
   }
+
+  .navbar {
+    /deep/ .dropdown {
+      align-self: start;
+    }
+  }
+
 }
