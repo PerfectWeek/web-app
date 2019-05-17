@@ -18,8 +18,9 @@ export class PublicProfileComponent implements OnInit, OnDestroy {
     image: any = null;
 
     constructor(private route: ActivatedRoute,
-                private profilSrv: ProfileService,
+                private profileSrv: ProfileService,
                 private toastSrv: ToastrService,
+                private router: Router,
                 private requestSrv: RequestService) {
 
     }
@@ -27,6 +28,10 @@ export class PublicProfileComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params
             .subscribe(params => {
+                this.profileSrv.userProfile$.subscribe(current_user => {
+                    if (params.name === current_user.pseudo)
+                        this.router.navigate(['profile']);
+                });
                 this.requestSrv.get(`users/${params.name}`, {}, {Authorization: ''})
                     .subscribe(ret => {
                         this.user = ret.user;

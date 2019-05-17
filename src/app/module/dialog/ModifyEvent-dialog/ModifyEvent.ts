@@ -143,7 +143,7 @@ export class ModifyEventDialog {
     ModifyImageEvent(event) {
         if (event.target.files && event.target.files.length === 1) {
             const file = event.target.files[0];
-            this.requestSrv.postFile(`events/${this.pw_event.id}/upload-image`, file, {Authorization: ''})
+            this.requestSrv.postImage(`events/${this.pw_event.id}/upload-image`, file, {Authorization: ''})
                 .do(() => {
                         this.requestSrv.get(`events/${this.pw_event.id}/image`, {}, {Authorization: ''})
                             .subscribe(ret => {
