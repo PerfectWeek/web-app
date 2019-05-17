@@ -40,7 +40,7 @@ export class AuthService {
         localStorage.removeItem('user_pseudo');
     }
 
-    private set auth(value: User) {
+    set auth(value: User) {
         this._auth = value;
         if (value != null) {
             localStorage.setItem('auth', JSON.stringify(value));
@@ -49,7 +49,7 @@ export class AuthService {
         }
     }
 
-    private get auth(): User {
+    get auth(): User {
         return this._auth;
     }
 

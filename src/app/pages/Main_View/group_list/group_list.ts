@@ -118,17 +118,19 @@ export class GroupListComponent implements OnInit, AfterViewInit {
 
     formatBody(body) {
         let field = 'members';
+        let found: boolean = false;
         let end = '"role":"actor"}';
         let str = 'members": [';
         for (let key in body) {
             if (key.toString().indexOf(field) != -1) {
+                found = true;
                 str += JSON.stringify(body[key]) + ',';
             }
         }
         str = str.slice(0, str.length - 1);
         str += ']';
         let result = JSON.stringify(body);
-        return (result.substring(0, result.indexOf('members[0]')) + str + result.substring(result.lastIndexOf(end) + end.length));
+        return found === true ? (result.substring(0, result.indexOf('members[0]')) + str + result.substring(result.lastIndexOf(end) + end.length)) : result;
     }
 
     createGroup() {

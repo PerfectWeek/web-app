@@ -39,7 +39,7 @@
 <br>
 <mat-dialog-actions style="display: flex; justify-content: space-between">
   <button class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
-  <button [disabled]="groupForm.valid === false || selectedUsers.length < 1" class="mat-raised-button btn-secondary"
+  <button [disabled]="groupForm.valid === false" class="mat-raised-button btn-secondary"
           (click)="createGroup()">Confirmer
   </button>
 </mat-dialog-actions>

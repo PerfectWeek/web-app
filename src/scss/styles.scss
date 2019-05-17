@@ -85,6 +85,11 @@
   justify-content: space-between;
 }
 
+.mat-autocomplete-panel.form-control.mat-autocomplete-visible {
+  overflow-y: scroll !important;
+  height: fit-content !important;
+}
+
 .mat-menu-content {
   padding: 0 !important;
 }

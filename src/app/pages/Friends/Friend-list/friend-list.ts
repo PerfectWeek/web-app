@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from "@angular/core";
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from "@angular/core";
 import {RequestService} from "../../../core/services/request.service";
 import {Router} from "@angular/router";
 import {ProfileService} from "../../../core/services/profile.service";
@@ -18,6 +18,13 @@ export class FriendListComponent implements OnInit, AfterViewInit {
     user: User;
 
     start: boolean = true;
+
+    @ViewChild('UserSearchInput') userSearchInput: ElementRef;
+
+    public searchUser$ = new BehaviorSubject<string>('');
+
+    filteredUsers: BehaviorSubject<User[]>;
+    filteredUsers$: Observable<User[]>;
 
     public searchFriend$ = new BehaviorSubject<string>('');
 
@@ -42,6 +49,8 @@ export class FriendListComponent implements OnInit, AfterViewInit {
                 private toastSrv: ToastrService,
                 private router: Router,
                 private dialog: MatDialog) {
+        this.filteredUsers = new BehaviorSubject<User[]>([]);
+        this.filteredUsers$ = this.filteredUsers.asObservable();
         this.ready = new BehaviorSubject<boolean>(false);
         this.ready$ = this.ready.asObservable();
     }
@@ -59,6 +68,12 @@ export class FriendListComponent implements OnInit, AfterViewInit {
             .debounceTime(300)
             .distinctUntilChanged()
             .do(() => this.searchFriend())
+            .subscribe();
+
+        this.searchUser$
+            .debounceTime(300)
+            .distinctUntilChanged()
+            .do(() => this.searchUser())
             .subscribe();
 
         this.ready$
@@ -102,6 +117,28 @@ export class FriendListComponent implements OnInit, AfterViewInit {
                 this.displayFriends.splice(index, 1);
             }
         });
+    }
+
+    searchUser() {
+        if (localStorage.getItem('user_pseudo') == null)
+            return;
+        this.filteredUsers.next([]);
+        this.requestSrv.get(`search/users`, {
+            page_size: 10,
+            page_number: 1,
+            q:    this.searchUser$.getValue()
+        }, {Authorization: ''})
+            .subscribe(response => {
+                this.filteredUsers.next(response.users);
+            }, err => {
+                this.toastSrv.error(err.error.message, 'Une erreur est survenue');
+            });
+    }
+
+    selectedUser(event) {
+        this.userSearchInput.nativeElement.value = '';
+        this.searchUser$.next('');
+        this.router.navigate([`profile/${event.option.viewValue}`]);
     }
 
     searchFriend() {

@@ -1,5 +1,5 @@
 <div class="flex flex-r-centered">
-  <h2 mat-dialog-title>Modification de votre {{data.fieldname}}</h2>
+  <h2 mat-dialog-title>Modification de votre {{data.fieldname === 'name' ? 'nom' : data.fieldname}}</h2>
 </div>
 <mat-dialog-content style="white-space: pre-wrap; text-align: center">
   <form [formGroup]="valueForm" class="form-row" style="padding: 15px; margin: 15px 0">
