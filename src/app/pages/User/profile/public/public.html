@@ -4,10 +4,10 @@
   </section>
   <div class="profile-image">
     <img src="{{image}}" alt="Profile image" title="Profile image">
-    <button mat-button [matMenuTriggerFor]="PublicProfileActions"><i class="fas fa-ellipsis-h"></i></button>
-    <mat-menu #PublicProfileActions="matMenu">
-      <button mat-menu-item title="Envoyer une requête d'ami" (click)="sendInvitation()">Faire une demande d'ami</button>
-    </mat-menu>
+    <button *ngIf="displayButton === true" mat-raised-button class="btn btn-secondary" title="Envoyer une requête d'ami" (click)="sendInvitation()">
+      Faire une demande d'ami
+    </button>
+    <button *ngIf="displayButton !== true" disabled mat-raised-button class="btn btn-danger">Vous êtes déjà amis</button>
   </div>
   <div class="main-container" id="Public-Profile-data-container">
     <div class="profile-container">
@@ -21,4 +21,5 @@
         <p class="profile-field-info">{{user?.email}}</p>
       </div>
     </div>
+  </div>
 </div>

@@ -15,6 +15,8 @@ export class PublicProfileComponent implements OnInit, OnDestroy {
     user: User;
     private sub: any;
 
+    displayButton: boolean = false;
+
     image: any = null;
 
     constructor(private route: ActivatedRoute,
@@ -34,6 +36,10 @@ export class PublicProfileComponent implements OnInit, OnDestroy {
                 });
                 this.requestSrv.get(`users/${params.name}`, {}, {Authorization: ''})
                     .subscribe(ret => {
+                        this.requestSrv.get(`friend-invites/${ret.user.pseudo}`, {}, {Authorization: ''})
+                            .subscribe(res => {
+                                res.status !== 'confirmed' ? this.displayButton = true : null;
+                            });
                         this.user = ret.user;
                         this.requestSrv.get(`users/${ret.user.pseudo}/image`, {}, {Authorization: ''})
                             .subscribe(ret => this.image = ret.image);
