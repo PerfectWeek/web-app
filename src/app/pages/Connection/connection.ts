@@ -7,6 +7,7 @@ import {ProfileService} from '../../core/services/profile.service';
 import {RequestService} from '../../core/services/request.service';
 import {UserService} from '../Registration/UserService';
 import {TokenService} from '../../core/services/token.service';
+import {environment} from "../../../environments/environment";
 
 declare var FB: any;
 
@@ -88,7 +89,7 @@ export class ConnectionComponent {
     ngOnInit() {
         (window as any).fbAsyncInit = function () {
             FB.init({
-                appId: '850667108631602',
+                appId: environment.facebook_client_id,
                 cookie: true,
                 xfbml: true,
                 version: 'v3.1'

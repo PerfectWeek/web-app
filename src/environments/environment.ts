@@ -11,4 +11,5 @@ export const environment = {
     apiEndpoint: 'https://perfect-week-test.herokuapp.com/',
     appName: 'PerfectWeek',
     google_client_id: '801780005342-ot6i9l8t9t2lo3fcg0o9co4q8m80ns3d.apps.googleusercontent.com',
+    facebook_client_id: '826928231016562'
 };
