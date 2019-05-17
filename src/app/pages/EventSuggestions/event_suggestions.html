@@ -1,8 +1,8 @@
 <div class="full-view">
     <section class="left-view">
         <mat-card>
-            <mat-card-title> Decouvrir </mat-card-title>
-            <mat-card-subtitle> Selection d'evenements pour l'utilisateur </mat-card-subtitle>
+            <mat-card-title> Découvrir </mat-card-title>
+            <mat-card-subtitle> Sélection d'évènements pour l'utilisateur </mat-card-subtitle>
         </mat-card>
 
         <ul class="event-list">
@@ -17,7 +17,7 @@
         </ul>
     </section>
 
-    <mwl-demo-component #calendar [in_calendar_id]="calendar_id"></mwl-demo-component>
+    <mwl-demo-component #calendar [displayOnly]="true" [in_calendar_id]="calendar_id"></mwl-demo-component>
 
     <div class="right-view" *ngIf="focusedEvent">
         <mat-card class="card-large">
@@ -38,7 +38,7 @@
                 <div>{{focusedEvent[1].location}}</div>
             </div>
             <mat-card-subtitle class="choices">
-                <button mat-raised-button class="join-event" (click)="joinEvent(focusedEvent[1].id)">Rejoindre l'evenement</button>
+                <button mat-raised-button class="join-event" (click)="joinEvent(focusedEvent[1].id)">Rejoindre l'évènement</button>
             </mat-card-subtitle>
         </mat-card>
     </div>

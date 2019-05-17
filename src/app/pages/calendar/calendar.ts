@@ -34,6 +34,7 @@ export class CalendarComponent implements OnInit, OnChanges {
     events: EventInput[] = [];
 
     @Input('in_calendar_id') in_calendar_id = null;
+    @Input('displayOnly') displayOnly: boolean = false;
 
     locale: 'fr';
     calendar_id: number = null;
@@ -220,6 +221,8 @@ export class CalendarComponent implements OnInit, OnChanges {
     }
 
     eventClick(event) {
+        if (this.displayOnly === true)
+            return ;
         const dialogRef = this.dialog.open(ModifyEventDialog, {
             width: '650px',
             data: {
@@ -235,6 +238,8 @@ export class CalendarComponent implements OnInit, OnChanges {
     }
 
     eventDrop(event): void {
+        if (this.displayOnly === true)
+            return;
         const api = this.getAPI();
         const modified_event = api.getEventById(event.event.id);
         this.requestSrv.get(`events/${event.event.id}`, {}, {Authorization: ''})

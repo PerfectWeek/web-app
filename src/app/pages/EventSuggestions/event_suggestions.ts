@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild, Inject} from "@angular/core";
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {RequestService} from "../../core/services/request.service";
 import {ProfileService} from "../../core/services/profile.service";
+import {ToastrService} from "ngx-toastr";
 
 
 @Component({
@@ -21,8 +22,8 @@ export class EventSuggestionsComponent implements OnInit {
     private min_date: Date = new Date();
     private max_date: Date = new Date(new Date().setMonth(this.min_date.getMonth() + 1)); // OMG IT IS HORRIBLE
 
-    private options: any = { weekday: 'short', month: 'short', day: 'numeric' };
-    private options_full: any = { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric' };
+    private options: any = {weekday: 'short', month: 'short', day: 'numeric'};
+    private options_full: any = {weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric'};
 
 
     private type_to_theme: any = {
@@ -37,6 +38,7 @@ export class EventSuggestionsComponent implements OnInit {
 
 
     constructor(private requestSrv: RequestService,
+                private toastSrv: ToastrService,
                 private profileSrv: ProfileService) {
     }
 
@@ -80,15 +82,14 @@ export class EventSuggestionsComponent implements OnInit {
                         image: this.generateEventImage(e.event.type)
                     }
                 });
-                console.log(this.suggestions);
             })
     }
 
     joinEvent(id) {
         this.requestSrv.post(`events/${id}/join`, {}, {Authorization: ''})
             .subscribe(response => {
-                console.log(response);
-        })
+                this.toastSrv.info("Cet évènement a bien été ajouté à votre liste d'évènements");
+            }, err => this.toastSrv.error("Une erreur est survenue lors de l'ajout à votre liste d'évènement"));
     }
 
     generateEventImage(type) {
