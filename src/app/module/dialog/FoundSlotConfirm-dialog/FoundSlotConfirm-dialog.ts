@@ -4,6 +4,7 @@ import {ToastrService} from 'ngx-toastr';
 import {ProfileService} from '../../../core/services/profile.service';
 import {RequestService} from '../../../core/services/request.service';
 import {DatePipe, formatDate} from '@angular/common';
+import {SwiperConfigInterface, SwiperPaginationInterface, SwiperScrollbarInterface} from 'ngx-swiper-wrapper';
 
 @Component({
     selector: 'FoundSlotConfirm-dialog',
@@ -37,9 +38,25 @@ import {DatePipe, formatDate} from '@angular/common';
 })
 export class FoundSlotConfirmDialog {
     calendars_list: any;
-    finalChoose: string = null;
-    slot_formated: string[] = [];
+    index: number;
     dialog_calendar_id: string = null;
+
+    public config: SwiperConfigInterface = {
+        a11y: true,
+        direction: 'horizontal',
+        slidesPerView: 1,
+        keyboard: false,
+        mousewheel: false,
+        scrollbar: false,
+        navigation: true,
+        pagination: true,
+        effect: 'slide',
+        speed: 0,
+    };
+
+    public show = true;
+    public type = 'component';
+    public disabled = false;
 
     @ViewChild('userInput') userInput;
 
@@ -54,34 +71,22 @@ export class FoundSlotConfirmDialog {
                     this.calendars_list = ret.calendars;
                 });
         });
-        for (const idx in this.data.slots.slots) {
-            const begin = new DatePipe('fr').transform(
-                this.data.slots.slots[idx].start_time,
-                'E d MMM H:mm',
-                'fr');
-            const end = new DatePipe('fr').transform(
-                this.data.slots.slots[idx].end_time,
-                'E d MMM H:mm',
-                'fr');
-            const final_str = begin + '\n' + end;
-            this.slot_formated.push(final_str);
-        }
-        this.slot_formated.push('Aucun de ces choix');
     }
 
     FoundSlotConfirm() {
-        let route_id_calendar;
-        if (this.dialog_calendar_id != null) {
-            route_id_calendar = this.dialog_calendar_id;
-        } else {
-            route_id_calendar = this.data.calendar_id;
+        const route_id_calendar = (this.dialog_calendar_id != null) ? this.dialog_calendar_id : this.data.calendar_id;
+
+        // if (this.index === this.data.slots.slots.length) {
+        //     this.toastSrv.error("Vous n'avez pas de créneaux disponible.");
+        //     this.dialogRef.close();
+        //     return;
+        // }
+        if (this.index === undefined) {
+            this.index = 0;
         }
-        if (this.finalChoose === this.data.slots.slots.length) {
-            this.dialogRef.close();
-            return;
-        }
-        const start = this.data.slots.slots[this.finalChoose].start_time;
-        const end = this.data.slots.slots[this.finalChoose].end_time;
+        const start = this.data.slots.slots[this.index].start_time;
+        const end = this.data.slots.slots[this.index].end_time;
+        console.log(this.data.slots.slots[this.index]);
         this.requestSrv.post(`calendars/${route_id_calendar}/events`, {
             name: this.data.event.name,
             type: this.data.event.type,

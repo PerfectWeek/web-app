@@ -3,23 +3,39 @@
 </div>
 <mat-dialog-content style="white-space: pre-wrap; text-align: center">
     <div>
-        <form #groupForm="ngForm" (ngSubmit)="FoundSlotConfirm()" class="form-row"
-              style="padding: 15px; margin: 15px 0">
-            <mat-radio-group required [(ngModel)]="finalChoose" name="finalChoose" class="example-radio-group"
-                             style="display: inline-flex; flex-direction: column;">
-                <mat-radio-button style="margin-left: 16px; .mat-radio-outer-circle{border-color: #5ABC95;}"
-                                  class="example-radio-button"
-                                  *ngFor="let slot of slot_formated; index as i" [value]="i">
-                    {{slot}}
-                </mat-radio-button>
-            </mat-radio-group>
-        </form>
+        <div class="vertical-container" fxLayout="column" fxLayoutAlign="stretch" fxFlex="50%">
+            <div class="content-container" fxLayout="column" fxLayoutAlign="stretch" fxFlex="auto">
+                <swiper *ngIf="type == 'component' && show" class="swiper-container" fxFlex="auto" [config]="config"
+                        [disabled]="disabled" [(index)]="index">
+                    <div *ngFor="let slot of this.data.slots.slots; index as i" class="swiper-slide">
+                        <best-slot_calendar-component
+                                slot={{slot|json}}
+                                temp_event={{this.data.event|json}}>
+                        </best-slot_calendar-component>
+                    </div>
+<!--                    <div align="center">AUCUN CHOIX</div>-->
+                </swiper>
+                <div *ngIf="type == 'directive' && show" class="swiper-container" [disabled]="disabled"
+                     [swiper]="config" [(index)]="index">
+                    <div class="swiper-wrapper">
+                        <best-slot_calendar-component
+                                *ngFor="let slot of this.data.slots.slots; index as i"
+                                slot={{slot|json}}>
+                        </best-slot_calendar-component>
+                    </div>
+                    <div class="swiper-scrollbar" [hidden]="config.scrollbar === false"></div>
+                    <div class="swiper-pagination" [hidden]="config.pagination === false"></div>
+                    <div class="swiper-button-prev" [hidden]="config.navigation === false"></div>
+                    <div class="swiper-button-next" [hidden]="config.navigation === false"></div>
+                </div>
+            </div>
+        </div>
     </div>
 </mat-dialog-content>
 <br>
 <mat-dialog-actions style="display: flex; justify-content: space-between">
     <button class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
-    <button [disabled]="groupForm.valid === false" class="mat-raised-button btn-secondary" (click)="FoundSlotConfirm()">
+    <button class="mat-raised-button btn-secondary" (click)="FoundSlotConfirm()">
         Confirmer
     </button>
 </mat-dialog-actions>

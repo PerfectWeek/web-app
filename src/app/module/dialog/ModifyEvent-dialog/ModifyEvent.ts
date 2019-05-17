@@ -8,32 +8,33 @@ import {ConfirmDialog} from '../Confirm-dialog/Confirm-dialog';
 @Component({
     selector: 'event-modification-dialog',
     templateUrl: 'ModifyEvent.html',
-    styles: ['.mat-raised-button {\n' +
-    '  box-sizing: border-box;\n' +
-    '  position: relative;\n' +
-    '  -webkit-user-select: none;\n' +
-    '  -moz-user-select: none;\n' +
-    '  -ms-user-select: none;\n' +
-    '  user-select: none;\n' +
-    '  cursor: pointer;\n' +
-    '  outline: 0;\n' +
-    '  border: none;\n' +
-    '  -webkit-tap-highlight-color: transparent;\n' +
-    '  display: inline-block;\n' +
-    '  white-space: nowrap;\n' +
-    '  text-decoration: none;\n' +
-    '  vertical-align: baseline;\n' +
-    '  text-align: center;\n' +
-    '  margin: 0;\n' +
-    '  min-width: 88px;\n' +
-    '  line-height: 36px;\n' +
-    '  padding: 0 16px;\n' +
-    '  border-radius: 2px;\n' +
-    '  overflow: visible;\n' +
-    '  transform: translate3d(0, 0, 0);\n' +
-    '  transition: background .4s cubic-bezier(.25, .8, .25, 1), box-shadow 280ms cubic-bezier(.4, 0, .2, 1);\n' +
-    '  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);\n' +
-    '}']
+    styleUrls: ['ModifyEvent.scss', '../../../../scss/dialog.scss']
+    // styles: ['.mat-raised-button {\n' +
+    // '  box-sizing: border-box;\n' +
+    // '  position: relative;\n' +
+    // '  -webkit-user-select: none;\n' +
+    // '  -moz-user-select: none;\n' +
+    // '  -ms-user-select: none;\n' +
+    // '  user-select: none;\n' +
+    // '  cursor: pointer;\n' +
+    // '  outline: 0;\n' +
+    // '  border: none;\n' +
+    // '  -webkit-tap-highlight-color: transparent;\n' +
+    // '  display: inline-block;\n' +
+    // '  white-space: nowrap;\n' +
+    // '  text-decoration: none;\n' +
+    // '  vertical-align: baseline;\n' +
+    // '  text-align: center;\n' +
+    // '  margin: 0;\n' +
+    // '  min-width: 88px;\n' +
+    // '  line-height: 36px;\n' +
+    // '  padding: 0 16px;\n' +
+    // '  border-radius: 2px;\n' +
+    // '  overflow: visible;\n' +
+    // '  transform: translate3d(0, 0, 0);\n' +
+    // '  transition: background .4s cubic-bezier(.25, .8, .25, 1), box-shadow 280ms cubic-bezier(.4, 0, .2, 1);\n' +
+    // '  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);\n' +
+    // '}']
 })
 export class ModifyEventDialog {
 
@@ -51,12 +52,14 @@ export class ModifyEventDialog {
         formated_end: Date,
     };
 
+    event_image: any;
+
     eventTypes: any = [{value: 'party', viewValue: 'Fête'},
         {value: 'work', viewValue: 'Travail'},
-        {value: 'hobby', viewValue: 'Hobby'},
+        {value: 'hobby', viewValue: 'Loisir'},
         {value: 'workout', viewValue: 'Entrainement'}];
 
-    eventVisibilities: any = [{value: 'public', viewValue: 'Publique'},
+    eventVisibilities: any = [{value: 'public', viewValue: 'Public'},
         {value: 'private', viewValue: 'Privé'}];
 
     constructor(private requestSrv: RequestService,
@@ -65,8 +68,13 @@ export class ModifyEventDialog {
                 public dialogRef: MatDialogRef<ModifyEventDialog>,
                 public dialog: MatDialog,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
-
         this.pw_event = data.event.event;
+
+        this.requestSrv.get(`events/${this.pw_event.id}/image`, {}, {Authorization: ''})
+            .subscribe(ret => {
+                this.event_image = ret.image;
+            });
+
         const current_event = this.data.calAPI.getEventById(this.pw_event.id);
         this.requestSrv.get(`events/${this.pw_event.id}`, {}, {Authorization: ''})
             .subscribe(ret => {
@@ -130,5 +138,20 @@ export class ModifyEventDialog {
                     }, ret => this.toastSrv.error('Une erreur est survenue lors de la suppression de l\'evenement'));
             }
         });
+    }
+
+    ModifyImageEvent(event) {
+        if (event.target.files && event.target.files.length === 1) {
+            const file = event.target.files[0];
+            this.requestSrv.postFile(`events/${this.pw_event.id}/upload-image`, file, {Authorization: ''})
+                .do(() => {
+                        this.requestSrv.get(`events/${this.pw_event.id}/image`, {}, {Authorization: ''})
+                            .subscribe(ret => {
+                                this.event_image = ret.image;
+                            });
+                        this.toastSrv.success("L'image a été uploadé avec succès");
+                    }, err => this.toastSrv.error("Une erreur est survenue lors de l'upload de l'image")
+                ).subscribe();
+        }
     }
 }
