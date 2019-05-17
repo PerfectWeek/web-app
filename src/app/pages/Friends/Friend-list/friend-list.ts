@@ -74,6 +74,7 @@ export class FriendListComponent implements OnInit, AfterViewInit {
         this.requestSrv.get(`friends`, {}, {Authorization: ''})
             .subscribe(response => {
                 this.friends = response.friends;
+                this.displayFriends = response.friends;
                 this.ready.next(true);
             }, err => {
                 this.toastSrv.error(err.error.message, 'Une erreur est survenue');
@@ -81,7 +82,7 @@ export class FriendListComponent implements OnInit, AfterViewInit {
     }
 
     goToUserProfile(friend) {
-        this.router.navigate(["profile", friend.name]);
+        this.router.navigate(["profile", friend.pseudo]);
     }
 
     removeFriend(friend, index) {

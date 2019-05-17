@@ -48,10 +48,6 @@
 
   & > .friend-list {
     width: 100%;
-    display: flex;
-    flex-flow: row;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
 
     & > .no-friends-notification {
       width: 100%;
@@ -63,16 +59,17 @@
       margin: 15px 0;
     }
 
-    & > .friend {
+    & .friend {
       width: 28%;
       display: flex;
       flex-flow: column;
       flex-wrap: nowrap;
       border: 1px solid map_get($colors, light);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
       margin: 10px;
 
-      & > .friend-header {
+      & .friend-header {
+        width: 100%;
         height: calc(3.5vw + 3.5vh);
         display: flex;
         flex-flow: row;
@@ -90,14 +87,13 @@
         }
       }
 
-      & > .friend-name {
+      & .friend-name {
         display: flex;
         flex-flow: row;
         flex-wrap: nowrap;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         padding: 5px;
-
 
         & > h4 {
           font-size: 1rem;

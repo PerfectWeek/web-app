@@ -53,7 +53,7 @@ export class AuthService {
         return this._auth;
     }
 
-    private _auth: User;
+    private _auth: User = null;
 
     finishInit = false;
 
@@ -65,7 +65,8 @@ export class AuthService {
                 private router: Router,
                 private tokenSrv: TokenService,
                 private toastSrv: ToastrService) {
-        this._auth = JSON.parse(localStorage.getItem('auth'));
+        if (localStorage.getItem('auth'))
+            this._auth = JSON.parse(localStorage.getItem('auth'));
     }
 
     isLogged(): Observable<boolean> {
@@ -114,7 +115,6 @@ export class AuthService {
     }
 
     logout() {
-        console.log('???');
         this.logged = false;
         this.clearData();
         this.router.navigate(['/login']);

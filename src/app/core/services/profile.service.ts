@@ -41,6 +41,7 @@ export class ProfileService {
                 private authSrv: AuthService) {
         this.invitationsSubject = new BehaviorSubject<UserInvitations>({group_invitations: [], friend_invitations: []});
         this.invitations$ = this.invitationsSubject.asObservable();
+
         if (localStorage.getItem('user_pseudo')) {
             let pseudo = localStorage.getItem('user_pseudo');
             this.subscription = this.authSrv.isLogged().pipe(
@@ -66,7 +67,6 @@ export class ProfileService {
             .subscribe(response => {
                 this.invitations.friend_invitations = response.friend_requests;
                 this.invitationsSubject.next(this.invitations);
-                console.log('friend invitations => ', this.invitations.friend_invitations);
             });
     }
 

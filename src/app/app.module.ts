@@ -42,6 +42,7 @@ import {
     MatListModule,
     MatMenuModule,
     MatIconModule,
+    MatDividerModule,
     MAT_LABEL_GLOBAL_OPTIONS,
     MAT_DATE_LOCALE, MatDialogRef, MatPaginatorIntl
 } from '@angular/material';
@@ -74,8 +75,6 @@ import {ConnectionComponent} from './pages/Connection/connection';
 import {NotFoundComponent} from './pages/NotFound/not-found';
 import {DashboardComponent} from './pages/User/dashboard/dashboard';
 import {ProfileComponent} from './pages/User/profile/profile';
-import {GroupManagementComponent} from './pages/User/groups/group-management';
-import {GroupComponent} from './pages/User/groups/group/group';
 // import {CalendarHeaderComponent} from "./pages/calendar/demo-utils/calendar-header.component";
 import {FormModalComponent} from './pages/calendar/demo-utils/ModalForm/form-modal.component';
 import {RegistrationConfirmationComponent} from './pages/Registration_Confirmation/registration-confirmation';
@@ -134,9 +133,7 @@ let gapiClientConfig: NgGapiClientConfig = {
         NotFoundComponent,
         DashboardComponent,
         ProfileComponent,
-        GroupManagementComponent,
         CalendarComponent,
-        GroupComponent,
         FormModalComponent,
         RegistrationConfirmationComponent,
         MainViewComponent,
@@ -188,6 +185,7 @@ let gapiClientConfig: NgGapiClientConfig = {
         MatListModule,
         MatMenuModule,
         MatIconModule,
+        MatDividerModule,
         FullCalendarModule,
         GoogleApiModule.forRoot({
             provide: NG_GAPI_CONFIG,

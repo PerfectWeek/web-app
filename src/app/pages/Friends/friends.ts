@@ -40,8 +40,10 @@ export class FriendsComponent implements AfterViewInit {
 	}
 
     ngAfterViewInit() {
-        this.request_scroll_pos_prev = this.request.nativeElement.scrollTop;
-        this.list_scroll_pos_prev = this.list.nativeElement.scrollTop;
+        if (this.list && this.request) {
+            this.request_scroll_pos_prev = this.request.nativeElement.scrollTop;
+            this.list_scroll_pos_prev = this.list.nativeElement.scrollTop;
+        }
     }
 
     scrolling(type: string, event) {

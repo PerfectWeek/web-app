@@ -37,24 +37,17 @@
       </form>
 
       <ul class="navbar-nav ml-auto" data-toggle="collapse" data-target=".navbar-collapse.show">
-        <li class="nav-item">
-          <a class="nav-link" href="javascript:void(0)" mat-button [matMenuTriggerFor]="Invitations">
-            <i class="nav-link" class="fas fa-envelope"> Invitations</i>
-          </a>
+        <div class="dropdown" style="align-self: center">
+          <button class="btn btn-transparent dropdown-toggle" type="button" id="Invitations" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mes invitations</button>
+          <div class="dropdown-menu" aria-labelledby="Invitations">
+            <h6 class="dropdown-header">Invitations à un groupe</h6>
+            <a class="dropdown-item" href="javascript:void(0)" (click)="answerRequest(invitation, 'group')" *ngFor="let invitation of groupInvitations.slice(0, 5)">{{invitation.name}}</a>
+            <div class="dropdown-divider"></div>
+            <h6 class="dropdown-header">demandes d'ami</h6>
+            <a class="dropdown-item" href="javascript:void(0)" (click)="answerRequest(invitation, 'friend')" *ngFor="let invitation of friendInvitations.slice(0, 5)">{{invitation.from_user.pseudo}}</a>
+          </div>
+        </div>
 
-          <mat-menu #Invitations="matMenu">
-            <button mat-menu-item [matMenuTriggerFor]="Friends">Amis</button>
-            <button mat-menu-item [matMenuTriggerFor]="Groups">Groupes</button>
-          </mat-menu>
-
-          <mat-menu #Friends="matMenu" >
-            <button mat-menu-item (click)="answerRequest(invitation, 'friend')" *ngFor="let invitation of friendInvitations.slice(0, 5)">{{invitation.from_user.pseudo}}</button>
-          </mat-menu>
-
-          <mat-menu #Groups="matMenu">
-            <button mat-menu-item (click)="answerRequest(invitation, 'group')" *ngFor="let invitation of groupInvitations.slice(0, 5)">{{invitation.name}}</button>
-          </mat-menu>
-        </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/profile"><i class="fas fa-user"></i> Mon profil</a>
         </li>	

@@ -43,7 +43,8 @@ export class Navbar implements OnInit, AfterViewInit {
         this.filteredUsers = new BehaviorSubject<User[]>([]);
         this.filteredUsers$ = this.filteredUsers.asObservable();
         this.invitations$ = this.profileSrv.invitationsSubject.asObservable();
-        this.profileSrv.getInvitations();
+        if (localStorage.getItem('user_pseudo') != null)
+            this.profileSrv.getInvitations();
     }
 
     ngOnInit() {
@@ -51,10 +52,6 @@ export class Navbar implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.profileSrv.invitations$
-            .do(res => console.log('pro invi => ', res))
-            .subscribe();
-
         this.searchUser$
             .debounceTime(300)
             .distinctUntilChanged()
@@ -69,6 +66,8 @@ export class Navbar implements OnInit, AfterViewInit {
     }
 
     searchUser() {
+        if (localStorage.getItem('user_pseudo') == null)
+            return;
         this.filteredUsers.next([]);
         this.requestSrv.get(`search/users`, {
             page_size: 10,
@@ -94,11 +93,13 @@ export class Navbar implements OnInit, AfterViewInit {
             this.requestSrv.postJSON(`group-invites/${invitation.id}/accept-invite`, body, {Authorization: ''})
                 .subscribe(ret => {
                     this.toastSrv.success(`Bravo, vous faites maitnenant parti du group ${invitation.name}`);
+                    this.profileSrv.getInvitations();
                 }, err => this.toastSrv.error('Une erreur est survenue'));
         else
-            this.requestSrv.postJSON(`groupes-invites/${invitation.id}/decline-invite`, body, {Authorization: ''})
+            this.requestSrv.postJSON(`group-invites/${invitation.id}/decline-invite`, body, {Authorization: ''})
                 .subscribe(ret => {
                     this.toastSrv.success(`Vous avez refusé l'invitation du groupe ${invitation.name}`);
+                    this.profileSrv.getInvitations();
                 }, err => this.toastSrv.error('Une erreur est survenue'));
     }
 
@@ -107,11 +108,13 @@ export class Navbar implements OnInit, AfterViewInit {
             this.requestSrv.post(`friend-invites/${invitation.from_user.pseudo}/accept`, {}, {Authorization: ''})
                 .subscribe(ret => {
                     this.toastSrv.success(`Bravo, vous êtes maintenant ami avec ${invitation.from_user.pseudo}`);
+                    this.profileSrv.getInvitations();
                 }, err => this.toastSrv.error('Une erreur est survenue'));
         else
             this.requestSrv.post(`friend-invites/${invitation.from_user.pseudo}/decline`, {}, {Authorization: ''})
                 .subscribe(ret => {
                     this.toastSrv.success(`Vous avez refusé la demande d'ami de ${invitation.from_user.pseudo}`);
+                    this.profileSrv.getInvitations();
                 }, err => this.toastSrv.error('Une erreur est survenue'));
     }
 
@@ -124,7 +127,9 @@ export class Navbar implements OnInit, AfterViewInit {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result && result !== undefined) {
+            console.log('result => ', result);
+            if (result !== null && result !== undefined) {
+                console.log('result => ', result);
                 if (type === 'group')
                     this.handleGroupRequest(invitation, result);
                 else
