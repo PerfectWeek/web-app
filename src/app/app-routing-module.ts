@@ -14,6 +14,7 @@ import {FriendsComponent} from './pages/Friends/friends';
 
 import {CalendarComponent} from './pages/calendar/calendar';
 import {RegistrationConfirmationComponent} from "./pages/Registration_Confirmation/registration-confirmation";
+import {EventSuggestionsComponent} from './pages/EventSuggestions/event_suggestions';
 import {MainViewComponent} from "./pages/Main_View/main_view";
 import {PublicProfileComponent} from "./pages/User/profile/public/public";
 
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'auth/validate-email/:id', component: RegistrationConfirmationComponent, canActivate: [IsLogout] },
   { path: 'login', component: ConnectionComponent, canActivate: [ IsLogout ] },
   { path: 'dashboard', component: MainViewComponent, canActivate: [isLogged ] },
+  { path: 'event-suggestions', component: EventSuggestionsComponent, canActivate: [isLogged ]},
   { path: 'calendar/:id', component: CalendarComponent, canActivate: [ isLogged ] },
   { path: 'profile', component: ProfileComponent, canActivate: [isLogged] },
   { path: 'profile/:name', component: PublicProfileComponent, canActivate: [isLogged] },

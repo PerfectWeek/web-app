@@ -1,0 +1,45 @@
+<div class="full-view">
+    <section class="left-view">
+        <mat-card>
+            <mat-card-title> Decouvrir </mat-card-title>
+            <mat-card-subtitle> Selection d'evenements pour l'utilisateur </mat-card-subtitle>
+        </mat-card>
+
+        <ul class="event-list">
+            <li *ngFor="let e of suggestions" [value]="e" (click)="previewEvent(e)">
+                <mat-card class="card">
+                    <img mat-card-image src="{{e.image}}" alt="Event image">
+                    <mat-card-title>{{e.name}}</mat-card-title>
+                    <mat-card-subtitle>{{e.description}}</mat-card-subtitle>
+                    <div class="date">{{e.start_time.toLocaleDateString('fr-FR', this.options)}}</div>
+                </mat-card>
+            </li>
+        </ul>
+    </section>
+
+    <mwl-demo-component #calendar [in_calendar_id]="calendar_id"></mwl-demo-component>
+
+    <div class="right-view" *ngIf="focusedEvent">
+        <mat-card class="card-large">
+            <img src="{{focusedEvent[1].image}}" alt="Event image" class="image">
+            <mat-card-title>{{focusedEvent[1].name}}</mat-card-title>
+            <mat-card-title>{{focusedEvent[1].description}}</mat-card-title>
+
+            <div class="inline">
+                <img src="../../../assets/Pictures/clock-circular-outline.svg" class="logo-small">
+                <div class="interval">
+                    <div class="start_time">{{focusedEvent[1].start_time.toLocaleDateString('fr-FR', this.options_full)}}</div>
+                    <div class="end_time">{{focusedEvent[1].end_time.toLocaleDateString('fr-FR', this.options_full)}}</div>
+                </div>
+            </div>
+
+            <div class="inline">
+                <img src="../../../assets/Pictures/maps-and-flags.svg" class="logo-small">
+                <div>{{focusedEvent[1].location}}</div>
+            </div>
+            <mat-card-subtitle class="choices">
+                <button mat-raised-button class="join-event" (click)="joinEvent(focusedEvent[1].id)">Rejoindre l'evenement</button>
+            </mat-card-subtitle>
+        </mat-card>
+    </div>
+</div>

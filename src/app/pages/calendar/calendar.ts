@@ -63,10 +63,8 @@ export class CalendarComponent implements OnInit, OnChanges {
             this.get_global_calendar();
             this.is_global_calendar = true;
         } else {
-            console.log('group');
             this.is_global_calendar = false;
             this.get_in_group_calendar();
-            console.log('events => ', this.events);
         }
     }
 
