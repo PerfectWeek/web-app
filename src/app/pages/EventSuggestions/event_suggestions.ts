@@ -12,10 +12,10 @@ import {ToastrService} from "ngx-toastr";
 })
 export class EventSuggestionsComponent implements OnInit {
 
-    private suggestions: any[] = [];
+    public suggestions: any[] = [];
 
     private focusedCalendar: any = null;
-    private focusedEvent: any = null;
+    public focusedEvent: any = null;
 
     private _calendar_id: number = -1;
 
