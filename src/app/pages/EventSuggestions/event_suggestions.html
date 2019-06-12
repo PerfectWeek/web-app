@@ -19,14 +19,19 @@
 
     <mwl-demo-component #calendar [displayOnly]="true" [in_calendar_id]="calendar_id"></mwl-demo-component>
 
-    <div class="right-view" *ngIf="focusedEvent">
+    <div class="right-view center" *ngIf="focusedEvent && this.isVisible">
         <mat-card class="card-large">
             <img src="{{focusedEvent[1].image}}" alt="Event image" class="image">
-            <mat-card-title>{{focusedEvent[1].name}}</mat-card-title>
-            <mat-card-title>{{focusedEvent[1].description}}</mat-card-title>
-
+            <br>
+            <br>
+            <mat-card-title style="text-align: center">{{focusedEvent[1].name}}</mat-card-title>
+            <mat-card-subtitle style="text-align: center">{{focusedEvent[1].description}}</mat-card-subtitle>
+            <br>
             <div class="inline">
-                <img src="../../../assets/Pictures/clock-circular-outline.svg" class="logo-small">
+                <i class="fas fa-info logo-small"></i> <div>{{focusedEvent[1].type}}</div>
+            </div>
+            <div class="inline">
+                <i class="far fa-clock logo-small"></i>
                 <div class="interval">
                     <div class="start_time">{{focusedEvent[1].start_time.toLocaleDateString('fr-FR', this.options_full)}}</div>
                     <div class="end_time">{{focusedEvent[1].end_time.toLocaleDateString('fr-FR', this.options_full)}}</div>
@@ -34,11 +39,13 @@
             </div>
 
             <div class="inline">
-                <img src="../../../assets/Pictures/maps-and-flags.svg" class="logo-small">
+                <i class="fas fa-map-marker-alt logo-small"></i>
                 <div>{{focusedEvent[1].location}}</div>
             </div>
+            <br>
             <mat-card-subtitle class="choices">
                 <button mat-raised-button class="join-event" (click)="joinEvent(focusedEvent[1].id)">Rejoindre l'évènement</button>
+                <button mat-raised-button class="delete-event" (click)="deleteEvent(focusedEvent[1])">Supprimé l'évènement</button>
             </mat-card-subtitle>
         </mat-card>
     </div>

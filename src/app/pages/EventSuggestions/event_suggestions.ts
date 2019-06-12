@@ -14,6 +14,7 @@ export class EventSuggestionsComponent implements OnInit {
 
     public suggestions: any[] = [];
 
+    private isVisible = true;
     private focusedCalendar: any = null;
     public focusedEvent: any = null;
 
@@ -55,7 +56,7 @@ export class EventSuggestionsComponent implements OnInit {
             this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
                 .subscribe(calendars => {
                     this.focusedCalendar = calendars.calendars[0].calendar;
-                    this.getSuggestions()
+                    this.getSuggestions();
                 })
         });
     }
@@ -88,28 +89,39 @@ export class EventSuggestionsComponent implements OnInit {
     joinEvent(id) {
         this.requestSrv.post(`events/${id}/join`, {}, {Authorization: ''})
             .subscribe(response => {
-                this.toastSrv.info("Cet évènement a bien été ajouté à votre liste d'évènements");
-            }, err => this.toastSrv.error("Une erreur est survenue lors de l'ajout à votre liste d'évènement"));
+                this.toastSrv.info('Cet évènement a bien été ajouté à votre liste d\'évènements');
+            }, err => this.toastSrv.error('Une erreur est survenue lors de l\'ajout à votre liste d\'évènement'));
     }
 
     generateEventImage(type) {
         return `https://lorempixel.com/600/300/${this.type_to_theme[type]}/${Math.floor((Math.random() * 1000 % 10))}`;
     }
 
+    deleteEvent(elem) {
+        console.log("ID     ", elem);
+        console.log("Suggestion before ", this.suggestions);
+        for (let i = 0; i < Object.keys(this.suggestions).length; i++) {
+            if (elem['id'] === this.suggestions[i]['id']) {
+                this.suggestions.splice(i, 1);
+                this.isVisible = false;
+            }
+        }
+    }
+
     getAPI() {
         return this.calendar.calendarComponent.getApi();
     }
 
-    closeEventPreview(api) {
-        this.focusedEvent[0].remove()
+    closeEventPreview() {
+        this.focusedEvent[0].remove();
     }
 
     previewEvent(event) {
         const api = this.getAPI();
-
         if (this.focusedEvent) {
-            this.closeEventPreview(api);
+            this.closeEventPreview();
         }
+        this.isVisible = true;
         this.focusedEvent = [api.addEvent({
             id: event.id,
             title: event.name,

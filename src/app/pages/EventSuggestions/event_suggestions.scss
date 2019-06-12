@@ -25,12 +25,20 @@
   }
 
   .logo-small {
-    width: 2vw;
-    height: 2vh;
+    width: 11%;
+    font-size: 25px;
+    text-align: -webkit-center;
   }
 
   .join-event {
     background-color: #5ABC95;
+    color: white;
+  }
+
+  .delete-event {
+    background-color: #FF0000;
+    color: white;
+    margin-left: 30%;
   }
 
   .suggestion {
@@ -61,6 +69,11 @@
     max-width: 30vw;
   }
 
+  .card:active, .card:hover {
+    max-width: 30vw;
+    border: #CF0A2C;
+  }
+
   .image {
     max-width: 100%;
     max-height: 100%;
@@ -86,5 +99,17 @@
     height: 100%;
     overflow-y: auto;
     border-left: 1px solid map_get($colors, lightgrey);
+  }
+
+  .break-line{
+    width:100%;
+    margin:20px;
+  }
+
+  .center {
+    margin-left: auto;
+    margin-bottom: auto;
+    margin-right: auto;
+    margin-top: auto;
   }
 }
