@@ -8,6 +8,7 @@ import {Friends} from "../../../core/models/Friends";
 import {User} from "../../../core/models/User";
 import {ConfirmDialog} from "../../../module/dialog/Confirm-dialog/Confirm-dialog";
 import {ToastrService} from "ngx-toastr";
+import {UsersService} from "../../../core/services/Requests/Users";
 
 @Component({
     selector: 'friend-list',
@@ -46,6 +47,7 @@ export class FriendListComponent implements OnInit, AfterViewInit {
 
     constructor(private profileSrv: ProfileService,
                 private requestSrv: RequestService,
+                private usersSrv: UsersService,
                 private toastSrv: ToastrService,
                 private router: Router,
                 private dialog: MatDialog) {
@@ -58,7 +60,9 @@ export class FriendListComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.profileSrv.userProfile$.subscribe(user => {
             this.user = user;
-        }, (error) => {console.log('error => ', error)});
+        }, (error) => {
+            console.log('error => ', error)
+        });
         this.getFriends();
         this.ready.next(true);
     }
@@ -86,10 +90,10 @@ export class FriendListComponent implements OnInit, AfterViewInit {
     }
 
     getFriends() {
-        this.requestSrv.get(`friends`, {}, {Authorization: ''})
+        this.usersSrv.getFriends()
             .subscribe(response => {
                 response.friends.forEach((friend, index) => {
-                    this.requestSrv.get(`users/${friend.pseudo}/image`, {}, {Authorization: ''})
+                    this.usersSrv.getImage(friend.pseudo)
                         .subscribe(ret => {
                             this.friends.push({name: friend.pseudo, image: ret.image});
                         });
@@ -106,8 +110,10 @@ export class FriendListComponent implements OnInit, AfterViewInit {
     }
 
     removeFriend(friend, index) {
-        let dialogRef = this.dialog.open(ConfirmDialog, {data: {
-            title: "Voulez-vous vraiment supprimé cette ami(e) ?"}
+        let dialogRef = this.dialog.open(ConfirmDialog, {
+            data: {
+                title: "Voulez-vous vraiment supprimé cette ami(e) ?"
+            }
         });
 
         dialogRef.afterClosed().subscribe(results => {
@@ -116,7 +122,6 @@ export class FriendListComponent implements OnInit, AfterViewInit {
                 // 	response: false,
                 // 	request: request.id
                 // }, Authorization: '').subscribe(ret => {
-                // 	console.log('Accept request ret => ', ret);
                 // 	this.friendRequests.splice(index, 1);
                 // });
                 this.displayFriends.splice(index, 1);
@@ -128,11 +133,11 @@ export class FriendListComponent implements OnInit, AfterViewInit {
         if (localStorage.getItem('user_pseudo') == null)
             return;
         this.filteredUsers.next([]);
-        this.requestSrv.get(`search/users`, {
+        this.usersSrv.searchUser({
             page_size: 10,
             page_number: 1,
-            q:    this.searchUser$.getValue()
-        }, {Authorization: ''})
+            q: this.searchUser$.getValue()
+        })
             .subscribe(response => {
                 this.filteredUsers.next(response.users);
             }, err => {
@@ -164,7 +169,6 @@ export class FriendListComponent implements OnInit, AfterViewInit {
         //     "=":    this.searchFriend$.getValue().toLowerCase()
         // }, {Authorization: ''})
         //     .subscribe(ret => {
-        // console.log('ret => ', ret);
         //         ret.relations.forEach(request => this.displayRequests.push(request));
         //     }, err => {
         //         this.toastSrv.error(err.error.message, 'Une erreur est survenue');

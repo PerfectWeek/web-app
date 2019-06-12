@@ -5,6 +5,8 @@ import {ProfileService} from '../../../core/services/profile.service';
 import {RequestService} from '../../../core/services/request.service';
 import {DatePipe, formatDate} from '@angular/common';
 import {SwiperConfigInterface, SwiperPaginationInterface, SwiperScrollbarInterface} from 'ngx-swiper-wrapper';
+import {UsersService} from "../../../core/services/Requests/Users";
+import {CalendarsService} from "../../../core/services/Requests/Calendars";
 
 @Component({
     selector: 'FoundSlotConfirm-dialog',
@@ -62,11 +64,13 @@ export class FoundSlotConfirmDialog {
 
     constructor(private requestSrv: RequestService,
                 private profileSrv: ProfileService,
+                private usersSrv: UsersService,
+                private calendarsSrv: CalendarsService,
                 private toastSrv: ToastrService,
                 public dialogRef: MatDialogRef<FoundSlotConfirmDialog>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         this.profileSrv.userProfile$.subscribe(user => {
-            this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
+            this.usersSrv.getCalendars(user.pseudo)
                 .subscribe(ret => {
                     this.calendars_list = ret.calendars;
                 });
@@ -86,8 +90,7 @@ export class FoundSlotConfirmDialog {
         }
         const start = this.data.slots.slots[this.index].start_time;
         const end = this.data.slots.slots[this.index].end_time;
-        console.log(this.data.slots.slots[this.index]);
-        this.requestSrv.post(`calendars/${route_id_calendar}/events`, {
+        this.calendarsSrv.createEvent(route_id_calendar, {
             name: this.data.event.name,
             type: this.data.event.type,
             location: this.data.event.location,
@@ -95,8 +98,7 @@ export class FoundSlotConfirmDialog {
             visibility: this.data.event.visibility,
             start_time: start,
             end_time: end
-        }, {Authorization: ''})
-            .subscribe(ret => {
+        }).subscribe(ret => {
                 this.data.calAPI_.addEvent({
                     id: ret.event.id,
                     type: this.data.event.type,

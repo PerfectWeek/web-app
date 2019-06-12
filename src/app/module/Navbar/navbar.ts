@@ -9,6 +9,8 @@ import {AcceptInvitationDialog} from "../dialog/Accept-invitation-dialog/accept-
 import {ToastrService} from "ngx-toastr";
 import {Group} from "../../core/models/Group";
 import {User} from "../../core/models/User";
+import {GroupsService} from "../../core/services/Requests/Groups";
+import {UsersService} from "../../core/services/Requests/Users";
 
 @Component({
     selector: 'navbar',
@@ -32,6 +34,8 @@ export class Navbar implements OnInit, AfterViewInit {
                 private dialog: MatDialog,
                 private toastSrv: ToastrService,
                 private requestSrv: RequestService,
+                private groupsSrv: GroupsService,
+                private usersSrv: UsersService,
                 private profileSrv: ProfileService) {
         this.invitations$ = this.profileSrv.invitationsSubject.asObservable();
         if (localStorage.getItem('user_pseudo') != null)
@@ -53,28 +57,28 @@ export class Navbar implements OnInit, AfterViewInit {
     handleGroupRequest(invitation, result) {
         let body = JSON.stringify({group_id: invitation.id});
         if (result === true)
-            this.requestSrv.postJSON(`group-invites/${invitation.id}/accept-invite`, body, {Authorization: ''})
+            this.groupsSrv.acceptInvitation(invitation.id, body)
                 .subscribe(ret => {
                     this.toastSrv.success(`Bravo, vous faites maitnenant parti du group ${invitation.name}`);
                     this.profileSrv.getInvitations();
                 }, err => this.toastSrv.error('Une erreur est survenue'));
         else
-            this.requestSrv.postJSON(`group-invites/${invitation.id}/decline-invite`, body, {Authorization: ''})
+            this.groupsSrv.declineInvitation(invitation.id, body)
                 .subscribe(ret => {
                     this.toastSrv.success(`Vous avez refusé l'invitation du groupe ${invitation.name}`);
                     this.profileSrv.getInvitations();
                 }, err => this.toastSrv.error('Une erreur est survenue'));
     }
 
-    handleFriendRequest(invitation, result) {
+    handleFriendRequest(invitation, result) {
         if (result === true)
-            this.requestSrv.post(`friend-invites/${invitation.from_user.pseudo}/accept`, {}, {Authorization: ''})
+            this.usersSrv.acceptFriendRequest(invitation.from_user.pseudo)
                 .subscribe(ret => {
                     this.toastSrv.success(`Bravo, vous êtes maintenant ami avec ${invitation.from_user.pseudo}`);
                     this.profileSrv.getInvitations();
                 }, err => this.toastSrv.error('Une erreur est survenue'));
         else
-            this.requestSrv.post(`friend-invites/${invitation.from_user.pseudo}/decline`, {}, {Authorization: ''})
+            this.usersSrv.declineFriendRequest(invitation.from_user.pseudo)
                 .subscribe(ret => {
                     this.toastSrv.success(`Vous avez refusé la demande d'ami de ${invitation.from_user.pseudo}`);
                     this.profileSrv.getInvitations();

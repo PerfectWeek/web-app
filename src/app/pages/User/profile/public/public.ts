@@ -4,6 +4,7 @@ import {RequestService} from "../../../../core/services/request.service";
 import {User} from "../../../../core/models/User";
 import {ProfileService} from "../../../../core/services/profile.service";
 import {ToastrService} from "ngx-toastr";
+import {UsersService} from "../../../../core/services/Requests/Users";
 
 @Component({
     selector: 'public-profile',
@@ -23,6 +24,7 @@ export class PublicProfileComponent implements OnInit, OnDestroy {
                 private profileSrv: ProfileService,
                 private toastSrv: ToastrService,
                 private router: Router,
+                private usersSrv: UsersService,
                 private requestSrv: RequestService) {
 
     }
@@ -34,14 +36,14 @@ export class PublicProfileComponent implements OnInit, OnDestroy {
                     if (params.name === current_user.pseudo)
                         this.router.navigate(['profile']);
                 });
-                this.requestSrv.get(`users/${params.name}`, {}, {Authorization: ''})
+                this.usersSrv.getUser(params.name)
                     .subscribe(ret => {
-                        this.requestSrv.get(`friend-invites/${ret.user.pseudo}`, {}, {Authorization: ''})
+                            this.usersSrv.getFriendInvitationStatus(ret.user.pseudo)
                             .subscribe(res => {
                                 res.status !== 'confirmed' ? this.displayButton = true : null;
                             });
                         this.user = ret.user;
-                        this.requestSrv.get(`users/${ret.user.pseudo}/image`, {}, {Authorization: ''})
+                        this.usersSrv.getImage(ret.user.pseudo)
                             .subscribe(ret => this.image = ret.image);
                     });
             });
@@ -52,8 +54,7 @@ export class PublicProfileComponent implements OnInit, OnDestroy {
     }
 
     sendInvitation() {
-        console.log('user pseudo', this.user.pseudo);
-        this.requestSrv.post(`users/${this.user.pseudo}/friend-invite`, {}, {Authorization: ''}).subscribe((response => {
+        this.usersSrv.inviteFriend(this.user.pseudo).subscribe((response => {
             this.toastSrv.success("L'invitation a bien été envoyée");
         }));
     }

@@ -12,6 +12,7 @@ import {MatDialog} from "@angular/material";
 import {ConfirmDialog} from "../../../module/dialog/Confirm-dialog/Confirm-dialog";
 import {filter, switchMap} from "rxjs/operators";
 import {CreateEventDialog} from '../../../module/dialog/CreateEvent-dialog/CreateEvent-dialog';
+import {UsersService} from "../../../core/services/Requests/Users";
 
 declare var FB: any;
 
@@ -36,6 +37,7 @@ export class ProfileComponent implements OnInit {
                 private toastSrv: ToastrService,
                 private authSrv: AuthService,
                 private userSrv: UserService,
+                private usersSrv: UsersService,
                 private tokenSrv: TokenService,
                 public dialog: MatDialog,
                 private profileSrv: ProfileService) {
@@ -45,7 +47,7 @@ export class ProfileComponent implements OnInit {
     ngOnInit() {
         this.profileSrv.userProfile$.subscribe(user => {
             this.user = user;
-            this.requestSrv.get(`users/${user.pseudo}/image`, {}, {Authorization: ''})
+            this.usersSrv.getImage(user.pseudo)
                 .subscribe(ret => {
                     this.image = ret.image;
                 });
@@ -107,12 +109,11 @@ export class ProfileComponent implements OnInit {
         let self = this;
         FB.login(function (response) {
             if (response.status === 'connected') {
-                self.requestSrv.put(`users/${self.user.pseudo}/providers/facebook`, {
+                self.usersSrv.linkFacebook(self.user.pseudo, {
                     access_token: response["authResponse"]["accessToken"],
                     refresh_token: ""
-                }, {Authorization: ""})
-                    .subscribe((resu) => self.toastSrv.success('Vous avez connecté votre compte Facebook avec succès'),
-                        err => this.toastSrv.error('Une erreur est survenue lors de la connection à Facebook'))
+                }).subscribe((resu) => self.toastSrv.success('Vous avez connecté votre compte Facebook avec succès'),
+                        err => self.toastSrv.error('Une erreur est survenue lors de la connection à Facebook'))
             } else {
             }
         }, {scope: 'email,user_events'});
@@ -127,9 +128,9 @@ export class ProfileComponent implements OnInit {
             const file = event.target.files[0];
 
             this.profileSrv.userProfile$.subscribe(user => {
-                this.requestSrv.postImage(`users/${user.pseudo}/upload-image`, file, {Authorization: ''})
+                this.usersSrv.postImage(user.pseudo, file)
                     .do(() => {
-                            this.requestSrv.get(`users/${user.pseudo}/image`, {}, {Authorization: ''})
+                            this.usersSrv.getImage(user.pseudo)
                                 .subscribe(ret => {
                                     this.image = ret.image;
                                 });

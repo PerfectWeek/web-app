@@ -3,6 +3,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ToastrService} from 'ngx-toastr';
 import {ProfileService} from '../../../core/services/profile.service';
 import {RequestService} from '../../../core/services/request.service';
+import {UsersService} from "../../../core/services/Requests/Users";
+import {CalendarsService} from "../../../core/services/Requests/Calendars";
 
 @Component({
     selector: 'createEvent-creation-dialog',
@@ -66,6 +68,8 @@ export class CreateEventDialog {
 
     constructor(private requestSrv: RequestService,
                 private profileSrv: ProfileService,
+                private usersSrv: UsersService,
+                private calendarsSrv: CalendarsService,
                 private toastSrv: ToastrService,
                 public dialogRef: MatDialogRef<CreateEventDialog>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
@@ -76,7 +80,6 @@ export class CreateEventDialog {
         //             this.image = ret.image;
         //         });
         // }, (error) => {
-        //     console.log('error => ', error)
         // });
         // if (this.dialog_calendar_id != null) {
         //     route_id_calendar = this.dialog_calendar_id;
@@ -85,9 +88,8 @@ export class CreateEventDialog {
         // }
 
         this.profileSrv.userProfile$.subscribe(user => {
-            this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
+            this.usersSrv.getCalendars(user.pseudo)
                 .subscribe(ret => {
-                    console.log(ret.calendars);
                     this.calendars_list = ret.calendars;
                 });
         });
@@ -103,7 +105,7 @@ export class CreateEventDialog {
         //     route_id_calendar = this.data.calendar_id;
         // }
         this.route_id_calendar = (this.dialog_calendar_id != null) ? this.dialog_calendar_id : this.data.calendar_id;
-        this.requestSrv.post(`calendars/${this.route_id_calendar}/events`, {
+        this.calendarsSrv.createEvent(this.route_id_calendar, {
             name: this.name,
             type: this.eventType,
             location: this.location,
@@ -111,8 +113,7 @@ export class CreateEventDialog {
             visibility: this.eventVisibility,
             start_time: this.start.toISOString(),
             end_time: this.end.toISOString(),
-        }, {Authorization: ''})
-            .subscribe(ret => {
+        }).subscribe(ret => {
                 this.data.calAPI.addEvent({
                     id: ret.event.id,
                     title: this.name,

@@ -3,6 +3,9 @@ import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {RequestService} from "../../core/services/request.service";
 import {ProfileService} from "../../core/services/profile.service";
 import {ToastrService} from "ngx-toastr";
+import {UsersService} from "../../core/services/Requests/Users";
+import {CalendarsService} from "../../core/services/Requests/Calendars";
+import {EventsService} from "../../core/services/Requests/Events";
 
 
 @Component({
@@ -39,6 +42,9 @@ export class EventSuggestionsComponent implements OnInit {
 
     constructor(private requestSrv: RequestService,
                 private toastSrv: ToastrService,
+                private usersSrv: UsersService,
+                private calendarsSrv: CalendarsService,
+                private eventsSrv: EventsService,
                 private profileSrv: ProfileService) {
     }
 
@@ -52,7 +58,7 @@ export class EventSuggestionsComponent implements OnInit {
 
     getCalendars() {
         this.profileSrv.userProfile$.subscribe(user => {
-            this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
+            this.usersSrv.getCalendars(user.pseudo)
                 .subscribe(calendars => {
                     this.focusedCalendar = calendars.calendars[0].calendar;
                     this.getSuggestions()
@@ -62,12 +68,11 @@ export class EventSuggestionsComponent implements OnInit {
 
     getSuggestions() {
         this._calendar_id = this.focusedCalendar.id;
-        this.requestSrv.get(`calendars/${this.focusedCalendar.id}/assistant/get-event-suggestions`, {
+        this.calendarsSrv.getEventSuggestion(this.focusedCalendar.id, {
             min_time: this.min_date.toISOString(),
             max_time: this.max_date.toISOString(),
             limit: 20,
-        }, {Authorization: ''})
-            .subscribe(events => {
+        }).subscribe(events => {
                 this.suggestions = events.suggestions.map(e => {
                     return {
                         id: e.event.id,
@@ -86,7 +91,7 @@ export class EventSuggestionsComponent implements OnInit {
     }
 
     joinEvent(id) {
-        this.requestSrv.post(`events/${id}/join`, {}, {Authorization: ''})
+            this.eventsSrv.joinEvent(id)
             .subscribe(response => {
                 this.toastSrv.info("Cet évènement a bien été ajouté à votre liste d'évènements");
             }, err => this.toastSrv.error("Une erreur est survenue lors de l'ajout à votre liste d'évènement"));

@@ -12,6 +12,8 @@ import {AuthService} from "../../core/services/auth.service";
 import {ToastrService} from "ngx-toastr";
 import {Router} from "@angular/router";
 import {User} from "../../core/models/User";
+import {AuthenticationService} from "../../core/services/Requests/Authentication";
+import {UsersService} from "../../core/services/Requests/Users";
 
 declare var FB: any;
 
@@ -24,6 +26,8 @@ export class UserService {
                 private requestSrv: RequestService,
                 private profileSrv: ProfileService,
                 private authSrv: AuthService,
+                private authReqSrv: AuthenticationService,
+                private usersSrv: UsersService,
                 private tokenSrv: TokenService,
                 private toastSrv: ToastrService,
                 public router: Router,
@@ -48,7 +52,6 @@ export class UserService {
 
     public signIn() {
         this.googleAuthService.getAuth().subscribe((auth) => {
-            console.log('auth => ', auth);
             auth.signIn().then(res => this.signInSuccessHandler(res), err => this.signInErrorHandler(err));
         });
     }
@@ -77,14 +80,10 @@ export class UserService {
     public signInSuccessHandler(res: GoogleUser) {
         this.ngZone.run(() => {
             this.user = res;
-            console.log(this.user);
             sessionStorage.setItem(
                 UserService.SESSION_STORAGE_KEY, res.getAuthResponse().access_token
             );
-            this.requestSrv.get("auth/providers/google/callback",{
-                access_token: this.getToken(),
-                refresh_token: ""
-            }, {})
+            this.authReqSrv.googleAuth(this.getToken(), "")
                 .subscribe((resu) => {
                     this.tokenSrv.token = resu["token"];
                     localStorage.setItem('user_pseudo', resu["user"]["pseudo"]);
@@ -98,15 +97,13 @@ export class UserService {
     public bindingSuccessHandler(res: GoogleUser) {
         this.ngZone.run(() => {
             this.user = res;
-            console.log(this.user);
             sessionStorage.setItem(
                 UserService.SESSION_STORAGE_KEY, res.getAuthResponse().access_token
              );
-            this.requestSrv.put(`users/${this.profileSrv.user.pseudo}/providers/google`,{
+            this.usersSrv.linkGoogle(this.profileSrv.user.pseudo, {
                 access_token: this.getToken(),
                 refresh_token: ""
-            }, {Authorization: ''})
-                .subscribe((resu) => this.toastSrv.success('Vous avez connecté votre compte Google avec succès'));
+            }).subscribe((resu) => this.toastSrv.success('Vous avez connecté votre compte Google avec succès'));
         });
     }
 

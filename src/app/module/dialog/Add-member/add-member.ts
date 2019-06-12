@@ -9,6 +9,7 @@ import {Router} from "@angular/router";
 import {MatAutocomplete} from "@angular/material";
 import {User} from "../../../core/models/User";
 import {BehaviorSubject, Observable} from "rxjs/Rx";
+import {UsersService} from "../../../core/services/Requests/Users";
 
 @Component({
     selector: 'add-member',
@@ -68,6 +69,7 @@ export class AddMemberDialog {
     constructor(private requestSrv: RequestService,
                 private profileSrv: ProfileService,
                 private toastSrv: ToastrService,
+                private usersSrv: UsersService,
                 private router: Router,
                 public dialogRef: MatDialogRef<AddMemberDialog>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
@@ -96,7 +98,7 @@ export class AddMemberDialog {
                 return;
             }
 
-        this.requestSrv.get(`users/${value}`, {}, {Authorization: ''})
+        this.usersSrv.getUser(value)
             .subscribe(ret => {
                     let id: number = -1;
                     this.selectedUsers.forEach((atm_user, index) => {
@@ -117,14 +119,13 @@ export class AddMemberDialog {
 
     search() {
         this.filteredUsers.next([]);
-        this.requestSrv.get(`search/users`, {
+        this.usersSrv.searchUser({
             page_size: this.pageSize,
             page_number: this.pageIndex,
-            q:    this.search$.getValue()
-        }, {Authorization: ''})
-            .subscribe(ret => this.filterUsers(ret.users), err => {
-                this.toastSrv.error(err.error.message, 'Une erreur est survenue');
-            });
+            q: this.search$.getValue()
+        }).subscribe(ret => this.filterUsers(ret.users), err => {
+            this.toastSrv.error(err.error.message, 'Une erreur est survenue');
+        });
     }
 
     filterUsers(users) {

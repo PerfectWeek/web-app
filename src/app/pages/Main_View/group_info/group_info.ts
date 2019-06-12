@@ -18,6 +18,8 @@ import {ChangeValueDialog} from "../../../module/dialog/Change -value/change-val
 import {ConfirmDialog} from "../../../module/dialog/Confirm-dialog/Confirm-dialog";
 import {AddMemberDialog} from "../../../module/dialog/Add-member/add-member";
 import {Router} from "@angular/router";
+import {UsersService} from "../../../core/services/Requests/Users";
+import {GroupsService} from "../../../core/services/Requests/Groups";
 
 @Component({
     selector: 'group-info',
@@ -75,6 +77,8 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
     constructor(private requestSrv: RequestService,
                 private profileSrv: ProfileService,
+                private usersSrv: UsersService,
+                private groupsSrv: GroupsService,
                 private dialog: MatDialog,
                 private router: Router,
                 private cd: ChangeDetectorRef,
@@ -98,9 +102,9 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
             if (this.group_id === -1)
                 this.user$.subscribe(user => {
-                    this.requestSrv.postImage(`users/${user.pseudo}/upload-image`, file, {Authorization: ''})
+                    this.usersSrv.postImage(user.pseudo, file)
                         .do(() => {
-                                this.requestSrv.get(`users/${user.pseudo}/image`, {}, {Authorization: ''})
+                                this.usersSrv.getImage(user.pseudo)
                                     .subscribe(ret => {
                                         this.group_image_modified.emit(-1);
                                         this.image = ret.image;
@@ -110,10 +114,10 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                         ).subscribe();
                 });
             else
-                this.requestSrv.postImage(`groups/${this.group_id}/upload-image`, file, {Authorization: ''})
+                this.groupsSrv.uploadImage(this.group_id, file)
                     .do(() => {
                         this.toastSrv.success("L'image a été uploadé avec succès");
-                        this.requestSrv.get(`groups/${this.group_id}/image`, {}, {Authorization: ''})
+                        this.groupsSrv.getImage(this.group_id)
                             .subscribe(ret => {
                                 this.group_image_modified.emit(this.group_id);
                                 this.image = ret.image;
@@ -128,7 +132,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
             this.user.pseudo = user.pseudo;
             this.user.email = user.email;
             this.user.description = "Regroupement de tous vos évènements";
-            this.requestSrv.get(`users/${user.pseudo}/image`, {}, {Authorization: ''})
+            this.usersSrv.getImage(user.pseudo)
                 .subscribe(ret => {
                     this.image = ret.image;
                     this.ready = true;
@@ -137,12 +141,12 @@ export class GroupInfoComponent implements OnInit, OnChanges {
     }
 
     getGroupInformation() {
-        this.requestSrv.get(`groups/${this.group_id}`, {}, {Authorization: ""})
+        this.groupsSrv.getGroup(this.group_id)
             .subscribe(ret => {
                 this.group.name = ret.group.name;
                 this.group.description =
                     (ret.group.description == "" || !ret.group.description) ? "Pas de description" : ret.group.description;
-                this.requestSrv.get(`groups/${ret.group.id}/members`, {}, {Authorization: ''})
+                this.groupsSrv.getGroupMembers(ret.group.id)
                     .subscribe(ret => {
                         this.group_members = ret.members;
                         this.group_members.forEach((member, index) => {
@@ -150,7 +154,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                                 this.userRole = this.rolesfr[`${member.role}`];
                                 this.isAdmin = member.role === 'admin';
                             }
-                            this.requestSrv.get(`users/${member.pseudo}/image`, {}, {Authorization: ''})
+                            this.usersSrv.getImage(member.pseudo)
                                 .subscribe(ret => {
                                     member.image = ret.image;
                                     if (index === this.group_members.length - 1)
@@ -158,7 +162,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                                 });
                         })
                     });
-                this.requestSrv.get(`groups/${ret.group.id}/image`, {}, {Authorization: ''})
+                this.groupsSrv.getImage(ret.group.id)
                     .subscribe(ret => {
                         this.image = ret.image;
                     });
@@ -186,11 +190,10 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                 if (result != null && result.value != user[`${fieldname}`]) {
                     let user_pseudo = user.pseudo;
                     user[`${fieldname}`] = result.value;
-                    this.requestSrv.put(`users/${user_pseudo}`, {
+                    this.usersSrv.modifyUser(user_pseudo, {
                         pseudo: user.pseudo,
                         email: user.email
-                    }, {Authorization: ''})
-                        .subscribe(ret => {
+                    }).subscribe(ret => {
                             user[`${fieldname}`] = ret.user[`${fieldname}`];
                             this.user[`${fieldname}`] = ret.user[`${fieldname}`];
                             this.toastSrv.success(`Votre ${fieldname} a bien été modifié`);
@@ -210,11 +213,10 @@ export class GroupInfoComponent implements OnInit, OnChanges {
         dialogRef.afterClosed().subscribe(result => {
             if (result != null && result.value != this.group[`${fieldname}`]) {
                 this.group[`${fieldname}`] = result.value;
-                this.requestSrv.put(`groups/${this.group_id}`, {
+                this.groupsSrv.modifyGroup(this.group_id, {
                     name: this.group.name,
                     description: this.group.description
-                }, {Authorization: ''})
-                    .subscribe(ret => {
+                }).subscribe(ret => {
                         this.group[`${fieldname}`] = ret.group[`${fieldname}`];
                         if (fieldname === 'name') {
                             this.group_modified.emit(ret.group.id);
@@ -233,14 +235,12 @@ export class GroupInfoComponent implements OnInit, OnChanges {
         dialogRef.afterClosed().subscribe(result => {
             if (result !== null && result != undefined) {
                 let users = [result];
-                this.requestSrv.post(`groups/${this.group_id}/add-members`,
-                    {users},
-                    {Authorization: ''})
+                this.groupsSrv.addMembers(this.group_id, users)
                     .subscribe(ret => {
                         this.ready = false;
                         this.group_members = ret.members;
                         this.group_members.forEach((member, index) => {
-                            this.requestSrv.get(`users/${member.pseudo}/image`, {}, {Authorization: ''})
+                            this.usersSrv.getImage(member.pseudo)
                                 .subscribe(ret => {
                                     member.image = ret.image;
                                     if (index === this.group_members.length - 1)
@@ -263,7 +263,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
             });
             dialogRef.afterClosed().subscribe(result => {
                 if (result === true)
-                    this.requestSrv.delete(`groups/${this.group_id}/members/${user.pseudo}`, {Authorization: ''})
+                    this.groupsSrv.removeMember(this.group_id, user.pseudo)
                         .subscribe(ret => {
                             this.left_group.emit(this.group_id);
                             this.toastSrv.success("Vous avez n'êtes désormais plus membre de ce groupe");
@@ -283,7 +283,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                 });
                 dialogRef.afterClosed().subscribe(result => {
                     if (result === true)
-                        this.requestSrv.delete(`groups/${this.group_id}/members/${pseudo}`, {Authorization: ''})
+                        this.groupsSrv.removeMember(this.group_id, pseudo)
                             .subscribe(ret => {
                                 this.toastSrv.success("Membre supprimé avec succès");
                                 this.group_members.splice(this.group_members.findIndex(member => member.pseudo === pseudo), 1);
@@ -298,7 +298,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
     }
 
     addFriend(pseudo) {
-        this.requestSrv.post(`users/${pseudo}/friend-invite`, {}, {Authorization: ''})
+        this.usersSrv.inviteFriend(pseudo)
             .subscribe(() => this.toastSrv.info("La demande d'ami a été envoyée"),
                 err => this.toastSrv.warning('Vous avez déjà demandé cette personne en ami'))
     }

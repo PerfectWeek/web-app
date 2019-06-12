@@ -8,6 +8,8 @@ import {Observable} from "rxjs/Observable";
 import {AuthService} from "./auth.service";
 import {Subscription} from "rxjs/Subscription";
 import {BehaviorSubject} from "rxjs/Rx";
+import {UsersService} from "./Requests/Users";
+import {GroupsService} from "./Requests/Groups";
 
 @Injectable()
 export class ProfileService {
@@ -38,7 +40,9 @@ export class ProfileService {
 
     constructor(private requestSrv: RequestService,
                 private toastSrv: ToastrService,
-                private authSrv: AuthService) {
+                private authSrv: AuthService,
+                private usersSrv: UsersService,
+                private groupsSrv: GroupsService) {
         this.invitationsSubject = new BehaviorSubject<UserInvitations>({group_invitations: [], friend_invitations: []});
         this.invitations$ = this.invitationsSubject.asObservable();
 
@@ -57,13 +61,13 @@ export class ProfileService {
     }
 
     public getInvitations() {
-        this.requestSrv.get('group-invites', {}, {Authorization: ''})
+        this.groupsSrv.getGroupInvitations()
             .subscribe(response => {
                 this.invitations.group_invitations = response.pending_invites;
                 this.invitationsSubject.next(this.invitations);
             });
 
-        this.requestSrv.get('friend-invites', {}, {Authorization: ''})
+            this.usersSrv.getFriendInvitations()
             .subscribe(response => {
                 this.invitations.friend_invitations = response.friend_requests;
                 this.invitationsSubject.next(this.invitations);
@@ -71,7 +75,7 @@ export class ProfileService {
     }
 
     public fetchUser$(pseudo): Observable<User> {
-        return this.requestSrv.get(`users/${pseudo}`, {}, {Authorization: ''})
+        return this.usersSrv.getUser(pseudo)
             .pipe(
                 tap((data: any) => {
                     this.user = data.user;
@@ -84,13 +88,10 @@ export class ProfileService {
     }
 
     public modify$(user: { pseudo: string, email: string }): Observable<User> {
-        return this.requestSrv.put(`users/${this.user.pseudo}`,
-            {
-                pseudo: user.pseudo,
-                email: user.email
-            }, {
-                Authorization: ''
-            }).pipe(
+        return this.usersSrv.modifyUser(this.user.pseudo, {
+            pseudo: user.pseudo,
+            email: user.email
+        }).pipe(
             tap(data => {
                 {
                     localStorage.setItem('user_pseudo', user.pseudo);
@@ -102,6 +103,6 @@ export class ProfileService {
     }
 
     public delete$(): Observable<User> {
-        return this.requestSrv.delete(`users/${this.user.pseudo}`, {Authorization: ''})
+        return this.usersSrv.deleteUser(this.user.pseudo);
     }
 }
