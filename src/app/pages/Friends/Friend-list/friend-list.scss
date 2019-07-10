@@ -12,6 +12,15 @@
 .friends {
   width: 100%;
 
+  & > .left-view {
+    position: relative;
+    width: 20%;
+    min-width: 60px;
+    height: 100%;
+    overflow-y: auto;
+    border-right: 1px solid map_get($colors, lightgrey);
+  }
+
   .friends-header {
     width: 100%;
     padding: 15px;
@@ -125,4 +134,13 @@
       }
     }
   }
+}
+
+.name-position {
+  position: absolute;
+  margin-top: 2px;
+}
+
+.trash-position {
+  margin-left: 95%;
 }

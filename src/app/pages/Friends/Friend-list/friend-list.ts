@@ -1,13 +1,14 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from "@angular/core";
-import {RequestService} from "../../../core/services/request.service";
-import {Router} from "@angular/router";
-import {ProfileService} from "../../../core/services/profile.service";
-import {BehaviorSubject, Observable} from "rxjs/Rx";
-import {MatDialog} from "@angular/material";
-import {Friends} from "../../../core/models/Friends";
-import {User} from "../../../core/models/User";
-import {ConfirmDialog} from "../../../module/dialog/Confirm-dialog/Confirm-dialog";
-import {ToastrService} from "ngx-toastr";
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {RequestService} from '../../../core/services/request.service';
+import {Router} from '@angular/router';
+import {ProfileService} from '../../../core/services/profile.service';
+import {BehaviorSubject, Observable} from 'rxjs/Rx';
+import {MatDialog} from '@angular/material';
+import {Friends} from '../../../core/models/Friends';
+import {User} from '../../../core/models/User';
+import {ConfirmDialog} from '../../../module/dialog/Confirm-dialog/Confirm-dialog';
+import {ToastrService} from 'ngx-toastr';
+import {AcceptInvitationDialog} from '../../../module/dialog/Accept-invitation-dialog/accept-invitation';
 
 @Component({
     selector: 'friend-list',
@@ -17,7 +18,7 @@ import {ToastrService} from "ngx-toastr";
 export class FriendListComponent implements OnInit, AfterViewInit {
     user: User;
 
-    start: boolean = true;
+    start = true;
 
     @ViewChild('UserSearchInput') userSearchInput: ElementRef;
 
@@ -32,17 +33,23 @@ export class FriendListComponent implements OnInit, AfterViewInit {
 
     ready: BehaviorSubject<boolean>;
 
-    pageSize: number = 15;
+    pageSize = 15;
 
-    pageIndex: number = 0;
+    pageIndex = 0;
 
-    sortingBy: string = "name";
+    sortingBy = 'name';
 
     displayFriends: any[];
 
     input: any;
 
     friends: Friends[] = [];
+
+    friendInvitations: FriendInvitation[] = [];
+
+    groupInvitations: GroupInvitation[] = [];
+
+    invitations$: Observable<UserInvitations>;
 
     constructor(private profileSrv: ProfileService,
                 private requestSrv: RequestService,
@@ -53,12 +60,15 @@ export class FriendListComponent implements OnInit, AfterViewInit {
         this.filteredUsers$ = this.filteredUsers.asObservable();
         this.ready = new BehaviorSubject<boolean>(false);
         this.ready$ = this.ready.asObservable();
+        if (localStorage.getItem('user_pseudo') != null) {
+            this.profileSrv.getInvitations();
+        }
     }
 
     ngOnInit() {
         this.profileSrv.userProfile$.subscribe(user => {
             this.user = user;
-        }, (error) => {console.log('error => ', error)});
+        }, (error) => {console.log('error => ', error); });
         this.getFriends();
         this.ready.next(true);
     }
@@ -83,6 +93,12 @@ export class FriendListComponent implements OnInit, AfterViewInit {
                 }
             })
             .subscribe();
+
+        this.invitations$
+            .do(invitations => {
+                this.groupInvitations = invitations.group_invitations;
+                this.friendInvitations = invitations.friend_invitations;
+            }).subscribe();
     }
 
     getFriends() {
@@ -102,12 +118,12 @@ export class FriendListComponent implements OnInit, AfterViewInit {
     }
 
     goToUserProfile(friend) {
-        this.router.navigate(["profile", friend.name]);
+        this.router.navigate(['profile', friend.name]);
     }
 
     removeFriend(friend, index) {
-        let dialogRef = this.dialog.open(ConfirmDialog, {data: {
-            title: "Voulez-vous vraiment supprimé cette ami(e) ?"}
+        const dialogRef = this.dialog.open(ConfirmDialog, {data: {
+            title: 'Voulez-vous vraiment supprimé cette ami(e) ?'}
         });
 
         dialogRef.afterClosed().subscribe(results => {
@@ -125,8 +141,9 @@ export class FriendListComponent implements OnInit, AfterViewInit {
     }
 
     searchUser() {
-        if (localStorage.getItem('user_pseudo') == null)
+        if (localStorage.getItem('user_pseudo') == null) {
             return;
+        }
         this.filteredUsers.next([]);
         this.requestSrv.get(`search/users`, {
             page_size: 10,
@@ -172,9 +189,39 @@ export class FriendListComponent implements OnInit, AfterViewInit {
 
     }
 
+    handleFriendRequest(invitation, result) {
+        if (result === true)
+            this.requestSrv.post(`friend-invites/${invitation.from_user.pseudo}/accept`, {}, {Authorization: ''})
+                .subscribe(ret => {
+                    this.toastSrv.success(`Bravo, vous êtes maintenant ami avec ${invitation.from_user.pseudo}`);
+                    this.profileSrv.getInvitations();
+                }, err => this.toastSrv.error('Une erreur est survenue'));
+        else
+            this.requestSrv.post(`friend-invites/${invitation.from_user.pseudo}/decline`, {}, {Authorization: ''})
+                .subscribe(ret => {
+                    this.toastSrv.success(`Vous avez refusé la demande d'ami de ${invitation.from_user.pseudo}`);
+                    this.profileSrv.getInvitations();
+                }, err => this.toastSrv.error('Une erreur est survenue'));
+    }
+
+    answerRequest(invitation, type: string) {
+        let dialogRef = this.dialog.open(AcceptInvitationDialog, {
+            data: {
+                type: type,
+                body: invitation
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result !== null && result !== undefined) {
+                this.handleFriendRequest(invitation, result);
+            }
+        })
+    }
+
     scrollSearch() {
         ++this.pageIndex;
-        let tmp = this.displayFriends;
+        const tmp = this.displayFriends;
         tmp.forEach(group => this.displayFriends.push(group));
 
         /* To be implemented when the routes will be up api wise*/

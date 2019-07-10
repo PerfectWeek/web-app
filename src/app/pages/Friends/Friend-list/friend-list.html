@@ -1,5 +1,15 @@
 <section class="main-container">
   <h1 style="text-align: center">Mes Amis</h1>
+  <section class="left-view">
+    PAR
+    ICI
+    LES
+    AMIS
+    <section>
+      <h4 (click)="answerRequest(invitation, 'friend')" *ngFor="let invitation of friendInvitations.slice(0, 5)">{{invitation.from_user.pseudo}}</h4>
+    </section>
+  </section>
+
 </section>
 <section class="friends">
   <section class="friends-header">
@@ -22,13 +32,15 @@
       <section *ngIf="displayFriends?.length > 0; else noFriends"
                style="width: 100%; display: flex; flex-flow: row; flex-wrap: wrap; justify-content: space-evenly">
         <section class="friend" *ngFor="let friend of displayFriends; let id = index">
-          <section (click)="goToUserProfile(friend)">
+          <section>
             <section class="friend-header">
               <img src="{{friend.image}}" alt="Friend's profile picture"
                    title="Friend's profile picture">
             </section>
             <section class="friend-name">
-              <h4 title="{{friend.name}}">{{friend.name}}</h4>
+              <h4 title="{{friend.name}}" class="name-position" (click)="goToUserProfile(friend)">{{friend.name}}</h4>
+              <i class="far fa-trash-alt trash-position" (click)="removeFriend(friend, 0)"></i>
+              <i class="far fa-eye" (click)="goToUserProfile(friend)"></i>
             </section>
           </section>
         </section>

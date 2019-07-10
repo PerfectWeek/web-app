@@ -131,5 +131,4 @@ export class EventSuggestionsComponent implements OnInit {
             borderColor: 'orange',
         }), event];
     }
-
 }

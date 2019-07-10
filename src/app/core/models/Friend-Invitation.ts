@@ -1,3 +1,3 @@
 interface FriendInvitation {
-    id: number
+    id: number;
 }
