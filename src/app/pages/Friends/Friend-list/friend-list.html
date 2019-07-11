@@ -1,11 +1,7 @@
 <section class="main-container">
   <h1 style="text-align: center">Mes Amis</h1>
   <section class="left-view">
-    PAR
-    ICI
-    LES
-    AMIS
-    <section>
+    <section class="friends-name">
       <h4 (click)="answerRequest(invitation, 'friend')" *ngFor="let invitation of friendInvitations.slice(0, 5)">{{invitation.from_user.pseudo}}</h4>
     </section>
   </section>
