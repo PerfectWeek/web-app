@@ -1,25 +1,55 @@
 @import "~scss/variables";
 
+.full-view {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  flex-flow: row;
+  flex-wrap: nowrap;
+
+  & > .left-view {
+    position: absolute;
+    width: 13%;
+    height: 274px;
+    //min-width: 60px;
+    //height: 100%;
+    //overflow-y: auto;
+    border-right: 1px solid map_get($colors, lightgrey);
+  }
+}
+
+.friend-btn {
+}
+
 .main-container {
   margin-top: 60px;
   box-shadow: none !important;
+  width: 67%;
 }
 
 #UserInput {
   color: black !important;
 }
 
+.test-class{
+  margin: 21px auto;
+  color: map_get($colors, secondary);
+  position: relative;
+  width: 73%;
+  min-width: 60px;
+  height: 100%;
+  border: 1px solid map_get($colors, light);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  padding: 10px;
+  border-radius: 8px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
 .friends {
   width: 100%;
-
-  & > .left-view {
-    position: relative;
-    width: 20%;
-    min-width: 60px;
-    height: 100%;
-    overflow-y: auto;
-    border-right: 1px solid map_get($colors, lightgrey);
-  }
 
   .friends-header {
     width: 100%;
@@ -133,6 +163,17 @@
         }
       }
     }
+  }
+}
+
+.for-icon {
+  position: relative;
+  width: 100%;
+  text-align: right;
+
+  i {
+   font-size: 15px;
+    margin-right: 5px;
   }
 }
 

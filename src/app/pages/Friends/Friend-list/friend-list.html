@@ -1,12 +1,18 @@
-<section class="main-container">
-  <h1 style="text-align: center">Mes Amis</h1>
+<div class="full-view">
   <section class="left-view">
-    <section class="friends-name">
-      <h4 (click)="answerRequest(invitation, 'friend')" *ngFor="let invitation of friendInvitations.slice(0, 5)">{{invitation.from_user.pseudo}}</h4>
+    <section class="main-container">
+      <h3 style="text-align: left;">Mes demandes d'Amis</h3>
+    </section>
+    <section *ngFor="let invitation of friendInvitations.slice(0, 5)">
+      <h5 class="test-class" (click)="answerRequest(invitation, 'friend')" >{{invitation.from_user.pseudo}} <i style="float: right;" class="fas fa-user-plus"></i></h5>
     </section>
   </section>
+</div>
 
+<section class="main-container">
+  <h1 style="text-align: center">Mes Amis</h1>
 </section>
+
 <section class="friends">
   <section class="friends-header">
     <section class="friends-search-bar">
@@ -35,8 +41,10 @@
             </section>
             <section class="friend-name">
               <h4 title="{{friend.name}}" class="name-position" (click)="goToUserProfile(friend)">{{friend.name}}</h4>
-              <i class="far fa-trash-alt trash-position" (click)="removeFriend(friend, 0)"></i>
-              <i class="far fa-eye" (click)="goToUserProfile(friend)"></i>
+              <div class="for-icon">
+                <i class="far fa-trash-alt" (click)="removeFriend(friend, 0)"></i>
+                <i class="far fa-eye" (click)="goToUserProfile(friend)"></i>
+              </div>
             </section>
           </section>
         </section>

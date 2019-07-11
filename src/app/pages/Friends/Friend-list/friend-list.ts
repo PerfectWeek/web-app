@@ -62,7 +62,6 @@ export class FriendListComponent implements OnInit, AfterViewInit {
         this.ready$ = this.ready.asObservable();
         this.invitations$ = this.profileSrv.invitationsSubject.asObservable();
         if (localStorage.getItem('user_pseudo') != null) {
-            console.log("par ici");
             this.profileSrv.getInvitations();
         }
     }
