@@ -109,6 +109,7 @@ export class ModifyEventDialog {
                     current_event.setProp('title', this.pw_event.name);
                     current_event.setDates(this.pw_event.formated_start,
                         this.pw_event.formated_end);
+                    (<any>window).ga('send', 'event', 'Events', 'Event Modification', `Event Name: ${this.pw_event.name}`);
                     this.toastSrv.success('L\'évènement a bien été modifié');
                     this.dialogRef.close(true);
                 },
@@ -130,6 +131,7 @@ export class ModifyEventDialog {
             if (result === true) {
                 this.eventsSrv.deleteEvent(this.pw_event.id)
                     .subscribe(ret => {
+                        (<any>window).ga('send', 'event', 'Events', 'Event Deletion', `Event Name: ${this.pw_event.name}`);
                         const current_event = this.data.calAPI.getEventById(this.pw_event.id);
                         current_event.remove();
                         this.dialogRef.close(false);

@@ -184,17 +184,6 @@ export class FriendInvitationDialog implements AfterViewInit {
             });
 
             return false;
-
-            //     this.requestSrv.post('userrelationship/invite', body, {Authorization: ''}).subscribe(ret => {
-            //             this.toastSrv.success(`Invitations envoyées`);
-            //             this.dialogRef.close();
-            //             return true;
-            //         },
-            //         err => {
-            //             this.toastSrv.error(err.error.message, 'Une erreur est survenue'); // Display an error message if an error occurs
-            //             return false;
-            //         });
-            // }, (error) => {console.log('error => ', error)});
         })
     }
 

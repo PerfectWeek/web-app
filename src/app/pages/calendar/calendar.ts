@@ -213,6 +213,7 @@ export class CalendarComponent implements OnInit, OnChanges {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result !== null && result !== undefined) {
+
                 this.toastSrv.success("L'événement a bien été créé")
             }
         });
