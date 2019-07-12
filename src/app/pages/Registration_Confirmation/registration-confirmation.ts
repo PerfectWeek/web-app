@@ -36,4 +36,9 @@ export class RegistrationConfirmationComponent implements OnInit {
               })
     })
   }
+
+  confirmRegistration() {
+      (<any>window).ga('send', 'event', 'Button', 'Confirming Registration', 'Confirming Registration');
+      this.router.navigate(['/login'])
+  }
 }

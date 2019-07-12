@@ -227,6 +227,25 @@ export class GroupInfoComponent implements OnInit, OnChanges {
         })
     }
 
+
+    formatBody(body) {
+        console.log('body => ', body);
+        let field = 'users';
+        let found: boolean = false;
+        let end = '"role":"actor"}';
+        let str = 'users":[';
+        for (let key in body) {
+            if (key.toString().indexOf(field) != -1) {
+                found = true;
+                str += JSON.stringify(body[key]) + ',';
+            }
+        }
+        str = str.slice(0, str.length - 1);
+        str += ']';
+        let result = JSON.stringify(body);
+        return found === true ? (result.substring(0, result.indexOf('users[0]')) + str + result.substring(result.lastIndexOf(end) + end.length)) : result;
+    }
+
     addMember() {
         let dialogRef = this.dialog.open(AddMemberDialog, {
             data: {members: this.group_members}
@@ -234,11 +253,11 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result !== null && result != undefined) {
-                let users = [result];
-                this.groupsSrv.addMembers(this.group_id, users)
+                this.groupsSrv.addMembers(this.group_id, this.formatBody(result))
                     .subscribe(ret => {
                         this.ready = false;
                         this.group_members = ret.members;
+                        (<any>window).ga('send', 'event', 'Group', 'Adding Members', `Group Name: ${result.name}`);
                         this.group_members.forEach((member, index) => {
                             this.usersSrv.getImage(member.pseudo)
                                 .subscribe(ret => {
@@ -265,6 +284,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                 if (result === true)
                     this.groupsSrv.removeMember(this.group_id, user.pseudo)
                         .subscribe(ret => {
+                            (<any>window).ga('send', 'event', 'Group', 'Leaving Group', `Member: ${user.pseudo} | Group Name: ${this.group.name}`);
                             this.left_group.emit(this.group_id);
                             this.toastSrv.success("Vous avez n'êtes désormais plus membre de ce groupe");
                         }, ret => this.toastSrv.error("Une erreur est survenue. Vous n'avez pas pu quitter ce groupe"))
@@ -285,6 +305,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                     if (result === true)
                         this.groupsSrv.removeMember(this.group_id, pseudo)
                             .subscribe(ret => {
+                                (<any>window).ga('send', 'event', 'Group', 'Removing From Group', `Member: ${pseudo} | Group Name: ${this.group.name}`);
                                 this.toastSrv.success("Membre supprimé avec succès");
                                 this.group_members.splice(this.group_members.findIndex(member => member.pseudo === pseudo), 1);
                             }, ret => this.toastSrv.error("Une erreur est survenue lors de la suppression d\'un membre"))
@@ -294,12 +315,15 @@ export class GroupInfoComponent implements OnInit, OnChanges {
     }
 
     goToProfile(pseudo) {
+        (<any>window).ga('send', 'event', 'Routing', 'Visiting Profile', `Profile of: ${pseudo}`);
         this.router.navigate([`profile/${pseudo}`]);
     }
 
     addFriend(pseudo) {
         this.usersSrv.inviteFriend(pseudo)
-            .subscribe(() => this.toastSrv.info("La demande d'ami a été envoyée"),
-                err => this.toastSrv.warning('Vous avez déjà demandé cette personne en ami'))
+            .subscribe(() => {
+                (<any>window).ga('send', 'event', 'Friends', 'Sending Friend Request', `Request to: ${pseudo}`);
+                this.toastSrv.info("La demande d'ami a été envoyée");
+                }, err => this.toastSrv.warning('Vous avez déjà demandé cette personne en ami'))
     }
 }

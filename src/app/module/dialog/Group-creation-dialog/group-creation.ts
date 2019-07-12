@@ -159,7 +159,6 @@ export class GroupCreationDialog implements AfterViewInit {
     }
 
     createGroup() {
-        // Checking to see if the user creating the group is in the group member list
         let body = {name: this.name};
         this.selectedUsers.forEach((user, index) => {
             body[`members[${index}]`] = user;

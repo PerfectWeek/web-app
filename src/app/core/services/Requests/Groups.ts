@@ -37,8 +37,8 @@ export class GroupsService {
     }
 
     addMembers(group_id: number, users): Observable<any> {
-        return this.requestSrv.post(`groups/${group_id}/add-members`,
-            {users},
+        return this.requestSrv.postJSON(`groups/${group_id}/add-members`,
+            users,
             {Authorization: ''})
     }
 

@@ -89,7 +89,10 @@ export class UserService {
                     localStorage.setItem('user_pseudo', resu["user"]["pseudo"]);
                     this.authSrv.logged = true;
                     this.authSrv.auth = {email: resu["user"]["email"], pseudo: resu["user"]["pseudo"]};
-                    this.profileSrv.fetchUser$(resu["user"]["pseudo"]).subscribe(() => this.router.navigate(['/dashboard']));
+                    this.profileSrv.fetchUser$(resu["user"]["pseudo"]).subscribe(() => {
+                        (<any>window).ga('send', 'event', 'Login', 'Google Connection', resu["user"]["pseudo"]);
+                        this.router.navigate(['/dashboard']);
+                    });
                 })
         });
     }

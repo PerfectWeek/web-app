@@ -121,6 +121,7 @@ export class GroupListComponent implements OnInit, AfterViewInit {
     }
 
     formatBody(body) {
+        console.log('body => ', body);
         let field = 'members';
         let found: boolean = false;
         let end = '"role":"actor"}';
@@ -144,6 +145,7 @@ export class GroupListComponent implements OnInit, AfterViewInit {
             if (result !== null && result !== undefined) {
                 this.groupsSrv.createGroup(this.formatBody(result))
                 .subscribe(ret => {
+                        (<any>window).ga('send', 'event', 'Group', 'Creating Group', `Group Name: ${result.name}`);
                         this.toastSrv.success(`Votre groupe ${ret.group.name} a bien été créé`);
                         this.ready.next(false);
                         this.getGroups();
@@ -170,9 +172,12 @@ export class GroupListComponent implements OnInit, AfterViewInit {
         groups.forEach(group => {
             this.removeClass(group.nativeElement, 'group-focused');
         });
-        if (pos_id === -1)
+        if (pos_id === -1) {
+            (<any>window).ga('send', 'event', 'Group', 'Checking myself', `User Pseudo: ${this.profileSrv.user.pseudo}`);
             this.user.nativeElement.className += ' group-focused';
+        }
         else {
+            (<any>window).ga('send', 'event', 'Group', 'Checking group', `Checking Group: "${this.displayGroups[pos_id].name}"`);
             groups[pos_id].nativeElement.className += ' group-focused';
         }
     }

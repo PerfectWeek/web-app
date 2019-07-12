@@ -63,6 +63,7 @@
     "@angular/cli": "~7.0.6",
     "@angular/compiler-cli": "^7.1.2",
     "@angular/language-service": "^7.1.2",
+    "@types/google.analytics": "0.0.40",
     "@types/jasmine": "^2.8.12",
     "@types/jasminewd2": "^2.0.6",
     "@types/node": "^6.0.118",

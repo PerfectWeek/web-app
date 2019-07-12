@@ -67,7 +67,8 @@ export class RegistrationComponent {
             .do((response) => this.toastSrv.success('Vous vous êtes inscrit avec succès', 'Inscription effectué'))
             .do(
                 () => {
-                    this.router.navigate(['/login'])
+                    (<any>window).ga('send', 'event', 'Registration', 'Registering', user.pseudo);
+                    this.router.navigate(['/login']);
                     return true;
 
                 },
@@ -95,7 +96,10 @@ export class RegistrationComponent {
                         localStorage.setItem('user_pseudo', resu["user"]["pseudo"]);
                         self.authSrv.auth = {email: resu["user"]["email"], pseudo: resu["user"]["pseudo"]};
                         self.authSrv.logged = true;
-                        self.profileSrv.fetchUser$(resu["user"]["pseudo"]).subscribe(() => self.ngZone.run(() => self.router.navigate(['/dashboard'])));
+                        self.profileSrv.fetchUser$(resu["user"]["pseudo"]).subscribe(() => self.ngZone.run(() => {
+                            (<any>window).ga('send', 'event', 'Login', 'Registering with Facebook', resu["user"]["pseudo"]);
+                            self.router.navigate(['/dashboard']);
+                        }));
                     })
             } else {
             }

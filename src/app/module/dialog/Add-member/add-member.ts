@@ -180,6 +180,10 @@ export class AddMemberDialog {
     }
 
     addMember() {
-        this.dialogRef.close(this.selectedUsers);
+        let body = {};
+        this.selectedUsers.forEach((user, index) => {
+            body[`users[${index}]`] = {name: user, role: 'actor'}
+        });
+        this.dialogRef.close(body);
     }
 }

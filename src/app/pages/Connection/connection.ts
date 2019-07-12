@@ -50,6 +50,7 @@ export class ConnectionComponent {
             .do(
                 ((data: any) => {
                     this.profileSrv.fetchUser$(data.user.pseudo).subscribe();
+                    (<any>window).ga('send', 'event', 'Login', 'Connection', data.user.pseudo);
                     this.router.navigate(['/dashboard']);
                     this.usersSrv.putTimezone(data.user.pseudo).subscribe();
                     return true;
@@ -76,7 +77,10 @@ export class ConnectionComponent {
                         localStorage.setItem('user_pseudo', resu["user"]["pseudo"]);
                         self.authSrv.auth = {email: resu["user"]["email"], pseudo: resu["user"]["pseudo"]};
                         self.authSrv.logged = true;
-                        self.profileSrv.fetchUser$(resu["user"]["pseudo"]).subscribe(() => self.ngZone.run(() => self.router.navigate(['/dashboard'])));
+                        self.profileSrv.fetchUser$(resu["user"]["pseudo"]).subscribe(() => self.ngZone.run(() => {
+                            (<any>window).ga('send', 'event', 'Login', 'FB Connection', resu["user"]["pseudo"]);
+                            self.router.navigate(['/dashboard']);
+                        }));
                     })
             } else {
             }
