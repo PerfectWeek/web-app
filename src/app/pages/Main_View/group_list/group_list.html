@@ -20,7 +20,7 @@
         </section>
         <mat-divider [inset]="false"></mat-divider>
         <section>
-            <h5 style="padding: 15px"><strong>Vos groupes</strong></h5>
+            <h5 style="padding: 15px"><strong>Vos calendriers</strong></h5>
             <mat-divider [inset]="false"></mat-divider>
         </section>
         <section #groups *ngFor="let group of displayGroups; let idx = index" class="group" (click)="sendGroup(group.id, idx)" tabindex="{{idx}}" title="{{group.name}}">
