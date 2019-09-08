@@ -84,7 +84,7 @@ export class EventSuggestionsComponent implements OnInit {
             min_time: this.min_date.toISOString(),
             max_time: this.max_date.toISOString(),
             limit: 20,
-        }, {Authorization: ''})
+        })
             .subscribe(events => {
                 for (let key in events.suggestions) {
                     this.requestSrv.get(`events/${events.suggestions[key].event.id}/image`, {}, {Authorization: ''}).subscribe(ret => {

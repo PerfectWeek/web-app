@@ -4,7 +4,6 @@
         <button style="margin-left: 5px" class="mat-raised-button btn-secondary" (click)="addEvent()">Ajouter un évènement</button>
     </div>
     <full-calendar
-            *ngIf="options"
             #fullcalendar
             defaultView="dayGridMonth"
             [editable]="!displayOnly"

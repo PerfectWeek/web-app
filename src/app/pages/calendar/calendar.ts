@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {OptionsInput} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -32,7 +32,7 @@ import {EventsService} from "../../core/services/Requests/Events";
     templateUrl: 'calendar.html',
 
 })
-export class CalendarComponent implements OnInit, OnChanges {
+export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     options: OptionsInput;
     @ViewChild('fullcalendar') calendarComponent: FullCalendarComponent;
     events: EventInput[] = [];
@@ -117,11 +117,13 @@ export class CalendarComponent implements OnInit, OnChanges {
             eventLimit: true,
             themeSystem: 'bootstrap',
         };
-        setTimeout(() => {
-            this.api = this.calendarComponent.getApi();
-            //this.get_group_info();
-        }, 500);
+    }
 
+    ngAfterViewInit(): void {
+        this.api = this.calendarComponent.getApi();
+        // setTimeout(() => {
+        //     //this.get_group_info();
+        // }, 500);
     }
 
     deleteEvent(elem): void {
@@ -140,8 +142,8 @@ export class CalendarComponent implements OnInit, OnChanges {
     }
 
     get_calendar_events(calendar_id) {
-        const calAPI = this.getAPI();
-        calAPI.removeAllEvents();
+        // const calAPI = this.getAPI();
+        this.api.removeAllEvents();
         this.calendarsSrv.getEvents(calendar_id)
             .subscribe(ret => {
                 const hexa = ['#e06868', '#ff906a', '#f2db09', '#3d8fdc', '#45c4d9', '#cae602', '#ffd39b', '#c0e2e1', '#ccffff', '#9c6eb2'];
