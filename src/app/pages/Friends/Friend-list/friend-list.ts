@@ -153,11 +153,12 @@ export class FriendListComponent implements OnInit, AfterViewInit {
 
     searchFriend() {
         this.pageIndex = 0;
-        this.input = this.searchFriend$.getValue().toLowerCase();
+        if (this.searchFriend$)
+            this.input = this.searchFriend$.getValue().toLowerCase();
 
         this.displayFriends = [];
         this.displayFriends = this.friends
-            .filter((friend: any) => friend.pseudo.toLowerCase().indexOf(this.searchFriend$.getValue().toLowerCase()) != -1);
+            .filter((friend: any) => friend.name.toLowerCase().indexOf(this.searchFriend$.getValue().toLowerCase()) != -1);
 
         /* To be implemented when the routes will be up api wise*/
 
