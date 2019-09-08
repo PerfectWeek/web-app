@@ -45,10 +45,13 @@ export class BestSlotCalendarComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.temp_event = JSON.parse(this.temp_event);
-        this.slot = JSON.parse(this.slot);
+        console.log("alors", this.slot);
+        //this.temp_event = JSON.parse(this.temp_event);
+        //this.slot = JSON.parse(this.slot);
         const tmp_date = new Date(this.slot.start_time);
         this.cursor = (tmp_date.getHours() - 4) + ':00:00';
+        // console.log(this.cursor, typeof this.cursor);
+        // console.log(this.temp_event);
         this.options = {
             editable: false,
             //plugins: [bootstrapPlugin, interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],

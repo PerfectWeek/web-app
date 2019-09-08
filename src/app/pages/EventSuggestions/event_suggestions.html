@@ -1,5 +1,29 @@
 <div class="full-view">
     <section class="left-view">
+
+        <mat-expansion-panel style="width: 100%">
+            <mat-expansion-panel-header>
+                <mat-panel-description style="justify-content: center">
+                    Filtre
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-grid-list cols="2" rowHeight="2:1">
+                <mat-grid-tile *ngFor="let type of eventTypes">
+                    <mat-checkbox
+                                  [value]="type.value"
+                                  [checked]="type.stat"
+                                  [(ngModel)]="type.stat"
+                                  (click)="check_filter()"
+                                  color="primary">
+                        {{type.viewValue}}
+                    </mat-checkbox>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <mat-form-field class="example-full-width" style="width: 100%">
+                <input matInput placeholder="Rechercher un évènement" [(ngModel)]="search">
+            </mat-form-field>
+        </mat-expansion-panel>
+
         <mat-card>
             <mat-card-title> Découvrir </mat-card-title>
             <mat-card-subtitle> Sélection d'évènements pour l'utilisateur </mat-card-subtitle>
@@ -7,7 +31,7 @@
 
         <ul class="event-list">
             <li *ngFor="let e of suggestions" [value]="e" (click)="previewEvent(e)">
-                <mat-card class="card">
+                <mat-card class="card" *ngIf="check_stat(e) === true;">
                     <img mat-card-image src="{{e.image}}" alt="Event image">
                     <mat-99vw-card-title>{{e.name}}</mat-99vw-card-title>
                     <mat-card-subtitle>{{e.description}}</mat-card-subtitle>
@@ -21,7 +45,7 @@
 
     <div class="right-view" *ngIf="focusedEvent">
         <mat-card class="card-large">
-            <img src="{{focusedEvent[1].image}}" alt="Event image" class="event-image">
+            <img src="{{focusedEvent[1].image}}" alt="Event image" class="event-image" style="display: block; height: auto; margin-left: auto; margin-right: auto; max-height: 400px; max-width: 400px">
             <div class="event-info-full">
                 <div class="inline">
                     <mat-card-title>{{focusedEvent[1].name}}</mat-card-title>
