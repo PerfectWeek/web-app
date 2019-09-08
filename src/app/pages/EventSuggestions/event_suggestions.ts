@@ -34,12 +34,24 @@ export class EventSuggestionsComponent implements OnInit {
         other: 'abstract'
     };
 
+
+    eventTypes: any = [{value: 'party', viewValue: 'Fête', stat: true},
+        {value: 'work', viewValue: 'Travail', stat: true},
+        {value: 'hobby', viewValue: 'Loisir', stat: true},
+        {value: 'workout', viewValue: 'Entrainement', stat: true}];
+
+    search: string = '';
+
     @ViewChild('calendar') calendar;
 
 
     constructor(private requestSrv: RequestService,
                 private toastSrv: ToastrService,
                 private profileSrv: ProfileService) {
+    }
+
+    check_filter() {
+        console.log(this.eventTypes);
     }
 
     ngOnInit() {
@@ -55,7 +67,7 @@ export class EventSuggestionsComponent implements OnInit {
             this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
                 .subscribe(calendars => {
                     this.focusedCalendar = calendars.calendars[0].calendar;
-                    this.getSuggestions()
+                    this.getSuggestions();
                 })
         });
     }
@@ -68,21 +80,47 @@ export class EventSuggestionsComponent implements OnInit {
             limit: 20,
         }, {Authorization: ''})
             .subscribe(events => {
-                this.suggestions = events.suggestions.map(e => {
-                    return {
-                        id: e.event.id,
-                        name: e.event.name,
-                        description: e.event.description,
-                        location: e.event.location,
-                        type: e.event.type,
-                        visibility: e.event.visibility,
-                        calendar_id: e.event.calendar_id,
-                        start_time: new Date(e.event.start_time),
-                        end_time: new Date(e.event.end_time),
-                        image: this.generateEventImage(e.event.type)
-                    }
-                });
-            })
+                for (let key in events.suggestions) {
+                    this.requestSrv.get(`events/${events.suggestions[key].event.id}/image`, {}, {Authorization: ''}).subscribe(ret => {
+                        this.suggestions.push({
+                            id: events.suggestions[key].event.id,
+                            name: events.suggestions[key].event.name,
+                            description: events.suggestions[key].event.description,
+                            location: events.suggestions[key].event.location,
+                            type: events.suggestions[key].event.type,
+                            visibility: events.suggestions[key].event.visibility,
+                            calendar_id: events.suggestions[key].event.calendar_id,
+                            start_time: new Date(events.suggestions[key].event.start_time),
+                            end_time: new Date(events.suggestions[key].event.end_time),
+                            image: ret.image
+                        });
+                    });
+                }
+                // this.suggestions = events.suggestions.map(e => {
+                //         return {
+                //             id: e.event.id,
+                //             name: e.event.name,
+                //             description: e.event.description,
+                //             location: e.event.location,
+                //             type: e.event.type,
+                //             visibility: e.event.visibility,
+                //             calendar_id: e.event.calendar_id,
+                //             start_time: new Date(e.event.start_time),
+                //             end_time: new Date(e.event.end_time),
+                //             image: this.generateEventImage(e.event.type, e.event.id),
+                //         };
+                //});
+            });
+    }
+
+    check_stat(event) {
+        if (this.search !== '' && event.name.toLowerCase().indexOf(this.search.toLowerCase()) === -1
+            && event.description.toLowerCase().indexOf(this.search.toLowerCase()) === -1
+            && event.location.toLowerCase().indexOf(this.search.toLowerCase()) === -1) {
+            return;
+        }
+        const index = this.eventTypes.findIndex(x => x.value === event.type);
+        return (this.eventTypes[index].stat === true);
     }
 
     joinEvent(id) {
@@ -101,11 +139,13 @@ export class EventSuggestionsComponent implements OnInit {
     }
 
     closeEventPreview(api) {
-        this.focusedEvent[0].remove()
+        this.focusedEvent[0].remove();
     }
 
     previewEvent(event) {
         const api = this.getAPI();
+
+        api.gotoDate(event.start_time);
 
         if (this.focusedEvent) {
             this.closeEventPreview(api);

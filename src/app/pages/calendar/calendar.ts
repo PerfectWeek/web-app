@@ -23,8 +23,9 @@ import {Calendar} from '@fullcalendar/core/Calendar';
 
 @Component({
     selector: 'mwl-demo-component',
-    styleUrls: ['../../../scss/themes/main.scss', 'calendar.scss',
-        '../../../scss/dialog.scss'],
+    styleUrls: ['calendar.scss',
+                '../../../scss/dialog.scss',
+                '../../../scss/themes/main.scss'],
     templateUrl: 'calendar.html',
 
 })

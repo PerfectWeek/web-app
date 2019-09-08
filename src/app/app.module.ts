@@ -44,7 +44,7 @@ import {
     MatIconModule,
     MatDividerModule,
     MAT_LABEL_GLOBAL_OPTIONS,
-    MAT_DATE_LOCALE, MatDialogRef, MatPaginatorIntl
+    MAT_DATE_LOCALE, MatDialogRef, MatPaginatorIntl, MatGridListModule
 } from '@angular/material';
 
 // import {CalendarModule, DateAdapter} from "angular-calendar";
@@ -207,6 +207,7 @@ let gapiClientConfig: NgGapiClientConfig = {
             positionClass: 'toast-bottom-center',
             preventDuplicates: true,
         }),
+        MatGridListModule,
     ],
     schemas: [ NO_ERRORS_SCHEMA ],
     providers: [
