@@ -3,6 +3,9 @@ import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {RequestService} from "../../core/services/request.service";
 import {ProfileService} from "../../core/services/profile.service";
 import {ToastrService} from "ngx-toastr";
+import {UsersService} from "../../core/services/Requests/Users";
+import {CalendarsService} from "../../core/services/Requests/Calendars";
+import {EventsService} from "../../core/services/Requests/Events";
 
 
 @Component({
@@ -34,12 +37,27 @@ export class EventSuggestionsComponent implements OnInit {
         other: 'abstract'
     };
 
+
+    eventTypes: any = [{value: 'party', viewValue: 'Fête', stat: true},
+        {value: 'work', viewValue: 'Travail', stat: true},
+        {value: 'hobby', viewValue: 'Loisir', stat: true},
+        {value: 'workout', viewValue: 'Entrainement', stat: true}];
+
+    search: string = '';
+
     @ViewChild('calendar') calendar;
 
 
     constructor(private requestSrv: RequestService,
                 private toastSrv: ToastrService,
+                private usersSrv: UsersService,
+                private calendarsSrv: CalendarsService,
+                private eventsSrv: EventsService,
                 private profileSrv: ProfileService) {
+    }
+
+    check_filter() {
+        console.log(this.eventTypes);
     }
 
     ngOnInit() {
@@ -52,41 +70,67 @@ export class EventSuggestionsComponent implements OnInit {
 
     getCalendars() {
         this.profileSrv.userProfile$.subscribe(user => {
-            this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
+            this.usersSrv.getCalendars(user.pseudo)
                 .subscribe(calendars => {
                     this.focusedCalendar = calendars.calendars[0].calendar;
-                    this.getSuggestions()
+                    this.getSuggestions();
                 })
         });
     }
 
     getSuggestions() {
         this._calendar_id = this.focusedCalendar.id;
-        this.requestSrv.get(`calendars/${this.focusedCalendar.id}/assistant/get-event-suggestions`, {
+        this.calendarsSrv.getEventSuggestion(this.focusedCalendar.id, {
             min_time: this.min_date.toISOString(),
             max_time: this.max_date.toISOString(),
             limit: 20,
-        }, {Authorization: ''})
+        })
             .subscribe(events => {
-                this.suggestions = events.suggestions.map(e => {
-                    return {
-                        id: e.event.id,
-                        name: e.event.name,
-                        description: e.event.description,
-                        location: e.event.location,
-                        type: e.event.type,
-                        visibility: e.event.visibility,
-                        calendar_id: e.event.calendar_id,
-                        start_time: new Date(e.event.start_time),
-                        end_time: new Date(e.event.end_time),
-                        image: this.generateEventImage(e.event.type)
-                    }
-                });
-            })
+                for (let key in events.suggestions) {
+                    this.requestSrv.get(`events/${events.suggestions[key].event.id}/image`, {}, {Authorization: ''}).subscribe(ret => {
+                        this.suggestions.push({
+                            id: events.suggestions[key].event.id,
+                            name: events.suggestions[key].event.name,
+                            description: events.suggestions[key].event.description,
+                            location: events.suggestions[key].event.location,
+                            type: events.suggestions[key].event.type,
+                            visibility: events.suggestions[key].event.visibility,
+                            calendar_id: events.suggestions[key].event.calendar_id,
+                            start_time: new Date(events.suggestions[key].event.start_time),
+                            end_time: new Date(events.suggestions[key].event.end_time),
+                            image: ret.image
+                        });
+                    });
+                }
+                // this.suggestions = events.suggestions.map(e => {
+                //         return {
+                //             id: e.event.id,
+                //             name: e.event.name,
+                //             description: e.event.description,
+                //             location: e.event.location,
+                //             type: e.event.type,
+                //             visibility: e.event.visibility,
+                //             calendar_id: e.event.calendar_id,
+                //             start_time: new Date(e.event.start_time),
+                //             end_time: new Date(e.event.end_time),
+                //             image: this.generateEventImage(e.event.type, e.event.id),
+                //         };
+                //});
+            });
+    }
+
+    check_stat(event) {
+        if (this.search !== '' && event.name.toLowerCase().indexOf(this.search.toLowerCase()) === -1
+            && event.description.toLowerCase().indexOf(this.search.toLowerCase()) === -1
+            && event.location.toLowerCase().indexOf(this.search.toLowerCase()) === -1) {
+            return;
+        }
+        const index = this.eventTypes.findIndex(x => x.value === event.type);
+        return (this.eventTypes[index].stat === true);
     }
 
     joinEvent(id) {
-        this.requestSrv.post(`events/${id}/join`, {}, {Authorization: ''})
+            this.eventsSrv.joinEvent(id)
             .subscribe(response => {
                 this.toastSrv.info("Cet évènement a bien été ajouté à votre liste d'évènements");
             }, err => this.toastSrv.error("Une erreur est survenue lors de l'ajout à votre liste d'évènement"));
@@ -101,11 +145,13 @@ export class EventSuggestionsComponent implements OnInit {
     }
 
     closeEventPreview(api) {
-        this.focusedEvent[0].remove()
+        this.focusedEvent[0].remove();
     }
 
     previewEvent(event) {
         const api = this.getAPI();
+
+        api.gotoDate(event.start_time);
 
         if (this.focusedEvent) {
             this.closeEventPreview(api);

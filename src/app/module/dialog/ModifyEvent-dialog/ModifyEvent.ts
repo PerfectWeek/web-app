@@ -4,6 +4,7 @@ import {ToastrService} from 'ngx-toastr';
 import {ProfileService} from '../../../core/services/profile.service';
 import {RequestService} from '../../../core/services/request.service';
 import {ConfirmDialog} from '../Confirm-dialog/Confirm-dialog';
+import {EventsService} from "../../../core/services/Requests/Events";
 
 @Component({
     selector: 'event-modification-dialog',
@@ -64,19 +65,20 @@ export class ModifyEventDialog {
 
     constructor(private requestSrv: RequestService,
                 private profileSrv: ProfileService,
+                private eventsSrv: EventsService,
                 private toastSrv: ToastrService,
                 public dialogRef: MatDialogRef<ModifyEventDialog>,
                 public dialog: MatDialog,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         this.pw_event = data.event.event;
 
-        this.requestSrv.get(`events/${this.pw_event.id}/image`, {}, {Authorization: ''})
+        this.eventsSrv.getImage(this.pw_event.id)
             .subscribe(ret => {
                 this.event_image = ret.image;
             });
 
         const current_event = this.data.calAPI.getEventById(this.pw_event.id);
-        this.requestSrv.get(`events/${this.pw_event.id}`, {}, {Authorization: ''})
+        this.eventsSrv.getEvent(this.pw_event.id)
             .subscribe(ret => {
                     this.pw_event.name = ret.event.name;
                     this.pw_event.type = ret.event.type;
@@ -85,18 +87,16 @@ export class ModifyEventDialog {
                     this.pw_event.description = ret.event.description;
                     this.pw_event.formated_start = ret.event.start_time;
                     this.pw_event.formated_end = ret.event.end_time;
-                    console.log('avant', this.pw_event);
                 },
                 err => {
-                    console.log('CA MARCHE PAS LA !');
+                    ;
                 });
     }
 
     modifyEvent() {
-        console.log('\n\napres la modification, ', this.pw_event);
         const str_end = (this.pw_event.formated_end instanceof Object) ? this.pw_event.formated_end.toISOString() : this.pw_event.formated_end;
         const str_start = (this.pw_event.formated_start instanceof Object) ? this.pw_event.formated_start.toISOString() : this.pw_event.formated_start;
-        this.requestSrv.put(`events/${this.pw_event.id}`, {
+        this.eventsSrv.modifyEvent(this.pw_event.id, {
             name: this.pw_event.name,
             type: this.pw_event.type,
             location: this.pw_event.location,
@@ -104,12 +104,12 @@ export class ModifyEventDialog {
             description: this.pw_event.description,
             start_time: str_start,
             end_time: str_end,
-        }, {Authorization: ''})
-            .subscribe(ret => {
+        }).subscribe(ret => {
                     const current_event = this.data.calAPI.getEventById(this.pw_event.id);
                     current_event.setProp('title', this.pw_event.name);
                     current_event.setDates(this.pw_event.formated_start,
                         this.pw_event.formated_end);
+                    (<any>window).ga('send', 'event', 'Events', 'Event Modification', `Event Name: ${this.pw_event.name}`);
                     this.toastSrv.success('L\'évènement a bien été modifié');
                     this.dialogRef.close(true);
                 },
@@ -129,8 +129,9 @@ export class ModifyEventDialog {
 
         dialogSupprim.afterClosed().subscribe(result => {
             if (result === true) {
-                this.requestSrv.delete(`events/${this.pw_event.id}`, {Authorization: ''})
+                this.eventsSrv.deleteEvent(this.pw_event.id)
                     .subscribe(ret => {
+                        (<any>window).ga('send', 'event', 'Events', 'Event Deletion', `Event Name: ${this.pw_event.name}`);
                         const current_event = this.data.calAPI.getEventById(this.pw_event.id);
                         current_event.remove();
                         this.dialogRef.close(false);
@@ -143,9 +144,9 @@ export class ModifyEventDialog {
     ModifyImageEvent(event) {
         if (event.target.files && event.target.files.length === 1) {
             const file = event.target.files[0];
-            this.requestSrv.postImage(`events/${this.pw_event.id}/upload-image`, file, {Authorization: ''})
+                this.eventsSrv.uploadImage(this.pw_event.id, file)
                 .do(() => {
-                        this.requestSrv.get(`events/${this.pw_event.id}/image`, {}, {Authorization: ''})
+                            this.eventsSrv.getImage(this.pw_event.id)
                             .subscribe(ret => {
                                 this.event_image = ret.image;
                             });

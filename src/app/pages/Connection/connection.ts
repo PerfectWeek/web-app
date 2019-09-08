@@ -8,6 +8,8 @@ import {RequestService} from '../../core/services/request.service';
 import {UserService} from '../Registration/UserService';
 import {TokenService} from '../../core/services/token.service';
 import {environment} from "../../../environments/environment";
+import {AuthenticationService} from "../../core/services/Requests/Authentication";
+import {UsersService} from "../../core/services/Requests/Users";
 
 declare var FB: any;
 
@@ -29,7 +31,9 @@ export class ConnectionComponent {
 
     constructor(private fb: FormBuilder,
                 private authSrv: AuthService,
+                private authReqService: AuthenticationService,
                 private profileSrv: ProfileService,
+                private usersSrv: UsersService,
                 private tokenSrv: TokenService,
                 private requestSrv: RequestService,
                 private userService: UserService,
@@ -46,10 +50,9 @@ export class ConnectionComponent {
             .do(
                 ((data: any) => {
                     this.profileSrv.fetchUser$(data.user.pseudo).subscribe();
+                    (<any>window).ga('send', 'event', 'Login', 'Connection', data.user.pseudo);
                     this.router.navigate(['/dashboard']);
-                    this.requestSrv.put(`users/${data.user.pseudo}/timezone`, {
-                        timezone: new Date().getTimezoneOffset()
-                    }, {Authorization: ''}).subscribe(ret => console.log(ret));
+                    this.usersSrv.putTimezone(data.user.pseudo).subscribe();
                     return true;
                 }),
                 () => {
@@ -68,16 +71,16 @@ export class ConnectionComponent {
         let self = this;
         FB.login(function (response) {
             if (response.status === 'connected') {
-                self.requestSrv.get("auth/providers/facebook/callback", {
-                    access_token: response["authResponse"]["accessToken"],
-                    refresh_token: ""
-                }, {})
+                self.authReqService.facebookAuth(response["authResponse"]["accessToken"], "")
                     .subscribe((resu) => {
                         self.tokenSrv.token = resu["token"];
                         localStorage.setItem('user_pseudo', resu["user"]["pseudo"]);
                         self.authSrv.auth = {email: resu["user"]["email"], pseudo: resu["user"]["pseudo"]};
                         self.authSrv.logged = true;
-                        self.profileSrv.fetchUser$(resu["user"]["pseudo"]).subscribe(() => self.ngZone.run(() => self.router.navigate(['/dashboard'])));
+                        self.profileSrv.fetchUser$(resu["user"]["pseudo"]).subscribe(() => self.ngZone.run(() => {
+                            (<any>window).ga('send', 'event', 'Login', 'FB Connection', resu["user"]["pseudo"]);
+                            self.router.navigate(['/dashboard']);
+                        }));
                     })
             } else {
             }

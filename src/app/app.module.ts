@@ -44,7 +44,7 @@ import {
     MatIconModule,
     MatDividerModule,
     MAT_LABEL_GLOBAL_OPTIONS,
-    MAT_DATE_LOCALE, MatDialogRef, MatPaginatorIntl
+    MAT_DATE_LOCALE, MatDialogRef, MatPaginatorIntl, MatGridListModule
 } from '@angular/material';
 
 // import {CalendarModule, DateAdapter} from "angular-calendar";
@@ -111,6 +111,11 @@ import localeFr from '@angular/common/locales/fr';
 import {environment} from "../environments/environment";
 import {BestSlotCalendarComponent} from './pages/calendar/BestSlotCalendar/best-slot-calendar';
 import {SWIPER_CONFIG, SwiperConfigInterface, SwiperModule} from 'ngx-swiper-wrapper';
+import {AuthenticationService} from "./core/services/Requests/Authentication";
+import {UsersService} from "./core/services/Requests/Users";
+import {GroupsService} from "./core/services/Requests/Groups";
+import {CalendarsService} from "./core/services/Requests/Calendars";
+import {EventsService} from "./core/services/Requests/Events";
 //import {FlexLayoutModule} from '@angular/flex-layout';
 
 registerLocaleData(localeFr);
@@ -207,6 +212,7 @@ let gapiClientConfig: NgGapiClientConfig = {
             positionClass: 'toast-bottom-center',
             preventDuplicates: true,
         }),
+        MatGridListModule,
     ],
     schemas: [ NO_ERRORS_SCHEMA ],
     providers: [
@@ -214,6 +220,11 @@ let gapiClientConfig: NgGapiClientConfig = {
         TokenService,
         AuthService,
         ProfileService,
+        AuthenticationService,
+        UsersService,
+        GroupsService,
+        CalendarsService,
+        EventsService,
         {
             provide: SWIPER_CONFIG,
             useValue: DEFAULT_SWIPER_CONFIG

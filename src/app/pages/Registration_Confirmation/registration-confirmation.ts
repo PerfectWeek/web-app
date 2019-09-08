@@ -2,6 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RequestService} from "../../core/services/request.service";
 import {ToastrService} from "ngx-toastr";
+import {AuthenticationService} from "../../core/services/Requests/Authentication";
 
 @Component({
   selector: "registration-confirmation",
@@ -15,6 +16,7 @@ export class RegistrationConfirmationComponent implements OnInit {
 
   constructor(public router: Router,
               private route: ActivatedRoute,
+              private authSrv: AuthenticationService,
               public requestSrv: RequestService,
               public toastSrv: ToastrService) {
 
@@ -22,7 +24,7 @@ export class RegistrationConfirmationComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      this.requestSrv.get(`auth/validate-email/${params['id']}`, {}, {})
+      this.authSrv.validateEmail(params['id'])
           .subscribe(
               ret => {
                   this.isOk = true;
@@ -33,5 +35,10 @@ export class RegistrationConfirmationComponent implements OnInit {
                 this.error_message = err.error.message;
               })
     })
+  }
+
+  confirmRegistration() {
+      (<any>window).ga('send', 'event', 'Button', 'Confirming Registration', 'Confirming Registration');
+      this.router.navigate(['/login'])
   }
 }

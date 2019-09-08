@@ -1,5 +1,6 @@
 import {Component, Input, OnInit, ViewChild, HostListener, AfterViewInit} from "@angular/core";
 import {RequestService} from "../../core/services/request.service";
+import {GroupsService} from "../../core/services/Requests/Groups";
 
 @Component({
     selector: "main-view",
@@ -32,7 +33,8 @@ export class MainViewComponent implements OnInit, AfterViewInit {
         this._calendar_id = id;
     }
 
-    constructor(private requestSrv: RequestService) {
+    constructor(private requestSrv: RequestService,
+                private groupsSrv: GroupsService) {
 
     }
 
@@ -47,7 +49,7 @@ export class MainViewComponent implements OnInit, AfterViewInit {
     goToGroup(group_id) {
         this.group_id = group_id;
         if (group_id != -1)
-            this.requestSrv.get(`groups/${group_id}`, {}, {Authorization: ''})
+            this.groupsSrv.getGroup(group_id)
                 .subscribe(ret => this.calendar_id = ret.group.calendar_id);
         else {
             this.calendar_id = group_id;

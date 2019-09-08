@@ -14,6 +14,8 @@ import frLocale from '@fullcalendar/core/locales/fr';
 import esLocale from '@fullcalendar/core/locales/es';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
 import {Calendar} from '@fullcalendar/core/Calendar';
+import {UsersService} from "../../../core/services/Requests/Users";
+import {CalendarsService} from "../../../core/services/Requests/Calendars";
 
 @Component({
     selector: 'best-slot_calendar-component',
@@ -37,16 +39,19 @@ export class BestSlotCalendarComponent implements OnInit {
     constructor(private modal: NgbModal,
                 public dialog: MatDialog,
                 private requestSrv: RequestService,
+                private usersSrv: UsersService,
+                private calendarsSrv: CalendarsService,
                 private profileSrv: ProfileService) {
     }
 
     ngOnInit() {
-        this.temp_event = JSON.parse(this.temp_event);
-        this.slot = JSON.parse(this.slot);
+        console.log("alors", this.slot);
+        //this.temp_event = JSON.parse(this.temp_event);
+        //this.slot = JSON.parse(this.slot);
         const tmp_date = new Date(this.slot.start_time);
         this.cursor = (tmp_date.getHours() - 4) + ':00:00';
-        console.log(this.cursor, typeof this.cursor);
-        console.log(this.temp_event);
+        // console.log(this.cursor, typeof this.cursor);
+        // console.log(this.temp_event);
         this.options = {
             editable: false,
             //plugins: [bootstrapPlugin, interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
@@ -72,13 +77,12 @@ export class BestSlotCalendarComponent implements OnInit {
             });
             this.api.updateSize();
             this.api.gotoDate(this.slot.start_time);
-            console.log('scrollTime', this.api.getOption('ScrollTime'));
             this.get_global_calendar();
         }, 500);
     }
 
     get_calendar_events(calendar_id) {
-        this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''})
+        this.calendarsSrv.getEvents(calendar_id)
             .subscribe(ret => {
                 const hexa = ["#3d8fdc"];
                 const backgroundColor_ = hexa[Math.floor(Math.random() * hexa.length)];
@@ -100,7 +104,7 @@ export class BestSlotCalendarComponent implements OnInit {
 
     get_global_calendar(): void {
         this.profileSrv.userProfile$.subscribe(user => {
-            this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
+            this.usersSrv.getCalendars(user.pseudo)
                 .subscribe(ret => {
                     for (let idx in ret.calendars) {
                         this.get_calendar_events(ret.calendars[idx].calendar.id);

@@ -15,6 +15,7 @@ import 'rxjs/add/operator/switchMap';
 import {ReplaySubject} from "rxjs/ReplaySubject";
 import {Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
+import {AuthenticationService} from "./Requests/Authentication";
 
 @Injectable()
 export class AuthService {
@@ -64,7 +65,8 @@ export class AuthService {
     constructor(private requestSrv: RequestService,
                 private router: Router,
                 private tokenSrv: TokenService,
-                private toastSrv: ToastrService) {
+                private toastSrv: ToastrService,
+                private authSrv: AuthenticationService) {
         if (localStorage.getItem('auth'))
             this._auth = JSON.parse(localStorage.getItem('auth'));
     }
@@ -96,9 +98,7 @@ export class AuthService {
     }
 
     connection(): Observable<void> {
-        return this.requestSrv.post('auth/login', this.auth, {
-            noMultiple: ''
-        }).do((data: any) => {
+        return this.authSrv.login(this.auth).do((data: any) => {
             localStorage.setItem('user_pseudo', data.user.pseudo);
             this.tokenSrv.token = data.access_token;
         })

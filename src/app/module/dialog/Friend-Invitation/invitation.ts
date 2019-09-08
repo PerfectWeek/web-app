@@ -10,6 +10,7 @@ import {BehaviorSubject, Observable} from "rxjs/Rx";
 import {User} from "../../../core/models/User";
 import {MatAutocomplete} from "@angular/material";
 import {startWith} from "rxjs/internal/operators";
+import {UsersService} from "../../../core/services/Requests/Users";
 
 @Component({
     selector: 'friend-invitation-dialog',
@@ -66,6 +67,7 @@ export class FriendInvitationDialog implements AfterViewInit {
 
     constructor(private requestSrv: RequestService,
                 private profileSrv: ProfileService,
+                private usersSrv: UsersService,
                 private toastSrv: ToastrService,
                 private router: Router,
                 public dialogRef: MatDialogRef<FriendInvitationDialog>,
@@ -86,7 +88,7 @@ export class FriendInvitationDialog implements AfterViewInit {
     addUser(event) {
         const input = event.input;
         const value = event.value;
-        this.requestSrv.get(`users/${value}`, {}, {Authorization: ''})
+        this.usersSrv.getUser(value)
             .subscribe(ret => {
                     let id: number = -1;
                     this.selectedUsers.forEach((atm_user, index) => {
@@ -107,11 +109,11 @@ export class FriendInvitationDialog implements AfterViewInit {
 
     search() {
         this.filteredUsers.next([]);
-        this.requestSrv.get(`search/users`, {
-            page_size: this.pageSize,
-            page_number: this.pageIndex,
-            q:    this.search$.getValue()
-        }, {Authorization: ''})
+            this.usersSrv.searchUser({
+                page_size: this.pageSize,
+                page_number: this.pageIndex,
+                q:    this.search$.getValue()
+            })
             .subscribe(ret => this.filterUsers(ret.users), err => {
                 this.toastSrv.error(err.error.message, 'Une erreur est survenue');
             });
@@ -182,17 +184,6 @@ export class FriendInvitationDialog implements AfterViewInit {
             });
 
             return false;
-
-            //     this.requestSrv.post('userrelationship/invite', body, {Authorization: ''}).subscribe(ret => {
-            //             this.toastSrv.success(`Invitations envoyées`);
-            //             this.dialogRef.close();
-            //             return true;
-            //         },
-            //         err => {
-            //             this.toastSrv.error(err.error.message, 'Une erreur est survenue'); // Display an error message if an error occurs
-            //             return false;
-            //         });
-            // }, (error) => {console.log('error => ', error)});
         })
     }
 

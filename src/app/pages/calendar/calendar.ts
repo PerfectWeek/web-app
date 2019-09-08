@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {OptionsInput} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -20,15 +20,19 @@ import {FoundSlotDialog} from '../../module/dialog/FoundSlot-dialog/FoundSlot-di
 import {ConfirmDialog} from '../../module/dialog/Confirm-dialog/Confirm-dialog';
 import {ModifyEventDialog} from '../../module/dialog/ModifyEvent-dialog/ModifyEvent';
 import {Calendar} from '@fullcalendar/core/Calendar';
+import {UsersService} from "../../core/services/Requests/Users";
+import {CalendarsService} from "../../core/services/Requests/Calendars";
+import {EventsService} from "../../core/services/Requests/Events";
 
 @Component({
     selector: 'mwl-demo-component',
-    styleUrls: ['../../../scss/themes/main.scss', 'calendar.scss',
-        '../../../scss/dialog.scss'],
+    styleUrls: ['calendar.scss',
+                '../../../scss/dialog.scss',
+                '../../../scss/themes/main.scss'],
     templateUrl: 'calendar.html',
 
 })
-export class CalendarComponent implements OnInit, OnChanges {
+export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     options: OptionsInput;
     @ViewChild('fullcalendar') calendarComponent: FullCalendarComponent;
     events: EventInput[] = [];
@@ -48,15 +52,15 @@ export class CalendarComponent implements OnInit, OnChanges {
                 public dialog: MatDialog,
                 private requestSrv: RequestService,
                 private profileSrv: ProfileService,
+                private calendarsSrv: CalendarsService,
+                private eventsSrv: EventsService,
+                private usersSrv: UsersService,
                 private toastSrv: ToastrService,
                 private router: Router) {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        console.log('ON CHANGE');
-        //console.log('calendar_id => ', this.in_calendar_id);
         this.calendar_id = +(this.router.url.slice(this.router.url.lastIndexOf('/') + 1));
-        //console.log("lolol", this.calendar_id);
         this.is_global_calendar = (!Number.isNaN(this.calendar_id)) ? false : true;
         this.events = [];
         this.in_calendar_id = changes.in_calendar_id.currentValue;
@@ -70,7 +74,6 @@ export class CalendarComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
-        console.log('calendar_id => ', this.in_calendar_id);
         this.events = [];
         // this.get_group_info();
         // if (this.in_calendar_id) {
@@ -114,13 +117,13 @@ export class CalendarComponent implements OnInit, OnChanges {
             eventLimit: true,
             themeSystem: 'bootstrap',
         };
-        setTimeout(() => {
-            //console.log('avant');
-            this.api = this.calendarComponent.getApi();
-            //console.log('apres');
-            //this.get_group_info();
-        }, 500);
+    }
 
+    ngAfterViewInit(): void {
+        this.api = this.calendarComponent.getApi();
+        // setTimeout(() => {
+        //     //this.get_group_info();
+        // }, 500);
     }
 
     deleteEvent(elem): void {
@@ -139,15 +142,14 @@ export class CalendarComponent implements OnInit, OnChanges {
     }
 
     get_calendar_events(calendar_id) {
-        const calAPI = this.getAPI();
-        calAPI.removeAllEvents();
-        this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''})
+        // const calAPI = this.getAPI();
+        this.api.removeAllEvents();
+        this.calendarsSrv.getEvents(calendar_id)
             .subscribe(ret => {
                 const hexa = ['#e06868', '#ff906a', '#f2db09', '#3d8fdc', '#45c4d9', '#cae602', '#ffd39b', '#c0e2e1', '#ccffff', '#9c6eb2'];
                 const backgroundColor_ = hexa[Math.floor(Math.random() * hexa.length)];
                 //const backgroundColor_ = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
                 const borderColor_ = '#1C4891';
-                console.log('ret => ', ret);
                 for (const idx in ret.events) {
                     this.api.addEvent({
                         id: ret.events[idx].id,
@@ -163,7 +165,7 @@ export class CalendarComponent implements OnInit, OnChanges {
 
     get_in_group_calendar(): void {
         this.get_calendar_events(this.in_calendar_id);
-        this.requestSrv.get(`calendars/${this.in_calendar_id}`, {}, {Authorization: ''})
+        this.calendarsSrv.getCalendars(this.in_calendar_id)
             .subscribe(ret => {
                 this.calendar_name = ret.calendar.name;
             });
@@ -171,16 +173,15 @@ export class CalendarComponent implements OnInit, OnChanges {
 
     get_group_calendar(): void {
         this.get_calendar_events(this.calendar_id);
-        this.requestSrv.get(`calendars/${this.calendar_id}`, {}, {Authorization: ''})
+        this.calendarsSrv.getCalendars(this.calendar_id)
             .subscribe(ret => {
                 this.calendar_name = ret.calendar.name;
             });
     }
 
     get_global_calendar(): void {
-        console.log('GLOBAL');
         this.profileSrv.userProfile$.subscribe(user => {
-            this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
+            this.usersSrv.getCalendars(user.pseudo)
                 .subscribe(ret => {
                     for (let idx in ret.calendars) {
                         this.get_calendar_events(ret.calendars[idx].calendar.id);
@@ -215,7 +216,8 @@ export class CalendarComponent implements OnInit, OnChanges {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result !== null && result !== undefined) {
-                console.log('Event created');
+
+                this.toastSrv.success("L'événement a bien été créé")
             }
         });
     }
@@ -234,7 +236,7 @@ export class CalendarComponent implements OnInit, OnChanges {
     }
 
     eventDragStop(event): void {
-        console.log(event);
+        ;
     }
 
     eventDrop(event): void {
@@ -242,19 +244,17 @@ export class CalendarComponent implements OnInit, OnChanges {
             return;
         const api = this.getAPI();
         const modified_event = api.getEventById(event.event.id);
-        this.requestSrv.get(`events/${event.event.id}`, {}, {Authorization: ''})
+        this.eventsSrv.getEvent(event.event.id)
             .subscribe(resp => {
-                this.requestSrv.put(`events/${event.event.id}`, {
-                        name: event.event.title,
-                        type: resp.event.type,
-                        location: resp.event.location,
-                        visibility: resp.event.visibility,
-                        description: resp.event.description,
-                        start_time: modified_event.start.toISOString(),
-                        end_time: modified_event.end.toISOString(),
-                    },
-                    {Authorization: ''})
-                    .subscribe(ret => {
+                this.eventsSrv.modifyEvent(event.event.id, {
+                    name: event.event.title,
+                    type: resp.event.type,
+                    location: resp.event.location,
+                    visibility: resp.event.visibility,
+                    description: resp.event.description,
+                    start_time: modified_event.start.toISOString(),
+                    end_time: modified_event.end.toISOString(),
+                }).subscribe(ret => {
                         this.toastSrv.success('Evenement modifié');
                     });
             });
@@ -274,21 +274,21 @@ export class CalendarComponent implements OnInit, OnChanges {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result !== null && result !== undefined) {
-                console.log('Creneau trouvé');
+                this.toastSrv.info("Un créneau a été trouvé")
             }
         });
     }
 
     dateClick(model) {
-        console.log('DATE CLICK', model);
+        ;
     }
 
     eventResize(event) {
         const api = this.getAPI();
         const modified_event = api.getEventById(event.event.id);
-        this.requestSrv.get(`events/${event.event.id}`, {}, {Authorization: ''})
+        this.eventsSrv.getEvent(event.event.id)
             .subscribe(resp => {
-                this.requestSrv.put(`events/${event.event.id}`, {
+                this.eventsSrv.modifyEvent(event.event.id, {
                         name: event.event.title,
                         type: resp.event.type,
                         location: resp.event.location,
@@ -296,9 +296,7 @@ export class CalendarComponent implements OnInit, OnChanges {
                         description: resp.event.description,
                         start_time: modified_event.start.toISOString(),
                         end_time: modified_event.end.toISOString(),
-                    },
-                    {Authorization: ''})
-                    .subscribe(ret => {
+                    }).subscribe(ret => {
                         this.toastSrv.success('Evenement modifié');
                     });
             });

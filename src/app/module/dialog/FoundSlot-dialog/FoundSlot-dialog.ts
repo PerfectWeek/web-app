@@ -4,6 +4,8 @@ import {ToastrService} from 'ngx-toastr';
 import {ProfileService} from '../../../core/services/profile.service';
 import {RequestService} from '../../../core/services/request.service';
 import {FoundSlotConfirmDialog} from '../FoundSlotConfirm-dialog/FoundSlotConfirm-dialog';
+import {UsersService} from "../../../core/services/Requests/Users";
+import {CalendarsService} from "../../../core/services/Requests/Calendars";
 
 @Component({
     selector: 'FoundSlot-dialog',
@@ -37,15 +39,16 @@ import {FoundSlotConfirmDialog} from '../FoundSlotConfirm-dialog/FoundSlotConfir
     // '}']
 })
 export class FoundSlotDialog {
-    name: string;
-    location: string;
+    //name: string;
     eventType: string;
-    description: string;
+    //description: string;
     start: Date;
     end: Date;
+    location = '';
     heure: number = 1;
     minute: number = 0;
-    eventVisibility = 'public';
+    limit: number = 10;
+    //eventVisibility = 'public';
 
     user: any = null;
     calendars_list: any;
@@ -59,17 +62,20 @@ export class FoundSlotDialog {
     eventVisibilities: any = [{value: 'public', viewValue: 'Public'},
         {value: 'private', viewValue: 'Privé'}];
 
+    current_date = new Date();
 
     @ViewChild('userInput') userInput;
 
     constructor(private requestSrv: RequestService,
                 private profileSrv: ProfileService,
+                private usersSrv: UsersService,
+                private calendarsSrv: CalendarsService,
                 private toastSrv: ToastrService,
                 public dialogRef: MatDialogRef<FoundSlotDialog>,
                 public dialog: MatDialog,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         this.profileSrv.userProfile$.subscribe(user => {
-            this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
+            this.usersSrv.getCalendars(user.pseudo)
                 .subscribe(ret => {
                     this.calendars_list = ret.calendars;
                 });
@@ -78,10 +84,10 @@ export class FoundSlotDialog {
 
 
     ChooseSlot(route_id_calendar, slots, event) {
-        // Open a New modal for choose a slot
+        // Open a New modal to choose a slot
         if (slots.slots.length !== 0) {
             const dialogConfirmRef = this.dialog.open(FoundSlotConfirmDialog, {
-                width: '1000px',
+                width: '1300px',
                 data: {
                     calendar_id: route_id_calendar,
                     slots,
@@ -90,9 +96,8 @@ export class FoundSlotDialog {
                 }
             });
             dialogConfirmRef.afterClosed().subscribe(result => {
-                console.log(result);
                 if (result !== null && result !== undefined) {
-                    console.log('Réponse enregistré');
+                    this.toastSrv.info("Votre slot a bien été enregistré")
                 }
             });
         }
@@ -107,30 +112,30 @@ export class FoundSlotDialog {
         // const start = '2019-05-09T00:00:00.000Z';
         // const end = '2019-05-09T19:23:00.000Z';
 
-        console.log(start, end);
         let route_id_calendar;
         if (this.dialog_calendar_id != null) {
             route_id_calendar = this.dialog_calendar_id;
         } else {
             route_id_calendar = this.data.calendar_id;
         }
+        this.toastSrv.success('Recherche de créneau en cours');
         this.requestSrv.get(`calendars/${route_id_calendar}/assistant/find-best-slots`,
             {
                 min_time: start,
                 max_time: end,
                 type: this.eventType,
                 location: this.location,
-                duration: this.heure * 60 + this.minute
+                duration: this.heure * 60 + this.minute,
+                limit: this.limit
             }, {Authorization: ''})
             .subscribe(slots => {
-                this.toastSrv.success('Recherche de créneau en cours');
                 this.dialogRef.close();
                 this.ChooseSlot(route_id_calendar, slots, {
-                    name: this.name,
+                    // name: this.name,
                     type: this.eventType,
                     location: this.location,
-                    visibility: this.eventVisibility,
-                    description: this.description,
+                    // visibility: this.eventVisibility,
+                    // description: this.description,
                     start: this.start,
                     end: this.end,
                     minute: this.minute,

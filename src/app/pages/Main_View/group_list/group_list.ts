@@ -17,6 +17,8 @@ import {Router} from "@angular/router";
 import {MatDialog} from "@angular/material";
 import {GroupCreationDialog} from "../../../module/dialog/Group-creation-dialog/group-creation";
 import {BehaviorSubject, Observable} from "rxjs/Rx";
+import {UsersService} from "../../../core/services/Requests/Users";
+import {GroupsService} from "../../../core/services/Requests/Groups";
 
 @Component({
     selector: 'group-list',
@@ -61,6 +63,8 @@ export class GroupListComponent implements OnInit, AfterViewInit {
 
     constructor(private requestSrv: RequestService,
                 private profileSrv: ProfileService,
+                private usersSrv: UsersService,
+                private groupsSrv: GroupsService,
                 private toastSrv: ToastrService,
                 private dialog: MatDialog,
                 private router: Router) {
@@ -95,14 +99,14 @@ export class GroupListComponent implements OnInit, AfterViewInit {
 
     getGroups() {
         this.profileSrv.userProfile$.subscribe(user => {
-            this.requestSrv.get(`users/${user.pseudo}/image`, {}, {Authorization: ''})
+            this.usersSrv.getImage(user.pseudo)
                 .subscribe(ret => this.userImage = ret.image);
-            this.requestSrv.get(`users/${user.pseudo}/groups`, {}, {Authorization: ''})
+            this.usersSrv.getGroups(user.pseudo)
                 .subscribe(groups => {
                     if (groups.groups.length > 0) {
                         this.userGroups = groups.groups;
                         this.userGroups.forEach((group, index) => {
-                            this.requestSrv.get(`groups/${group.id}/image`, {}, {Authorization: ""})
+                            this.groupsSrv.getImage(group.id)
                                 .subscribe(ret => {
                                     group['image'] = ret.image;
                                     if (index === this.userGroups.length - 1)
@@ -117,6 +121,7 @@ export class GroupListComponent implements OnInit, AfterViewInit {
     }
 
     formatBody(body) {
+        console.log('body => ', body);
         let field = 'members';
         let found: boolean = false;
         let end = '"role":"actor"}';
@@ -138,7 +143,9 @@ export class GroupListComponent implements OnInit, AfterViewInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result !== null && result !== undefined) {
-                this.requestSrv.postJSON('groups', this.formatBody(result), {Authorization: ''}).subscribe(ret => {
+                this.groupsSrv.createGroup(this.formatBody(result))
+                .subscribe(ret => {
+                        (<any>window).ga('send', 'event', 'Group', 'Creating Group', `Group Name: ${result.name}`);
                         this.toastSrv.success(`Votre groupe ${ret.group.name} a bien été créé`);
                         this.ready.next(false);
                         this.getGroups();
@@ -165,15 +172,17 @@ export class GroupListComponent implements OnInit, AfterViewInit {
         groups.forEach(group => {
             this.removeClass(group.nativeElement, 'group-focused');
         });
-        if (pos_id === -1)
+        if (pos_id === -1) {
+            (<any>window).ga('send', 'event', 'Group', 'Checking myself', `User Pseudo: ${this.profileSrv.user.pseudo}`);
             this.user.nativeElement.className += ' group-focused';
+        }
         else {
+            (<any>window).ga('send', 'event', 'Group', 'Checking group', `Checking Group: "${this.displayGroups[pos_id].name}"`);
             groups[pos_id].nativeElement.className += ' group-focused';
         }
     }
 
     search() {
-        console.log('\nSearch by input value');
         this.input = this.search$.getValue().toLowerCase();
         this.pageIndex = 0;
 
@@ -184,62 +193,20 @@ export class GroupListComponent implements OnInit, AfterViewInit {
             user.pseudo.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) !== -1 ? this.displayUser = true : this.displayUser = false;
         });
 
-        console.log("Number of groups returned per request => ", this.pageSize);
-        console.log("Starting at group => ", this.pageIndex, " * ", this.pageSize);
-        console.log("Sorting groups by => ", this.sortingBy);
-        console.log("Searching groups for value => ", this.search$.getValue().toLowerCase());
-
-
         /* To be implemented when the routes will be up api wise*/
-
-        // this.displayGroups = [];
-        // this.requestSrv.get(`groups`, {
-        //     _limit: this.pageSize,
-        //     _start: this.pageIndex,
-        //     _sort:  this.sortingBy,
-        //     "=":    this.search$.getValue().toLowerCase()
-        // }, {Authorization: ''})
-        //     .subscribe(ret => {
-        //         ret.groups.forEach(group => this.displayGroups.push(group));
-        // this.profileSrv.userProfile$.subscribe(user => {
-        //     user.pseudo.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) !== -1 ? this.displayUser = true : this.displayUser = false;
-        // });
-        //     }, err => {
-        //         this.toastSrv.error(err.error.message, 'Une erreur est survenue');
-        //     });
 
     }
 
     scrollGroupSearch() {
-        console.log('\nAfter Scroll Search');
         ++this.pageIndex;
-        console.log("Number of groups returned per request => ", this.pageSize);
-        console.log("Starting at group => ", this.pageIndex, " * ", this.pageSize);
-        console.log("Sorting groups by => ", this.sortingBy);
-        console.log("Searching groups for value => ", this.search$.getValue().toLowerCase());
 
         let tmp = this.displayGroups;
 
         /* To be implemented when the routes will be up api wise*/
-
-        // this.requestSrv.get(`groups`, {
-        //     _limit: this.pageSize,
-        //     _start: this.pageIndex,
-        //     _sort:  this.sortingBy,
-        //     _contains:    this.search$.getValue().toLowerCase()
-        // }, {Authorization: ''})
-        //     .subscribe(ret => {
-        //         ret.groups.forEach(group => this.displayGroups.push(group));
-        // this.profileSrv.userProfile$.subscribe(user => {
-        //     user.pseudo.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) !== -1 ? this.displayUser = true : this.displayUser = false;
-        // });
-        //     }, err => {
-        //         this.toastSrv.error(err.error.message, 'Une erreur est survenue');
-        //     });
     }
 
     modifyGroupName(group_id: number) {
-        this.requestSrv.get(`groups/${group_id}`, {}, {Authorization: ''})
+        this.groupsSrv.getGroup(group_id)
             .subscribe(ret => {
                 (this.userGroups.find(group => group.id === group_id)).name = ret.group.name;
             })

@@ -14,6 +14,8 @@ import {UserService} from './UserService';
 import {GoogleApiService} from 'ng-gapi';
 import {SheetResource} from './SheetResource';
 import {environment} from "../../../environments/environment";
+import {UsersService} from "../../core/services/Requests/Users";
+import {AuthenticationService} from "../../core/services/Requests/Authentication";
 
 declare var FB: any;
 
@@ -43,6 +45,8 @@ export class RegistrationComponent {
                 private requestSrv: RequestService,
                 private profileSrv: ProfileService,
                 private authSrv: AuthService,
+                private authReqSrv: AuthenticationService,
+                private usersSrv: UsersService,
                 private tokenSrv: TokenService,
                 public router: Router,
                 private userService: UserService,
@@ -59,11 +63,12 @@ export class RegistrationComponent {
             return;
         const user: User = this.registrationForm.value;
         delete (<any>user).confirmPassword;
-        this.requestSrv.post('users', user)
+        this.usersSrv.createUser(user)
             .do((response) => this.toastSrv.success('Vous vous êtes inscrit avec succès', 'Inscription effectué'))
             .do(
                 () => {
-                    this.router.navigate(['/login'])
+                    (<any>window).ga('send', 'event', 'Registration', 'Registering', user.pseudo);
+                    this.router.navigate(['/login']);
                     return true;
 
                 },
@@ -85,16 +90,16 @@ export class RegistrationComponent {
         let self = this;
         FB.login(function (response) {
             if (response.status === 'connected') {
-                self.requestSrv.get("auth/providers/facebook/callback", {
-                    access_token: response["authResponse"]["accessToken"],
-                    refresh_token: ""
-                }, {})
+                self.authReqSrv.facebookAuth(response["authResponse"]["accessToken"], "")
                     .subscribe((resu) => {
                         self.tokenSrv.token = resu["token"];
                         localStorage.setItem('user_pseudo', resu["user"]["pseudo"]);
                         self.authSrv.auth = {email: resu["user"]["email"], pseudo: resu["user"]["pseudo"]};
                         self.authSrv.logged = true;
-                        self.profileSrv.fetchUser$(resu["user"]["pseudo"]).subscribe(() => self.ngZone.run(() => self.router.navigate(['/dashboard'])));
+                        self.profileSrv.fetchUser$(resu["user"]["pseudo"]).subscribe(() => self.ngZone.run(() => {
+                            (<any>window).ga('send', 'event', 'Login', 'Registering with Facebook', resu["user"]["pseudo"]);
+                            self.router.navigate(['/dashboard']);
+                        }));
                     })
             } else {
             }
