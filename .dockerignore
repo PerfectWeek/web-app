@@ -1,1 +1,11 @@
+# Node
 node_modules
+dist
+
+# MISC
+.DS_Store
+
+# Dev
+.git
+.idea
+.vscode

@@ -1,13 +1,14 @@
-FROM node:12.2.0
+FROM node:11
 
 WORKDIR /app
-COPY . /app
 
-ENV PATH /app/node_modules/.bin:$PATH
-
+COPY package.json package-lock.json ./
 RUN npm install
-RUN npm install -g @angular/cli
 
-CMD ng build --prod="true"
+COPY ./ ./
 
-CMD ng serve --host 0.0.0.0
+RUN npm run build:prod
+
+EXPOSE 4200
+
+CMD npm run start:prod
