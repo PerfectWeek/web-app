@@ -152,3 +152,9 @@
     padding: 0 !important;
   }
 }
+
+@media screen and (max-width: map_get($widths, s)), (max-height: map_get($heights, s)) {
+  .cdk-overlay-pane {
+    max-width: 100% !important;
+  }
+}

@@ -1,6 +1,6 @@
 <section class="loader" *ngIf="(ready$ | async) === false; else loaded"></section>
 <ng-template #loaded>
-    <section class="groups">
+    <section class="groups" id="fullsize">
         <section class="group-header">
             <section class="group-search-bar">
                 <i class="fas fa-search"></i>
@@ -27,5 +27,15 @@
             <img src="{{group.image}}" alt="Group's image" title="Group's image">
             <h4>{{group.name}}</h4>
         </section>
-</section>
+    </section>
+    <section class="mobile-groups" id="mobile-size">
+        <section class="group" (click)="sendGroup(-1, -1)" tabindex="-1" title="You">
+            <img src="{{userImage}}" alt="User's profile image" title="User's profile image">
+            <h4>You</h4>
+        </section>
+        <section #groups *ngFor="let group of displayGroupsMobile; let idx = index" class="group" (click)="sendGroup(group.id, idx)" tabindex="{{idx}}" title="{{group.name}}">
+            <img src="{{group.image}}" alt="Calendar's image" title="Calendar's image">
+            <h4>{{group.name}}</h4>
+        </section>
+    </section>
 </ng-template>

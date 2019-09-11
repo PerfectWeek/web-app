@@ -3,7 +3,7 @@
 @media screen and (max-width: map_get($widths, l)) {
 
   .form-container-sm {
-    & > form, #provider-signin {
+    & > form {
       width: 50%;
     }
   }
@@ -12,7 +12,7 @@
 @media screen and (max-width: map_get($widths, m)) {
 
   .form-container-sm {
-    & > form, #provider-signin {
+    & > form {
       width: 75%;
     }
   }
@@ -32,11 +32,11 @@
   .form-container-sm {
     align-items: start;
 
-    & > form, #provider-signin {
-      width: fill-available;
+    & > form {
+      width: stretch;
       width: -webkit-fill-available;
       width: -moz-available;
-      min-height: fill-available;
+      min-height: stretch;
       min-height: -webkit-fill-available;
       min-height: -moz-available;
       height: auto;

@@ -1,24 +1,26 @@
 <div class="main-full-component">
-  <section class="main-container" style="box-shadow: none !important;">
-    <h3 style="text-align: center">{{user?.pseudo}}</h3>
-  </section>
-  <div class="profile-image">
-    <img src="{{image}}" alt="Profile image" title="Profile image">
-    <button *ngIf="displayButton === true" mat-raised-button class="btn btn-secondary" title="Envoyer une requête d'ami" (click)="sendInvitation()">
-      Faire une demande d'ami
-    </button>
-    <button *ngIf="displayButton !== true" disabled mat-raised-button class="btn btn-danger">Vous êtes déjà amis</button>
-  </div>
-  <div class="main-container" id="Public-Profile-data-container">
-    <div class="profile-container">
-      <div>
-        <h6><strong><i class="fas fa-user"></i> Pseudo</strong></h6>
-        <p class="profile-field-info">{{user?.pseudo}}</p>
-      </div>
+  <div class="main-container">
+    <section id="Page-title">
+      <h3 style="text-align: center">{{user?.pseudo}}</h3>
+    </section>
+    <div class="profile-image">
+      <img src="{{image}}" alt="Profile image" title="Profile image">
+      <button *ngIf="displayButton === true" mat-raised-button class="btn btn-secondary" title="Envoyer une requête d'ami" (click)="sendInvitation()">
+        Faire une demande d'ami
+      </button>
+      <button *ngIf="displayButton !== true" disabled mat-raised-button class="btn btn-danger">Vous êtes déjà amis</button>
+    </div>
+    <div id="Public-Profile-data-container">
+      <div class="profile-container">
+        <div>
+          <h6><strong><i class="fas fa-user"></i> Pseudo</strong></h6>
+          <p class="profile-field-info">{{user?.pseudo}}</p>
+        </div>
 
-      <div>
-        <h6><strong><i class="fas fa-envelope"></i> Email</strong></h6>
-        <p class="profile-field-info">{{user?.email}}</p>
+        <div>
+          <h6><strong><i class="fas fa-envelope"></i> Email</strong></h6>
+          <p class="profile-field-info">{{user?.email}}</p>
+        </div>
       </div>
     </div>
   </div>
