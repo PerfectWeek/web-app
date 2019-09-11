@@ -10,6 +10,7 @@ import {MatAutocomplete} from "@angular/material";
 import {User} from "../../../core/models/User";
 import {BehaviorSubject, Observable} from "rxjs/Rx";
 import {UsersService} from "../../../core/services/Requests/Users";
+import {PermissionService} from '../../../core/services/permission.service';
 
 @Component({
     selector: 'add-member',
@@ -45,6 +46,8 @@ export class AddMemberDialog {
 
     members: string[] = [];
 
+    role: string = 'spectator';
+
     pageIndex: number = 1;
     pageSize: number = 10;
     sortingBy: string = "pseudo";
@@ -71,6 +74,7 @@ export class AddMemberDialog {
                 private toastSrv: ToastrService,
                 private usersSrv: UsersService,
                 private router: Router,
+                private PermSrv: PermissionService,
                 public dialogRef: MatDialogRef<AddMemberDialog>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         data.members.forEach(member => this.members.push(member.pseudo));
@@ -182,7 +186,7 @@ export class AddMemberDialog {
     addMember() {
         let body = {};
         this.selectedUsers.forEach((user, index) => {
-            body[`users[${index}]`] = {name: user, role: 'actor'}
+            body[`users[${index}]`] = {name: user, role: 'spectator'}
         });
         this.dialogRef.close(body);
     }

@@ -1,15 +1,17 @@
-import {Component, OnInit, ViewChild, Inject} from "@angular/core";
+import {Component, OnInit, ViewChild, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {RequestService} from "../../core/services/request.service";
-import {ProfileService} from "../../core/services/profile.service";
-import {ToastrService} from "ngx-toastr";
-import {UsersService} from "../../core/services/Requests/Users";
-import {CalendarsService} from "../../core/services/Requests/Calendars";
-import {EventsService} from "../../core/services/Requests/Events";
+import {RequestService} from '../../core/services/request.service';
+import {ProfileService} from '../../core/services/profile.service';
+import {ToastrService} from 'ngx-toastr';
+import {UsersService} from '../../core/services/Requests/Users';
+import {CalendarsService} from '../../core/services/Requests/Calendars';
+import {EventsService} from '../../core/services/Requests/Events';
+import {User} from '../../core/models/User';
+import {forEach} from '@angular/router/src/utils/collection';
 
 
 @Component({
-    selector: "event-suggestions",
+    selector: 'event-suggestions',
     templateUrl: 'event_suggestions.html',
     styleUrls: ['event_suggestions.scss', '../../../scss/themes/main.scss']
 })
@@ -45,6 +47,11 @@ export class EventSuggestionsComponent implements OnInit {
 
     search: string = '';
 
+    user: User;
+    calendars_id: any = [];
+    user_events: any = [];
+    user_events_id: any = [];
+
     @ViewChild('calendar') calendar;
 
 
@@ -62,6 +69,26 @@ export class EventSuggestionsComponent implements OnInit {
 
     ngOnInit() {
         this.getCalendars();
+
+        this.profileSrv.userProfile$.subscribe(ret => {
+            this.user = ret;
+            this.usersSrv.getCalendars(this.user.pseudo).subscribe(ret => {
+                ret.calendars.filter(e => {
+                    this.calendars_id.push(e.calendar.id);
+                });
+                this.calendars_id.map(e => {
+                    this.calendarsSrv.getEvents(e).subscribe(ret => {
+                        this.user_events.push(...ret.events);
+                        this.user_events.map(e => {
+                            this.user_events_id.push(e.id);
+                        });
+                    });
+                });
+                // for (const idx in this.calendars_id) {
+                //     this.calendarsSrv.getEvents(this.calendars_id[idx]).subscribe(ret => console.log(ret));
+                // }
+            });
+        });
     }
 
     get calendar_id() {
@@ -74,7 +101,7 @@ export class EventSuggestionsComponent implements OnInit {
                 .subscribe(calendars => {
                     this.focusedCalendar = calendars.calendars[0].calendar;
                     this.getSuggestions();
-                })
+                });
         });
     }
 
@@ -88,18 +115,22 @@ export class EventSuggestionsComponent implements OnInit {
             .subscribe(events => {
                 for (let key in events.suggestions) {
                     this.requestSrv.get(`events/${events.suggestions[key].event.id}/image`, {}, {Authorization: ''}).subscribe(ret => {
-                        this.suggestions.push({
-                            id: events.suggestions[key].event.id,
-                            name: events.suggestions[key].event.name,
-                            description: events.suggestions[key].event.description,
-                            location: events.suggestions[key].event.location,
-                            type: events.suggestions[key].event.type,
-                            visibility: events.suggestions[key].event.visibility,
-                            calendar_id: events.suggestions[key].event.calendar_id,
-                            start_time: new Date(events.suggestions[key].event.start_time),
-                            end_time: new Date(events.suggestions[key].event.end_time),
-                            image: ret.image
-                        });
+
+                        // console.log(events.suggestions[key].event.id, "===", this.user_events_id);
+                        if (this.user_events_id.indexOf(events.suggestions[key].event.id) === -1) {
+                            this.suggestions.push({
+                                id: events.suggestions[key].event.id,
+                                name: events.suggestions[key].event.name,
+                                description: events.suggestions[key].event.description,
+                                location: events.suggestions[key].event.location,
+                                type: events.suggestions[key].event.type,
+                                visibility: events.suggestions[key].event.visibility,
+                                calendar_id: events.suggestions[key].event.calendar_id,
+                                start_time: new Date(events.suggestions[key].event.start_time),
+                                end_time: new Date(events.suggestions[key].event.end_time),
+                                image: ret.image
+                            });
+                        }
                     });
                 }
                 // this.suggestions = events.suggestions.map(e => {
@@ -130,10 +161,19 @@ export class EventSuggestionsComponent implements OnInit {
     }
 
     joinEvent(id) {
-            this.eventsSrv.joinEvent(id)
+        // this.focusedEvent = null;
+        this.eventsSrv.joinEvent(id)
             .subscribe(response => {
-                this.toastSrv.info("Cet évènement a bien été ajouté à votre liste d'évènements");
-            }, err => this.toastSrv.error("Une erreur est survenue lors de l'ajout à votre liste d'évènement"));
+                this.toastSrv.info('Cet évènement a bien été ajouté à votre liste d\'évènements');
+                this.focusedEvent = null;
+                this.suggestions = this.suggestions.filter(e => e.id !== id);
+                const callAPI = this.getAPI();
+                let test = callAPI.getEventById(id);
+                const hexa = ['#f2db09', '#3d8fdc', '#45c4d9', '#cae602', '#ffd39b', '#c0e2e1', '#ccffff', '#9c6eb2'];
+                const color = hexa[Math.floor(Math.random() * hexa.length)];
+                test.setProp('backgroundColor', color);
+                test.setProp('borderColor', color);
+            }, err => this.toastSrv.error('Une erreur est survenue lors de l\'ajout à votre liste d\'évènement'));
     }
 
     generateEventImage(type) {

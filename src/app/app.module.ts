@@ -116,6 +116,7 @@ import {UsersService} from "./core/services/Requests/Users";
 import {GroupsService} from "./core/services/Requests/Groups";
 import {CalendarsService} from "./core/services/Requests/Calendars";
 import {EventsService} from "./core/services/Requests/Events";
+import {PermissionService} from './core/services/permission.service';
 //import {FlexLayoutModule} from '@angular/flex-layout';
 
 registerLocaleData(localeFr);
@@ -225,6 +226,7 @@ let gapiClientConfig: NgGapiClientConfig = {
         GroupsService,
         CalendarsService,
         EventsService,
+        PermissionService,
         {
             provide: SWIPER_CONFIG,
             useValue: DEFAULT_SWIPER_CONFIG

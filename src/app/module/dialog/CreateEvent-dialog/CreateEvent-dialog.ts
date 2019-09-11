@@ -5,6 +5,7 @@ import {ProfileService} from '../../../core/services/profile.service';
 import {RequestService} from '../../../core/services/request.service';
 import {UsersService} from "../../../core/services/Requests/Users";
 import {CalendarsService} from "../../../core/services/Requests/Calendars";
+import {PermissionService} from '../../../core/services/permission.service';
 
 @Component({
     selector: 'createEvent-creation-dialog',
@@ -15,7 +16,7 @@ export class CreateEventDialog {
 
     name: string = null;
     location: string = "";
-    eventType: string = null;
+    eventType: string = 'hobby';
     description: string = "";
     eventVisibility = 'public';
     //is_global_calendar = true; //important
@@ -48,6 +49,7 @@ export class CreateEventDialog {
                 private usersSrv: UsersService,
                 private calendarsSrv: CalendarsService,
                 private toastSrv: ToastrService,
+                public PermSrv: PermissionService,
                 public dialogRef: MatDialogRef<CreateEventDialog>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
 
@@ -60,7 +62,8 @@ export class CreateEventDialog {
                 }
                 else
                     console.log("ZERTYUIOP");
-        console.log("read only", this.rd_only);
+        //console.log("read only", this.rd_only);
+
         // this.profileSrv.userProfile$.subscribe(user => {
         //     this.requestSrv.get(`users/${user.pseudo}/image`, {}, {Authorization: ''})
         //         .subscribe(ret => {
@@ -77,7 +80,10 @@ export class CreateEventDialog {
         this.profileSrv.userProfile$.subscribe(user => {
             this.usersSrv.getCalendars(user.pseudo)
                 .subscribe(ret => {
-                    this.calendars_list = ret.calendars;
+                    // console.log("val", ret.calendars);
+                    // console.log("type", typeof ret.calendars);
+                    this.calendars_list = ret.calendars.filter(e => { if (PermSrv.permission[e.calendar.role].CRUD === true) {return e;} } );
+                    //this.calendars_list = ret.calendars;
                 });
         });
 

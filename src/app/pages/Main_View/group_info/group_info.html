@@ -41,8 +41,8 @@
                 Membres
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <p (click)="addMember()" class="add-member"><i class="fas fa-plus"></i> <span>Ajouter un membre</span></p>
-            <section *ngFor="let member of group_members, let i = index" class="group-member-container">
+            <p *ngIf="isAdmin === true" (click)="addMember()" class="add-member"><i class="fas fa-plus"></i> <span>Ajouter un membre</span></p>
+              <section *ngFor="let member of group_members, let i = index" class="group-member-container">
               <img src="{{member.image}}">
               <p class="group-member-pseudo">{{member.pseudo}}</p>
               <i class="fas fa-ellipsis-h" [matMenuTriggerFor]="actions"></i>
@@ -53,6 +53,20 @@
                   <button mat-menu-item (click)="goToProfile(member.pseudo)">Accéder à son profil</button>
                   <mat-delimiter></mat-delimiter>
                   <button mat-menu-item (click)="addFriend(member.pseudo)">L'ajouter en ami</button>
+
+                  <button mat-menu-item *ngIf="isAdmin === true" [matMenuTriggerFor]="role_menu">Roles</button>
+                  <mat-menu #role_menu="matMenu">
+                  <button mat-menu-item *ngFor="let perm of PermSrv.permission_list"
+                          [value]="perm.role"
+                          [disabled]="perm.role === member.role"
+                          (click)="changeMemberPermission(member, perm.role)">
+                      {{perm.text}}
+<!--                     <a *ngIf="perm.role === member.role">Yes</a>-->
+                  </button>
+                  </mat-menu>
+
+<!--                    <button *ngIf="isAdmin === true" mat-menu-item (click)="changeMemberPermission(member)">Changer le role</button>-->
+
                 </section>
               </mat-menu>
             </section>

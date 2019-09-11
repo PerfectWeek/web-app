@@ -20,15 +20,17 @@ import {FoundSlotDialog} from '../../module/dialog/FoundSlot-dialog/FoundSlot-di
 import {ConfirmDialog} from '../../module/dialog/Confirm-dialog/Confirm-dialog';
 import {ModifyEventDialog} from '../../module/dialog/ModifyEvent-dialog/ModifyEvent';
 import {Calendar} from '@fullcalendar/core/Calendar';
-import {UsersService} from "../../core/services/Requests/Users";
-import {CalendarsService} from "../../core/services/Requests/Calendars";
-import {EventsService} from "../../core/services/Requests/Events";
+import {UsersService} from '../../core/services/Requests/Users';
+import {CalendarsService} from '../../core/services/Requests/Calendars';
+import {EventsService} from '../../core/services/Requests/Events';
+import {GroupsService} from '../../core/services/Requests/Groups';
+import {PermissionService} from '../../core/services/permission.service';
 
 @Component({
     selector: 'mwl-demo-component',
     styleUrls: ['calendar.scss',
-                '../../../scss/dialog.scss',
-                '../../../scss/themes/main.scss'],
+        '../../../scss/dialog.scss',
+        '../../../scss/themes/main.scss'],
     templateUrl: 'calendar.html',
 
 })
@@ -40,11 +42,13 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     @Input('in_calendar_id') in_calendar_id = null;
     @Input('displayOnly') displayOnly: boolean = false;
 
+    @Input('role') role: string = 'admin';
+
     locale: 'fr';
     calendar_id: number = null;
     calendar_name: string = null;
     is_global_calendar: boolean = true;
-    //@Input('addEventCallback') addEventCallback;
+
     api: Calendar;
 
 
@@ -56,6 +60,8 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 private eventsSrv: EventsService,
                 private usersSrv: UsersService,
                 private toastSrv: ToastrService,
+                private groupsSrv: GroupsService,
+                public permSrv: PermissionService,
                 private router: Router) {
     }
 
@@ -64,12 +70,25 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
         this.is_global_calendar = (!Number.isNaN(this.calendar_id)) ? false : true;
         this.events = [];
         this.in_calendar_id = changes.in_calendar_id.currentValue;
+
         if (this.in_calendar_id === -1) {
             this.get_global_calendar();
             this.is_global_calendar = true;
+
         } else {
             this.is_global_calendar = false;
             this.get_in_group_calendar();
+        }
+
+        if (this.is_global_calendar === false) {
+            this.calendarsSrv.getCalendars(this.in_calendar_id).subscribe(ret => {
+                this.role = ret.calendar.role;
+
+                // this.api.setOption('editable', this.permSrv.permission[this.role].CRUD); // maybe delete
+            });
+        } else {
+            this.role = 'admin';
+            // this.api.setOption('editable', this.permSrv.permission[this.role].CRUD); // maybe delete
         }
     }
 
@@ -121,9 +140,6 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     ngAfterViewInit(): void {
         this.api = this.calendarComponent.getApi();
-        // setTimeout(() => {
-        //     //this.get_group_info();
-        // }, 500);
     }
 
     deleteEvent(elem): void {
@@ -217,22 +233,47 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result !== null && result !== undefined) {
 
-                this.toastSrv.success("L'événement a bien été créé")
+                this.toastSrv.success('L\'événement a bien été créé');
             }
         });
     }
 
     eventClick(event) {
-        if (this.displayOnly === true)
-            return ;
-        const dialogRef = this.dialog.open(ModifyEventDialog, {
-            width: '650px',
-            data: {
-                event,
-                calendar_locale: this.locale,
-                calAPI: this.api
-            }
+        this.eventsSrv.getEvent(event.event.id).subscribe(ret => {
+            //console.log(ret);
+            this.calendarsSrv.getCalendars(ret.event.calendar_id).subscribe(ret => {
+                // console.log(ret);
+                this.role = ret.calendar.role;
+                if (this.permSrv.permission[this.role].read === false) {
+                    this.toastSrv.error('Vous n\'avez pas les droits de lecture sûr cette évènement');
+                    return;
+                }
+
+                const dialogRef = this.dialog.open(ModifyEventDialog, {
+                    width: '650px',
+                    data: {
+                        event,
+                        calendar_locale: this.locale,
+                        calAPI: this.api,
+                        role: this.role
+                    }
+                });
+                if (this.is_global_calendar === true) {
+                    this.role = 'admin';
+                }
+            });
         });
+
+
+        // const dialogRef = this.dialog.open(ModifyEventDialog, {
+        //     width: '650px',
+        //     data: {
+        //         event,
+        //         calendar_locale: this.locale,
+        //         calAPI: this.api,
+        //         role: this.role
+        //     }
+        // });
     }
 
     eventDragStop(event): void {
@@ -240,24 +281,33 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     eventDrop(event): void {
-        if (this.displayOnly === true)
-            return;
-        const api = this.getAPI();
-        const modified_event = api.getEventById(event.event.id);
-        this.eventsSrv.getEvent(event.event.id)
-            .subscribe(resp => {
-                this.eventsSrv.modifyEvent(event.event.id, {
-                    name: event.event.title,
-                    type: resp.event.type,
-                    location: resp.event.location,
-                    visibility: resp.event.visibility,
-                    description: resp.event.description,
-                    start_time: modified_event.start.toISOString(),
-                    end_time: modified_event.end.toISOString(),
-                }).subscribe(ret => {
-                        this.toastSrv.success('Evenement modifié');
+        this.eventsSrv.getEvent(event.event.id).subscribe(ret => {
+            //console.log(ret);
+            this.calendarsSrv.getCalendars(ret.event.calendar_id).subscribe(ret => {
+                //console.log(ret);
+                this.role = ret.calendar.role;
+                if (this.permSrv.permission[this.role].CRUD === false) {
+                    this.toastSrv.error(`En temps que ${this.permSrv.permission[this.role].frRole} vous n'êtes pas autorisez à modifier la durée de cette évènement, vos modification ne seront pas prises en comptes`);
+                    return;
+                }
+                const api = this.getAPI();
+                const modified_event = api.getEventById(event.event.id);
+                this.eventsSrv.getEvent(event.event.id)
+                    .subscribe(resp => {
+                        this.eventsSrv.modifyEvent(event.event.id, {
+                            name: event.event.title,
+                            type: resp.event.type,
+                            location: resp.event.location,
+                            visibility: resp.event.visibility,
+                            description: resp.event.description,
+                            start_time: modified_event.start.toISOString(),
+                            end_time: modified_event.end.toISOString(),
+                        }).subscribe(ret => {
+                            this.toastSrv.success('Evenement modifié');
+                        });
                     });
             });
+        });
     }
 
     foundSlots(): void {
@@ -274,32 +324,45 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result !== null && result !== undefined) {
-                this.toastSrv.info("Un créneau a été trouvé")
+                this.toastSrv.info('Un créneau a été trouvé');
             }
         });
     }
 
     dateClick(model) {
-        ;
+        // console.log("oui", model.date);
+        // this.api.changeView('timeGridDay');
+        // this.api.gotoDate(model.date);
     }
 
     eventResize(event) {
-        const api = this.getAPI();
-        const modified_event = api.getEventById(event.event.id);
-        this.eventsSrv.getEvent(event.event.id)
-            .subscribe(resp => {
-                this.eventsSrv.modifyEvent(event.event.id, {
-                        name: event.event.title,
-                        type: resp.event.type,
-                        location: resp.event.location,
-                        visibility: resp.event.visibility,
-                        description: resp.event.description,
-                        start_time: modified_event.start.toISOString(),
-                        end_time: modified_event.end.toISOString(),
-                    }).subscribe(ret => {
-                        this.toastSrv.success('Evenement modifié');
+        this.eventsSrv.getEvent(event.event.id).subscribe(ret => {
+            //console.log(ret);
+            this.calendarsSrv.getCalendars(ret.event.calendar_id).subscribe(ret => {
+                //console.log(ret);
+                this.role = ret.calendar.role;
+                if (this.permSrv.permission[this.role].CRUD === false) {
+                    this.toastSrv.error(`En temps que ${this.permSrv.permission[this.role].frRole} vous n'êtes pas autorisez à modifier la durée de cette évènement, vos modification ne seront pas prises en comptes`);
+                    return;
+                }
+
+                const api = this.getAPI();
+                const modified_event = api.getEventById(event.event.id);
+                this.eventsSrv.getEvent(event.event.id)
+                    .subscribe(resp => {
+                        this.eventsSrv.modifyEvent(event.event.id, {
+                            name: event.event.title,
+                            type: resp.event.type,
+                            location: resp.event.location,
+                            visibility: resp.event.visibility,
+                            description: resp.event.description,
+                            start_time: modified_event.start.toISOString(),
+                            end_time: modified_event.end.toISOString(),
+                        }).subscribe(ret => {
+                            this.toastSrv.success('Evenement modifié');
+                        });
                     });
             });
+        });
     }
-
 }

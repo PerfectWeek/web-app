@@ -18,7 +18,7 @@
                     </mat-select>
                 </mat-form-field>
 
-                <mat-form-field style="width: 45%;">
+                <mat-form-field [ngStyle]="{width: (data.is_global_calendar == true) ? '45%' : '100%'}">
                     <mat-select placeholder="Type" required
                                 [(ngModel)]="eventType"
                                 name="eventType">
@@ -137,7 +137,7 @@
             <mat-expansion-panel style="width: 100%">
                 <mat-expansion-panel-header>
                     <mat-panel-description style="justify-content: center">
-                        Option
+                        Options
                     </mat-panel-description>
                 </mat-expansion-panel-header>
 

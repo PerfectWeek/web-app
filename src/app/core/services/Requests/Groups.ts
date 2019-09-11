@@ -29,7 +29,7 @@ export class GroupsService {
     }
 
     modifyMemberRole(group_id: number, pseudo: string, role: string): Observable<any> {
-        return this.requestSrv.put(`groups/${group_id}.members/${pseudo}`, {role}, {Authorization: ''});
+        return this.requestSrv.put(`groups/${group_id}/members/${pseudo}`, {role}, {Authorization: ''});
     }
 
     removeMember(group_id: number, pseudo: string): Observable<any> {
