@@ -10,7 +10,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build:prod": "ng build --prod",
-    "start:prod": "ng serve --host 0.0.0.0 --disable-host-check"
+    "start:prod": "serve -s dist/"
   },
   "private": true,
   "dependencies": {
@@ -54,6 +54,7 @@
     "rrule": "2.5.6",
     "rxjs": "^6.3.3",
     "rxjs-compat": "^6.0.0-rc.0",
+    "serve": "^11.1.0",
     "tapable": "^1.1.1",
     "tooltip": "^1.6.1",
     "webpack": "^4.27.1",
