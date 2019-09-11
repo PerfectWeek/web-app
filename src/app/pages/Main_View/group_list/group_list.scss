@@ -137,6 +137,11 @@
     width: -moz-fit-content;
 
     .group {
+      & > img {
+        width: calc(5vw + 5vh);
+        height: calc(5vw + 5vh);
+      }
+
       & > h4 {
         margin-bottom: 0;
       }
