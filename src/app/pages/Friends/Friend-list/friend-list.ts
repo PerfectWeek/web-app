@@ -178,9 +178,9 @@ export class FriendListComponent implements OnInit, AfterViewInit {
     }
 
     scrollSearch() {
-        ++this.pageIndex;
-        let tmp = this.displayFriends;
-        tmp.forEach(group => this.displayFriends.push(group));
+        // ++this.pageIndex;
+        // let tmp = this.displayFriends;
+        // tmp.forEach(group => this.displayFriends.push(group));
 
         /* To be implemented when the routes will be up api wise*/
 

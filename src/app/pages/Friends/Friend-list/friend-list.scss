@@ -5,10 +5,6 @@
   box-shadow: none !important;
 }
 
-#UserInput {
-  color: black !important;
-}
-
 .friends {
   width: 100%;
 
@@ -31,6 +27,13 @@
       align-items: center;
       background-color: map_get($colors, light) !important;
       border-radius: 5px;
+
+      & > #UserInput {
+        color: black !important;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
 
       & > i {
         padding-left: 8px;
@@ -122,6 +125,29 @@
         & > i:hover {
           filter: saturate(2);
         }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: map_get($widths, s)), (max-height: map_get($heights, s)) {
+
+  #friend-list-title {
+    margin: 0 auto;
+  }
+
+  .friends-search-bar {
+    margin: 0 0 15px 0;
+  }
+
+  .friend {
+    width: 85% !important;
+
+    & .friend-header {
+      height: calc(7.5vw + 7.5vh);
+
+      & > img {
+        height: calc(5vw + 5vh);
       }
     }
   }

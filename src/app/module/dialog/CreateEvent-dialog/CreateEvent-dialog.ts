@@ -113,7 +113,7 @@ export class CreateEventDialog {
                     visibility: this.eventVisibility,
                 });
                 (<any>window).ga('send', 'event', 'Events', 'Event Creation', `Event Name: ${this.name}`);
-                this.toastSrv.success('Evenement ajouté au groupe');
+                this.toastSrv.success('Evenement ajouté au calendrier');
                 this.dialogRef.close();
             }, err => this.toastSrv.error('Une erreur est survenue lors de l\'ajout du nouvel evenement'));
     }

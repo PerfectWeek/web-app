@@ -159,6 +159,9 @@
     & .group-name {
       & h3 {
         font-size: 0.9rem !important;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
 
@@ -185,6 +188,9 @@
     & .group-name {
       & h3 {
         font-size: 0.9rem !important;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
 

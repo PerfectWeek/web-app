@@ -4,12 +4,3 @@
   left: initial;
   right: calc(15% - (20vw + 20vh));
 }
-
-@media screen and (max-width: map_get($widths, l)) {
-
-  .form-container-sm {
-    & > form {
-      width: 50%;
-    }
-  }
-}

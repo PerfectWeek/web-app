@@ -19,6 +19,7 @@ import {GroupCreationDialog} from "../../../module/dialog/Group-creation-dialog/
 import {BehaviorSubject, Observable} from "rxjs/Rx";
 import {UsersService} from "../../../core/services/Requests/Users";
 import {GroupsService} from "../../../core/services/Requests/Groups";
+import {Group} from "../../../core/models/Group";
 
 @Component({
     selector: 'group-list',
@@ -32,6 +33,8 @@ export class GroupListComponent implements OnInit, AfterViewInit {
     userGroups: any[] = [];
 
     displayGroups: any[] = [];
+
+    displayGroupsMobile: any[] = [];
 
     public search$ = new BehaviorSubject<string>('');
 
@@ -98,6 +101,8 @@ export class GroupListComponent implements OnInit, AfterViewInit {
     }
 
     getGroups() {
+        this.displayGroups = [];
+        this.displayGroupsMobile = [];
         this.profileSrv.userProfile$.subscribe(user => {
             this.usersSrv.getImage(user.pseudo)
                 .subscribe(ret => this.userImage = ret.image);
@@ -109,11 +114,17 @@ export class GroupListComponent implements OnInit, AfterViewInit {
                             this.groupsSrv.getImage(group.id)
                                 .subscribe(ret => {
                                     group['image'] = ret.image;
+                                    this.displayGroups.push(group);
+                                    let obj:any = {};
+                                    for (let key in group)
+                                        obj[key] = group[key];
+                                    let acr = obj.name.match(/\b(\w)/g);
+                                    obj.name = (acr != null) ?  acr.join('.').toUpperCase() : group.name;
+                                    this.displayGroupsMobile.push(obj);
                                     if (index === this.userGroups.length - 1)
                                         this.ready.next(true);
                                 });
                         });
-                        this.displayGroups = this.userGroups;
                     }
                     else this.ready.next(true);
                 })
@@ -121,7 +132,6 @@ export class GroupListComponent implements OnInit, AfterViewInit {
     }
 
     formatBody(body) {
-        console.log('body => ', body);
         let field = 'members';
         let found: boolean = false;
         let end = '"role":"actor"}';
@@ -146,7 +156,7 @@ export class GroupListComponent implements OnInit, AfterViewInit {
                 this.groupsSrv.createGroup(this.formatBody(result))
                 .subscribe(ret => {
                         (<any>window).ga('send', 'event', 'Group', 'Creating Group', `Group Name: ${result.name}`);
-                        this.toastSrv.success(`Votre groupe ${ret.group.name} a bien été créé`);
+                        this.toastSrv.success(`Votre calendrier ${ret.group.name} a bien été créé`);
                         this.ready.next(false);
                         this.getGroups();
                     },
@@ -189,6 +199,16 @@ export class GroupListComponent implements OnInit, AfterViewInit {
         this.displayGroups = [];
         this.displayGroups = this.userGroups
             .filter(group => group.name.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) != -1);
+        this.displayGroups.forEach(group => {
+            let obj = {};
+            for (let key in group)
+                obj[key] = group[key];
+            this.displayGroupsMobile.push(obj);
+        });
+        this.displayGroupsMobile.forEach(group => {
+            let acr = group.name.match(/\b(\w)/g);
+            group.name = (acr != null) ?  acr.join('.').toUpperCase() : group.name;
+        });
         this.profileSrv.userProfile$.subscribe(user => {
             user.pseudo.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) !== -1 ? this.displayUser = true : this.displayUser = false;
         });

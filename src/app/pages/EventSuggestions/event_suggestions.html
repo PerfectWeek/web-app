@@ -1,7 +1,7 @@
 <div class="full-view">
     <section class="left-view">
 
-        <mat-expansion-panel style="width: 100%">
+        <mat-expansion-panel style="width: 100%" class="fullsize">
             <mat-expansion-panel-header>
                 <mat-panel-description style="justify-content: center">
                     Filtre
@@ -24,12 +24,12 @@
             </mat-form-field>
         </mat-expansion-panel>
 
-        <mat-card>
+        <mat-card class="fullsize">
             <mat-card-title> Découvrir </mat-card-title>
             <mat-card-subtitle> Sélection d'évènements pour l'utilisateur </mat-card-subtitle>
         </mat-card>
 
-        <ul class="event-list">
+        <ul class="event-list fullsize">
             <li *ngFor="let e of suggestions" [value]="e" (click)="previewEvent(e)">
                 <mat-card class="card" *ngIf="check_stat(e) === true;">
                     <img mat-card-image src="{{e.image}}" alt="Event image">
@@ -39,12 +39,23 @@
                 </mat-card>
             </li>
         </ul>
+
+        <div class="mobile">
+            <section *ngFor="let e of suggestions" [value]="e" (click)="previewEvent(e)">
+                <mat-card class="card">
+                    <h4>{{e.name}}</h4>
+                    <img mat-card-image src="{{e.image}}" alt="Event image">
+                </mat-card>
+            </section>
+        </div>
     </section>
 
-    <mwl-demo-component #calendar [displayOnly]="true" [in_calendar_id]="calendar_id"></mwl-demo-component>
+    <section class="center-view">
+        <mwl-demo-component #calendar [displayOnly]="true" [in_calendar_id]="calendar_id"></mwl-demo-component>
+    </section>
 
     <div class="right-view" *ngIf="focusedEvent">
-        <mat-card class="card-large">
+        <mat-card class="card-large fullsize">
             <img src="{{focusedEvent[1].image}}" alt="Event image" class="event-image" style="display: block; height: auto; margin-left: auto; margin-right: auto; max-height: 400px; max-width: 400px">
             <div class="event-info-full">
                 <div class="inline">
@@ -70,5 +81,15 @@
                 </mat-card-subtitle>
             </div>
         </mat-card>
+
+        <div class="card-large mobile-right">
+            <mat-card class="card-large">
+                <img src="{{focusedEvent[1].image}}" alt="Event image" class="event-image" style="display: block; height: auto; margin-left: auto; margin-right: auto; max-height: 400px; max-width: 400px">
+                <h4 style="text-align: center">{{focusedEvent[1].name}}</h4>
+                <mat-card-subtitle class="choices">
+                    <button mat-raised-button class="join-event" (click)="joinEvent(focusedEvent[1].id)">Rejoindre l'évènement</button>
+                </mat-card-subtitle>
+            </mat-card>
+        </div>
     </div>
 </div>

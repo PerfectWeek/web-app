@@ -81,3 +81,30 @@
     }
   }
 }
+
+@media screen and (max-width: map_get($widths, s)), (max-height: map_get($heights, s)) {
+
+  .full-view[_ngcontent-c2] {
+    flex-flow: column;
+    align-items: center;
+
+    & > .left-view[_ngcontent-c2] {
+      width: 100%;
+      height: fit-content;
+      &::-webkit-scrollbar {
+        display: none !important;
+      }
+    }
+
+    & > .center-view[_ngcontent-c2] {
+      width: 100%;
+      &::-webkit-scrollbar {
+        display: none !important;
+      }
+    }
+
+    & > .rigth-view[_ngcontent-c2] {
+      display: none !important;
+    }
+  }
+}

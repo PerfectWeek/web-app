@@ -22,7 +22,7 @@ declare var FB: any;
 @Component({
     selector: 'registration',
     templateUrl: 'registration.html',
-    styleUrls: ['registration.scss']
+    styleUrls: ['registration.scss', '../../../scss/_Authentication.scss']
 })
 export class RegistrationComponent {
 

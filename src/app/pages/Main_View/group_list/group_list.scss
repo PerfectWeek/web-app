@@ -94,6 +94,10 @@
   outline: none;
 }
 
+#mobile-size {
+  display: none;
+}
+
 @media only screen and (max-width: map_get($widths, xl)) {
   .group-header {
     & > a {
@@ -112,12 +116,35 @@
 
 @media only screen and (max-width: map_get($widths, m)) {
   .group {
-    & > img {
-      display: none;
-    }
-
     & > h4 {
       font-size: 0.9rem;
+    }
+  }
+}
+
+@media screen and (max-width: map_get($widths, s)), (max-height: map_get($heights, s)) {
+
+  #fullsize {
+    display: none;
+  }
+
+  #mobile-size {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-around;
+    overflow-x: scroll;
+    width: fit-content;
+    width: -moz-fit-content;
+
+    .group {
+      & > img {
+        width: calc(5vw + 5vh);
+        height: calc(5vw + 5vh);
+      }
+
+      & > h4 {
+        margin-bottom: 0;
+      }
     }
   }
 }

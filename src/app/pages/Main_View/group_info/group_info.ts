@@ -221,7 +221,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                         if (fieldname === 'name') {
                             this.group_modified.emit(ret.group.id);
                         }
-                        this.toastSrv.success(`Le ${fieldname === 'name' ? 'nom' : fieldname} de ce groupe a bien été modifié`);
+                        this.toastSrv.success(`Le ${fieldname === 'name' ? 'nom' : fieldname} de ce calendrier a bien été modifié`);
                     })
             }
         })
@@ -266,7 +266,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                                         this.ready = true;
                                 });
                         });
-                        this.toastSrv.success("User ajouté au groupe");
+                        this.toastSrv.success("User ajouté au calendrier");
                     }, err => this.toastSrv.error("Une erreur est survenue lors de l'ajout du nouveau membre"))
             }
         })
@@ -276,8 +276,8 @@ export class GroupInfoComponent implements OnInit, OnChanges {
         this.user$.subscribe(user => {
             let dialogRef = this.dialog.open(ConfirmDialog, {
                 data: {
-                    title: 'Quitter le groupe',
-                    question: 'Voulez-vous vraiment quitter ce groupe ?'
+                    title: 'Quitter le calendrier',
+                    question: 'Voulez-vous vraiment quitter ce calendrier ?'
                 }
             });
             dialogRef.afterClosed().subscribe(result => {
@@ -286,8 +286,8 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                         .subscribe(ret => {
                             (<any>window).ga('send', 'event', 'Group', 'Leaving Group', `Member: ${user.pseudo} | Group Name: ${this.group.name}`);
                             this.left_group.emit(this.group_id);
-                            this.toastSrv.success("Vous avez n'êtes désormais plus membre de ce groupe");
-                        }, ret => this.toastSrv.error("Une erreur est survenue. Vous n'avez pas pu quitter ce groupe"))
+                            this.toastSrv.success("Vous avez n'êtes désormais plus membre de ce calendrier");
+                        }, ret => this.toastSrv.error("Une erreur est survenue. Vous n'avez pas pu quitter ce calendrier"))
             })
         })
     }

@@ -2,6 +2,14 @@
 
 .profile-image {
   justify-content: space-between !important;
+  margin-bottom: 1rem;
+
+  & > img {
+    margin-left: calc(4vw + 4vh);
+  }
+  & > button {
+    margin-right: calc(4vw + 4vh);
+  }
 }
 
 .btn-danger {
@@ -9,5 +17,11 @@
 
   &:hover {
     color: white !important;
+  }
+}
+
+@media screen and (max-width: map_get($widths, s)), (max-height: map_get($heights, s)) {
+  .profile-image > img, .profile-image > button {
+    margin: 0;
   }
 }

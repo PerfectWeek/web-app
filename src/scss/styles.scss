@@ -44,7 +44,7 @@
   margin-top: $main-full-page-margin;
   width: 100%;
   background-color: rgba(255, 255, 255, 0.9);
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .main-full-component {
@@ -150,5 +150,11 @@
 @media screen and (max-width: map_get($widths, m)) {
   .mat-expansion-panel-body {
     padding: 0 !important;
+  }
+}
+
+@media screen and (max-width: map_get($widths, s)), (max-height: map_get($heights, s)) {
+  .cdk-overlay-pane {
+    max-width: 100% !important;
   }
 }
