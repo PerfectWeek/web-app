@@ -61,7 +61,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 private usersSrv: UsersService,
                 private toastSrv: ToastrService,
                 private groupsSrv: GroupsService,
-                private permSrv: PermissionService,
+                public permSrv: PermissionService,
                 private router: Router) {
     }
 
@@ -88,8 +88,6 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
             });
         } else {
             this.role = 'admin';
-            this.displayOnly = false;
-
             // this.api.setOption('editable', this.permSrv.permission[this.role].CRUD); // maybe delete
         }
     }
@@ -142,9 +140,6 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     ngAfterViewInit(): void {
         this.api = this.calendarComponent.getApi();
-        // setTimeout(() => {
-        //     //this.get_group_info();
-        // }, 500);
     }
 
     deleteEvent(elem): void {
@@ -245,9 +240,9 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     eventClick(event) {
         this.eventsSrv.getEvent(event.event.id).subscribe(ret => {
-            console.log(ret);
+            //console.log(ret);
             this.calendarsSrv.getCalendars(ret.event.calendar_id).subscribe(ret => {
-                console.log(ret);
+                // console.log(ret);
                 this.role = ret.calendar.role;
                 if (this.permSrv.permission[this.role].read === false) {
                     this.toastSrv.error('Vous n\'avez pas les droits de lecture sûr cette évènement');
@@ -287,17 +282,14 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     eventDrop(event): void {
         this.eventsSrv.getEvent(event.event.id).subscribe(ret => {
-            console.log(ret);
+            //console.log(ret);
             this.calendarsSrv.getCalendars(ret.event.calendar_id).subscribe(ret => {
-                console.log(ret);
+                //console.log(ret);
                 this.role = ret.calendar.role;
                 if (this.permSrv.permission[this.role].CRUD === false) {
                     this.toastSrv.error(`En temps que ${this.permSrv.permission[this.role].frRole} vous n'êtes pas autorisez à modifier la durée de cette évènement, vos modification ne seront pas prises en comptes`);
                     return;
                 }
-                // if (this.displayOnly === true) {
-                //     return;
-                // }
                 const api = this.getAPI();
                 const modified_event = api.getEventById(event.event.id);
                 this.eventsSrv.getEvent(event.event.id)
@@ -345,9 +337,9 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     eventResize(event) {
         this.eventsSrv.getEvent(event.event.id).subscribe(ret => {
-            console.log(ret);
+            //console.log(ret);
             this.calendarsSrv.getCalendars(ret.event.calendar_id).subscribe(ret => {
-                console.log(ret);
+                //console.log(ret);
                 this.role = ret.calendar.role;
                 if (this.permSrv.permission[this.role].CRUD === false) {
                     this.toastSrv.error(`En temps que ${this.permSrv.permission[this.role].frRole} vous n'êtes pas autorisez à modifier la durée de cette évènement, vos modification ne seront pas prises en comptes`);

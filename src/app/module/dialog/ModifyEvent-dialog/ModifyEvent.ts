@@ -71,7 +71,7 @@ export class ModifyEventDialog {
                 private profileSrv: ProfileService,
                 private eventsSrv: EventsService,
                 private toastSrv: ToastrService,
-                private PermSrv: PermissionService,
+                public PermSrv: PermissionService,
                 public dialogRef: MatDialogRef<ModifyEventDialog>,
                 public dialog: MatDialog,
                 @Inject(MAT_DIALOG_DATA) public data: any) {

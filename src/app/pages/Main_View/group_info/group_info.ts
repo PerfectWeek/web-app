@@ -22,7 +22,6 @@ import {UsersService} from "../../../core/services/Requests/Users";
 import {GroupsService} from "../../../core/services/Requests/Groups";
 import {PermissionService} from '../../../core/services/permission.service';
 import {ModifyEventDialog} from '../../../module/dialog/ModifyEvent-dialog/ModifyEvent';
-import {ChangeRoleDialog} from '../../../module/dialog/ChangeRole-dialog/ChangeRole-dialog';
 
 @Component({
     selector: 'group-info',

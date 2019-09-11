@@ -117,7 +117,6 @@ import {GroupsService} from "./core/services/Requests/Groups";
 import {CalendarsService} from "./core/services/Requests/Calendars";
 import {EventsService} from "./core/services/Requests/Events";
 import {PermissionService} from './core/services/permission.service';
-import {ChangeRoleDialog} from './module/dialog/ChangeRole-dialog/ChangeRole-dialog';
 //import {FlexLayoutModule} from '@angular/flex-layout';
 
 registerLocaleData(localeFr);
@@ -169,7 +168,6 @@ let gapiClientConfig: NgGapiClientConfig = {
         AddMemberDialog,
         FriendInvitationDialog,
         AcceptInvitationDialog,
-        ChangeRoleDialog,
     ],
     imports: [
         //FlexLayoutModule,
@@ -266,7 +264,6 @@ let gapiClientConfig: NgGapiClientConfig = {
         AddMemberDialog,
         FriendInvitationDialog,
         AcceptInvitationDialog,
-        ChangeRoleDialog,
     ]
 })
 export class AppModule {

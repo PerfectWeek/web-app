@@ -10,7 +10,7 @@
                     <img src="{{event_image}}" alt="Profile image and button to change the image"
                          title="Cliquez pour changer l'image">
                 </label>
-                <input id="event_image_file" (change)="ModifyImageEvent($event)" type="file" accept=".jpg,.png,.jpeg" class="image-input" style="display: none;">
+                <input id="event_image_file" [disabled]="!PermSrv.permission[data.role].CRUD" (change)="ModifyImageEvent($event)" type="file" accept=".jpg,.png,.jpeg" class="image-input" style="display: none;">
 
                 <div fxLayout="column" style="display: grid; width: 70%">
                     <mat-form-field>

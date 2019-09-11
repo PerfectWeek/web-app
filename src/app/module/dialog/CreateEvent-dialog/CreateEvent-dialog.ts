@@ -49,7 +49,7 @@ export class CreateEventDialog {
                 private usersSrv: UsersService,
                 private calendarsSrv: CalendarsService,
                 private toastSrv: ToastrService,
-                private PermSrv: PermissionService,
+                public PermSrv: PermissionService,
                 public dialogRef: MatDialogRef<CreateEventDialog>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
 
