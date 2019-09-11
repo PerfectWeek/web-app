@@ -5,6 +5,7 @@ import {ProfileService} from '../../../core/services/profile.service';
 import {RequestService} from '../../../core/services/request.service';
 import {ConfirmDialog} from '../Confirm-dialog/Confirm-dialog';
 import {EventsService} from "../../../core/services/Requests/Events";
+import {PermissionService} from '../../../core/services/permission.service';
 
 @Component({
     selector: 'event-modification-dialog',
@@ -55,6 +56,9 @@ export class ModifyEventDialog {
 
     event_image: any;
 
+    is_picture_changed: boolean = false;
+    image_path: any;
+
     eventTypes: any = [{value: 'party', viewValue: 'Fête'},
         {value: 'work', viewValue: 'Travail'},
         {value: 'hobby', viewValue: 'Loisir'},
@@ -67,6 +71,7 @@ export class ModifyEventDialog {
                 private profileSrv: ProfileService,
                 private eventsSrv: EventsService,
                 private toastSrv: ToastrService,
+                private PermSrv: PermissionService,
                 public dialogRef: MatDialogRef<ModifyEventDialog>,
                 public dialog: MatDialog,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
@@ -117,6 +122,14 @@ export class ModifyEventDialog {
                     this.toastSrv.error('Une erreur est survenue');
                     this.dialogRef.close(false);
                 });
+
+        //upload de la PP
+        if (this.is_picture_changed === true) {
+            this.eventsSrv.uploadImage(this.pw_event.id, this.image_path)
+                .do(() => {
+                    }, err => this.toastSrv.error("Une erreur est survenue lors de l'upload de l'image")
+                ).subscribe();
+        }
     }
 
     deleteEvent() {
@@ -143,16 +156,24 @@ export class ModifyEventDialog {
 
     ModifyImageEvent(event) {
         if (event.target.files && event.target.files.length === 1) {
-            const file = event.target.files[0];
-                this.eventsSrv.uploadImage(this.pw_event.id, file)
-                .do(() => {
-                            this.eventsSrv.getImage(this.pw_event.id)
-                            .subscribe(ret => {
-                                this.event_image = ret.image;
-                            });
-                        this.toastSrv.success("L'image a été uploadé avec succès");
-                    }, err => this.toastSrv.error("Une erreur est survenue lors de l'upload de l'image")
-                ).subscribe();
+            this.image_path = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = (event:any) => {
+                this.event_image = event.target.result;
+                this.is_picture_changed = true;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+
+            // this.eventsSrv.uploadImage(this.pw_event.id, file)
+            //     .do(() => {
+            //                 this.eventsSrv.getImage(this.pw_event.id)
+            //                 .subscribe(ret => {
+            //                     this.event_image = ret.image;
+            //                     console.log("apres", this.event_image);
+            //                 });
+            //             this.toastSrv.success("L'image a été uploadé avec succès");
+            //         }, err => this.toastSrv.error("Une erreur est survenue lors de l'upload de l'image")
+            //     ).subscribe();
         }
     }
 }

@@ -18,6 +18,7 @@
                                placeholder="Nom de l'évenement"
                                [(ngModel)]="pw_event.name"
                                name="title"
+                               [readonly]="!PermSrv.permission[data.role].CRUD"
                                required>
                     </mat-form-field>
 
@@ -26,6 +27,7 @@
                                placeholder="Description"
                                name="description"
                                [(ngModel)]="pw_event.description"
+                               [readonly]="!PermSrv.permission[data.role].CRUD"
                                >
                     </mat-form-field>
 
@@ -34,6 +36,7 @@
                                placeholder="Lieux"
                                name="location"
                                [(ngModel)]="pw_event.location"
+                               [readonly]="!PermSrv.permission[data.role].CRUD"
                                >
                     </mat-form-field>
 
@@ -45,6 +48,7 @@
                 <mat-form-field>
                     <mat-select placeholder="Visibilité" required
                                 [(value)]="pw_event.visibility"
+                                [disabled]="!PermSrv.permission[data.role].CRUD"
                                 name="eventType">
                         <mat-option *ngFor="let visibility of eventVisibilities" [value]="visibility.value">
                             {{visibility.viewValue}}
@@ -55,6 +59,7 @@
                     <mat-select placeholder="Type" required
                                 [(ngModel)]="pw_event.type"
                                 [(value)]="pw_event.type"
+                                [disabled]="!PermSrv.permission[data.role].CRUD"
                                 name="eventType">
                         <mat-option *ngFor="let type of eventTypes" [value]="type.value">
                             {{type.viewValue}}
@@ -67,12 +72,13 @@
                     <input matInput
                            type="color"
                            name="color"
-                           [(ngModel)]="pw_event.backgroundColor">
+                           [(ngModel)]="pw_event.backgroundColor"
+                           [readonly]="!PermSrv.permission[data.role].CRUD">
                 </mat-form-field>
             </div>
 
             <div class="my_layout" fxLayout="row">
-                <mat-form-field>
+                <mat-form-field style="width:40%">
                     <input matInput
                            class="form-control"
                            type="text"
@@ -81,6 +87,7 @@
                            [altInput]="true"
                            [convertModelValue]="true"
                            [enableTime]="true"
+                           [disabled]="!PermSrv.permission[data.role].CRUD"
                            name="start"
                            dateFormat="Y-m-dTH:i"
                            altFormat="F j, Y H:i"
@@ -88,7 +95,7 @@
                            required>
                 </mat-form-field>
 
-                <mat-form-field>
+                <mat-form-field style="width:40%">
                     <input matInput
                            class="form-control"
                            type="text"
@@ -97,6 +104,7 @@
                            [altInput]="true"
                            [convertModelValue]="true"
                            [enableTime]="true"
+                           [disabled]="!PermSrv.permission[data.role].CRUD"
                            name="end"
                            dateFormat="Y-m-dTH:i"
                            altFormat="F j, Y H:i"
@@ -108,7 +116,9 @@
     </div>
 </mat-dialog-content>
 <br>
-<mat-dialog-actions style="display: flex; justify-content: space-between">
+
+
+<mat-dialog-actions *ngIf="PermSrv.permission[data.role].CRUD === true" style="display: flex; justify-content: space-between">
     <button class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
     <button class="mat-raised-button btn-danger" (click)="deleteEvent()">Supprimer</button>
     <button [disabled]="groupForm.valid === false" class="mat-raised-button btn-secondary" (click)="modifyEvent()">

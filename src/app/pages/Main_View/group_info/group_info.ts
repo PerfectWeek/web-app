@@ -20,6 +20,9 @@ import {AddMemberDialog} from "../../../module/dialog/Add-member/add-member";
 import {Router} from "@angular/router";
 import {UsersService} from "../../../core/services/Requests/Users";
 import {GroupsService} from "../../../core/services/Requests/Groups";
+import {PermissionService} from '../../../core/services/permission.service';
+import {ModifyEventDialog} from '../../../module/dialog/ModifyEvent-dialog/ModifyEvent';
+import {ChangeRoleDialog} from '../../../module/dialog/ChangeRole-dialog/ChangeRole-dialog';
 
 @Component({
     selector: 'group-info',
@@ -63,6 +66,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
     image = null;
 
     user_role: string;
+    rawRole: string;
 
     isAdmin: boolean = false;
 
@@ -82,7 +86,8 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                 private dialog: MatDialog,
                 private router: Router,
                 private cd: ChangeDetectorRef,
-                private toastSrv: ToastrService) {
+                private toastSrv: ToastrService,
+                private PermSrv: PermissionService) {
 
     }
 
@@ -151,6 +156,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                         this.group_members = ret.members;
                         this.group_members.forEach((member, index) => {
                             if (member.pseudo === this.profileSrv.user.pseudo) {
+                                this.rawRole = member.role;
                                 this.userRole = this.rolesfr[`${member.role}`];
                                 this.isAdmin = member.role === 'admin';
                             }
@@ -325,5 +331,14 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                 (<any>window).ga('send', 'event', 'Friends', 'Sending Friend Request', `Request to: ${pseudo}`);
                 this.toastSrv.info("La demande d'ami a été envoyée");
                 }, err => this.toastSrv.warning('Vous avez déjà demandé cette personne en ami'))
+    }
+
+    changeMemberPermission(member, new_role) {
+        console.log(member, new_role);
+        // this.groupsSrv.mod
+        this.groupsSrv.modifyMemberRole(this.group_id, member.pseudo, new_role).subscribe(ret => {
+            member.role = new_role;
+            this.toastSrv.info(`${member.pseudo} est maintenant ${this.PermSrv.permission[new_role].frRole} du calendrier ${this.group.name}.`);
+        }, error => {this.toastSrv.error(`Une erreur est suvenue durant la modification du role de ${member.pseudo}`)});
     }
 }

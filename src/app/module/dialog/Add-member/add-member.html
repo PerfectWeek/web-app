@@ -11,6 +11,15 @@
                   (removed)="removeUser(user)">
           {{user}}
           <mat-icon matChipRemove *ngIf="removable">x</mat-icon>
+
+<!--          <mat-select placeholder="Type" required-->
+<!--                      [(value)]="role">-->
+<!--            <mat-option *ngFor="let perm of PermSrv.permission_list" [value]="perm.role"-->
+<!--                        >-->
+<!--              {{perm.text}}-->
+<!--            </mat-option>-->
+<!--          </mat-select>-->
+
         </mat-chip>
         <input placeholder="Nouvel utilisateur"
                id="UserInput"
