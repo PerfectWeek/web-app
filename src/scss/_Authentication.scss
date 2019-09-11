@@ -1,0 +1,45 @@
+@import "form";
+
+@media screen and (max-width: map_get($widths, l)) {
+
+  .form-container-sm {
+    & > form, #provider-signin {
+      width: 50%;
+    }
+  }
+}
+
+@media screen and (max-width: map_get($widths, m)) {
+
+  .form-container-sm {
+    & > form, #provider-signin {
+      width: 75%;
+    }
+  }
+}
+
+@media screen and (max-width: map_get($widths, s)), (max-height: map_get($heights, s)) {
+
+  .background-logo-name {
+    visibility: hidden;
+  }
+
+  :host ::ng-deep .mat-form-field-infix {
+    padding: 0 !important;
+    border-top: none !important;
+  }
+
+  .form-container-sm {
+    align-items: start;
+
+    & > form, #provider-signin {
+      width: fill-available;
+      width: -webkit-fill-available;
+      width: -moz-available;
+      min-height: fill-available;
+      min-height: -webkit-fill-available;
+      min-height: -moz-available;
+      height: auto;
+    }
+  }
+}

@@ -17,10 +17,16 @@ $colors: (
 );
 
 $widths: (
-  s:  320px,
-  m:  768px,
+  s:  420px,
+  m:  780px,
   l:  1024px,
   xl: 1464px
+);
+
+$heights: (
+  s: 420px,
+  m: 780px,
+  l: 1080px
 );
 
 $navbar-height: 4rem;

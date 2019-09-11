@@ -16,7 +16,7 @@ declare var FB: any;
 @Component({
     selector: 'connection',
     templateUrl: 'connection.html',
-    styleUrls: ['connection.scss']
+    styleUrls: ['connection.scss', '../../../scss/_Authentication.scss']
 })
 export class ConnectionComponent {
 
