@@ -59,13 +59,13 @@ export class Navbar implements OnInit, AfterViewInit {
         if (result === true)
             this.groupsSrv.acceptInvitation(invitation.id, body)
                 .subscribe(ret => {
-                    this.toastSrv.success(`Bravo, vous faites maitnenant parti du group ${invitation.name}`);
+                    this.toastSrv.success(`Bravo, vous faites maitnenant parti du calendrier ${invitation.name}`);
                     this.profileSrv.getInvitations();
                 }, err => this.toastSrv.error('Une erreur est survenue'));
         else
             this.groupsSrv.declineInvitation(invitation.id, body)
                 .subscribe(ret => {
-                    this.toastSrv.success(`Vous avez refusé l'invitation du groupe ${invitation.name}`);
+                    this.toastSrv.success(`Vous avez refusé l'invitation du calendrier ${invitation.name}`);
                     this.profileSrv.getInvitations();
                 }, err => this.toastSrv.error('Une erreur est survenue'));
     }

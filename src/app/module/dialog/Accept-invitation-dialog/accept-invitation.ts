@@ -40,7 +40,7 @@ export class AcceptInvitationDialog {
     constructor(public dialogRef: MatDialogRef<AcceptInvitationDialog>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         if (data.type === 'group')
-            this.title = `Voulez-vous accepter l\'invitation au groupe ${data.body.name} ?`;
+            this.title = `Voulez-vous accepter l\'invitation au calendrier ${data.body.name} ?`;
         else if (data.type === 'friend')
             this.title = `Voulez-vous accepter la demande d'ami de ${data.body.from_user.pseudo} ?`;
     }

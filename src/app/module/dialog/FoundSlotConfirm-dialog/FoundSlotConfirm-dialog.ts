@@ -103,7 +103,7 @@ export class FoundSlotConfirmDialog {
         //             start: new Date(start),
         //             end: new Date(end),
         //         });
-        //         this.toastSrv.success('Evenement ajouté au groupe');
+        //         this.toastSrv.success('Evenement ajouté au calendrier');
         //         this.dialogRef.close();
         //     }, err => this.toastSrv.error('Une erreur est survenue lors de l\'ajout du nouvel evenement'));
     }

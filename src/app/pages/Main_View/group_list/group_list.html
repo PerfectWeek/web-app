@@ -4,9 +4,9 @@
         <section class="group-header">
             <section class="group-search-bar">
                 <i class="fas fa-search"></i>
-                <input title="Rechercher un groupe" type="text" name="search" id="search" class="form-control" placeholder="Rechercher un groupe" matInput (keyup)="search$.next($event.target.value)">
+                <input title="Rechercher un calendrier" type="text" name="search" id="search" class="form-control" placeholder="Rechercher un calendrier" matInput (keyup)="search$.next($event.target.value)">
             </section>
-            <a href="javascript:void(0)" (click)="createGroup()" title="Créer un nouveau groupe"><i class="far fa-edit"></i></a>
+            <a href="javascript:void(0)" (click)="createGroup()" title="Créer un nouveau calendrier"><i class="far fa-edit"></i></a>
         </section>
         <section *ngIf="displayUser === true" >
             <section>

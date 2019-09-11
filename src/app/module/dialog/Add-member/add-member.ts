@@ -94,7 +94,7 @@ export class AddMemberDialog {
         for (let member of this.members)
             if (value === member) {
                 input.value = '';
-                this.toastSrv.error('Cet utilisateur est déjà membre du groupe');
+                this.toastSrv.error('Cet utilisateur est déjà membre du calendrier');
                 return;
             }
 

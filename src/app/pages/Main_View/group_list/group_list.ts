@@ -146,7 +146,7 @@ export class GroupListComponent implements OnInit, AfterViewInit {
                 this.groupsSrv.createGroup(this.formatBody(result))
                 .subscribe(ret => {
                         (<any>window).ga('send', 'event', 'Group', 'Creating Group', `Group Name: ${result.name}`);
-                        this.toastSrv.success(`Votre groupe ${ret.group.name} a bien été créé`);
+                        this.toastSrv.success(`Votre calendrier ${ret.group.name} a bien été créé`);
                         this.ready.next(false);
                         this.getGroups();
                     },
