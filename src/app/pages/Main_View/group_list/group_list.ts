@@ -101,16 +101,18 @@ export class GroupListComponent implements OnInit, AfterViewInit {
     }
 
     getGroups() {
-        this.displayGroups = [];
-        this.displayGroupsMobile = [];
         this.profileSrv.userProfile$.subscribe(user => {
             this.usersSrv.getImage(user.pseudo)
                 .subscribe(ret => this.userImage = ret.image);
             this.usersSrv.getGroups(user.pseudo)
                 .subscribe(groups => {
+                    this.displayGroups = [];
+                    this.displayGroupsMobile = [];
+                    this.userGroups = [];
                     if (groups.groups.length > 0) {
                         this.userGroups = groups.groups;
                         this.userGroups.forEach((group, index) => {
+                            console.log('group => ', group);
                             this.groupsSrv.getImage(group.id)
                                 .subscribe(ret => {
                                     group['image'] = ret.image;
@@ -197,6 +199,7 @@ export class GroupListComponent implements OnInit, AfterViewInit {
         this.pageIndex = 0;
 
         this.displayGroups = [];
+        this.displayGroupsMobile = [];
         this.displayGroups = this.userGroups
             .filter(group => group.name.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) != -1);
         this.displayGroups.forEach(group => {
