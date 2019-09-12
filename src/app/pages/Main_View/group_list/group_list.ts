@@ -106,13 +106,13 @@ export class GroupListComponent implements OnInit, AfterViewInit {
                 .subscribe(ret => this.userImage = ret.image);
             this.usersSrv.getGroups(user.pseudo)
                 .subscribe(groups => {
+                    console.log('groups => ', groups);
                     this.displayGroups = [];
                     this.displayGroupsMobile = [];
                     this.userGroups = [];
                     if (groups.groups.length > 0) {
                         this.userGroups = groups.groups;
                         this.userGroups.forEach((group, index) => {
-                            console.log('group => ', group);
                             this.groupsSrv.getImage(group.id)
                                 .subscribe(ret => {
                                     group['image'] = ret.image;
@@ -198,20 +198,22 @@ export class GroupListComponent implements OnInit, AfterViewInit {
         this.input = this.search$.getValue().toLowerCase();
         this.pageIndex = 0;
 
-        this.displayGroups = [];
-        this.displayGroupsMobile = [];
-        this.displayGroups = this.userGroups
-            .filter(group => group.name.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) != -1);
-        this.displayGroups.forEach(group => {
-            let obj = {};
-            for (let key in group)
-                obj[key] = group[key];
-            this.displayGroupsMobile.push(obj);
-        });
-        this.displayGroupsMobile.forEach(group => {
-            let acr = group.name.match(/\b(\w)/g);
-            group.name = (acr != null) ?  acr.join('.').toUpperCase() : group.name;
-        });
+        if (this.input != undefined && this.input != "" && this.input != null) {
+            this.displayGroups = [];
+            this.displayGroupsMobile = [];
+            this.displayGroups = this.userGroups
+                .filter(group => group.name.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) != -1);
+            this.displayGroups.forEach(group => {
+                let obj = {};
+                for (let key in group)
+                    obj[key] = group[key];
+                this.displayGroupsMobile.push(obj);
+            });
+            this.displayGroupsMobile.forEach(group => {
+                let acr = group.name.match(/\b(\w)/g);
+                group.name = (acr != null) ?  acr.join('.').toUpperCase() : group.name;
+            });
+        }
         this.profileSrv.userProfile$.subscribe(user => {
             user.pseudo.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) !== -1 ? this.displayUser = true : this.displayUser = false;
         });
