@@ -1,5 +1,5 @@
 <div class="flex flex-r-centered">
-    <h2 mat-dialog-title>Création d'un nouvel évènement</h2>
+    <h2 i18n="@@EventCreationTitle" mat-dialog-title>Création d'un nouvel évènement</h2>
 </div>
 <mat-dialog-content style="white-space: pre-wrap; text-align: center">
     <div>
@@ -7,7 +7,7 @@
 
             <mat-form-field style="width: 100%"
                             *ngIf="data.is_global_calendar == true">
-                <mat-select placeholder="Calendrier"
+                <mat-select i18n-placeholder="@@EventCreationCalendarPlaceholder" placeholder="Calendrier"
                             style="width: 100%"
                             [(ngModel)]="dialog_calendar_id"
                             name="dialog_calendar_id" required>
@@ -19,7 +19,7 @@
 
             <mat-form-field style="width: 100%">
                 <input matInput
-                       placeholder="Nom de l'évenement"
+                       i18n-placeholder="@@EventCreationEventNamePlaceholder" placeholder="Nom de l'évenement"
                        [(ngModel)]="name"
                        name="name"
                        required>
@@ -27,7 +27,7 @@
 
             <mat-form-field style="width: 100%">
                 <input matInput
-                       placeholder="Description"
+                       i18n-placeholder="@@EventCreationDescriptionPlaceholder" placeholder="Description"
                        name="description"
                        [(ngModel)]="description"
                 >
@@ -35,7 +35,7 @@
 
             <mat-form-field style="width: 100%">
                 <input matInput
-                       placeholder="Lieux"
+                       i18n-placeholder="@@EventCreationLocationPlaceholder" placeholder="Lieux"
                        name="location"
                        [(ngModel)]="location"
                 >
@@ -43,7 +43,7 @@
 
             <div class="my_layout" fxLayout="row" style="width: 100%">
                 <mat-form-field style="width: 45%">
-                    <mat-select placeholder="Visibilité" required
+                    <mat-select i18n-placeholder="@@EventCreationVisibilityPlaceholder" placeholder="Visibilité" required
                                 [(value)]="eventVisibility"
                                 name="eventVisibility">
                         <mat-option *ngFor="let visibility of eventVisibilities" [value]="visibility.value">
@@ -86,10 +86,11 @@
                                name="start"
                                dateFormat="Y-m-dTH:i"
                                altFormat="F j, Y H:i"
+                               i18n-placeholder="@@EventCreationBeginningDatePlaceholder"
                                placeholder="Date de debut"
                                required>
                     </mat-form-field>
-                    <p class="error-message" *ngIf="start < this.current_date">la date de début d'évènement ne doit pas
+                    <p i18n="@@EventCreationBeginningDateErrorMessage" class="error-message" *ngIf="start < this.current_date">La date de début d'évènement ne doit pas
                         être antérieur à la date actuelle.</p>
                 </div>
 
@@ -107,12 +108,13 @@
                                name="end"
                                dateFormat="Y-m-dTH:i"
                                altFormat="F j, Y H:i"
+                               i18n-placeholder="@@EventCreationEndingDatePlaceholder"
                                placeholder="Date de fin"
                                required>
                     </mat-form-field>
-                    <p class="error-message" *ngIf="end < this.current_date">la date de fin d'évènement ne doit pas être
+                    <p i18n="@@EventCreationEndingDateErrorMessage" class="error-message" *ngIf="end < this.current_date">La date de fin d'évènement ne doit pas être
                         antérieur à la date actuelle.</p>
-                    <p class="error-message" *ngIf="start > end">la date de fin d'évènement ne doit pas être
+                    <p i18n="@@EventCreationEndingDateErrorMessage2" class="error-message" *ngIf="start > end">La date de fin d'évènement ne doit pas être
                         antérieur à la date de début d'évènement.</p>
                 </div>
             </div>
@@ -122,8 +124,8 @@
 </mat-dialog-content>
 <br>
 <mat-dialog-actions style="display: flex; justify-content: space-between">
-    <button class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
-    <button [disabled]="groupForm.valid === false || end < this.current_date || start < this.current_date || start > end" class="mat-raised-button btn-secondary" (click)="createEvent()">
+    <button i18n="@@EventCreationCancel" class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
+    <button i18n="@@EventCreationConfirm" [disabled]="groupForm.valid === false || end < this.current_date || start < this.current_date || start > end" class="mat-raised-button btn-secondary" (click)="createEvent()">
         Confirmer
     </button>
 </mat-dialog-actions>

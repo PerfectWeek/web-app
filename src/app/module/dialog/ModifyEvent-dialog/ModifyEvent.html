@@ -1,5 +1,5 @@
 <div class="flex flex-r-centered">
-    <h2 mat-dialog-title>Modification d'évènement</h2>
+    <h2 i18n="@@ModifyEventTitle" mat-dialog-title>Modification d'évènement</h2>
 </div>
 <mat-dialog-content style="white-space: pre-wrap; text-align: center">
     <div>
@@ -7,14 +7,15 @@
 
             <div class="my_layout" fxLayout="row">
                 <label class="profile-image" for="event_image_file">
-                    <img src="{{event_image}}" alt="Profile image and button to change the image"
-                         title="Cliquez pour changer l'image">
+                    <img src="{{event_image}}" i18n-alt="@@ModifyEventImageAlt" alt="Profile image and button to change the image"
+                         i18n-title="@@ModifyEventImageTitle" title="Cliquez pour changer l'image">
                 </label>
                 <input id="event_image_file" [disabled]="!PermSrv.permission[data.role].CRUD" (change)="ModifyImageEvent($event)" type="file" accept=".jpg,.png,.jpeg" class="image-input" style="display: none;">
 
                 <div fxLayout="column" style="display: grid; width: 70%">
                     <mat-form-field>
                         <input matInput
+                               i18n-placholder="@@ModifyEventName"
                                placeholder="Nom de l'évenement"
                                [(ngModel)]="pw_event.name"
                                name="title"
@@ -33,6 +34,7 @@
 
                     <mat-form-field>
                         <input matInput
+                               i18n-placholder="@@ModifyEventLocation"
                                placeholder="Lieux"
                                name="location"
                                [(ngModel)]="pw_event.location"
@@ -46,7 +48,7 @@
 
             <div class="my_layout" fxLayout="row">
                 <mat-form-field>
-                    <mat-select placeholder="Visibilité" required
+                    <mat-select i18n-placholder="@@ModifyEventVisibility" placeholder="Visibilité" required
                                 [(value)]="pw_event.visibility"
                                 [disabled]="!PermSrv.permission[data.role].CRUD"
                                 name="eventType">
@@ -68,7 +70,7 @@
                 </mat-form-field>
 
                 <mat-form-field style="width: 8%;">
-                    <mat-label>Couleur</mat-label>
+                    <mat-label i18n="@@ModifyEventColor">Couleur</mat-label>
                     <input matInput
                            type="color"
                            name="color"
@@ -91,6 +93,7 @@
                            name="start"
                            dateFormat="Y-m-dTH:i"
                            altFormat="F j, Y H:i"
+                           i18n-placholder="@@ModifyEventBegDate"
                            placeholder="Date de debut"
                            required>
                 </mat-form-field>
@@ -108,6 +111,7 @@
                            name="end"
                            dateFormat="Y-m-dTH:i"
                            altFormat="F j, Y H:i"
+                           i18n-placholder="@@ModifyEventEndDate"
                            placeholder="Date de fin"
                            required>
                 </mat-form-field>
@@ -119,9 +123,9 @@
 
 
 <mat-dialog-actions *ngIf="PermSrv.permission[data.role].CRUD === true" style="display: flex; justify-content: space-between">
-    <button class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
-    <button class="mat-raised-button btn-danger" (click)="deleteEvent()">Supprimer</button>
-    <button [disabled]="groupForm.valid === false" class="mat-raised-button btn-secondary" (click)="modifyEvent()">
+    <button i18n="@@ModifyEventCancel" class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
+    <button i18n="@@ModifyEventDelete" class="mat-raised-button btn-danger" (click)="deleteEvent()">Supprimer</button>
+    <button i18n="@@ModifyEventConfirm" [disabled]="groupForm.valid === false" class="mat-raised-button btn-secondary" (click)="modifyEvent()">
         Confirmer
     </button>
 </mat-dialog-actions>

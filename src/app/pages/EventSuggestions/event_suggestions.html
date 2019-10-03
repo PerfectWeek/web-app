@@ -3,7 +3,7 @@
 
         <mat-expansion-panel style="width: 100%" class="fullsize">
             <mat-expansion-panel-header>
-                <mat-panel-description style="justify-content: center">
+                <mat-panel-description style="justify-content: center" i18n="@@EventSuggestionFilters">
                     Filtre
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -20,13 +20,13 @@
                 </mat-grid-tile>
             </mat-grid-list>
             <mat-form-field class="example-full-width" style="width: 100%">
-                <input matInput placeholder="Rechercher un évènement" [(ngModel)]="search">
+                <input matInput i18n-placeholder="@@EventSuggestionSearch" placeholder="Rechercher un évènement" [(ngModel)]="search">
             </mat-form-field>
         </mat-expansion-panel>
 
         <mat-card class="fullsize">
-            <mat-card-title> Découvrir </mat-card-title>
-            <mat-card-subtitle> Sélection d'évènements pour l'utilisateur </mat-card-subtitle>
+            <mat-card-title i18n="@@EventSuggestionDiscover"> Découvrir </mat-card-title>
+            <mat-card-subtitle i18n="@@EventSuggestionDiscoverSelection"> Sélection d'évènements pour l'utilisateur </mat-card-subtitle>
         </mat-card>
 
         <ul class="event-list fullsize">
@@ -78,7 +78,7 @@
                     <div>{{focusedEvent[1].location}}</div>
                 </div>
                 <mat-card-subtitle class="choices">
-                    <button mat-raised-button class="join-event" (click)="joinEvent(focusedEvent[1].id)">Rejoindre l'évènement</button>
+                    <button i18n="@@EventSuggestionJoinEvent" mat-raised-button class="join-event" (click)="joinEvent(focusedEvent[1].id)">Rejoindre l'évènement</button>
                 </mat-card-subtitle>
             </div>
         </mat-card>
@@ -88,7 +88,7 @@
                 <img src="{{focusedEvent[1].image}}" alt="Event image" class="event-image" style="display: block; height: auto; margin-left: auto; margin-right: auto; max-height: 400px; max-width: 400px">
                 <h4 style="text-align: center">{{focusedEvent[1].name}}</h4>
                 <mat-card-subtitle class="choices">
-                    <button mat-raised-button class="join-event" (click)="joinEvent(focusedEvent[1].id)">Rejoindre l'évènement</button>
+                    <button i18n="@@EventSuggestionJoinEvent" mat-raised-button class="join-event" (click)="joinEvent(focusedEvent[1].id)">Rejoindre l'évènement</button>
                 </mat-card-subtitle>
             </mat-card>
         </div>

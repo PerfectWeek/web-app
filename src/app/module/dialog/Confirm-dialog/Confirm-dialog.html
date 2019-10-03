@@ -4,6 +4,6 @@
 <mat-dialog-content style="white-space: pre-wrap; text-align: center">{{data.question}}</mat-dialog-content>
 <br>
 <mat-dialog-actions style="display: flex; justify-content: space-between">
-  <button class="mat-raised-button btn-primary" [mat-dialog-close]="false">Non</button>
-  <button class="mat-raised-button btn-danger" [mat-dialog-close]="true">Oui</button>
+  <button i18n="@@ConfirmNo" class="mat-raised-button btn-primary" [mat-dialog-close]="false">Non</button>
+  <button i18n="@@ConfirmYes" class="mat-raised-button btn-danger" [mat-dialog-close]="true">Oui</button>
 </mat-dialog-actions>

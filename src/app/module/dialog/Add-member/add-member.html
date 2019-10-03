@@ -1,5 +1,5 @@
 <div class="flex flex-r-centered">
-  <h2 mat-dialog-title>Ajout de membre</h2>
+  <h2 i18n="@@AddMemberTitle" mat-dialog-title>Ajout de membre</h2>
 </div>
 <mat-dialog-content style="white-space: pre-wrap; text-align: center">
   <form #groupForm="ngForm" class="form-row" style="padding: 15px; margin: 15px 0">
@@ -21,7 +21,7 @@
 <!--          </mat-select>-->
 
         </mat-chip>
-        <input placeholder="Nouvel utilisateur"
+        <input i18n-placeholder="@@AddMemberNewUserPlaceholder" placeholder="Nouvel utilisateur"
                id="UserInput"
                #UserInput
                [matAutocomplete]="users"
@@ -40,6 +40,6 @@
   </form>
 </mat-dialog-content>
 <mat-dialog-actions style="display: flex; justify-content: space-between">
-  <button class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
-  <button [disabled]="groupForm.valid === false || selectedUsers.length < 1" class="mat-raised-button btn-secondary" (click)="addMember()">Confirmer</button>
+  <button i18n="@@AddMemberCancel" class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
+  <button i18n="@@AddMemberConfirm" [disabled]="groupForm.valid === false || selectedUsers.length < 1" class="mat-raised-button btn-secondary" (click)="addMember()">Confirmer</button>
 </mat-dialog-actions>

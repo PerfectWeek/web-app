@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Inject, LOCALE_ID} from '@angular/core';
 import {Router} from "@angular/router";
 
 @Component({
@@ -9,7 +9,8 @@ import {Router} from "@angular/router";
 export class AppComponent {
   title = 'app';
 
-  constructor(private router: Router) {
+  constructor(@Inject(LOCALE_ID) protected localeId: string,
+              private router: Router) {
 
   }
 }

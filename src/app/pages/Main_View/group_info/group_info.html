@@ -3,7 +3,7 @@
   <section class="group-info-component">
     <section class="group-name">
       <label for="file-input">
-        <img src="{{image}}" alt="Image du calendrier" title="Cliquez pour changer l'image">
+        <img src="{{image}}" i18n-alt="@@CalendarInfoImageAlt" alt="Image du calendrier" i18n-title="@@CalendarInfoImageTitle" title="Cliquez pour changer l'image">
       </label>
       <input [disabled]="isAdmin !== true" id="file-input" type="file" accept=".jpg,.png,.jpeg" class="image-input" (change)="onFileChange($event)">
       <section class="group-header-info">
@@ -24,7 +24,7 @@
         <mat-accordion>
           <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
-              <mat-panel-title>
+              <mat-panel-title i18n="@@CalendarInfoPersonnalData">
                 Données personnelles
               </mat-panel-title>
             </mat-expansion-panel-header>
@@ -37,22 +37,22 @@
         <mat-accordion>
           <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
-              <mat-panel-title>
+              <mat-panel-title i18n="@@CalendarInfoMembers">
                 Membres
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <p *ngIf="isAdmin === true" (click)="addMember()" class="add-member"><i class="fas fa-plus"></i> <span>Ajouter un membre</span></p>
+            <p *ngIf="isAdmin === true" (click)="addMember()" i18n="@@CalendarInfoAddMembers" class="add-member"><i class="fas fa-plus"></i> <span>Ajouter un membre</span></p>
               <section *ngFor="let member of group_members, let i = index" class="group-member-container">
               <img src="{{member.image}}">
               <p class="group-member-pseudo">{{member.pseudo}}</p>
               <i class="fas fa-ellipsis-h" [matMenuTriggerFor]="actions"></i>
               <mat-menu #actions="matMenu">
-                <button *ngIf="member.pseudo === (user$ | async).pseudo" mat-menu-item (click)="leaveGroup()">Quitter le calendrier</button>
+                <button *ngIf="member.pseudo === (user$ | async).pseudo" i18n="@@CalendarInfoLeave" mat-menu-item (click)="leaveGroup()">Quitter le calendrier</button>
                 <section *ngIf="member.pseudo !== (user$ | async).pseudo">
-                  <button *ngIf="isAdmin === true" mat-menu-item (click)="fireFromGroup(member.pseudo)">Supprimer du calendrier</button>
+                  <button *ngIf="isAdmin === true" mat-menu-item i18n="@@CalendarInfoDelete" (click)="fireFromGroup(member.pseudo)">Supprimer du calendrier</button>
                   <button mat-menu-item (click)="goToProfile(member.pseudo)">Accéder à son profil</button>
                   <mat-delimiter></mat-delimiter>
-                  <button mat-menu-item (click)="addFriend(member.pseudo)">L'ajouter en ami</button>
+                  <button mat-menu-item i18n="@@CalendarInfoAddFriend" (click)="addFriend(member.pseudo)">L'ajouter en ami</button>
 
                   <button mat-menu-item *ngIf="isAdmin === true" [matMenuTriggerFor]="role_menu">Roles</button>
                   <mat-menu #role_menu="matMenu">

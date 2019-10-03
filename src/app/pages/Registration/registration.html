@@ -5,38 +5,38 @@
     <div class="main-container">
       <div class="form-container-sm">
         <form [formGroup]="registrationForm" (ngSubmit)="submit()">
-          <p class="h3 text-center mb-4">Inscription</p>
+          <p i18n="@@RegistrationTitle" class="h3 text-center mb-4">Inscription</p>
 
           <div class="col-fields">
             <mat-form-field>
-              <input type="text" formControlName="pseudo" id="name" class="form-control" placeholder="Pseudo" matInput required>
+              <input type="text" formControlName="pseudo" id="name" class="form-control" i18n-placeholder="@@RegistrationUsername" placeholder="Pseudo" matInput required>
             </mat-form-field>
 
             <div class="input-error-message">
               <mat-form-field>
-                <input type="email" email formControlName="email" id="email" class="form-control" matInput placeholder="Email" required>
+                <input type="email" email formControlName="email" id="email" class="form-control" matInput i18n-placeholder="@@RegistrationEmail" placeholder="Email" required>
               </mat-form-field>
               <p class="error-message" *ngIf="registrationForm.get('email').invalid && registrationForm.get('email').touched">Veuillez entrer un format valide.</p>
             </div>
 
             <div class="input-error-message">
               <mat-form-field>
-                <input type="password" formControlName="password" id="password" class="form-control" matInput placeholder="Mot de Passe" required>
+                <input type="password" formControlName="password" id="password" class="form-control" matInput i18n-placeholder="@@RegistrationPassword" placeholder="Mot de Passe" required>
               </mat-form-field>
-              <p class="error-message" *ngIf="registrationForm.get('password').invalid && registrationForm.get('password').errors.pattern">Le mot de passe doit comprendre au moins une lettre et un chiffre et faire au moins 8 caractères.</p>
+              <p class="error-message" i18n="@@RegistrationPasswordFormatErrorMessage" *ngIf="registrationForm.get('password').invalid && registrationForm.get('password').errors.pattern">Le mot de passe doit comprendre au moins une lettre et un chiffre et faire au moins 8 caractères.</p>
             </div>
 
             <div class="input-error-message">
               <mat-form-field>
-                <input type="password" formControlName="confirmPassword" id="confirmPassword" class="form-control" matInput placeholder="Confirmation du Mot de Passe" required>
+                <input type="password" formControlName="confirmPassword" id="confirmPassword" class="form-control" matInput i18n-placeholder="@@RegistrationConfirmPassword" placeholder="Confirmation du Mot de Passe" required>
               </mat-form-field>
-              <p class="error-message" *ngIf="registrationForm.get('confirmPassword').invalid && registrationForm.get('confirmPassword').touched">Les 2 mots de passe ne sont pas identiques.</p>
+              <p class="error-message" i18n="@@RegistrationConfirmPasswordError" *ngIf="registrationForm.get('confirmPassword').invalid && registrationForm.get('confirmPassword').touched">Les 2 mots de passe ne sont pas identiques.</p>
             </div>
           </div>
 
           <div class="buttons-spaced-reversed">
-            <button [disabled]="registrationForm.invalid" class="btn btn-secondary" mat-raised-button type="submit">S'inscrire</button>
-            <button class="btn-primary" (click)="router.navigate(['/login'])" mat-raised-button type="button">Déjà inscrit ?</button>
+            <button [disabled]="registrationForm.invalid" class="btn btn-secondary" mat-raised-button i18n="@@RegistrationRegister" type="submit">S'inscrire</button>
+            <button class="btn-primary" (click)="router.navigate(['/login'])" mat-raised-button i18n="@@RegistrationToConnection" type="button">Déjà inscrit ?</button>
             <button (click)="signInWithFB()" mat-raised-button><img src="assets/Pictures/facebook.png" width="40" height="40" style="padding: 6px;margin-left: -15px;" type="button">  Facebook</button>
             <button (click)="signInGoogle()" mat-raised-button><img src="assets/Pictures/google.png" width="40" height="40" style="padding: 6px;margin-left: -12px;" type="button">  Google</button>
           </div>

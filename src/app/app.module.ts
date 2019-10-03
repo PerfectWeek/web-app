@@ -108,6 +108,7 @@ import {isLogged} from './core/Guards/isLogged-guard';
 import {IsLogout} from './core/Guards/isLogout-guard';
 
 import localeFr from '@angular/common/locales/fr';
+import localeFrExtra from '@angular/common/locales/extra/fr';
 import {environment} from "../environments/environment";
 import {BestSlotCalendarComponent} from './pages/calendar/BestSlotCalendar/best-slot-calendar';
 import {SWIPER_CONFIG, SwiperConfigInterface, SwiperModule} from 'ngx-swiper-wrapper';
@@ -119,7 +120,7 @@ import {EventsService} from "./core/services/Requests/Events";
 import {PermissionService} from './core/services/permission.service';
 //import {FlexLayoutModule} from '@angular/flex-layout';
 
-registerLocaleData(localeFr);
+registerLocaleData(localeFr, localeFrExtra);
 
 const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
     direction: 'horizontal',

@@ -45,7 +45,6 @@ export class BestSlotCalendarComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log("alors", this.slot);
         //this.temp_event = JSON.parse(this.temp_event);
         //this.slot = JSON.parse(this.slot);
         const tmp_date = new Date(this.slot.start_time);

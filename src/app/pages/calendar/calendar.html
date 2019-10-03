@@ -1,8 +1,8 @@
 <div id="calendar">
 <!--    <div *ngIf="displayOnly === false" class="button_layout" fxLayout="row">-->
     <div *ngIf="permSrv.permission[role].CRUD === true && displayOnly === false"  class="button_layout" fxLayout="row">
-        <button class="mat-raised-button btn-secondary" (click)="foundSlots()">Trouver un créneau</button>
-        <button style="margin-left: 5px" class="mat-raised-button btn-secondary" (click)="addEvent()">Ajouter un évènement</button>
+        <button i18n="@@CalendarFindSlot" class="mat-raised-button btn-secondary" (click)="foundSlots()">Trouver un créneau</button>
+        <button i18n="@@CalendarAddEvent" style="margin-left: 5px" class="mat-raised-button btn-secondary" (click)="addEvent()">Ajouter un évènement</button>
     </div>
     <full-calendar
             #fullcalendar

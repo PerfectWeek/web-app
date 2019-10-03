@@ -5,23 +5,23 @@
     <div class="main-container">
       <div class="form-container-sm flex-column">
         <form [formGroup]="connectionForm" (ngSubmit)="submit()">
-          <p class="h3 text-center mb-4">Connexion</p>
+          <p i18n="@@ConnectionTitle" class="h3 text-center mb-4">Connexion</p>
 
           <div class="col-fields">
             <mat-form-field>
-              <input type="email" email formControlName="email" id="email" class="form-control" placeholder="Email" matInput required>
+              <input type="email" email formControlName="email" id="email" class="form-control" i18n-placeholder="@@ConnectionEmail" placeholder="Email" matInput required>
             </mat-form-field>
 
             <mat-form-field>
-              <input type="password" formControlName="password" id="password" class="form-control" placeholder="Mot de Passe" matInput required>
+              <input type="password" formControlName="password" id="password" class="form-control" i18n-placeholder="@@ConnectionPassword" placeholder="Mot de Passe" matInput required>
             </mat-form-field>
           </div>
 
           <div class="buttons-spaced-reversed">
-            <button [disabled]="connectionForm.invalid" class="btn btn-secondary" mat-raised-button type="submit">Se connecter</button>
-            <button class="btn-primary" (click)="router.navigate(['/registration'])" mat-raised-button type="button">Pas encore inscrit ?</button>
+            <button [disabled]="connectionForm.invalid" class="btn btn-secondary" mat-raised-button i18n="@@ConnectionConnect" type="submit">Se connecter</button>
+            <button class="btn-primary" (click)="router.navigate(['/registration'])" mat-raised-button i18n="@@ConnectionToRegistration" type="button">Pas encore inscrit ?</button>
             <button (click)="signInWithFB()" mat-raised-button><img src="assets/Pictures/facebook.png" width="40" height="40" style="padding: 6px;margin-left: -15px;" type="button">  Facebook</button>
-            <button (click)="signInGoogle()" mat-raised-button><img src="assets/Pictures/google.png" width="40" height="40" style="padding: 6px;margin-left: -12px;" type="button">  Google</button>
+            <button (click)="signInGoogle()" mat-raised-button><img src="assets/Pictures/google.png" width="40" height="40" style="padding: 6px;margin-left: -12px;"  type="button">  Google</button>
           </div>
         </form>
 

@@ -19,6 +19,11 @@ import {UsersService} from "../../core/services/Requests/Users";
 })
 export class Navbar implements OnInit, AfterViewInit {
 
+    languageList = [
+        { code: 'fr', label: 'Français' },
+        { code: 'en', label: 'English' }
+    ];
+
     isLogged$ = this.authSrv.isLogged();
 
     userProfile$ = this.profileSrv.userProfile$;

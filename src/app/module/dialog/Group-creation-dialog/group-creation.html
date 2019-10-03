@@ -1,11 +1,11 @@
 <div class="flex flex-r-centered">
-  <h2 mat-dialog-title>Création d'un nouveau calendrier</h2>
+  <h2 i18n="@@GroupeCreationTitle" mat-dialog-title>Création d'un nouveau calendrier</h2>
 </div>
 <mat-dialog-content style="white-space: pre-wrap; text-align: center">
   <div>
     <form #groupForm="ngForm" (ngSubmit)="createGroup()" class="form-row" style="padding: 15px; margin: 15px 0">
       <mat-form-field>
-        <input matInput placeholder="Nom" [(ngModel)]="name" name="name" required>
+        <input matInput i18n-placeholder="@@GroupeCreationName" placeholder="Nom" [(ngModel)]="name" name="name" required>
       </mat-form-field>
 
       <mat-form-field style="width: 100%">
@@ -17,7 +17,8 @@
             {{user.name}}
             <mat-icon matChipRemove *ngIf="removable">x</mat-icon>
           </mat-chip>
-          <input placeholder="Nouvel utilisateur"
+          <input i18n-placeholder="@@GroupeCreationNewUser"
+                 placeholder="Nouvel utilisateur"
                  id="UserInput"
                  #UserInput
                  [matAutocomplete]="users"
@@ -38,8 +39,8 @@
 </mat-dialog-content>
 <br>
 <mat-dialog-actions style="display: flex; justify-content: space-between">
-  <button class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
-  <button [disabled]="groupForm.valid === false" class="mat-raised-button btn-secondary"
+  <button i18n="@@GroupeCreationCancel" class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
+  <button i18n="@@GroupeCreationConfirm" [disabled]="groupForm.valid === false" class="mat-raised-button btn-secondary"
           (click)="createGroup()">Confirmer
   </button>
 </mat-dialog-actions>
