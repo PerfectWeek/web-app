@@ -5,6 +5,7 @@ import {User} from "../../../../core/models/User";
 import {ProfileService} from "../../../../core/services/profile.service";
 import {ToastrService} from "ngx-toastr";
 import {UsersService} from "../../../../core/services/Requests/Users";
+import * as imageUtils from "../../../../core/helpers/image";
 
 @Component({
     selector: 'public-profile',
@@ -17,8 +18,6 @@ export class PublicProfileComponent implements OnInit, OnDestroy {
     private sub: any;
 
     displayButton: boolean = false;
-
-    image: any = null;
 
     constructor(private route: ActivatedRoute,
                 private profileSrv: ProfileService,
@@ -33,18 +32,20 @@ export class PublicProfileComponent implements OnInit, OnDestroy {
         this.sub = this.route.params
             .subscribe(params => {
                 this.profileSrv.userProfile$.subscribe(current_user => {
-                    if (params.name === current_user.pseudo)
+                    if (params.id === current_user.id)
                         this.router.navigate(['profile']);
                 });
-                this.usersSrv.getUser(params.name)
+                this.usersSrv.getUser(params.id)
                     .subscribe(ret => {
-                            this.usersSrv.getFriendInvitationStatus(ret.user.pseudo)
-                            .subscribe(res => {
-                                res.status !== 'confirmed' ? this.displayButton = true : null;
-                            });
+                            // this.usersSrv.getFriendInvitationStatus(ret.user.pseudo)
+                            // .subscribe(res => {
+                            //     res.status !== 'confirmed' ? this.displayButton = true : null;
+                            // });
                         this.user = ret.user;
-                        this.usersSrv.getImage(ret.user.pseudo)
-                            .subscribe(ret => this.image = ret.image);
+                        this.usersSrv.getImage(ret.user.id)
+                            .subscribe(ret => {
+                                imageUtils.createImageFromBlob(ret, this.user);
+                            }, err => console.log('err => ', err.message));
                     });
             });
     }
@@ -54,7 +55,7 @@ export class PublicProfileComponent implements OnInit, OnDestroy {
     }
 
     sendInvitation() {
-        this.usersSrv.inviteFriend(this.user.pseudo).subscribe((response => {
+        this.usersSrv.inviteFriend(this.user.name).subscribe((response => {
             this.toastSrv.success("L'invitation a bien été envoyée");
         }));
     }

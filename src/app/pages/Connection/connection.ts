@@ -49,10 +49,10 @@ export class ConnectionComponent {
         this.authSrv.newConnection(this.connectionForm.value)
             .do(
                 ((data: any) => {
-                    this.profileSrv.fetchUser$(data.user.pseudo).subscribe();
-                    (<any>window).ga('send', 'event', 'Login', 'Connection', data.user.pseudo);
+                    this.profileSrv.fetchUser$().subscribe();
+                    (<any>window).ga('send', 'event', 'Login', 'Connection', data.user.name);
                     this.router.navigate(['/dashboard']);
-                    this.usersSrv.putTimezone(data.user.pseudo).subscribe();
+                    this.usersSrv.putTimezone().subscribe();
                     return true;
                 }),
                 () => {
@@ -75,9 +75,9 @@ export class ConnectionComponent {
                     .subscribe((resu) => {
                         self.tokenSrv.token = resu["token"];
                         localStorage.setItem('user_pseudo', resu["user"]["pseudo"]);
-                        self.authSrv.auth = {email: resu["user"]["email"], pseudo: resu["user"]["pseudo"]};
+                        self.authSrv.auth = {email: resu["user"]["email"], name: resu["user"]["pseudo"]};
                         self.authSrv.logged = true;
-                        self.profileSrv.fetchUser$(resu["user"]["pseudo"]).subscribe(() => self.ngZone.run(() => {
+                        self.profileSrv.fetchUser$().subscribe(() => self.ngZone.run(() => {
                             (<any>window).ga('send', 'event', 'Login', 'FB Connection', resu["user"]["pseudo"]);
                             self.router.navigate(['/dashboard']);
                         }));

@@ -13,9 +13,9 @@
                 <h5 i18n="@@CalendarListGlobal" style="padding: 15px"><strong>Calendrier global</strong></h5>
                 <mat-divider [inset]="false"></mat-divider>
             </section>
-            <section tabindex="-1" #user class="group" (click)="sendGroup(-1, -1)" title="{{user.pseudo}}">
-                <img src="{{userImage}}" i18n="@@CalendarListImageAlt" alt="User's profile image" i18n-title="@@CalendarListImageTitle" title="User's profile image">
-                <h4 *ngIf="profileSrv.userProfile$ | async, let user">{{user.pseudo}}</h4>
+            <section tabindex="-1" #user class="group" (click)="sendGroup(-1, -1)" title="{{user.name}}">
+                <img *ngIf="profileSrv.userProfile$ | async, let user" src="{{user.image}}" i18n="@@CalendarListImageAlt" alt="User's profile image" i18n-title="@@CalendarListImageTitle" title="User's profile image">
+                <h4 *ngIf="profileSrv.userProfile$ | async, let user">{{user.name}}</h4>
             </section>
         </section>
         <mat-divider [inset]="false"></mat-divider>

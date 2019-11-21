@@ -27,7 +27,7 @@ const routes: Routes = [
   { path: 'event-suggestions', component: EventSuggestionsComponent, canActivate: [isLogged ]},
   { path: 'calendar/:id', component: CalendarComponent, canActivate: [ isLogged ] },
   { path: 'profile', component: ProfileComponent, canActivate: [isLogged] },
-  { path: 'profile/:name', component: PublicProfileComponent, canActivate: [isLogged] },
+  { path: 'profile/:id', component: PublicProfileComponent, canActivate: [isLogged] },
   { path: 'friends', component: FriendsComponent, canActivate: [isLogged] },
   { path: '**', component: NotFoundComponent }
 ];

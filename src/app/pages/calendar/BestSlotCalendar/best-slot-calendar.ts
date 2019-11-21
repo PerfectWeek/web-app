@@ -103,7 +103,7 @@ export class BestSlotCalendarComponent implements OnInit {
 
     get_global_calendar(): void {
         this.profileSrv.userProfile$.subscribe(user => {
-            this.usersSrv.getCalendars(user.pseudo)
+            this.calendarsSrv.getConfirmedCalendars()
                 .subscribe(ret => {
                     for (let idx in ret.calendars) {
                         this.get_calendar_events(ret.calendars[idx].calendar.id);

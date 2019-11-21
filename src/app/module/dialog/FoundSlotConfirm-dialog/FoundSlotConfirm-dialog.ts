@@ -41,7 +41,7 @@ export class FoundSlotConfirmDialog {
                 public dialog: MatDialog,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         this.profileSrv.userProfile$.subscribe(user => {
-            this.usersSrv.getCalendars(user.pseudo)
+            this.calendarsSrv.getConfirmedCalendars()
                 .subscribe(ret => {
                     this.calendars_list = ret.calendars;
                 });
@@ -246,13 +246,10 @@ export class FoundSlotConfirmDialog {
     }
 
     get_global_calendar(): void {
-        this.profileSrv.userProfile$.subscribe(user => {
-            this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
-                .subscribe(ret => {
-                    for (let idx in ret.calendars) {
-                        this.get_calendar_events(ret.calendars[idx].calendar.id);
-                    }
-                });
+        this.calendarsSrv.getConfirmedCalendars().subscribe(ret => {
+            for (let idx in ret.calendars) {
+                this.get_calendar_events(ret.calendars[idx].calendar.id);
+            }
         });
     }
 }

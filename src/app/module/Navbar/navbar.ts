@@ -11,6 +11,7 @@ import {Group} from "../../core/models/Group";
 import {User} from "../../core/models/User";
 import {GroupsService} from "../../core/services/Requests/Groups";
 import {UsersService} from "../../core/services/Requests/Users";
+import {CalendarsService} from "../../core/services/Requests/Calendars";
 
 @Component({
     selector: 'navbar',
@@ -32,6 +33,8 @@ export class Navbar implements OnInit, AfterViewInit {
 
     friendInvitations: FriendInvitation[] = [];
 
+    EventInvitations: EventInvitation[] = [];
+
     invitations$: Observable<UserInvitations>;
 
     constructor(private authSrv: AuthService,
@@ -39,6 +42,7 @@ export class Navbar implements OnInit, AfterViewInit {
                 private dialog: MatDialog,
                 private toastSrv: ToastrService,
                 private requestSrv: RequestService,
+                private calendarSrv: CalendarsService,
                 private groupsSrv: GroupsService,
                 private usersSrv: UsersService,
                 private profileSrv: ProfileService) {
@@ -56,25 +60,26 @@ export class Navbar implements OnInit, AfterViewInit {
             .do(invitations => {
                 this.groupInvitations = invitations.group_invitations;
                 this.friendInvitations = invitations.friend_invitations;
+                this.EventInvitations = invitations.event_invitations;
             }).subscribe();
     }
 
     handleGroupRequest(invitation, result) {
         let body = JSON.stringify({group_id: invitation.id});
         if (result === true)
-            this.groupsSrv.acceptInvitation(invitation.id, body)
+            this.calendarSrv.acceptInvitation(invitation.id)
                 .subscribe(ret => {
                     this.toastSrv.success(`Bravo, vous faites maitnenant parti du calendrier ${invitation.name}`);
                     this.profileSrv.getInvitations();
                 }, err => this.toastSrv.error('Une erreur est survenue'));
         else
-            this.groupsSrv.declineInvitation(invitation.id, body)
+            this.calendarSrv.declineInvitation(invitation.id)
                 .subscribe(ret => {
                     this.toastSrv.success(`Vous avez refusé l'invitation du calendrier ${invitation.name}`);
                     this.profileSrv.getInvitations();
                 }, err => this.toastSrv.error('Une erreur est survenue'));
     }
-
+x
     handleFriendRequest(invitation, result) {
         if (result === true)
             this.usersSrv.acceptFriendRequest(invitation.from_user.pseudo)

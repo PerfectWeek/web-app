@@ -22,6 +22,10 @@ import {UsersService} from "../../../core/services/Requests/Users";
 import {GroupsService} from "../../../core/services/Requests/Groups";
 import {PermissionService} from '../../../core/services/permission.service';
 import {ModifyEventDialog} from '../../../module/dialog/ModifyEvent-dialog/ModifyEvent';
+import {CalendarsService} from "../../../core/services/Requests/Calendars";
+
+import * as imageUtils from "../../../core/helpers/image";
+import {User} from "../../../core/models/User";
 
 @Component({
     selector: 'group-info',
@@ -49,16 +53,9 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
     @Output("group_image_modified") group_image_modified = new EventEmitter<number>();
 
-    user: { pseudo: string, description: string, email: string } = {
-        pseudo: '',
-        description: '',
-        email: ''
-    };
+    user: User = {name: null, email: null};
 
-    group: Group = {
-        name: '',
-        description: ''
-    };
+    group: Group = {name: ""};
 
     user$ = this.profileSrv.userProfile$;
 
@@ -69,7 +66,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
     isAdmin: boolean = false;
 
-    group_members: { pseudo: string, role: string, image: any }[] = [];
+    group_members: { name: string, role: string, image: any, id: number }[] = [];
 
     roles: string[] = [
         "Admin",
@@ -81,7 +78,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
     constructor(private requestSrv: RequestService,
                 private profileSrv: ProfileService,
                 private usersSrv: UsersService,
-                private groupsSrv: GroupsService,
+                private calendarSrv: CalendarsService,
                 private dialog: MatDialog,
                 private router: Router,
                 private cd: ChangeDetectorRef,
@@ -106,26 +103,30 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
             if (this.group_id === -1)
                 this.user$.subscribe(user => {
-                    this.usersSrv.postImage(user.pseudo, file)
+                    this.usersSrv.putImage(file)
                         .do(() => {
-                                this.usersSrv.getImage(user.pseudo)
-                                    .subscribe(ret => {
-                                        this.group_image_modified.emit(-1);
-                                        this.image = ret.image;
-                                    });
+                            this.usersSrv.getImage(user.id)
+                                .subscribe(ret => {
+                                    imageUtils.createImageFromBlob(ret, this.user);
+                                    setTimeout(() => {this.image = this.user.image}, 10);
+                                }, err => console.log('err => ', err.message));
                                 this.toastSrv.success("L'image a été uploadé avec succès");
                             }, err => this.toastSrv.error("Une erreur est survenue lors de l'upload de l'image")
                         ).subscribe();
                 });
             else
-                this.groupsSrv.uploadImage(this.group_id, file)
+                this.calendarSrv.uploadImage(this.group_id, file)
                     .do(() => {
                         this.toastSrv.success("L'image a été uploadé avec succès");
-                        this.groupsSrv.getImage(this.group_id)
+                        this.calendarSrv.getImage(this.group_id)
                             .subscribe(ret => {
-                                this.group_image_modified.emit(this.group_id);
-                                this.image = ret.image;
-                            });
+                                let obj = {image: null};
+                                imageUtils.createImageFromBlob(ret, obj);
+                                setTimeout(() => {
+                                    this.image = obj.image;
+                                    this.group_image_modified.emit(this.group_id);
+                                }, 10);
+                            }, err => console.log('err => ', err.message));
                     }, err => this.toastSrv.error("Une erreur est survenue lors de l'upload de l'image"))
                     .subscribe();
         }
@@ -133,44 +134,46 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
     getUserInformation() {
         this.user$.subscribe(user => {
-            this.user.pseudo = user.pseudo;
+            this.user.name = user.name;
             this.user.email = user.email;
             this.user.description = "Regroupement de tous vos évènements";
-            this.usersSrv.getImage(user.pseudo)
+            this.usersSrv.getImage(user.id)
                 .subscribe(ret => {
-                    this.image = ret.image;
-                    this.ready = true;
-                });
+                    imageUtils.createImageFromBlob(ret, this.user);
+                    setTimeout(() => {
+                        this.image = this.user.image;
+                        this.ready = true;
+                        }, 100);
+                }, err => console.log('err => ', err.message));
         })
     }
 
     getGroupInformation() {
-        this.groupsSrv.getGroup(this.group_id)
+        this.calendarSrv.getCalendar(this.group_id)
             .subscribe(ret => {
-                this.group.name = ret.group.name;
-                this.group.description =
-                    (ret.group.description == "" || !ret.group.description) ? "Pas de description" : ret.group.description;
-                this.groupsSrv.getGroupMembers(ret.group.id)
+                this.group.name = ret.calendar.name;
+                this.group_members = ret.calendar.members;
+                this.group_members.forEach((member, index) => {
+                    if (member.name === this.profileSrv.user.name) {
+                        this.rawRole = member.role;
+                        this.userRole = this.rolesfr[`${member.role}`];
+                        this.isAdmin = member.role === 'admin';
+                    }
+                    this.usersSrv.getImage(member.id)
+                        .subscribe(ret => {
+                            imageUtils.createImageFromBlob(ret, member);
+                            if (index === this.group_members.length - 1)
+                                this.ready = true;
+                        });
+                });
+                this.calendarSrv.getImage(this.group_id)
                     .subscribe(ret => {
-                        this.group_members = ret.members;
-                        this.group_members.forEach((member, index) => {
-                            if (member.pseudo === this.profileSrv.user.pseudo) {
-                                this.rawRole = member.role;
-                                this.userRole = this.rolesfr[`${member.role}`];
-                                this.isAdmin = member.role === 'admin';
-                            }
-                            this.usersSrv.getImage(member.pseudo)
-                                .subscribe(ret => {
-                                    member.image = ret.image;
-                                    if (index === this.group_members.length - 1)
-                                        this.ready = true;
-                                });
-                        })
-                    });
-                this.groupsSrv.getImage(ret.group.id)
-                    .subscribe(ret => {
-                        this.image = ret.image;
-                    });
+                        let obj = {image: null};
+                        imageUtils.createImageFromBlob(ret, obj);
+                        setTimeout(() => {
+                            this.image = obj.image;
+                        }, 50);
+                    }, err => console.log('err => ', err.message));
             });
     }
 
@@ -186,17 +189,16 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
     changeUser(value: string, fieldname: string) {
         this.user$.subscribe(user => {
-
             let dialogRef = this.dialog.open(ChangeValueDialog, {
                 data: {fieldname: fieldname, value: value}
             });
 
             dialogRef.afterClosed().subscribe(result => {
                 if (result != null && result.value != user[`${fieldname}`]) {
-                    let user_pseudo = user.pseudo;
+                    let user_pseudo = user.name;
                     user[`${fieldname}`] = result.value;
-                    this.usersSrv.modifyUser(user_pseudo, {
-                        pseudo: user.pseudo,
+                    this.usersSrv.modifyUser({
+                        name: user.name,
                         email: user.email
                     }).subscribe(ret => {
                             user[`${fieldname}`] = ret.user[`${fieldname}`];
@@ -218,10 +220,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
         dialogRef.afterClosed().subscribe(result => {
             if (result != null && result.value != this.group[`${fieldname}`]) {
                 this.group[`${fieldname}`] = result.value;
-                this.groupsSrv.modifyGroup(this.group_id, {
-                    name: this.group.name,
-                    description: this.group.description
-                }).subscribe(ret => {
+                this.calendarSrv.modifyCalendar(this.group_id, this.group.name).subscribe(ret => {
                         this.group[`${fieldname}`] = ret.group[`${fieldname}`];
                         if (fieldname === 'name') {
                             this.group_modified.emit(ret.group.id);
@@ -235,10 +234,10 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
     formatBody(body) {
         console.log('body => ', body);
-        let field = 'users';
+        let field = 'members';
         let found: boolean = false;
         let end = '"role":"actor"}';
-        let str = 'users":[';
+        let str = 'members":[';
         for (let key in body) {
             if (key.toString().indexOf(field) != -1) {
                 found = true;
@@ -248,7 +247,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
         str = str.slice(0, str.length - 1);
         str += ']';
         let result = JSON.stringify(body);
-        return found === true ? (result.substring(0, result.indexOf('users[0]')) + str + result.substring(result.lastIndexOf(end) + end.length)) : result;
+        return found === true ? (result.substring(0, result.indexOf('members[0]')) + str + result.substring(result.lastIndexOf(end) + end.length)) : result;
     }
 
     addMember() {
@@ -258,13 +257,13 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result !== null && result != undefined) {
-                this.groupsSrv.addMembers(this.group_id, this.formatBody(result))
+                this.calendarSrv.inviteUsers(this.group_id, this.formatBody(result))
                     .subscribe(ret => {
                         this.ready = false;
                         this.group_members = ret.members;
                         (<any>window).ga('send', 'event', 'Group', 'Adding Members', `Group Name: ${result.name}`);
                         this.group_members.forEach((member, index) => {
-                            this.usersSrv.getImage(member.pseudo)
+                            this.usersSrv.getImage(member.id)
                                 .subscribe(ret => {
                                     member.image = ret.image;
                                     if (index === this.group_members.length - 1)
@@ -287,9 +286,9 @@ export class GroupInfoComponent implements OnInit, OnChanges {
             });
             dialogRef.afterClosed().subscribe(result => {
                 if (result === true)
-                    this.groupsSrv.removeMember(this.group_id, user.pseudo)
+                    this.calendarSrv.removeMember(this.group_id, user.id)
                         .subscribe(ret => {
-                            (<any>window).ga('send', 'event', 'Group', 'Leaving Group', `Member: ${user.pseudo} | Group Name: ${this.group.name}`);
+                            (<any>window).ga('send', 'event', 'Group', 'Leaving Group', `Member: ${user.name} | Group Name: ${this.group.name}`);
                             this.left_group.emit(this.group_id);
                             this.toastSrv.success("Vous avez n'êtes désormais plus membre de ce calendrier");
                         }, ret => this.toastSrv.error("Une erreur est survenue. Vous n'avez pas pu quitter ce calendrier"))
@@ -299,7 +298,8 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
     fireFromGroup(pseudo: string) {
         this.user$.subscribe(user => {
-            if (this.group_members.find(member => member.pseudo === user.pseudo).role === 'Admin') {
+            if (this.group_members.find(member => member.name === user.name).role === 'Admin') {
+                let id = this.group_members.find(member => member.name === user.name).id;
                 let dialogRef = this.dialog.open(ConfirmDialog, {
                     data: {
                         title: 'Suppression du profil',
@@ -308,11 +308,11 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                 });
                 dialogRef.afterClosed().subscribe(result => {
                     if (result === true)
-                        this.groupsSrv.removeMember(this.group_id, pseudo)
+                        this.calendarSrv.removeMember(this.group_id, id)
                             .subscribe(ret => {
                                 (<any>window).ga('send', 'event', 'Group', 'Removing From Group', `Member: ${pseudo} | Group Name: ${this.group.name}`);
                                 this.toastSrv.success("Membre supprimé avec succès");
-                                this.group_members.splice(this.group_members.findIndex(member => member.pseudo === pseudo), 1);
+                                this.group_members.splice(this.group_members.findIndex(member => member.name === pseudo), 1);
                             }, ret => this.toastSrv.error("Une erreur est survenue lors de la suppression d\'un membre"))
                 })
             }
@@ -335,9 +335,9 @@ export class GroupInfoComponent implements OnInit, OnChanges {
     changeMemberPermission(member, new_role) {
         console.log(member, new_role);
         // this.groupsSrv.mod
-        this.groupsSrv.modifyMemberRole(this.group_id, member.pseudo, new_role).subscribe(ret => {
+        this.calendarSrv.editUserRole(this.group_id, member.id, new_role).subscribe(ret => {
             member.role = new_role;
-            this.toastSrv.info(`${member.pseudo} est maintenant ${this.PermSrv.permission[new_role].frRole} du calendrier ${this.group.name}.`);
-        }, error => {this.toastSrv.error(`Une erreur est suvenue durant la modification du role de ${member.pseudo}`)});
+            this.toastSrv.info(`${member.name} est maintenant ${this.PermSrv.permission[new_role].frRole} du calendrier ${this.group.name}.`);
+        }, error => {this.toastSrv.error(`Une erreur est suvenue durant la modification du role de ${member.name}`)});
     }
 }

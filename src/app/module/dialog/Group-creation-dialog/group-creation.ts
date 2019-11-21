@@ -128,7 +128,7 @@ export class GroupCreationDialog implements AfterViewInit {
             let is_in: boolean = false;
 
             for (let selected of this.selectedUsers)
-                if (user.pseudo === selected.name) {
+                if (user.name === selected.name) {
                     is_in = true;
                     break;
                 }
@@ -138,7 +138,7 @@ export class GroupCreationDialog implements AfterViewInit {
             in_users.push(user);
         }
         let idx = in_users.findIndex(function (user) {
-            return self.profileSrv.user.pseudo === user.pseudo;
+            return self.profileSrv.user.name === user.name;
         });
         idx !== -1 ? in_users.splice(idx, 1) : null;
         this.filteredUsers.next(in_users);

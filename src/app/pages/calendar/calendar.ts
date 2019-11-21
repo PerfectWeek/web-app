@@ -81,7 +81,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
         }
 
         if (this.is_global_calendar === false) {
-            this.calendarsSrv.getCalendars(this.in_calendar_id).subscribe(ret => {
+            this.calendarsSrv.getCalendar(this.in_calendar_id).subscribe(ret => {
                 this.role = ret.calendar.role;
 
                 // this.api.setOption('editable', this.permSrv.permission[this.role].CRUD); // maybe delete
@@ -181,7 +181,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     get_in_group_calendar(): void {
         this.get_calendar_events(this.in_calendar_id);
-        this.calendarsSrv.getCalendars(this.in_calendar_id)
+        this.calendarsSrv.getCalendar(this.in_calendar_id)
             .subscribe(ret => {
                 this.calendar_name = ret.calendar.name;
             });
@@ -189,7 +189,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     get_group_calendar(): void {
         this.get_calendar_events(this.calendar_id);
-        this.calendarsSrv.getCalendars(this.calendar_id)
+        this.calendarsSrv.getCalendar(this.calendar_id)
             .subscribe(ret => {
                 this.calendar_name = ret.calendar.name;
             });
@@ -197,7 +197,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     get_global_calendar(): void {
         this.profileSrv.userProfile$.subscribe(user => {
-            this.usersSrv.getCalendars(user.pseudo)
+            this.calendarsSrv.getConfirmedCalendars()
                 .subscribe(ret => {
                     for (let idx in ret.calendars) {
                         this.get_calendar_events(ret.calendars[idx].calendar.id);
@@ -241,7 +241,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     eventClick(event) {
         this.eventsSrv.getEvent(event.event.id).subscribe(ret => {
             //console.log(ret);
-            this.calendarsSrv.getCalendars(ret.event.calendar_id).subscribe(ret => {
+            this.calendarsSrv.getCalendar(ret.event.calendar_id).subscribe(ret => {
                 // console.log(ret);
                 this.role = ret.calendar.role;
                 if (this.permSrv.permission[this.role].read === false) {
@@ -283,7 +283,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     eventDrop(event): void {
         this.eventsSrv.getEvent(event.event.id).subscribe(ret => {
             //console.log(ret);
-            this.calendarsSrv.getCalendars(ret.event.calendar_id).subscribe(ret => {
+            this.calendarsSrv.getCalendar(ret.event.calendar_id).subscribe(ret => {
                 //console.log(ret);
                 this.role = ret.calendar.role;
                 if (this.permSrv.permission[this.role].CRUD === false) {
@@ -338,7 +338,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     eventResize(event) {
         this.eventsSrv.getEvent(event.event.id).subscribe(ret => {
             //console.log(ret);
-            this.calendarsSrv.getCalendars(ret.event.calendar_id).subscribe(ret => {
+            this.calendarsSrv.getCalendar(ret.event.calendar_id).subscribe(ret => {
                 //console.log(ret);
                 this.role = ret.calendar.role;
                 if (this.permSrv.permission[this.role].CRUD === false) {

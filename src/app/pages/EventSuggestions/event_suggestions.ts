@@ -72,7 +72,7 @@ export class EventSuggestionsComponent implements OnInit {
 
         this.profileSrv.userProfile$.subscribe(ret => {
             this.user = ret;
-            this.usersSrv.getCalendars(this.user.pseudo).subscribe(ret => {
+            this.calendarsSrv.getConfirmedCalendars().subscribe(ret => {
                 ret.calendars.filter(e => {
                     this.calendars_id.push(e.calendar.id);
                 });
@@ -97,7 +97,7 @@ export class EventSuggestionsComponent implements OnInit {
 
     getCalendars() {
         this.profileSrv.userProfile$.subscribe(user => {
-            this.usersSrv.getCalendars(user.pseudo)
+            this.calendarsSrv.getConfirmedCalendars()
                 .subscribe(calendars => {
                     this.focusedCalendar = calendars.calendars[0].calendar;
                     this.getSuggestions();
@@ -162,7 +162,7 @@ export class EventSuggestionsComponent implements OnInit {
 
     joinEvent(id) {
         // this.focusedEvent = null;
-        this.eventsSrv.joinEvent(id)
+        this.eventsSrv.changeStatus(id, 'going')
             .subscribe(response => {
                 this.toastSrv.info('Cet évènement a bien été ajouté à votre liste d\'évènements');
                 this.focusedEvent = null;

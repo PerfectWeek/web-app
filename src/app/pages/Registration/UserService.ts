@@ -88,8 +88,8 @@ export class UserService {
                     this.tokenSrv.token = resu["token"];
                     localStorage.setItem('user_pseudo', resu["user"]["pseudo"]);
                     this.authSrv.logged = true;
-                    this.authSrv.auth = {email: resu["user"]["email"], pseudo: resu["user"]["pseudo"]};
-                    this.profileSrv.fetchUser$(resu["user"]["pseudo"]).subscribe(() => {
+                    this.authSrv.auth = {email: resu["user"]["email"], name: resu["user"]["pseudo"]};
+                    this.profileSrv.fetchUser$().subscribe(() => {
                         (<any>window).ga('send', 'event', 'Login', 'Google Connection', resu["user"]["pseudo"]);
                         this.router.navigate(['/dashboard']);
                     });
@@ -103,7 +103,7 @@ export class UserService {
             sessionStorage.setItem(
                 UserService.SESSION_STORAGE_KEY, res.getAuthResponse().access_token
              );
-            this.usersSrv.linkGoogle(this.profileSrv.user.pseudo, {
+            this.usersSrv.linkGoogle(this.profileSrv.user.name, {
                 access_token: this.getToken(),
                 refresh_token: ""
             }).subscribe((resu) => this.toastSrv.success('Vous avez connecté votre compte Google avec succès'));

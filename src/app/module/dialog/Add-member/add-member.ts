@@ -77,7 +77,7 @@ export class AddMemberDialog {
                 private PermSrv: PermissionService,
                 public dialogRef: MatDialogRef<AddMemberDialog>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
-        data.members.forEach(member => this.members.push(member.pseudo));
+        data.members.forEach(member => this.members.push(member.name));
         this.filteredUsers = new BehaviorSubject<User[]>([]);
         this.filteredUsers$ = this.filteredUsers.asObservable();
     }
@@ -139,7 +139,7 @@ export class AddMemberDialog {
             let is_in: boolean = false;
 
             for (let selected of this.selectedUsers)
-                if (user.pseudo === selected) {
+                if (user.name === selected) {
                     is_in = true;
                     break;
                 }
@@ -149,7 +149,7 @@ export class AddMemberDialog {
             in_users.push(user);
         }
         let idx = in_users.findIndex(function (user) {
-            return self.profileSrv.user.pseudo === user.pseudo;
+            return self.profileSrv.user.name === user.name;
         });
         idx !== -1 ? in_users.splice(idx, 1) : null;
         this.filteredUsers.next(in_users);
@@ -157,11 +157,11 @@ export class AddMemberDialog {
 
     filterCurrentUser(currentUser) {
         for (let member of this.members)
-            if (currentUser.pseudo === member)
+            if (currentUser.name === member)
                 return;
 
         for (let user of this.selectedUsers)
-            if (currentUser.pseudo === user)
+            if (currentUser.name === user)
                 return;
 
         let users = this.filteredUsers.getValue();

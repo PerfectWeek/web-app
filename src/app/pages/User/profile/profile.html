@@ -4,14 +4,14 @@
     <h3 i18n="@@ProfileTitle" style="text-align: center">Mon Profil</h3>
   </section>
   <label class="profile-image" for="file-input">
-    <img src="{{image}}" i18n-alt="@@ProfileImageAlt" alt="Profile image and button to change the image" i18n-title="@@ProfileImageTitle" title="Cliquez pour changer l'image">
+    <img src="{{user?.image}}" i18n-alt="@@ProfileImageAlt" alt="Profile image and button to change the image" i18n-title="@@ProfileImageTitle" title="Cliquez pour changer l'image">
   </label>
   <input id="file-input" type="file" accept=".jpg,.png,.jpeg" class="image-input" (change)="onFileChange($event)" style="display: none">
   <div class="child-container" id="Profile-data-container">
     <div class="profile-container" *ngIf="user && modifying === false">
       <div>
         <h6 i18n="@@ProfileUsername"><strong><i class="fas fa-user"></i> Pseudo</strong></h6>
-        <p class="profile-field-info">{{user.pseudo}}</p>
+        <p class="profile-field-info">{{user.name}}</p>
       </div>
 
       <div>
