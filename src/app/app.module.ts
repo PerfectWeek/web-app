@@ -50,7 +50,7 @@ import {
 // import {CalendarModule, DateAdapter} from "angular-calendar";
 
 
-import {NgbModalModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModalModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {FlatpickrModule} from 'angularx-flatpickr';
 // import {adapterFactory} from "angular-calendar/date-adapters/date-fns";
 
@@ -88,6 +88,7 @@ import {GroupInfoComponent} from "./pages/Main_View/group_info/group_info";
 import {FriendsComponent} from './pages/Friends/friends';
 import {FriendListComponent} from "./pages/Friends/Friend-list/friend-list";
 import {PublicProfileComponent} from "./pages/User/profile/public/public";
+import {MapComponent} from './pages/Map/map';
 
 //Dialog
 import {ConfirmDialog} from './module/dialog/Confirm-dialog/Confirm-dialog';
@@ -117,6 +118,11 @@ import {GroupsService} from "./core/services/Requests/Groups";
 import {CalendarsService} from "./core/services/Requests/Calendars";
 import {EventsService} from "./core/services/Requests/Events";
 import {PermissionService} from './core/services/permission.service';
+import {AgmCoreModule, GoogleMapsAPIWrapper} from '@agm/core';
+import {EventTypeService} from './core/services/event_type.service';
+import { ShareButtonsModule } from '@ngx-share/buttons';
+import {EventComponent} from './pages/Event/event';
+
 //import {FlexLayoutModule} from '@angular/flex-layout';
 
 registerLocaleData(localeFr);
@@ -140,6 +146,7 @@ let gapiClientConfig: NgGapiClientConfig = {
 
 @NgModule({
     declarations: [
+        EventComponent,
         AppComponent,
         Navbar,
         RegistrationComponent,
@@ -168,9 +175,12 @@ let gapiClientConfig: NgGapiClientConfig = {
         AddMemberDialog,
         FriendInvitationDialog,
         AcceptInvitationDialog,
+        MapComponent,
     ],
     imports: [
-        //FlexLayoutModule,
+        ShareButtonsModule.withConfig({
+            debug: true
+        }),
         SwiperModule,
         CommonModule,
         NgbModalModule,
@@ -204,6 +214,10 @@ let gapiClientConfig: NgGapiClientConfig = {
         MatIconModule,
         MatDividerModule,
         FullCalendarModule,
+        NgbModule,
+        AgmCoreModule.forRoot({
+            apiKey: 'AIzaSyBqQSHkNYPKl94rm_e7kOsxpbn9q7c4mgs'
+        }),
         GoogleApiModule.forRoot({
             provide: NG_GAPI_CONFIG,
             useValue: gapiClientConfig
@@ -227,6 +241,8 @@ let gapiClientConfig: NgGapiClientConfig = {
         CalendarsService,
         EventsService,
         PermissionService,
+        EventTypeService,
+        GoogleMapsAPIWrapper,
         {
             provide: SWIPER_CONFIG,
             useValue: DEFAULT_SWIPER_CONFIG

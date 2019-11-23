@@ -56,7 +56,7 @@
                     <mat-select placeholder="Type" required
                                 [(ngModel)]="eventType"
                                 name="eventType">
-                        <mat-option *ngFor="let type of eventTypes" [value]="type.value">
+                        <mat-option *ngFor="let type of eventTypeSrv.eventTypes" [value]="type.value">
                             {{type.viewValue}}
                         </mat-option>
                     </mat-select>

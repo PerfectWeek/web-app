@@ -1,44 +1,21 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {ToastrService} from 'ngx-toastr';
 import {ProfileService} from '../../../core/services/profile.service';
 import {RequestService} from '../../../core/services/request.service';
 import {ConfirmDialog} from '../Confirm-dialog/Confirm-dialog';
-import {EventsService} from "../../../core/services/Requests/Events";
+import {EventsService} from '../../../core/services/Requests/Events';
 import {PermissionService} from '../../../core/services/permission.service';
+import {EventTypeService} from '../../../core/services/event_type.service';
+import {Location} from '@angular/common';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
     selector: 'event-modification-dialog',
     templateUrl: 'ModifyEvent.html',
     styleUrls: ['ModifyEvent.scss', '../../../../scss/dialog.scss']
-    // styles: ['.mat-raised-button {\n' +
-    // '  box-sizing: border-box;\n' +
-    // '  position: relative;\n' +
-    // '  -webkit-user-select: none;\n' +
-    // '  -moz-user-select: none;\n' +
-    // '  -ms-user-select: none;\n' +
-    // '  user-select: none;\n' +
-    // '  cursor: pointer;\n' +
-    // '  outline: 0;\n' +
-    // '  border: none;\n' +
-    // '  -webkit-tap-highlight-color: transparent;\n' +
-    // '  display: inline-block;\n' +
-    // '  white-space: nowrap;\n' +
-    // '  text-decoration: none;\n' +
-    // '  vertical-align: baseline;\n' +
-    // '  text-align: center;\n' +
-    // '  margin: 0;\n' +
-    // '  min-width: 88px;\n' +
-    // '  line-height: 36px;\n' +
-    // '  padding: 0 16px;\n' +
-    // '  border-radius: 2px;\n' +
-    // '  overflow: visible;\n' +
-    // '  transform: translate3d(0, 0, 0);\n' +
-    // '  transition: background .4s cubic-bezier(.25, .8, .25, 1), box-shadow 280ms cubic-bezier(.4, 0, .2, 1);\n' +
-    // '  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);\n' +
-    // '}']
 })
-export class ModifyEventDialog {
+export class ModifyEventDialog implements OnInit, OnDestroy {
 
     pw_event: {
         id: string
@@ -59,10 +36,11 @@ export class ModifyEventDialog {
     is_picture_changed: boolean = false;
     image_path: any;
 
-    eventTypes: any = [{value: 'party', viewValue: 'Fête'},
-        {value: 'work', viewValue: 'Travail'},
-        {value: 'hobby', viewValue: 'Loisir'},
-        {value: 'workout', viewValue: 'Entrainement'}];
+    share_url = null;
+    // eventTypes: any = [{value: 'party', viewValue: 'Fête'},
+    //     {value: 'work', viewValue: 'Travail'},
+    //     {value: 'hobby', viewValue: 'Loisir'},
+    //     {value: 'workout', viewValue: 'Entrainement'}];
 
     eventVisibilities: any = [{value: 'public', viewValue: 'Public'},
         {value: 'private', viewValue: 'Privé'}];
@@ -72,10 +50,13 @@ export class ModifyEventDialog {
                 private eventsSrv: EventsService,
                 private toastSrv: ToastrService,
                 public PermSrv: PermissionService,
+                public eventTypeSrv: EventTypeService,
+                private location: Location,
                 public dialogRef: MatDialogRef<ModifyEventDialog>,
                 public dialog: MatDialog,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         this.pw_event = data.event.event;
+        this.share_url = `https://wwww.app.perfect-week/event/${this.pw_event.id}`; //a modifier
 
         this.eventsSrv.getImage(this.pw_event.id)
             .subscribe(ret => {
@@ -96,6 +77,14 @@ export class ModifyEventDialog {
                 err => {
                     ;
                 });
+    }
+
+    ngOnInit(): void {
+        this.location.replaceState(`/event/${this.pw_event.id}`);
+    }
+
+    ngOnDestroy(): void {
+        this.location.replaceState('/dashboard');
     }
 
     modifyEvent() {
@@ -148,7 +137,7 @@ export class ModifyEventDialog {
                         const current_event = this.data.calAPI.getEventById(this.pw_event.id);
                         current_event.remove();
                         this.dialogRef.close(false);
-                        this.toastSrv.success('Evenement Supprimé');
+                this.toastSrv.success('Evenement Supprimé');
                     }, ret => this.toastSrv.error('Une erreur est survenue lors de la suppression de l\'evenement'));
             }
         });

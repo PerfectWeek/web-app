@@ -6,6 +6,7 @@ import {RequestService} from '../../../core/services/request.service';
 import {UsersService} from "../../../core/services/Requests/Users";
 import {CalendarsService} from "../../../core/services/Requests/Calendars";
 import {PermissionService} from '../../../core/services/permission.service';
+import {EventTypeService} from '../../../core/services/event_type.service';
 
 @Component({
     selector: 'createEvent-creation-dialog',
@@ -31,10 +32,10 @@ export class CreateEventDialog {
     image: any = null;
     route_id_calendar;
 
-    eventTypes: any = [{value: 'party', viewValue: 'Fête'},
-        {value: 'work', viewValue: 'Travail'},
-        {value: 'hobby', viewValue: 'Loisir'},
-        {value: 'workout', viewValue: 'Entrainement'}];
+    // eventTypes: any = [{value: 'party', viewValue: 'Fête'},
+    //     {value: 'work', viewValue: 'Travail'},
+    //     {value: 'hobby', viewValue: 'Loisir'},
+    //     {value: 'workout', viewValue: 'Entrainement'}];
 
     eventVisibilities: any = [{value: 'public', viewValue: 'Public'},
         {value: 'private', viewValue: 'Privé'}];
@@ -50,6 +51,7 @@ export class CreateEventDialog {
                 private calendarsSrv: CalendarsService,
                 private toastSrv: ToastrService,
                 public PermSrv: PermissionService,
+                public eventTypeSrv: EventTypeService,
                 public dialogRef: MatDialogRef<CreateEventDialog>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
 

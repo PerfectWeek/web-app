@@ -43,7 +43,8 @@ export class EventSuggestionsComponent implements OnInit {
     eventTypes: any = [{value: 'party', viewValue: 'Fête', stat: true},
         {value: 'work', viewValue: 'Travail', stat: true},
         {value: 'hobby', viewValue: 'Loisir', stat: true},
-        {value: 'workout', viewValue: 'Entrainement', stat: true}];
+        {value: 'workout', viewValue: 'Entrainement', stat: true},
+        {value: 'other', viewValue: 'Autre', stat: true}];
 
     search: string = '';
 

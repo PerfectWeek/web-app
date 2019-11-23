@@ -1,24 +1,21 @@
-<div class="flex flex-r-centered">
-    <h2 mat-dialog-title>Modification d'évènement</h2>
-</div>
 <mat-dialog-content style="white-space: pre-wrap; text-align: center">
     <div>
-        <form #groupForm="ngForm" (ngSubmit)="modifyEvent()" class="form-row" style="padding: 15px; margin: 15px 0">
+        <form #groupForm="ngForm" class="form-row" style="padding: 15px; margin: 15px 0">
 
             <div class="my_layout" fxLayout="row">
                 <label class="profile-image" for="event_image_file">
                     <img src="{{event_image}}" alt="Profile image and button to change the image"
                          title="Cliquez pour changer l'image">
                 </label>
-                <input id="event_image_file" [disabled]="!PermSrv.permission[data.role].CRUD" (change)="ModifyImageEvent($event)" type="file" accept=".jpg,.png,.jpeg" class="image-input" style="display: none;">
+                <input id="event_image_file" [disabled]="true" type="file" accept=".jpg,.png,.jpeg" class="image-input" style="display: none;">
 
                 <div fxLayout="column" style="display: grid; width: 70%">
                     <mat-form-field>
                         <input matInput
                                placeholder="Nom de l'évenement"
-                               [(ngModel)]="pw_event.name"
+                               [(ngModel)]="this.name"
                                name="title"
-                               [readonly]="!PermSrv.permission[data.role].CRUD"
+                               [readonly]="true"
                                required>
                     </mat-form-field>
 
@@ -26,18 +23,18 @@
                         <input matInput
                                placeholder="Description"
                                name="description"
-                               [(ngModel)]="pw_event.description"
-                               [readonly]="!PermSrv.permission[data.role].CRUD"
-                               >
+                               [(ngModel)]="this.description"
+                               [readonly]="true"
+                        >
                     </mat-form-field>
 
                     <mat-form-field>
                         <input matInput
                                placeholder="Lieux"
                                name="location"
-                               [(ngModel)]="pw_event.location"
-                               [readonly]="!PermSrv.permission[data.role].CRUD"
-                               >
+                               [(ngModel)]="this.location"
+                               [readonly]="true"
+                        >
                     </mat-form-field>
 
                 </div>
@@ -47,8 +44,8 @@
             <div class="my_layout" fxLayout="row">
                 <mat-form-field>
                     <mat-select placeholder="Visibilité" required
-                                [(value)]="pw_event.visibility"
-                                [disabled]="!PermSrv.permission[data.role].CRUD"
+                                [(value)]="visibility"
+                                [disabled]="true"
                                 name="eventType">
                         <mat-option *ngFor="let visibility of eventVisibilities" [value]="visibility.value">
                             {{visibility.viewValue}}
@@ -57,9 +54,9 @@
                 </mat-form-field>
                 <mat-form-field>
                     <mat-select placeholder="Type" required
-                                [(ngModel)]="pw_event.type"
-                                [(value)]="pw_event.type"
-                                [disabled]="!PermSrv.permission[data.role].CRUD"
+                                [(ngModel)]="this.type"
+                                [(value)]="this.type"
+                                [disabled]="true"
                                 name="eventType">
                         <mat-option *ngFor="let type of eventTypeSrv.eventTypes" [value]="type.value">
                             {{type.viewValue}}
@@ -72,8 +69,8 @@
                     <input matInput
                            type="color"
                            name="color"
-                           [(ngModel)]="pw_event.backgroundColor"
-                           [readonly]="!PermSrv.permission[data.role].CRUD">
+                           [(ngModel)]="this.backgroundColor"
+                           [readonly]="true">
                 </mat-form-field>
             </div>
 
@@ -83,11 +80,11 @@
                            class="form-control"
                            type="text"
                            mwlFlatpickr
-                           [(ngModel)]="this.pw_event.formated_start"
+                           [(ngModel)]="this.formated_start"
                            [altInput]="true"
                            [convertModelValue]="true"
                            [enableTime]="true"
-                           [disabled]="!PermSrv.permission[data.role].CRUD"
+                           [disabled]="true"
                            name="start"
                            dateFormat="Y-m-dTH:i"
                            altFormat="F j, Y H:i"
@@ -100,11 +97,11 @@
                            class="form-control"
                            type="text"
                            mwlFlatpickr
-                           [(ngModel)]="this.pw_event.formated_end"
+                           [(ngModel)]="this.formated_end"
                            [altInput]="true"
                            [convertModelValue]="true"
                            [enableTime]="true"
-                           [disabled]="!PermSrv.permission[data.role].CRUD"
+                           [disabled]="true"
                            name="end"
                            dateFormat="Y-m-dTH:i"
                            altFormat="F j, Y H:i"
@@ -118,18 +115,8 @@
 
 <share-buttons [theme]="'material-dark'"
                [include]="['facebook','messenger','whatsapp','twitter','linkedin','google','pinterest','reddit','tumblr','mix','vk','telegram','xing','line','sms','email','print','copy']"
-               [show]="3"
+               [show]="18"
                [size]="4"
                [autoSetMeta]="false"
-               [url]="this.share_url"
+                [url]="this.share_url"
 ></share-buttons>
-
-<br>
-
-<mat-dialog-actions *ngIf="PermSrv.permission[data.role].CRUD === true" style="display: flex; justify-content: space-between">
-    <button class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
-    <button class="mat-raised-button btn-danger" (click)="deleteEvent()">Supprimer</button>
-    <button [disabled]="groupForm.valid === false" class="mat-raised-button btn-secondary" (click)="modifyEvent()">
-        Confirmer
-    </button>
-</mat-dialog-actions>

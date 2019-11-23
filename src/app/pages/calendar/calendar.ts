@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, NgZone, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {OptionsInput} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -26,6 +26,31 @@ import {EventsService} from '../../core/services/Requests/Events';
 import {GroupsService} from '../../core/services/Requests/Groups';
 import {PermissionService} from '../../core/services/permission.service';
 
+import {AgmMap, GoogleMapsAPIWrapper, MapsAPILoader} from '@agm/core';
+
+// declare var google: any;
+//
+// interface Marker {
+//     lat: number;
+//     lng: number;
+//     label?: string;
+//     draggable: boolean;
+// }
+//
+// interface Location {
+//     lat: number;
+//     lng: number;
+//     viewport?: Object;
+//     zoom: number;
+//     // address_level_1?:string;
+//     // address_level_2?: string;
+//     // address_country?: string;
+//     // address_zip?: string;
+//     // address_state?: string;
+//     marker?: Marker;
+// }
+
+
 @Component({
     selector: 'mwl-demo-component',
     styleUrls: ['calendar.scss',
@@ -51,6 +76,26 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     api: Calendar;
 
+    // lat: number = 48.8534;
+    // lng: number = 2.3488;
+    display_map: boolean = false;
+    switch_button_content: string = 'Calendrier';
+    calendar_events: any = [];
+    events_with_address: any = [];
+    //
+    // all_pos: Location[] = [];
+    // public location:Location = {};//{
+    //     // lat: 51.678418,
+    //     // lng: 7.809007,
+    //     // marker: {
+    //     //     lat: 51.678418,
+    //     //     lng: 7.809007,
+    //     //     draggable: true
+    //     // },
+    //     // zoom: 5
+    // //};
+    // @ViewChild(AgmMap) map: AgmMap;
+    // geocoder: any;
 
     constructor(private modal: NgbModal,
                 public dialog: MatDialog,
@@ -63,7 +108,70 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 private groupsSrv: GroupsService,
                 public permSrv: PermissionService,
                 private router: Router) {
+        // this.mapsApiLoader = mapsApiLoader;
+        // this.zone = zone;
+        // this.wrapper = wrapper;
+        // this.mapsApiLoader.load().then(() => {
+        //     this.geocoder = new google.maps.Geocoder();
+        // });
     }
+
+    // findLocation(address) {
+    //     if (!this.geocoder) {
+    //         this.geocoder = new google.maps.Geocoder();
+    //     }
+    //     this.geocoder.geocode({
+    //         'address': address
+    //     }, (results, status) => {
+    //         console.log('results', results);
+    //         if (status === google.maps.GeocoderStatus.OK) {
+    //             for (var i = 0; i < results[0].address_components.length; i++) {
+    //                 let types = results[0].address_components[i].types;
+    //
+    //                 // if (types.indexOf('locality') !== -1) {
+    //                 //     this.location.address_level_2 = results[0].address_components[i].long_name;
+    //                 // }
+    //                 // if (types.indexOf('country') !== -1) {
+    //                 //     this.location.address_country = results[0].address_components[i].long_name;
+    //                 // }
+    //                 // if (types.indexOf('postal_code') !== -1) {
+    //                 //     this.location.address_zip = results[0].address_components[i].long_name;
+    //                 // }
+    //                 // if (types.indexOf('administrative_area_level_1') !== -1) {
+    //                 //     this.location.address_state = results[0].address_components[i].long_name;
+    //                 // }
+    //             }
+    //             if (results[0].geometry.location) {
+    //                 this.location.lat = results[0].geometry.location.lat();
+    //                 this.location.lng = results[0].geometry.location.lng();
+    //                 //this.all_pos.push(this.location);
+    //                 this.location.marker.lat = results[0].geometry.location.lat();
+    //                 this.location.marker.lng = results[0].geometry.location.lng();
+    //                 this.location.marker.draggable = true;
+    //                 this.location.viewport = results[0].geometry.viewport;
+    //             }
+    //             this.map.triggerResize();
+    //         } else {
+    //             alert("Sorry, this search produced no results.");
+    //         }
+    //     });
+    // }
+
+    // findLocation(address) {
+    //     if (!this.geocoder) {
+    //         this.geocoder = new google.maps.Geocoder();
+    //     }
+    //     this.geocoder.geocode({
+    //         'address': address
+    //     }, (results, status) => {
+    //         console.log(results);
+    //         if (status === google.maps.GeocoderStatus.OK) {
+    //             // decompose the result
+    //         } else {
+    //             console.log("trouve pas l'adresse");
+    //         }
+    //     });
+    // }
 
     ngOnChanges(changes: SimpleChanges) {
         this.calendar_id = +(this.router.url.slice(this.router.url.lastIndexOf('/') + 1));
@@ -83,30 +191,21 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
         if (this.is_global_calendar === false) {
             this.calendarsSrv.getCalendars(this.in_calendar_id).subscribe(ret => {
                 this.role = ret.calendar.role;
-
-                // this.api.setOption('editable', this.permSrv.permission[this.role].CRUD); // maybe delete
             });
         } else {
             this.role = 'admin';
-            // this.api.setOption('editable', this.permSrv.permission[this.role].CRUD); // maybe delete
         }
     }
 
     ngOnInit() {
+        // this.test_map() //ici
         this.events = [];
-        // this.get_group_info();
-        // if (this.in_calendar_id) {
-        //     (this.in_calendar_id === -1) ? this.get_global_calendar() : this.getInGroupCalendar();
-        // }
-        // else
-        //     this.get_group_info();
         this.options = {
             editable: true,
             customButtons: {
                 addEventButton: {
                     text: 'Ajouter un evenement',
                     click: async () => {
-                        //this.addEventCallback();
                         this.addEvent();
                     },
                 },
@@ -121,12 +220,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 left: 'prev,next today',
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
-                // right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
             },
-            // footer: {
-            //     right: 'FoundSlotButton,addEventButton',
-            //     center: '',
-            // },
             plugins: [bootstrapPlugin, interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
             locales: [esLocale, frLocale],
             locale: frLocale,
@@ -136,6 +230,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
             eventLimit: true,
             themeSystem: 'bootstrap',
         };
+        //this.events_with_address = this.calendar_events.filter(e => e.location !== '' && new Date(e.end_time) > new Date());
     }
 
     ngAfterViewInit(): void {
@@ -166,6 +261,10 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 const backgroundColor_ = hexa[Math.floor(Math.random() * hexa.length)];
                 //const backgroundColor_ = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
                 const borderColor_ = '#1C4891';
+                this.calendar_events.push(...ret.events);
+                //this.calendar_events.push(ret.events);
+
+
                 for (const idx in ret.events) {
                     this.api.addEvent({
                         id: ret.events[idx].id,
@@ -365,4 +464,32 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
             });
         });
     }
+
+    switch_map_calendar() {
+        // do the request for events
+        if (this.display_map === false) {
+        //if (true) {
+            this.events_with_address = this.calendar_events.filter(e => e.location !== '' && new Date(e.end_time) > new Date());
+            // console.log("dkoedoe", filter_events);
+            // console.log("dkoedoe", filter_events[0]);
+            // filter_events.forEach(elem => {
+            //     console.log("test", elem.location);
+            //     // setTimeout(() => {this.findLocation(elem.location); }, 500);
+            // });
+            // console.log("nike", this.all_pos);
+            // this.findLocation(filter_events[0].location);
+            this.switch_button_content = 'Calendrier';
+        } else {
+            this.switch_button_content = 'Map';
+        }
+        this.display_map = !this.display_map;
+    }
+
+    // clickedevent(a, b) {
+    //     // console("clicked event", a, b);
+    // }
+    //
+    // eventDragEnd(a, b) {
+    //     // console("event drag end", a, b);
+    // }
 }
