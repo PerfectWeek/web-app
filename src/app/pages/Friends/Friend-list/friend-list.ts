@@ -46,7 +46,7 @@ export class FriendListComponent implements OnInit, AfterViewInit {
 
     input: any;
 
-    friends: Friends[] = [];
+    friends: any[] = [];
 
     constructor(private profileSrv: ProfileService,
                 private requestSrv: RequestService,
@@ -102,7 +102,7 @@ export class FriendListComponent implements OnInit, AfterViewInit {
                         .subscribe(ret => {
                             let obj: {image: any} = {image: null};
                             imageUtils.createImageFromBlob(ret, obj);
-                            setTimeout(() => this.friends.push({name: friend.user.name, image: obj.image}), 50);
+                            setTimeout(() => this.friends.push({name: friend.user.name, id: friend.user.id, image: obj.image}), 50);
                         });
                     if (index >= friendsInvitations.length - 1) {
                         this.displayFriends = this.friends;
@@ -115,7 +115,7 @@ export class FriendListComponent implements OnInit, AfterViewInit {
     }
 
     goToUserProfile(friend) {
-        this.router.navigate(["profile", friend.name]);
+        this.router.navigate([`profile/${friend.id}`]);
     }
 
     removeFriend(friend, index) {
