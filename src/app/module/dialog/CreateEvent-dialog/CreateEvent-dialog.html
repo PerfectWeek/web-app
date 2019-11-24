@@ -56,7 +56,7 @@
                     <mat-select placeholder="Type" required
                                 [(ngModel)]="eventType"
                                 name="eventType">
-                        <mat-option *ngFor="let type of eventTypes" [value]="type.value">
+                        <mat-option *ngFor="let type of eventTypeSrv.eventTypes" [value]="type.value">
                             {{type.viewValue}}
                         </mat-option>
                     </mat-select>
@@ -88,6 +88,8 @@
                                altFormat="F j, Y H:i"
                                i18n-placeholder="@@EventCreationBeginningDatePlaceholder"
                                placeholder="Date de debut"
+                               [locale]="locale"
+                               [time24hr]="true"
                                required>
                     </mat-form-field>
                     <p i18n="@@EventCreationBeginningDateErrorMessage" class="error-message" *ngIf="start < this.current_date">La date de début d'évènement ne doit pas
@@ -110,6 +112,8 @@
                                altFormat="F j, Y H:i"
                                i18n-placeholder="@@EventCreationEndingDatePlaceholder"
                                placeholder="Date de fin"
+                               [locale]="locale"
+                               [time24hr]="true"
                                required>
                     </mat-form-field>
                     <p i18n="@@EventCreationEndingDateErrorMessage" class="error-message" *ngIf="end < this.current_date">La date de fin d'évènement ne doit pas être

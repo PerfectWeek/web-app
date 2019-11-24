@@ -6,8 +6,15 @@
 @import '~@fullcalendar/core/main.css';
 @import '~@fullcalendar/daygrid/main.css';
 @import '~@fullcalendar/timegrid/main.css';
+@import '~@fullcalendar/list/main.css';
 
 @import "~ngx-toastr/toastr.css";
+
+@import url('https://fonts.googleapis.com/css?family=Spectral+SC:700');
+
+@import '~@ngx-share/button/themes/material/material-dark-theme';
+@import '~@ngx-share/button/themes/modern/modern-light-theme';
+
 
 @import "variables";
 @import "form";

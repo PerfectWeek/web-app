@@ -1,11 +1,15 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {ToastrService} from 'ngx-toastr';
 import {ProfileService} from '../../../core/services/profile.service';
 import {RequestService} from '../../../core/services/request.service';
 import {ConfirmDialog} from '../Confirm-dialog/Confirm-dialog';
-import {EventsService} from "../../../core/services/Requests/Events";
+import {EventsService} from '../../../core/services/Requests/Events';
 import {PermissionService} from '../../../core/services/permission.service';
+import {EventTypeService} from '../../../core/services/event_type.service';
+import {Location} from '@angular/common';
+import French from 'flatpickr/dist/l10n/fr.js';
+import {ActivatedRoute} from '@angular/router';
 
 import * as imageUtils from "../../../core/helpers/image"
 
@@ -14,7 +18,7 @@ import * as imageUtils from "../../../core/helpers/image"
     templateUrl: 'ModifyEvent.html',
     styleUrls: ['ModifyEvent.scss', '../../../../scss/dialog.scss']
 })
-export class ModifyEventDialog {
+export class ModifyEventDialog implements OnInit, OnDestroy {
 
     pw_event: {
         id: string
@@ -42,15 +46,17 @@ export class ModifyEventDialog {
         formated_start: null
     };
 
+    locale = French.fr;
     event_image: any;
 
     is_picture_changed: boolean = false;
     image_path: any;
 
-    eventTypes: any = [{value: 'party', viewValue: 'Fête'},
-        {value: 'work', viewValue: 'Travail'},
-        {value: 'hobby', viewValue: 'Loisir'},
-        {value: 'workout', viewValue: 'Entrainement'}];
+    share_url = null;
+    // eventTypes: any = [{value: 'party', viewValue: 'Fête'},
+    //     {value: 'work', viewValue: 'Travail'},
+    //     {value: 'hobby', viewValue: 'Loisir'},
+    //     {value: 'workout', viewValue: 'Entrainement'}];
 
     eventVisibilities: any = [{value: 'public', viewValue: 'Public'},
         {value: 'private', viewValue: 'Privé'}];
@@ -60,6 +66,8 @@ export class ModifyEventDialog {
                 private eventsSrv: EventsService,
                 private toastSrv: ToastrService,
                 public PermSrv: PermissionService,
+                public eventTypeSrv: EventTypeService,
+                private location: Location,
                 public dialogRef: MatDialogRef<ModifyEventDialog>,
                 public dialog: MatDialog,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
@@ -69,6 +77,7 @@ export class ModifyEventDialog {
                 imageUtils.createImageFromBlob(image, obj);
                 setTimeout(() => {this.event_image = obj.image;}, 50);
             });
+        this.share_url = `https://wwww.app.perfect-week/event/${this.pw_event.id}`; //a modifier
 
         const current_event = this.data.calAPI.getEventById(data.event.event.id);
         this.eventsSrv.getEvent(data.event.event.id)
@@ -84,6 +93,14 @@ export class ModifyEventDialog {
                 this.pw_event.backgroundColor = ret.event.color;
                 },
                 err => console.log("err => ", err.message));
+    }
+
+    ngOnInit(): void {
+        this.location.replaceState(`/event/${this.pw_event.id}`);
+    }
+
+    ngOnDestroy(): void {
+        this.location.replaceState('/dashboard');
     }
 
     modifyEvent() {

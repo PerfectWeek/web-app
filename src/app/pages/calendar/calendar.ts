@@ -1,4 +1,15 @@
-import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    Input,
+    NgZone,
+    OnChanges,
+    OnInit, QueryList,
+    SimpleChanges,
+    ViewChild,
+    ViewChildren
+} from '@angular/core';
 import {OptionsInput} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -51,6 +62,10 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     api: Calendar;
 
+    display_map: boolean = false;
+    switch_button_content: string = 'Carte';
+    calendar_events: any = [];
+    events_with_address: any = [];
 
     constructor(private modal: NgbModal,
                 public dialog: MatDialog,
@@ -115,7 +130,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                     click: async () => {
                         this.foundSlots();
                     },
-                }
+                },
             },
             header: {
                 left: 'prev,next today',
@@ -158,12 +173,10 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     get_calendar_events(calendar_id) {
-        // const calAPI = this.getAPI();
         this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).subscribe(ret => {
             this.api.removeAllEvents();
-            const hexa = ['#e06868', '#ff906a', '#f2db09', '#3d8fdc', '#45c4d9', '#cae602', '#ffd39b', '#c0e2e1', '#ccffff', '#9c6eb2'];
-            const backgroundColor_ = hexa[Math.floor(Math.random() * hexa.length)];
             const borderColor_ = '#1C4891';
+            this.calendar_events.push(...ret.events);
             for (let event of ret.events) {
                 this.api.addEvent({
                     id: event.id,
@@ -195,25 +208,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     get_global_calendar(): void {
         this.get_calendar_events(-1);
-        // this.profileSrv.userProfile$.subscribe(user => {
-        //     this.calendarsSrv.getConfirmedCalendars()
-        //         .subscribe(ret => {
-        //             this.get_calendar_events(ret.calendars[idx].id);
-        //         });
-        // });
     }
-
-    // get_group_info() {
-    //     this.calendar_id = +(this.router.url.slice(this.router.url.lastIndexOf('/') + 1));
-    //     this.is_global_calendar = (!Number.isNaN(this.calendar_id)) ? false : true;
-    //     // if (!Number.isNaN(this.calendar_id)) {
-    //     //     this.is_global_calendar = false;
-    //     //     this.get_group_calendar();
-    //     // } else {
-    //     //     this.is_global_calendar = true;
-    //     //     this.get_global_calendar();
-    //     // }
-    // }
 
     addEvent(): void {
         const dialogRef = this.dialog.open(CreateEventDialog, {
@@ -347,5 +342,55 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                     });
             });
         });
+    }
+
+    switch_map_calendar() {
+        // do the request for events
+        if (this.display_map === false) {
+        //if (true) {
+            this.events_with_address = this.calendar_events.filter(e => e.location !== '' && new Date(e.end_time) > new Date());
+            // console.log("dkoedoe", filter_events);
+            // console.log("dkoedoe", filter_events[0]);
+            // filter_events.forEach(elem => {
+            //     console.log("test", elem.location);
+            //     // setTimeout(() => {this.findLocation(elem.location); }, 500);
+            // });
+            // console.log("nike", this.all_pos);
+            // this.findLocation(filter_events[0].location);
+            this.switch_button_content = 'Calendrier';
+        } else {
+            this.switch_button_content = 'Carte';
+
+            const hexa = ['#e06868', '#ff906a', '#f2db09', '#3d8fdc', '#45c4d9', '#cae602', '#ffd39b', '#c0e2e1', '#ccffff', '#9c6eb2'];
+            const backgroundColor_ = hexa[Math.floor(Math.random() * hexa.length)];
+            const borderColor_ = '#1C4891';
+            this.events = [];
+            let tmp = this.api.getEvents();
+            // this.api.removeAllEvents();
+            tmp.forEach(e => {
+                this.events.push({
+                        id: e.id,
+                        title: e.title,
+                        end: e.end,
+                        start: e.start,
+                        backgroundColor: '#ababab',
+                        borderColor: '#ffffff',
+                    });
+            });
+            // let tmp = this.api.getEvents();
+            // this.api.removeAllEvents();
+            // this.events = [];
+            // tmp.forEach(e => {
+            //     this.api.addEvent({
+            //         id: e.id,
+            //         title: e.title,
+            //         end: e.end,
+            //         start: e.start,
+            //         backgroundColor: '#ababab',
+            //         borderColor: '#ffffff',
+            //     });
+            // });
+        }
+        this.display_map = !this.display_map;
     }
 }

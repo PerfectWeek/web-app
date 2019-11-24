@@ -14,7 +14,12 @@
   }
 }
 
-  /deep/ .sb-group.sb-material-dark.ng-star-inserted {
-    display: flex;
-    justify-content: space-around;
+/deep/ .sb-group.sb-material-dark.ng-star-inserted {
+  display: flex;
+  justify-content: space-around;
+}
+
+/deep/ .form-row.ng-untouched.ng-pristine.ng-valid  {
+  padding: 50px;
+  margin: 100px;
   }

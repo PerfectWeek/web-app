@@ -7,6 +7,9 @@ import {UsersService} from "../../../core/services/Requests/Users";
 import {CalendarsService} from "../../../core/services/Requests/Calendars";
 import {PermissionService} from '../../../core/services/permission.service';
 import {EventsService} from "../../../core/services/Requests/Events";
+import {EventTypeService} from '../../../core/services/event_type.service';
+
+import French from 'flatpickr/dist/l10n/fr.js';
 
 @Component({
     selector: 'createEvent-creation-dialog',
@@ -14,7 +17,6 @@ import {EventsService} from "../../../core/services/Requests/Events";
     styleUrls: ['CreateEvent-dialog.scss', '../../../../scss/dialog.scss'],
 })
 export class CreateEventDialog {
-
     name: string = null;
     location: string = "";
     eventType: string = 'hobby';
@@ -32,10 +34,11 @@ export class CreateEventDialog {
     image: any = null;
     route_id_calendar;
 
-    eventTypes: any = [{value: 'party', viewValue: 'Fête'},
-        {value: 'work', viewValue: 'Travail'},
-        {value: 'hobby', viewValue: 'Loisir'},
-        {value: 'workout', viewValue: 'Entrainement'}];
+    locale = French.fr;
+    // eventTypes: any = [{value: 'party', viewValue: 'Fête'},
+    //     {value: 'work', viewValue: 'Travail'},
+    //     {value: 'hobby', viewValue: 'Loisir'},
+    //     {value: 'workout', viewValue: 'Entrainement'}];
 
     eventVisibilities: any = [{value: 'public', viewValue: 'Public'},
         {value: 'private', viewValue: 'Privé'}];
@@ -52,6 +55,7 @@ export class CreateEventDialog {
                 private eventSrv: EventsService,
                 private toastSrv: ToastrService,
                 public PermSrv: PermissionService,
+                public eventTypeSrv: EventTypeService,
                 public dialogRef: MatDialogRef<CreateEventDialog>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
 
