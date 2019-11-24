@@ -1,5 +1,5 @@
 <div class="flex flex-r-centered">
-    <h2 mat-dialog-title>Choisir le créneau qui vous convient le plus</h2>
+    <h2 i18n="@@FoundSlotConfirmTitle" mat-dialog-title>Choisir le créneau qui vous convient le plus</h2>
 </div>
 <mat-dialog-content style="white-space: pre-wrap; text-align: center">
     <div style="display: flex; justify-content: space-around;">
@@ -61,8 +61,8 @@
 </mat-dialog-content>
 <br>
 <mat-dialog-actions style="display: flex; justify-content: space-between">
-    <button class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
-    <button class="mat-raised-button btn-secondary" (click)="FoundSlotConfirm()">
+    <button i18n="@@FoundSlotConfirmCancel" class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
+    <button i18n="@@FoundSlotConfirmConfirm" class="mat-raised-button btn-secondary" (click)="FoundSlotConfirm()">
         Confirmer
     </button>
 </mat-dialog-actions>

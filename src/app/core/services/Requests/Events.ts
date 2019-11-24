@@ -7,6 +7,14 @@ export class EventsService {
 
     constructor(private requestSrv: RequestService) {}
 
+    createEvent(body: any): Observable<any> {
+        return this.requestSrv.postJSON(`events`, body, {Authorization: ''});
+    }
+
+    getEvents(params?: any): Observable<any> {
+        return this.requestSrv.get(`events`, params, {Authorization: ''});
+    }
+
     getEvent(event_id: string): Observable<any> {
         return this.requestSrv.get(`events/${event_id}`, {}, {Authorization: ''});
     }
@@ -19,35 +27,57 @@ export class EventsService {
         return this.requestSrv.delete(`events/${event_id}`, {Authorization: ''});
     }
 
-    getAttendees(event_id: string): Observable<any> {
-        return this.requestSrv.get(`events/${event_id}/attendees`, {}, {Authorization: ''});
+    inviteUser(event_id: string, users): Observable<any> {
+        return this.requestSrv.postJSON(`events/${event_id}/attendees`, users, {Authorization: ''});
     }
 
-    removeAttendee(event_id: string, pseudo: string): Observable<any> {
-        return this.requestSrv.delete(`events/${event_id}/attendees/${pseudo}`, {Authorization: ''});
-    }
-
-    inviteUser(event_id: string, users: any): Observable<any> {
-        return this.requestSrv.post(`events/${event_id}/invite-users`, users, {Authorization: ''});
-    }
-
-    changeUserStatus(event_id: string, status: string): Observable<any> {
-        return this.requestSrv.put(`events/${event_id}/status`, status, {Authorization: ''});
-    }
-
-    joinEvent(event_id: string, status?: string): Observable<any> {
-        return this.requestSrv.post(`events/${event_id}/join`, status, {Authorization: ''});
+    changeStatus(event_id: string, status?: string): Observable<any> {
+        return this.requestSrv.put(`events/${event_id}/attendees/me/status`, status, {Authorization: ''});
     }
 
     uploadImage(event_id: string, file: any): Observable<any> {
-        return this.requestSrv.postImage(`events/${event_id}/upload-image`, file, {Authorization: ''});
+        return this.requestSrv.putImage(`events/${event_id}/images/icon`, file, {Authorization: ''});
     }
 
     getImage(event_id: string): Observable<any> {
-        return this.requestSrv.get(`events/${event_id}/image`, {}, {Authorization: ''});
+        return this.requestSrv.getImage(`events/${event_id}/images/icon`, {}, {Authorization: ''});
     }
 
     getInvitations(): Observable<any> {
-        return this.requestSrv.get('event-invites', {}, {Authorization: ''});
+        return this.requestSrv.get('events', {}, {Authorization: ''});
+    }
+
+    setEventStatus(event_id: number, status: string): Observable<any> {
+        return this.requestSrv.put(`events/${event_id}/attendees/me/status`, {status}, {Authorization: ""});
+    }
+
+    editUserRole(event_id: string, user_id: number, role: string): Observable<any> {
+        return this.requestSrv.put(`events/${event_id}/attendees/${user_id}/role`, role, {Authorization: ''});
+    }
+
+    getSuggestions(params?: any): Observable<any> {
+        return this.requestSrv.get("assistant/event-suggestions", params, {Authorization: ""});
     }
 }
+
+/**********************************************************************************\
+*    The format Body function to be used when inviting multiple users to an event. *
+*    Keeping it here as I'm not using it as of now but will need it later          *
+\**********************************************************************************/
+
+// formatBody(body) {
+//     let field = 'attendees';
+//     let found: boolean = false;
+//     let end = '"role":"actor"}';
+//     let str = 'attendees":[';
+//     for (let key in body) {
+//         if (key.toString().indexOf(field) != -1) {
+//             found = true;
+//             str += JSON.stringify(body[key]) + ',';
+//         }
+//     }
+//     str = str.slice(0, str.length - 1);
+//     str += ']';
+//     let result = JSON.stringify(body);
+//     return found === true ? (result.substring(0, result.indexOf('attendees[0]')) + str + result.substring(result.lastIndexOf(end) + end.length)) : result;
+// }

@@ -11,6 +11,9 @@ import {Group} from "../../core/models/Group";
 import {User} from "../../core/models/User";
 import {GroupsService} from "../../core/services/Requests/Groups";
 import {UsersService} from "../../core/services/Requests/Users";
+import {CalendarsService} from "../../core/services/Requests/Calendars";
+import { InvitationsService } from "../../core/services/Requests/Invitations";
+import {EventsService} from "../../core/services/Requests/Events";
 
 @Component({
     selector: 'navbar',
@@ -18,6 +21,11 @@ import {UsersService} from "../../core/services/Requests/Users";
     styleUrls: ['navbar.scss']
 })
 export class Navbar implements OnInit, AfterViewInit {
+
+    languageList = [
+        { code: 'fr', label: 'Français' },
+        { code: 'en', label: 'English' }
+    ];
 
     isLogged$ = this.authSrv.isLogged();
 
@@ -27,6 +35,8 @@ export class Navbar implements OnInit, AfterViewInit {
 
     friendInvitations: FriendInvitation[] = [];
 
+    EventInvitations: EventInvitation[] = [];
+
     invitations$: Observable<UserInvitations>;
 
     constructor(private authSrv: AuthService,
@@ -34,6 +44,9 @@ export class Navbar implements OnInit, AfterViewInit {
                 private dialog: MatDialog,
                 private toastSrv: ToastrService,
                 private requestSrv: RequestService,
+                private calendarSrv: CalendarsService,
+                private invitationsSrv: InvitationsService,
+                private eventSrv: EventsService,
                 private groupsSrv: GroupsService,
                 private usersSrv: UsersService,
                 private profileSrv: ProfileService) {
@@ -51,19 +64,20 @@ export class Navbar implements OnInit, AfterViewInit {
             .do(invitations => {
                 this.groupInvitations = invitations.group_invitations;
                 this.friendInvitations = invitations.friend_invitations;
+                this.EventInvitations = invitations.event_invitations;
             }).subscribe();
     }
 
     handleGroupRequest(invitation, result) {
         let body = JSON.stringify({group_id: invitation.id});
         if (result === true)
-            this.groupsSrv.acceptInvitation(invitation.id, body)
+            this.calendarSrv.acceptInvitation(invitation.id)
                 .subscribe(ret => {
                     this.toastSrv.success(`Bravo, vous faites maitnenant parti du calendrier ${invitation.name}`);
                     this.profileSrv.getInvitations();
                 }, err => this.toastSrv.error('Une erreur est survenue'));
         else
-            this.groupsSrv.declineInvitation(invitation.id, body)
+            this.calendarSrv.declineInvitation(invitation.id)
                 .subscribe(ret => {
                     this.toastSrv.success(`Vous avez refusé l'invitation du calendrier ${invitation.name}`);
                     this.profileSrv.getInvitations();
@@ -72,17 +86,32 @@ export class Navbar implements OnInit, AfterViewInit {
 
     handleFriendRequest(invitation, result) {
         if (result === true)
-            this.usersSrv.acceptFriendRequest(invitation.from_user.pseudo)
+            this.invitationsSrv.acceptFriendInvitation(invitation.user.id)
                 .subscribe(ret => {
-                    this.toastSrv.success(`Bravo, vous êtes maintenant ami avec ${invitation.from_user.pseudo}`);
+                    this.toastSrv.success(`Bravo, vous êtes maintenant ami avec ${invitation.user.name}`);
                     this.profileSrv.getInvitations();
                 }, err => this.toastSrv.error('Une erreur est survenue'));
         else
-            this.usersSrv.declineFriendRequest(invitation.from_user.pseudo)
+            this.invitationsSrv.declineFriendInvitation(invitation.user.id)
                 .subscribe(ret => {
-                    this.toastSrv.success(`Vous avez refusé la demande d'ami de ${invitation.from_user.pseudo}`);
+                    this.toastSrv.success(`Vous avez refusé la demande d'ami de ${invitation.user.name}`);
                     this.profileSrv.getInvitations();
                 }, err => this.toastSrv.error('Une erreur est survenue'));
+    }
+
+    handleEventRequest(invitation, result) {
+        if (result === true)
+            this.eventSrv.setEventStatus(invitation.id, "going")
+                .subscribe(ret => {
+                    this.toastSrv.success(`Bravo, vous faites maintenant parti de l'évènement ${invitation.name}`);
+                    this.profileSrv.getInvitations();
+            });
+        else
+            this.eventSrv.setEventStatus(invitation.id, "no")
+                .subscribe(ret => {
+                    this.toastSrv.success(`Vous avez refusé de rejoindre l'évènement ${invitation.name}`);
+                    this.profileSrv.getInvitations();
+            });
     }
 
     answerRequest(invitation, type: string) {
@@ -97,8 +126,10 @@ export class Navbar implements OnInit, AfterViewInit {
             if (result !== null && result !== undefined) {
                 if (type === 'group')
                     this.handleGroupRequest(invitation, result);
-                else
+                else if (type === "friend")
                     this.handleFriendRequest(invitation, result);
+                else
+                    this.handleEventRequest(invitation, result);
             }
         })
     }

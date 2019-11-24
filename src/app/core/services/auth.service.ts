@@ -99,18 +99,18 @@ export class AuthService {
 
     connection(): Observable<void> {
         return this.authSrv.login(this.auth).do((data: any) => {
-            localStorage.setItem('user_pseudo', data.user.pseudo);
-            this.tokenSrv.token = data.access_token;
+            localStorage.setItem('user_pseudo', data.user.name);
+            this.tokenSrv.token = data.token;
         })
             .do(() => this.logged = true, () => this.logged = false);
     }
 
     changeAuth(modification: User): void {
         if (modification.email && modification.email !== this.auth.email) {
-            this.auth = {email: modification.email, password: this.auth.password, pseudo: this.auth.pseudo};
+            this.auth = {email: modification.email, password: this.auth.password, name: this.auth.name};
         }
         if (modification.password && modification.password !== this.auth.password) {
-            this.auth = {email: this.auth.email, password: modification.password, pseudo: modification.pseudo};
+            this.auth = {email: this.auth.email, password: modification.password, name: modification.name};
         }
     }
 

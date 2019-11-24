@@ -16,6 +16,7 @@ import {DatePipe, formatDate} from '@angular/common';
 import {SwiperConfigInterface, SwiperPaginationInterface, SwiperScrollbarInterface} from 'ngx-swiper-wrapper';
 import {UsersService} from "../../../core/services/Requests/Users";
 import {CalendarsService} from "../../../core/services/Requests/Calendars";
+import {EventsService} from "../../../core/services/Requests/Events";
 
 @Component({
     selector: 'FoundSlotConfirm-dialog',
@@ -36,12 +37,13 @@ export class FoundSlotConfirmDialog {
                 private profileSrv: ProfileService,
                 private usersSrv: UsersService,
                 private calendarsSrv: CalendarsService,
+                private eventsSrv: EventsService,
                 private toastSrv: ToastrService,
                 public dialogRef: MatDialogRef<FoundSlotConfirmDialog>,
                 public dialog: MatDialog,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         this.profileSrv.userProfile$.subscribe(user => {
-            this.usersSrv.getCalendars(user.pseudo)
+            this.calendarsSrv.getConfirmedCalendars()
                 .subscribe(ret => {
                     this.calendars_list = ret.calendars;
                 });
@@ -75,9 +77,8 @@ export class FoundSlotConfirmDialog {
             }
         });
         dialogConfirmRef.afterClosed().subscribe(result => {
-            console.log(result);
             if (result !== null && result !== undefined) {
-                console.log('Réponse enregistré');
+                ;
             }
         });
         // const start = this.data.slots.slots[this.index].start_time;
@@ -111,7 +112,7 @@ export class FoundSlotConfirmDialog {
     Before(): void {
         if (this.index > 0) {
             this.index--;
-            console.log(this.slot[this.index]);
+
             const previous_suggest_event = this.api.getEventById(this.id_of_suggest_event);
             if (previous_suggest_event !== null) {
                 previous_suggest_event.remove();
@@ -135,11 +136,9 @@ export class FoundSlotConfirmDialog {
                 this.api.changeView('timeGridWeek');
             }, 10);
         }
-        console.log('this.index', this.index);
     }
 
     After(): void {
-        console.log('After');
         if (this.index < this.slot.length - 1) {
             this.index++;
             const previous_suggest_event = this.api.getEventById(this.id_of_suggest_event);
@@ -165,7 +164,6 @@ export class FoundSlotConfirmDialog {
                 this.api.changeView('timeGridWeek');
             }, 10);
         }
-            console.log('this.index', this.index);
     }
 
     ////////////////////////////////////////////////////////////
@@ -188,13 +186,8 @@ export class FoundSlotConfirmDialog {
         // this.slot = JSON.parse(this.slot);
         this.temp_event = this.data.event;
         this.slot = this.data.slots.slots;
-        // console.log('alors', this.slot);
-        // console.log('alors', this.index);
-        // console.log('alors', this.slot[this.index]);
         const tmp_date = new Date(this.slot[this.index].start_time);
-        console.log('tmp_date', tmp_date);
         this.cursor = (tmp_date.getHours() - 4) + ':00:00';
-        console.log('cursor', this.cursor);
         this.options = {
             editable: false,
             plugins: [timeGridPlugin, bootstrapPlugin],
@@ -225,10 +218,8 @@ export class FoundSlotConfirmDialog {
     }
 
     get_calendar_events(calendar_id) {
-        this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''})
+        this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {})
             .subscribe(ret => {
-                const hexa = ['#3d8fdc'];
-                const backgroundColor_ = hexa[Math.floor(Math.random() * hexa.length)];
                 // const backgroundColor_ = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
                 const borderColor_ = '#1C4891';
                 for (const idx in ret.events) {
@@ -237,7 +228,7 @@ export class FoundSlotConfirmDialog {
                         title: ret.events[idx].name,
                         end: ret.events[idx].end_time,
                         start: ret.events[idx].start_time,
-                        backgroundColor: backgroundColor_,
+                        backgroundColor: ret.events[idx].color,
                         borderColor: borderColor_,
                     });
 
@@ -246,13 +237,6 @@ export class FoundSlotConfirmDialog {
     }
 
     get_global_calendar(): void {
-        this.profileSrv.userProfile$.subscribe(user => {
-            this.requestSrv.get(`users/${user.pseudo}/calendars`, {}, {Authorization: ''})
-                .subscribe(ret => {
-                    for (let idx in ret.calendars) {
-                        this.get_calendar_events(ret.calendars[idx].calendar.id);
-                    }
-                });
-        });
+        this.get_calendar_events(-1);
     }
 }

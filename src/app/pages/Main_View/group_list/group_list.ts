@@ -20,6 +20,9 @@ import {BehaviorSubject, Observable} from "rxjs/Rx";
 import {UsersService} from "../../../core/services/Requests/Users";
 import {GroupsService} from "../../../core/services/Requests/Groups";
 import {Group} from "../../../core/models/Group";
+import {CalendarsService} from "../../../core/services/Requests/Calendars";
+
+import * as imageUtils from "../../../core/helpers/image";
 
 @Component({
     selector: 'group-list',
@@ -67,7 +70,7 @@ export class GroupListComponent implements OnInit, AfterViewInit {
     constructor(private requestSrv: RequestService,
                 private profileSrv: ProfileService,
                 private usersSrv: UsersService,
-                private groupsSrv: GroupsService,
+                private calendarSrv: CalendarsService,
                 private toastSrv: ToastrService,
                 private dialog: MatDialog,
                 private router: Router) {
@@ -76,7 +79,7 @@ export class GroupListComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        this.getGroups();
+        this.getCalendars();
     }
 
     ngAfterViewInit() {
@@ -100,36 +103,34 @@ export class GroupListComponent implements OnInit, AfterViewInit {
             .subscribe();
     }
 
-    getGroups() {
+    getCalendars() {
         this.profileSrv.userProfile$.subscribe(user => {
-            this.usersSrv.getImage(user.pseudo)
-                .subscribe(ret => this.userImage = ret.image);
-            this.usersSrv.getGroups(user.pseudo)
-                .subscribe(groups => {
-                    console.log('groups => ', groups);
+            this.calendarSrv.getConfirmedCalendars()
+                .subscribe(calendars => {
                     this.displayGroups = [];
                     this.displayGroupsMobile = [];
                     this.userGroups = [];
-                    if (groups.groups.length > 0) {
-                        this.userGroups = groups.groups;
-                        this.userGroups.forEach((group, index) => {
-                            this.groupsSrv.getImage(group.id)
+                    if (calendars.calendars.length > 0) {
+                        this.userGroups = calendars.calendars;
+                        this.userGroups.forEach((calendar, index) => {
+                            this.calendarSrv.getImage(calendar.id)
                                 .subscribe(ret => {
-                                    group['image'] = ret.image;
-                                    this.displayGroups.push(group);
+                                    calendar['image'] = null;
+                                    imageUtils.createImageFromBlob(ret, calendar);
+                                    this.displayGroups.push(calendar);
                                     let obj:any = {};
-                                    for (let key in group)
-                                        obj[key] = group[key];
+                                    for (let key in calendar)
+                                        obj[key] = calendar[key];
                                     let acr = obj.name.match(/\b(\w)/g);
-                                    obj.name = (acr != null) ?  acr.join('.').toUpperCase() : group.name;
+                                    obj.name = (acr != null) ?  acr.join('.').toUpperCase() : calendar.name;
                                     this.displayGroupsMobile.push(obj);
-                                    if (index === this.userGroups.length - 1)
+                                    if (index >= this.userGroups.length - 1)
                                         this.ready.next(true);
                                 });
                         });
                     }
                     else this.ready.next(true);
-                })
+                }, err => console.log("err => ", err.message));
         });
     }
 
@@ -155,12 +156,18 @@ export class GroupListComponent implements OnInit, AfterViewInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result !== null && result !== undefined) {
-                this.groupsSrv.createGroup(this.formatBody(result))
-                .subscribe(ret => {
-                        (<any>window).ga('send', 'event', 'Group', 'Creating Group', `Group Name: ${result.name}`);
-                        this.toastSrv.success(`Votre calendrier ${ret.group.name} a bien été créé`);
-                        this.ready.next(false);
-                        this.getGroups();
+                result['color'] = "#000000";
+                this.calendarSrv.createCalendar(result)
+                .subscribe(calendar => {
+                    delete result.name;
+                    delete result.color;
+                    this.calendarSrv.inviteUsers(calendar.calendar.id, this.formatBody(result))
+                        .subscribe(ret => {
+                            (<any>window).ga('send', 'event', 'Group', 'Creating Group', `Group Name: ${result.id}`);
+                            this.toastSrv.success(`Votre calendrier ${calendar.calendar.name} a bien été créé`);
+                            this.ready.next(false);
+                            this.getCalendars();
+                        })
                     },
                     err => {
                         this.toastSrv.error(err.error.message, 'Une erreur est survenue'); // Display an error message if an error occurs
@@ -185,7 +192,7 @@ export class GroupListComponent implements OnInit, AfterViewInit {
             this.removeClass(group.nativeElement, 'group-focused');
         });
         if (pos_id === -1) {
-            (<any>window).ga('send', 'event', 'Group', 'Checking myself', `User Pseudo: ${this.profileSrv.user.pseudo}`);
+            (<any>window).ga('send', 'event', 'Group', 'Checking myself', `User Pseudo: ${this.profileSrv.user.name}`);
             this.user.nativeElement.className += ' group-focused';
         }
         else {
@@ -197,9 +204,10 @@ export class GroupListComponent implements OnInit, AfterViewInit {
     search() {
         this.input = this.search$.getValue().toLowerCase();
         this.pageIndex = 0;
+        this.displayGroups = [];
+        this.displayGroupsMobile = [];
 
         if (this.input != undefined && this.input != "" && this.input != null) {
-            this.displayGroups = [];
             this.displayGroupsMobile = [];
             this.displayGroups = this.userGroups
                 .filter(group => group.name.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) != -1);
@@ -213,9 +221,17 @@ export class GroupListComponent implements OnInit, AfterViewInit {
                 let acr = group.name.match(/\b(\w)/g);
                 group.name = (acr != null) ?  acr.join('.').toUpperCase() : group.name;
             });
+        } else {
+            this.displayGroups = this.userGroups;
+            this.displayGroups.forEach(group => {
+                let obj = {};
+                for (let key in group)
+                    obj[key] = group[key];
+                this.displayGroupsMobile.push(obj);
+            });
         }
         this.profileSrv.userProfile$.subscribe(user => {
-            user.pseudo.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) !== -1 ? this.displayUser = true : this.displayUser = false;
+            user.name.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) !== -1 ? this.displayUser = true : this.displayUser = false;
         });
 
         /* To be implemented when the routes will be up api wise*/
@@ -230,15 +246,15 @@ export class GroupListComponent implements OnInit, AfterViewInit {
         /* To be implemented when the routes will be up api wise*/
     }
 
-    modifyGroupName(group_id: number) {
-        this.groupsSrv.getGroup(group_id)
+    modifyGroupName(calendar_id: number) {
+        this.calendarSrv.getConfirmedCalendars()
             .subscribe(ret => {
-                (this.userGroups.find(group => group.id === group_id)).name = ret.group.name;
+                (this.userGroups.find(group => group.id === calendar_id)).name = ret.group.name;
             })
     }
 
     leftGroup(group_id: number) {
         this.ready.next(false);
-        this.getGroups();
+        this.getCalendars();
     }
 }

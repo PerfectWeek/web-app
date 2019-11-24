@@ -13,6 +13,7 @@ import {ConfirmDialog} from "../../../module/dialog/Confirm-dialog/Confirm-dialo
 import {filter, switchMap} from "rxjs/operators";
 import {CreateEventDialog} from '../../../module/dialog/CreateEvent-dialog/CreateEvent-dialog';
 import {UsersService} from "../../../core/services/Requests/Users";
+import * as imageUtils from "../../../core/helpers/image";
 
 declare var FB: any;
 
@@ -30,8 +31,6 @@ export class ProfileComponent implements OnInit {
     pseudo: string = null;
     email: string = null;
 
-    image: any = null;
-
     constructor(private route: ActivatedRoute,
                 private requestSrv: RequestService,
                 private toastSrv: ToastrService,
@@ -47,10 +46,10 @@ export class ProfileComponent implements OnInit {
     ngOnInit() {
         this.profileSrv.userProfile$.subscribe(user => {
             this.user = user;
-            this.usersSrv.getImage(user.pseudo)
+            this.usersSrv.getImage(user.id)
                 .subscribe(ret => {
-                    this.image = ret.image;
-                });
+                    imageUtils.createImageFromBlob(ret, this.user);
+                }, err => console.log('err => ', err.message));
         }, (error) => {
             console.log('error => ', error)
         });
@@ -64,13 +63,13 @@ export class ProfileComponent implements OnInit {
 
     startModification() {
         this.modifying = true;
-        this.pseudo = this.user.pseudo;
+        this.pseudo = this.user.name;
         this.email = this.user.email;
     }
 
     modifyProfile() {
-        this.profileSrv.modify$({pseudo: this.pseudo, email: this.email}).subscribe((user: any) => {
-            this.user.pseudo = this.pseudo;
+        this.profileSrv.modify$({name: this.pseudo, email: this.email}).subscribe((user: any) => {
+            this.user.name = this.pseudo;
             this.user.email = this.email;
             this.modifying = false;
             this.pseudo = null;
@@ -109,7 +108,7 @@ export class ProfileComponent implements OnInit {
         let self = this;
         FB.login(function (response) {
             if (response.status === 'connected') {
-                self.usersSrv.linkFacebook(self.user.pseudo, {
+                self.usersSrv.linkFacebook(self.user.name, {
                     access_token: response["authResponse"]["accessToken"],
                     refresh_token: ""
                 }).subscribe((resu) => self.toastSrv.success('Vous avez connecté votre compte Facebook avec succès'),
@@ -128,14 +127,17 @@ export class ProfileComponent implements OnInit {
             const file = event.target.files[0];
 
             this.profileSrv.userProfile$.subscribe(user => {
-                this.usersSrv.postImage(user.pseudo, file)
+                this.usersSrv.putImage(file)
                     .do(() => {
-                            this.usersSrv.getImage(user.pseudo)
-                                .subscribe(ret => {
-                                    this.image = ret.image;
-                                });
+                        this.usersSrv.getImage(user.id)
+                            .subscribe(ret => {
+                                imageUtils.createImageFromBlob(ret, this.user);
+                            }, err => console.log('err => ', err.message));
                             this.toastSrv.success("L'image a été uploadé avec succès");
-                        }, err => this.toastSrv.error("Une erreur est survenue lors de l'upload de l'image")
+                        }, err => {
+                        console.log("err => ", err.message);
+                        this.toastSrv.error("Une erreur est survenue lors de l'upload de l'image")
+                        }
                     ).subscribe();
             });
         }

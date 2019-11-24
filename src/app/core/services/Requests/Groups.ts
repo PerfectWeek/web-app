@@ -43,11 +43,11 @@ export class GroupsService {
     }
 
     uploadImage(group_id: number, file: any): Observable<any> {
-        return this.requestSrv.postImage(`groups/${group_id}/upload-image`, file, {Authorization: ''});
+        return this.requestSrv.putImage(`groups/${group_id}/upload-image`, file, {Authorization: ''});
     }
 
     getImage(group_id: number): Observable<any> {
-        return this.requestSrv.get(`groups/${group_id}/image`, {}, {Authorization: ''})
+        return this.requestSrv.getImage(`groups/${group_id}/image`, {}, {Authorization: ''})
     }
 
     getGroupInvitations(): Observable<any> {

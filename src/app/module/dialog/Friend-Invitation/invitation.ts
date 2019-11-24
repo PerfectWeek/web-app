@@ -126,7 +126,7 @@ export class FriendInvitationDialog implements AfterViewInit {
             let is_in: boolean = false;
 
             for (let selected of this.selectedUsers)
-                if (user.pseudo === selected) {
+                if (user.name === selected) {
                     is_in = true;
                     break;
                 }
@@ -136,7 +136,7 @@ export class FriendInvitationDialog implements AfterViewInit {
             in_users.push(user);
         }
         let idx = in_users.findIndex(function (user) {
-            return self.profileSrv.user.pseudo === user.pseudo;
+            return self.profileSrv.user.name === user.name;
         });
         idx !== -1 ? in_users.splice(idx, 1) : null;
         this.filteredUsers.next(in_users);
@@ -144,7 +144,7 @@ export class FriendInvitationDialog implements AfterViewInit {
 
     filterCurrentUser(currentUser) {
         for (let user of this.selectedUsers)
-            if (currentUser.pseudo === user)
+            if (currentUser.name === user)
                 return;
 
         let users = this.filteredUsers.getValue();
@@ -169,13 +169,13 @@ export class FriendInvitationDialog implements AfterViewInit {
     sendInvitations() {
         this.profileSrv.userProfile$.subscribe(user => {
             let id = -1;
-            this.selectedUsers.forEach((pseudo, index) => {
-                if (pseudo === user.pseudo)
+            this.selectedUsers.forEach((name, index) => {
+                if (name === user.name)
                     id = index;
             });
 
             if (id === -1)
-                this.selectedUsers.push(user.pseudo);
+                this.selectedUsers.push(user.name);
 
             // Setting the request body attributes and values
             let body = {};

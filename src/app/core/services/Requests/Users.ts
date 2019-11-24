@@ -8,26 +8,30 @@ export class UsersService {
     constructor(private requestSrv: RequestService) {
     }
 
-    createUser(user): Observable<any> {
-        return this.requestSrv.post('users', user);
-    }
+    // createUser(user): Observable<any> {
+    //     return this.requestSrv.post('users', user);
+    // }
 
-    putTimezone(pseudo: string): Observable<any> {
-        return this.requestSrv.put(`users/${pseudo}/timezone`, {
+    putTimezone(): Observable<any> {
+        return this.requestSrv.put(`users/me/timezone`, {
             timezone: new Date().getTimezoneOffset()
         }, {Authorization: ''});
     }
 
-    getUser(pseudo: string): Observable<any> {
-        return this.requestSrv.get(`users/${pseudo}`, {}, {Authorization: ''});
+    getMe(): Observable<any> {
+        return this.requestSrv.get(`users/me`, {}, {Authorization: ''});
     }
 
-    modifyUser(pseudo: string, body: any): Observable<any> {
-        return this.requestSrv.put(`users/${pseudo}`, body, {Authorization: ''});
+    getUser(user_id: number): Observable<any> {
+        return this.requestSrv.get(`users/${user_id}`, {}, {Authorization: ''});
     }
 
-    deleteUser(pseudo: string): Observable<any> {
-        return this.requestSrv.delete(`users/${pseudo}`, {Authorization: ''});
+    modifyUser(body: any): Observable<any> {
+        return this.requestSrv.put(`users/me`, body, {Authorization: ''});
+    }
+
+    deleteUser(): Observable<any> {
+        return this.requestSrv.delete(`users/me`, {Authorization: ''});
     }
 
     linkFacebook(pseudo: string, body: any): Observable<any> {
@@ -38,20 +42,16 @@ export class UsersService {
         return this.requestSrv.put(`users/${pseudo}/providers/google`, body, {Authorization: ''});
     }
 
-    postImage(pseudo: string, file): Observable<any> {
-        return this.requestSrv.postImage(`users/${pseudo}/upload-image`, file, {Authorization: ''});
+    putImage(file): Observable<any> {
+        return this.requestSrv.putImage(`users/me/images/profile`, file, {Authorization: ''});
     }
 
-    getImage(pseudo: string): Observable<any> {
-        return this.requestSrv.get(`users/${pseudo}/image`, {}, {Authorization: ''});
+    getImage(id: number): Observable<any> {
+        return this.requestSrv.getImage(`users/${id}/images/profile`, {}, {Authorization: ''});
     }
 
     getGroups(pseudo: string): Observable<any> {
         return this.requestSrv.get(`users/${pseudo}/groups`, {}, {Authorization: ''});
-    }
-
-    getCalendars(pseudo: string): Observable<any> {
-        return this.requestSrv.get(`users/${pseudo}/calendars`, {}, {Authorization: ''});
     }
 
     getFriends(): Observable<any> {
@@ -59,23 +59,7 @@ export class UsersService {
     }
 
     inviteFriend(pseudo: string): Observable<any> {
-        return this.requestSrv.post(`users/${pseudo}/friend-invite`, {}, {Authorization: ''});
-    }
-
-    getFriendInvitations(): Observable<any> {
-        return this.requestSrv.get('friend-invites', {}, {Authorization: ''});
-    }
-
-    getFriendInvitationStatus(pseudo: string): Observable<any> {
-        return this.requestSrv.get(`friend-invites/${pseudo}`, {}, {Authorization: ''});
-    }
-
-    acceptFriendRequest(pseudo: string): Observable<any> {
-        return this.requestSrv.post(`friend-invites/${pseudo}/accept`, {}, {Authorization: ''});
-    }
-
-    declineFriendRequest(pseudo: string): Observable<any> {
-        return this.requestSrv.post(`friend-invites/${pseudo}/decline`, {}, {Authorization: ''});
+        return this.requestSrv.postJSON(`users/${pseudo}/friend-invite`, {}, {Authorization: ''});
     }
 
     searchUser(params: any): Observable<any> {

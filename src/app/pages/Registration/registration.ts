@@ -30,7 +30,7 @@ export class RegistrationComponent {
 
     initRegistrationForm() {
         return this.fb.group({
-                pseudo: [null, Validators.required],
+                name: [null, Validators.required],
                 email: [null, Validators.compose([Validators.email, Validators.pattern("^\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$"), Validators.required])],
                 password: [null, Validators.compose([Validators.pattern("^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+).{7,}$"), Validators.required])],
                 confirmPassword: [null, Validators.required]
@@ -63,11 +63,11 @@ export class RegistrationComponent {
             return;
         const user: User = this.registrationForm.value;
         delete (<any>user).confirmPassword;
-        this.usersSrv.createUser(user)
+        this.authReqSrv.register(user)
             .do((response) => this.toastSrv.success('Vous vous êtes inscrit avec succès', 'Inscription effectué'))
             .do(
                 () => {
-                    (<any>window).ga('send', 'event', 'Registration', 'Registering', user.pseudo);
+                    (<any>window).ga('send', 'event', 'Registration', 'Registering', user.name);
                     this.router.navigate(['/login']);
                     return true;
 
@@ -94,9 +94,9 @@ export class RegistrationComponent {
                     .subscribe((resu) => {
                         self.tokenSrv.token = resu["token"];
                         localStorage.setItem('user_pseudo', resu["user"]["pseudo"]);
-                        self.authSrv.auth = {email: resu["user"]["email"], pseudo: resu["user"]["pseudo"]};
+                        self.authSrv.auth = {email: resu["user"]["email"], name: resu["user"]["pseudo"]};
                         self.authSrv.logged = true;
-                        self.profileSrv.fetchUser$(resu["user"]["pseudo"]).subscribe(() => self.ngZone.run(() => {
+                        self.profileSrv.fetchUser$().subscribe(() => self.ngZone.run(() => {
                             (<any>window).ga('send', 'event', 'Login', 'Registering with Facebook', resu["user"]["pseudo"]);
                             self.router.navigate(['/dashboard']);
                         }));

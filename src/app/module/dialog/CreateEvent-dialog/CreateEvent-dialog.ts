@@ -6,6 +6,7 @@ import {RequestService} from '../../../core/services/request.service';
 import {UsersService} from "../../../core/services/Requests/Users";
 import {CalendarsService} from "../../../core/services/Requests/Calendars";
 import {PermissionService} from '../../../core/services/permission.service';
+import {EventsService} from "../../../core/services/Requests/Events";
 
 @Component({
     selector: 'createEvent-creation-dialog',
@@ -20,7 +21,7 @@ export class CreateEventDialog {
     description: string = "";
     eventVisibility = 'public';
     //is_global_calendar = true; //important
-    color: any;
+    color: string = "#ffffff";
     start: Date;
     end: Date;
 
@@ -48,6 +49,7 @@ export class CreateEventDialog {
                 private profileSrv: ProfileService,
                 private usersSrv: UsersService,
                 private calendarsSrv: CalendarsService,
+                private eventSrv: EventsService,
                 private toastSrv: ToastrService,
                 public PermSrv: PermissionService,
                 public dialogRef: MatDialogRef<CreateEventDialog>,
@@ -60,8 +62,6 @@ export class CreateEventDialog {
                     this.start = data.event.start;
                     this.end = data.event.end;
                 }
-                else
-                    console.log("ZERTYUIOP");
         //console.log("read only", this.rd_only);
 
         // this.profileSrv.userProfile$.subscribe(user => {
@@ -78,11 +78,11 @@ export class CreateEventDialog {
         // }
 
         this.profileSrv.userProfile$.subscribe(user => {
-            this.usersSrv.getCalendars(user.pseudo)
+            this.calendarsSrv.getConfirmedCalendars()
                 .subscribe(ret => {
                     // console.log("val", ret.calendars);
                     // console.log("type", typeof ret.calendars);
-                    this.calendars_list = ret.calendars.filter(e => { if (PermSrv.permission[e.calendar.role].CRUD === true) {return e;} } );
+                    this.calendars_list = ret.calendars.filter(e => {if (PermSrv.permission[e.role].CRUD === true) {return e;} });
                     //this.calendars_list = ret.calendars;
                 });
         });
@@ -98,14 +98,16 @@ export class CreateEventDialog {
         //     route_id_calendar = this.data.calendar_id;
         // }
         this.route_id_calendar = (this.dialog_calendar_id != null) ? this.dialog_calendar_id : this.data.calendar_id;
-        this.calendarsSrv.createEvent(this.route_id_calendar, {
+        this.eventSrv.createEvent({
             name: this.name,
             type: this.eventType,
             location: this.location,
             description: this.description,
             visibility: this.eventVisibility,
+            calendar_id: this.route_id_calendar,
             start_time: this.start.toISOString(),
             end_time: this.end.toISOString(),
+            color: this.color
         }).subscribe(ret => {
                 this.data.calAPI.addEvent({
                     id: ret.event.id,

@@ -45,6 +45,20 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ]
+            },
+            "fr": {
+              "aot": true,
+              "i18nFile": "src/translate/messages.fr.xlf",
+              "i18nFormat": "xlf",
+              "i18nLocale": "fr",
+              "i18nMissingTranslation": "error"
+            },
+            "en": {
+              "aot": true,
+              "i18nFile": "src/translate/messages.en.xlf",
+              "i18nFormat": "xlf",
+              "i18nLocale": "en",
+              "i18nMissingTranslation": "error"
             }
           }
         },
@@ -56,6 +70,12 @@
           "configurations": {
             "production": {
               "browserTarget": "perfect-week:build:production"
+            },
+            "fr ": {
+              "browserTarget": "perfect-week:build:fr"
+            },
+            "en": {
+              "browserTarget": "perfect-week:build:en"
             }
           }
         },

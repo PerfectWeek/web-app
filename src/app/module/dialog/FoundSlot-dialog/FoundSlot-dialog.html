@@ -1,5 +1,5 @@
 <div class="flex flex-r-centered">
-    <h2 mat-dialog-title>Trouver un créneau libre</h2>
+    <h2 i18n="@@FoundSlotTitle" mat-dialog-title>Trouver un créneau libre</h2>
 </div>
 <mat-dialog-content style="white-space: pre-wrap; text-align: center">
     <div>
@@ -8,12 +8,12 @@
             <div class="my_layout" fxLayout="row">
                 <mat-form-field style="width: 45%;"
                                 *ngIf="data.is_global_calendar == true">
-                    <mat-select placeholder="Calendrier"
+                    <mat-select i18n-placeholder="@@FoundSlotCalendar" placeholder="Calendrier"
                                 style="width: 100%"
                                 [(ngModel)]="dialog_calendar_id"
                                 name="dialog_calendar_id" required>
-                        <mat-option *ngFor="let calendar of calendars_list" [value]="calendar.calendar.id">
-                            {{calendar.calendar.name}}
+                        <mat-option *ngFor="let calendar of calendars_list" [value]="calendar.id">
+                            {{calendar.name}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -47,13 +47,14 @@
 
             <!--            <div layout-gt-sm="row">-->
             <div class="my_layout" fxLayout="row" style="width: 100%; align-items: center;">
-                <mat-label>Durée:</mat-label>
+                <mat-label i18n="@@FoundSlotDuration">Durée:</mat-label>
                 <div class="input-error-message" style="width: 40%">
                     <mat-form-field>
                         <input matInput
                                [(ngModel)]="heure"
                                name="heure"
                                type="number"
+                               i18n-placeholder="@@FoundSlotHours"
                                placeholder="Heure"
                                min="0"
                                max="24"
@@ -105,10 +106,11 @@
                                name="start"
                                dateFormat="Y-m-dTH:i"
                                altFormat="F j, Y H:i"
+                               i18n-placeholder="@@FoundSlotBeginningDate"
                                placeholder="Date minimum de debut"
                                required>
                     </mat-form-field>
-                    <p class="error-message" *ngIf="start < this.current_date">la date de début d'évènement ne doit pas
+                    <p i18n="@@FoundSlotBeginningDateErrorMessage" class="error-message" *ngIf="start < this.current_date">La date de début d'évènement ne doit pas
                         être antérieur à la date actuelle.</p>
                 </div>
 
@@ -125,12 +127,13 @@
                                name="end"
                                dateFormat="Y-m-dTH:i"
                                altFormat="F j, Y H:i"
+                               i18n-placeholder="@@FoundSlotEndingDate"
                                placeholder="Date maximum de fin"
                                required>
                     </mat-form-field>
-                    <p class="error-message" *ngIf="end < this.current_date">la date de fin d'évènement ne doit pas être
+                    <p i18n="@@FoundSlotEndingDateErrorMessage" class="error-message" *ngIf="end < this.current_date">La date de fin d'évènement ne doit pas être
                         antérieur à la date actuelle.</p>
-                    <p class="error-message" *ngIf="start > end">la date de fin d'évènement ne doit pas être
+                    <p i18n="@@FoundSlotEndingDateErrorMessage2" class="error-message" *ngIf="start > end">La date de fin d'évènement ne doit pas être
                         antérieur à la date de début d'évènement.</p>
                 </div>
             </div>
@@ -144,6 +147,7 @@
                 <div class="my_layout" fxLayout="row">
                     <mat-form-field style="width: 60%">
                         <input matInput
+                               i18n-placeholder="@@FoundSlotLocation"
                                placeholder="Lieux"
                                name="location"
                                [(ngModel)]="location">
@@ -155,14 +159,15 @@
                                    [(ngModel)]="limit"
                                    name="slot_number"
                                    type="number"
+                                   i18n-placeholder="@@FoundSlotSlotsMax"
                                    placeholder="nombre maximum de créneaux proposé"
                                    min="10"
                                    max="20"
                                    maxlength="2"
                                    required>
                         </mat-form-field>
-                        <p class="error-message" *ngIf="limit < 10">10 choix minimum</p>
-                        <p class="error-message" *ngIf="limit > 20">20 choix maximum</p>
+                        <p i18n="@@FoundSlotSlotMinErrorMessage" class="error-message" *ngIf="limit < 10">10 choix minimum</p>
+                        <p i18n="@@FoundSlotSlotMaxErrorMessage" class="error-message" *ngIf="limit > 20">20 choix maximum</p>
                     </div>
                 </div>
 
@@ -172,9 +177,9 @@
 </mat-dialog-content>
 <br>
 <mat-dialog-actions style="display: flex; justify-content: space-between">
-    <button class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
+    <button i18n="@@FoundSlotCancel" class="mat-raised-button btn-primary" [mat-dialog-close]="null">Annuler</button>
 
-    <button [disabled]="groupForm.valid === false || end < this.current_date || start < this.current_date || start > end || heure > 24 || minute > 60 || limit < 10 || limit > 20"
+    <button i18n="@@FoundSlotConfirm" [disabled]="groupForm.valid === false || end < this.current_date || start < this.current_date || start > end || heure > 24 || minute > 60 || limit < 10 || limit > 20"
             class="mat-raised-button btn-secondary" (click)="FoundSlot()">
         Confirmer
     </button>

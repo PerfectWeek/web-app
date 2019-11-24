@@ -1,17 +1,17 @@
 <section class="main-container" id="friend-list-title">
-  <h1 style="text-align: center">Mes Amis</h1>
+  <h1 i18n="@@FriendsTitle" style="text-align: center">Mes Amis</h1>
 </section>
 <section class="friends">
   <section class="friends-header">
     <section class="friends-search-bar">
-      <input title="Rechercher un Utilisateur" type="text" name="searchUser" class="form-control"
-             placeholder="Rechercher un Utilisateur" #UserSearchInput matInput
+      <input i18n-title="@@FriendsSearchTitle" title="Rechercher un Utilisateur" type="text" name="searchUser" class="form-control"
+             i18n-placeholder="@@FriendsUserSearch" placeholder="Rechercher un Utilisateur" #UserSearchInput matInput
              id="UserInput"
              [matAutocomplete]="users"
              (keyup)="searchUser$.next($event.target.value)">
       <mat-autocomplete #users="matAutocomplete" (optionSelected)="selectedUser($event)">
         <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
-          {{user.pseudo}}
+          {{user.name}}
         </mat-option>
       </mat-autocomplete>
     </section>
@@ -25,7 +25,7 @@
           <section (click)="goToUserProfile(friend)">
             <section class="friend-header">
               <img src="{{friend.image}}" alt="Friend's profile picture"
-                   title="Friend's profile picture">
+                   i18n-title="@@FriendsPictureTitle" title="Friend's profile picture">
             </section>
             <section class="friend-name">
               <h4 title="{{friend.name}}">{{friend.name}}</h4>
@@ -36,7 +36,7 @@
     </ng-template>
     <ng-template #noFriends>
       <section class="no-friends-notification">
-        <h2>Vous n'avez aucun ami pour le moment</h2>
+        <h2 i18n="@@FriendsNoFriends">Vous n'avez aucun ami pour le moment</h2>
       </section>
     </ng-template>
   </section>

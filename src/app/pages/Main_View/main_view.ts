@@ -1,6 +1,7 @@
 import {Component, Input, OnInit, ViewChild, HostListener, AfterViewInit} from "@angular/core";
 import {RequestService} from "../../core/services/request.service";
 import {GroupsService} from "../../core/services/Requests/Groups";
+import {CalendarsService} from "../../core/services/Requests/Calendars";
 
 @Component({
     selector: "main-view",
@@ -9,7 +10,7 @@ import {GroupsService} from "../../core/services/Requests/Groups";
 })
 export class MainViewComponent implements OnInit, AfterViewInit {
 
-    @ViewChild('group_list') group_list;
+    @ViewChild('calendar_list') calendar_list;
     @ViewChild('left_view') left_view;
 
     scroll_pos_prev: number;
@@ -34,7 +35,7 @@ export class MainViewComponent implements OnInit, AfterViewInit {
     }
 
     constructor(private requestSrv: RequestService,
-                private groupsSrv: GroupsService) {
+                private calendarSrv: CalendarsService) {
 
     }
 
@@ -49,26 +50,26 @@ export class MainViewComponent implements OnInit, AfterViewInit {
     goToGroup(group_id) {
         this.group_id = group_id;
         if (group_id != -1)
-            this.groupsSrv.getGroup(group_id)
-                .subscribe(ret => this.calendar_id = ret.group.calendar_id);
+            this.calendarSrv.getCalendar(group_id)
+                .subscribe(ret => this.calendar_id = ret.calendar.id);
         else {
             this.calendar_id = group_id;
         }
     }
 
     modifyGroupName(group_id) {
-        this.group_list.modifyGroupName(group_id);
+        this.calendar_list.modifyGroupName(group_id);
     }
 
     GroupModification(group_id) {
-        this.group_list.getGroups();
-        this.group_list.ready.next(false);
-        this.group_list.user.nativeElement.click();
+        this.calendar_list.getCalendars();
+        this.calendar_list.ready.next(false);
+        this.calendar_list.user.nativeElement.click();
     }
 
     imageModification(group_id) {
-        this.group_list.getGroups();
-        this.group_list.ready.next(false);
+        this.calendar_list.getCalendars();
+        this.calendar_list.ready.next(false);
     }
 
     scrolling(event) {
@@ -80,7 +81,7 @@ export class MainViewComponent implements OnInit, AfterViewInit {
         setTimeout(function () {
             if (self.scroll_pos_prev < pos) {
                 if (height - pos === end) {
-                    self.group_list.scrollGroupSearch();
+                    self.calendar_list.scrollGroupSearch();
                 }
             }
             self.scroll_pos_prev = pos;

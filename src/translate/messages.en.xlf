@@ -1,0 +1,1363 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="ChangeValueTitle" datatype="html">
+        <source>Modification de votre <x id="INTERPOLATION" equiv-text="{{data.fieldname === &apos;name&apos; ? &apos;nom&apos; : data.fieldname}}"/></source>
+        <target>Modification of your <x id="INTERPOLATION" equiv-text="{{data.fieldname === &apos;name&apos; ? &apos;nom&apos; : data.fieldname}}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/Change -value/change-value.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ChangeValueEmailFormatErrorMessage" datatype="html">
+        <source>Veuillez entrer un format valide.</source>
+        <target>Please enter a valid format.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/Change -value/change-value.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ChangeValueCancel" datatype="html">
+        <source>Annuler</source>
+        <target>Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/Change -value/change-value.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ChangeValueConfirm" datatype="html">
+        <source>Confirmer</source>
+        <target>Confirm</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/Change -value/change-value.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="AcceptInvitationAccept" datatype="html">
+        <source>Accepter</source>
+        <target>Accept</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/Accept-invitation-dialog/accept-invitation.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="AcceptInvitationDecline" datatype="html">
+        <source>Refuser</source>
+        <target>Decline</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/Accept-invitation-dialog/accept-invitation.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="NavbarEvents" datatype="html">
+        <source>Evenements</source>
+        <target>Events</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/Navbar/navbar.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="NavbarInvitations" datatype="html">
+        <source>Mes invitations</source>
+        <target>My invitations</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/Navbar/navbar.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="NavbarCalendarInvitation" datatype="html">
+        <source>Invitations à un calendrier</source>
+        <target>Calendar invitations</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/Navbar/navbar.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="NavbarFriendRequests" datatype="html">
+        <source>Demandes d&apos;ami</source>
+        <target>Friend requests</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/Navbar/navbar.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="NavbarProfileLink" datatype="html">
+        <source><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/> Mon profil</source>
+        <target><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/> My profile</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/Navbar/navbar.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="NavbarFriendsLink" datatype="html">
+        <source><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/> Mes Ami(e)s</source>
+        <target><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/> My friends</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/Navbar/navbar.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="NavbarLanguages" datatype="html">
+        <source>Langues</source>
+        <target>Languages</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/Navbar/navbar.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="NavbarDisconnect" datatype="html">
+        <source><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/> Se déconnecter</source>
+        <target><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/> Disconnect</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/Navbar/navbar.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="NavbarToRegistration" datatype="html">
+        <source><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/> S&apos;inscrire</source>
+        <target><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/> Register</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/Navbar/navbar.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="NavbarToConnection" datatype="html">
+        <source><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/> Se connecter</source>
+        <target><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/> Login</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/Navbar/navbar.html</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="RegistrationTitle" datatype="html">
+        <source>Inscription</source>
+        <target>Registration</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Registration/registration.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="RegistrationUsername" datatype="html">
+        <source>Pseudo</source>
+        <target>username</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Registration/registration.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="RegistrationEmail" datatype="html">
+        <source>Email</source>
+        <target>Email</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Registration/registration.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="RegistrationPassword" datatype="html">
+        <source>Mot de Passe</source>
+        <target>Password</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Registration/registration.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="RegistrationPasswordFormatErrorMessage" datatype="html">
+        <source>Le mot de passe doit comprendre au moins une lettre et un chiffre et faire au moins 8 caractères.</source>
+        <target>The password must contain at least one letter and on number and have a length of at least 8 characters.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Registration/registration.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="RegistrationConfirmPassword" datatype="html">
+        <source>Confirmation du Mot de Passe</source>
+        <target>Password confirmation</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Registration/registration.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="RegistrationConfirmPasswordError" datatype="html">
+        <source>Les 2 mots de passe ne sont pas identiques.</source>
+        <target>The 2 passwords are different.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Registration/registration.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="RegistrationRegister" datatype="html">
+        <source>S&apos;inscrire</source>
+        <target>Register</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Registration/registration.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="RegistrationToConnection" datatype="html">
+        <source>Déjà inscrit ?</source>
+        <target>Already registered ?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Registration/registration.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ConnectionTitle" datatype="html">
+        <source>Connexion</source>
+        <target>Login</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Connection/connection.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ConnectionEmail" datatype="html">
+        <source>Email</source>
+        <target>Email</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Connection/connection.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ConnectionPassword" datatype="html">
+        <source>Mot de Passe</source>
+        <target>password</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Connection/connection.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ConnectionConnect" datatype="html">
+        <source>Se connecter</source>
+        <target>Login</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Connection/connection.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ConnectionToRegistration" datatype="html">
+        <source>Pas encore inscrit ?</source>
+        <target>Not yet registered ?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Connection/connection.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="NotFoudMessage" datatype="html">
+        <source>Désolé, nous n&apos;avons pas encore planifié la création de cette page</source>
+        <target>Sorry, we've yet to plan the creation of this particular page</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/NotFound/not-found.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="NotFoudLinkHome" datatype="html">
+        <source>Retourner à l&apos;accueil</source>
+        <target>Home</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/NotFound/not-found.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ConfirmNo" datatype="html">
+        <source>Non</source>
+        <target>No</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/Confirm-dialog/Confirm-dialog.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ConfirmYes" datatype="html">
+        <source>Oui</source>
+        <target>Yes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/Confirm-dialog/Confirm-dialog.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="EventCreationTitle" datatype="html">
+        <source>Création d&apos;un nouvel évènement</source>
+        <target>Creation of a new event</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/CreateEvent-dialog/CreateEvent-dialog.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="EventCreationCalendarPlaceholder" datatype="html">
+        <source>Calendrier</source>
+        <target>Calendar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/CreateEvent-dialog/CreateEvent-dialog.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="EventCreationEventNamePlaceholder" datatype="html">
+        <source>Nom de l&apos;évenement</source>
+        <target>Name of the event</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/CreateEvent-dialog/CreateEvent-dialog.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="EventCreationDescriptionPlaceholder" datatype="html">
+        <source>Description</source>
+        <target>Description</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/CreateEvent-dialog/CreateEvent-dialog.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="EventCreationLocationPlaceholder" datatype="html">
+        <source>Lieux</source>
+        <target>Location</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/CreateEvent-dialog/CreateEvent-dialog.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="EventCreationVisibilityPlaceholder" datatype="html">
+        <source>Visibilité</source>
+        <target>Visibility</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/CreateEvent-dialog/CreateEvent-dialog.html</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="EventCreationBeginningDatePlaceholder" datatype="html">
+        <source>Date de debut</source>
+        <target>Start date</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/CreateEvent-dialog/CreateEvent-dialog.html</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="EventCreationBeginningDateErrorMessage" datatype="html">
+        <source>La date de début d&apos;évènement ne doit pas
+                        être antérieur à la date actuelle.</source>
+        <target>The start date can not be before today's date.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/CreateEvent-dialog/CreateEvent-dialog.html</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="EventCreationEndingDatePlaceholder" datatype="html">
+        <source>Date de fin</source>
+        <target>End date</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/CreateEvent-dialog/CreateEvent-dialog.html</context>
+          <context context-type="linenumber">112</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="EventCreationEndingDateErrorMessage" datatype="html">
+        <source>La date de fin d&apos;évènement ne doit pas être
+                        antérieur à la date actuelle.</source>
+                        <target>The end date can not be before today's date.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/CreateEvent-dialog/CreateEvent-dialog.html</context>
+          <context context-type="linenumber">115</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="EventCreationEndingDateErrorMessage2" datatype="html">
+        <source>La date de fin d&apos;évènement ne doit pas être
+                        antérieur à la date de début d&apos;évènement.</source>
+                        <target>The end date can not be before the event's start date.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/CreateEvent-dialog/CreateEvent-dialog.html</context>
+          <context context-type="linenumber">117</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="EventCreationCancel" datatype="html">
+        <source>Annuler</source>
+        <target>Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/CreateEvent-dialog/CreateEvent-dialog.html</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="EventCreationConfirm" datatype="html">
+        <source>
+                Confirmer
+            </source>
+        <target>
+                Confirm
+            </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/CreateEvent-dialog/CreateEvent-dialog.html</context>
+          <context context-type="linenumber">128</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ProfileTitle" datatype="html">
+        <source>Mon Profil</source>
+        <target>My Profile</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/User/profile/profile.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ProfileImageAlt" datatype="html">
+        <source>Profile image and button to change the image</source>
+        <target>Profile image and button to change the image</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/User/profile/profile.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ProfileImageTitle" datatype="html">
+        <source>Cliquez pour changer l&apos;image</source>
+        <target>Click here to change the image</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/User/profile/profile.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ProfileUsername" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/> Pseudo<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/> Username<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/User/profile/profile.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ProfileEmail" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/> Email<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/> Email<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/User/profile/profile.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ProfileUsernamePlaceholder" datatype="html">
+        <source>Pseudo</source>
+        <target>Username</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/User/profile/profile.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ProfileDelete" datatype="html">
+        <source>Supprimer</source>
+        <target>Delete</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/User/profile/profile.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ProfileCancel" datatype="html">
+        <source>Annuler</source>
+        <target>Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/User/profile/profile.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ProfileModify" datatype="html">
+        <source>Modifier</source>
+        <target>Modify</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/User/profile/profile.html</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ProfileProfileModification" datatype="html">
+        <source>Modifier le profil</source>
+        <target>Modify the profile</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/User/profile/profile.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ProfileProfileDeletion" datatype="html">
+        <source>Supprimer le profil</source>
+        <target>Delete the profile</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/User/profile/profile.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ProfileSynchronization" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Se synchroniser avec:<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Synchronize with:<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/User/profile/profile.html</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.alert.close" datatype="html">
+        <source>Close</source>
+        <target>Close</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/alert/alert.d.ts</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.carousel.previous" datatype="html">
+        <source>Previous</source>
+        <target>Previous</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/carousel/carousel.d.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.carousel.next" datatype="html">
+        <source>Next</source>
+        <target>Next</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/carousel/carousel.d.ts</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.datepicker.previous-month" datatype="html">
+        <source>Previous month</source>
+        <target>Previous month</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/datepicker/datepicker-navigation.d.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/datepicker/datepicker-navigation.d.ts</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.datepicker.next-month" datatype="html">
+        <source>Next month</source>
+        <target>Next month</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/datepicker/datepicker-navigation.d.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/datepicker/datepicker-navigation.d.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.datepicker.select-month" datatype="html">
+        <source>Select month</source>
+        <target>Select month</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/datepicker/datepicker-navigation-select.d.ts</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/datepicker/datepicker-navigation-select.d.ts</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.datepicker.select-year" datatype="html">
+        <source>Select year</source>
+        <target>Select year</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/datepicker/datepicker-navigation-select.d.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/datepicker/datepicker-navigation-select.d.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.pagination.first" datatype="html">
+        <source>««</source>
+        <target>««</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/pagination/pagination.d.ts</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.pagination.previous" datatype="html">
+        <source>«</source>
+        <target>«</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/pagination/pagination.d.ts</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.pagination.next" datatype="html">
+        <source>»</source>
+        <target>»</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/pagination/pagination.d.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.pagination.last" datatype="html">
+        <source>»»</source>
+        <target>»»</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/pagination/pagination.d.ts</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.pagination.first-aria" datatype="html">
+        <source>First</source>
+        <target>First</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/pagination/pagination.d.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.pagination.previous-aria" datatype="html">
+        <source>Previous</source>
+        <target>Previous</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/pagination/pagination.d.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.pagination.next-aria" datatype="html">
+        <source>Next</source>
+        <target>Next</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/pagination/pagination.d.ts</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.pagination.last-aria" datatype="html">
+        <source>Last</source>
+        <target>Last</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/pagination/pagination.d.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.progressbar.value" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{getPercentValue()}}"/>%</source>
+        <target><x id="INTERPOLATION" equiv-text="{{getPercentValue()}}"/>%</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/progressbar/progressbar.d.ts</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.increment-hours" datatype="html">
+        <source>Increment hours</source>
+        <target>Increment hours</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/timepicker/timepicker.d.ts</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.HH" datatype="html">
+        <source>HH</source>
+        <target>HH</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/timepicker/timepicker.d.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.hours" datatype="html">
+        <source>Hours</source>
+        <target>Hours</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/timepicker/timepicker.d.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.decrement-hours" datatype="html">
+        <source>Decrement hours</source>
+        <target>Decrement hours</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/timepicker/timepicker.d.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.increment-minutes" datatype="html">
+        <source>Increment minutes</source>
+        <target>Increment minutes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/timepicker/timepicker.d.ts</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.MM" datatype="html">
+        <source>MM</source>
+        <target>MM</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/timepicker/timepicker.d.ts</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.minutes" datatype="html">
+        <source>Minutes</source>
+        <target>Minutes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/timepicker/timepicker.d.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.decrement-minutes" datatype="html">
+        <source>Decrement minutes</source>
+        <target>Decrement minutes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/timepicker/timepicker.d.ts</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.increment-seconds" datatype="html">
+        <source>Increment seconds</source>
+        <target>Increment seconds</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/timepicker/timepicker.d.ts</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.SS" datatype="html">
+        <source>SS</source>
+        <target>SS</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/timepicker/timepicker.d.ts</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.seconds" datatype="html">
+        <source>Seconds</source>
+        <target>Seconds</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/timepicker/timepicker.d.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.decrement-seconds" datatype="html">
+        <source>Decrement seconds</source>
+        <target>Decrement seconds</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/timepicker/timepicker.d.ts</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.PM" datatype="html">
+        <source>PM</source>
+        <target>PM</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/timepicker/timepicker.d.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ngb.timepicker.AM" datatype="html">
+        <source>AM</source>
+        <target>AM</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../node_modules/@ng-bootstrap/ng-bootstrap/timepicker/timepicker.d.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FoundSlotConfirmTitle" datatype="html">
+        <source>Choisir le créneau qui vous convient le plus</source>
+        <target>Choose the timing period that's right for you</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/FoundSlotConfirm-dialog/FoundSlotConfirm-dialog.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FoundSlotConfirmCancel" datatype="html">
+        <source>Annuler</source>
+        <target>Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/FoundSlotConfirm-dialog/FoundSlotConfirm-dialog.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FoundSlotConfirmConfirm" datatype="html">
+        <source>
+                Confirmer
+            </source>
+        <target>
+                Confirm
+            </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/FoundSlotConfirm-dialog/FoundSlotConfirm-dialog.html</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FoundSlotTitle" datatype="html">
+        <source>Trouver un créneau libre</source>
+        <target>Find an open time period </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/FoundSlot-dialog/FoundSlot-dialog.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FoundSlotCalendar" datatype="html">
+        <source>Calendrier</source>
+        <target>Calendar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/FoundSlot-dialog/FoundSlot-dialog.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FoundSlotDuration" datatype="html">
+        <source>Durée:</source>
+        <target>Duration:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/FoundSlot-dialog/FoundSlot-dialog.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FoundSlotHours" datatype="html">
+        <source>Heure</source>
+        <target>Hour</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/FoundSlot-dialog/FoundSlot-dialog.html</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FoundSlotBeginningDate" datatype="html">
+        <source>Date minimum de debut</source>
+        <target>Minimum start date</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/FoundSlot-dialog/FoundSlot-dialog.html</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FoundSlotBeginningDateErrorMessage" datatype="html">
+        <source>La date de début d&apos;évènement ne doit pas
+                        être antérieur à la date actuelle.</source>
+                        <target>The start date can not be before today's date.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/FoundSlot-dialog/FoundSlot-dialog.html</context>
+          <context context-type="linenumber">113</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FoundSlotEndingDate" datatype="html">
+        <source>Date maximum de fin</source>
+        <target>Maximum end date</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/FoundSlot-dialog/FoundSlot-dialog.html</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FoundSlotEndingDateErrorMessage" datatype="html">
+        <source>La date de fin d&apos;évènement ne doit pas être
+                        antérieur à la date actuelle.</source>
+                        <target>The end date can not be before today's date.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/FoundSlot-dialog/FoundSlot-dialog.html</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FoundSlotEndingDateErrorMessage2" datatype="html">
+        <source>La date de fin d&apos;évènement ne doit pas être
+                        antérieur à la date de début d&apos;évènement.</source>
+                        <target>The end date can not be before the event's start date.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/FoundSlot-dialog/FoundSlot-dialog.html</context>
+          <context context-type="linenumber">136</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FoundSlotLocation" datatype="html">
+        <source>Lieux</source>
+        <target>Location</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/FoundSlot-dialog/FoundSlot-dialog.html</context>
+          <context context-type="linenumber">151</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FoundSlotSlotsMax" datatype="html">
+        <source>nombre maximum de créneaux proposé</source>
+        <target>Maximum number of time period suggested</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/FoundSlot-dialog/FoundSlot-dialog.html</context>
+          <context context-type="linenumber">163</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FoundSlotSlotMinErrorMessage" datatype="html">
+        <source>10 choix minimum</source>
+        <target>10 suggestions minimum</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/FoundSlot-dialog/FoundSlot-dialog.html</context>
+          <context context-type="linenumber">169</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FoundSlotSlotMaxErrorMessage" datatype="html">
+        <source>20 choix maximum</source>
+        <target>20 suggestions maximum</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/FoundSlot-dialog/FoundSlot-dialog.html</context>
+          <context context-type="linenumber">170</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FoundSlotCancel" datatype="html">
+        <source>Annuler</source>
+        <target>Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/FoundSlot-dialog/FoundSlot-dialog.html</context>
+          <context context-type="linenumber">180</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FoundSlotConfirm" datatype="html">
+        <source>
+                Confirmer
+            </source>
+        <target>
+                Confirm
+            </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/FoundSlot-dialog/FoundSlot-dialog.html</context>
+          <context context-type="linenumber">183</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ModifyEventTitle" datatype="html">
+        <source>Modification d&apos;évènement</source>
+        <target>Event modification</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/ModifyEvent-dialog/ModifyEvent.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ModifyEventImageAlt" datatype="html">
+        <source>Profile image and button to change the image</source>
+        <target>Profile image and button to change the image</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/ModifyEvent-dialog/ModifyEvent.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ModifyEventImageTitle" datatype="html">
+        <source>Cliquez pour changer l&apos;image</source>
+        <target>Click here to change the image</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/ModifyEvent-dialog/ModifyEvent.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ModifyEventColor" datatype="html">
+        <source>Couleur</source>
+        <target>Color</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/ModifyEvent-dialog/ModifyEvent.html</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ModifyEventCancel" datatype="html">
+        <source>Annuler</source>
+        <target>Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/ModifyEvent-dialog/ModifyEvent.html</context>
+          <context context-type="linenumber">126</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ModifyEventDelete" datatype="html">
+        <source>Supprimer</source>
+        <target>Delete</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/ModifyEvent-dialog/ModifyEvent.html</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ModifyEventConfirm" datatype="html">
+        <source>
+                Confirmer
+            </source>
+            <target>
+                    Confirm
+                </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/ModifyEvent-dialog/ModifyEvent.html</context>
+          <context context-type="linenumber">128</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="CalendarFindSlot" datatype="html">
+        <source>Trouver un créneau</source>
+        <target>Find a time period</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/calendar/calendar.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="CalendarAddEvent" datatype="html">
+        <source>Ajouter un évènement</source>
+        <target>Add an event</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/calendar/calendar.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="RegConfirmSuccess" datatype="html">
+        <source>Votre compte a été créé avec succès</source>
+        <target>Your account has been created successfully</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Registration_Confirmation/registration-confirmation.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="RegConfirmToConnection" datatype="html">
+        <source>Se connecter</source>
+        <target>Log in</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Registration_Confirmation/registration-confirmation.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="RegConfirmToRegistration" datatype="html">
+        <source>Retourner à la page d&apos;inscription</source>
+        <target>To registration</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Registration_Confirmation/registration-confirmation.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="RegConfirmToConnection2" datatype="html">
+        <source>Se connecter</source>
+        <target>Log in</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Registration_Confirmation/registration-confirmation.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="RegConfirmToRegistration2" datatype="html">
+        <source>Retourner à la page d&apos;inscription</source>
+        <target>To Registration</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Registration_Confirmation/registration-confirmation.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="EventSuggestionFilters" datatype="html">
+        <source>
+                    Filtre
+                </source>
+                <target>
+                                    Filter
+                                </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/EventSuggestions/event_suggestions.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="EventSuggestionSearch" datatype="html">
+        <source>Rechercher un évènement</source>
+        <target>Event search</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/EventSuggestions/event_suggestions.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="EventSuggestionDiscover" datatype="html">
+        <source> Découvrir </source>
+        <target> Discover </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/EventSuggestions/event_suggestions.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="EventSuggestionDiscoverSelection" datatype="html">
+        <source> Sélection d&apos;évènements pour l&apos;utilisateur </source>
+        <target> Event selection for users </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/EventSuggestions/event_suggestions.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="EventSuggestionJoinEvent" datatype="html">
+        <source>Rejoindre l&apos;évènement</source>
+        <target>Join the event</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/EventSuggestions/event_suggestions.html</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/EventSuggestions/event_suggestions.html</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="GroupeCreationTitle" datatype="html">
+        <source>Création d&apos;un nouveau calendrier</source>
+        <target>Creation of a new calendar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/Group-creation-dialog/group-creation.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="GroupeCreationName" datatype="html">
+        <source>Nom</source>
+        <target>Name</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/Group-creation-dialog/group-creation.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="GroupeCreationNewUser" datatype="html">
+        <source>Nouvel utilisateur</source>
+        <target>New user</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/Group-creation-dialog/group-creation.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="GroupeCreationCancel" datatype="html">
+        <source>Annuler</source>
+        <target>Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/Group-creation-dialog/group-creation.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="GroupeCreationConfirm" datatype="html">
+        <source>Confirmer
+  </source>
+  <target>Confirm
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/Group-creation-dialog/group-creation.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="CalendarListSearchTitle" datatype="html">
+        <source>Rechercher un calendrier</source>
+        <target>Calendar search</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Main_View/group_list/group_list.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="CalendarListSearch" datatype="html">
+        <source>Rechercher un calendrier</source>
+        <target>Calendar search</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Main_View/group_list/group_list.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="CalendarListGlobal" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Calendrier global<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Global calendar<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Main_View/group_list/group_list.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="CalendarListImageTitle" datatype="html">
+        <source>User&apos;s profile image</source>
+        <target>User&apos;s profile image</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Main_View/group_list/group_list.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="CalendarListYourCalendar" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Vos calendriers<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Your calendars<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Main_View/group_list/group_list.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="CalendarListMobileViewSelf" datatype="html">
+        <source>Moi</source>
+        <target>You</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Main_View/group_list/group_list.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="AddMemberTitle" datatype="html">
+        <source>Ajout de membre</source>
+        <target>Add member</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/Add-member/add-member.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="AddMemberNewUserPlaceholder" datatype="html">
+        <source>Nouvel utilisateur</source>
+        <target>New user</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/Add-member/add-member.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="AddMemberCancel" datatype="html">
+        <source>Annuler</source>
+        <target>Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/Add-member/add-member.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="AddMemberConfirm" datatype="html">
+        <source>Confirmer</source>
+        <target>Confirm</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/Add-member/add-member.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="CalendarInfoImageAlt" datatype="html">
+        <source>Image du calendrier</source>
+        <target>Calendar's image</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Main_View/group_info/group_info.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="CalendarInfoImageTitle" datatype="html">
+        <source>Cliquez pour changer l&apos;image</source>
+        <target>Click here to change the image</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Main_View/group_info/group_info.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="CalendarInfoPersonnalData" datatype="html">
+        <source>
+                Données personnelles
+              </source>
+              <target>
+                              Personnal data
+                            </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Main_View/group_info/group_info.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="CalendarInfoMembers" datatype="html">
+        <source>
+                Membres
+              </source>
+              <target>
+                              Members
+                            </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Main_View/group_info/group_info.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="CalendarInfoAddMembers" datatype="html">
+        <source><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/> <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>Ajouter un membre<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <target><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/> <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/>Add members<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Main_View/group_info/group_info.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="CalendarInfoLeave" datatype="html">
+        <source>Quitter le calendrier</source>
+        <target>Leave the calendar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Main_View/group_info/group_info.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="CalendarInfoDelete" datatype="html">
+        <source>Supprimer du calendrier</source>
+        <target>Remove from the calendar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Main_View/group_info/group_info.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="CalendarInfoAddFriend" datatype="html">
+        <source>L&apos;ajouter en ami</source>
+        <context-group purpose="location">
+        <target>Send a friend request</target>
+          <context context-type="sourcefile">app/pages/Main_View/group_info/group_info.html</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="PublicProfileFriendRequest" datatype="html">
+        <source>
+        Faire une demande d&apos;ami
+      </source>
+      <target>
+              Send a friend request
+            </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/User/profile/public/public.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="PublicProfileFriendRequestTitle" datatype="html">
+        <source>Envoyer une requête d&apos;ami</source>
+        <target>Send a friend request</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/User/profile/public/public.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="PublicProfileAlreadyFriend" datatype="html">
+        <source>Vous êtes déjà amis</source>
+        <target>You are already friend</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/User/profile/public/public.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="PublicProfileUserName" datatype="html">
+        <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/> Pseudo<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+        <target><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/> Username<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/User/profile/public/public.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FriendsTitle" datatype="html">
+        <source>Mes Amis</source>
+        <target>My friends</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Friends/Friend-list/friend-list.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FriendsSearchTitle" datatype="html">
+        <source>Rechercher un Utilisateur</source>
+        <target>User search</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Friends/Friend-list/friend-list.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FriendsUserSearch" datatype="html">
+        <source>Rechercher un Utilisateur</source>
+        <target>User search</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Friends/Friend-list/friend-list.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FriendsPictureTitle" datatype="html">
+        <source>Friend&apos;s profile picture</source>
+        <target>Friend&apos;s profile picture</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Friends/Friend-list/friend-list.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="FriendsNoFriends" datatype="html">
+        <source>Vous n&apos;avez aucun ami pour le moment</source>
+        <target>You have no friends as of yet</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/pages/Friends/Friend-list/friend-list.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="InvitationTitle" datatype="html">
+        <source>Invitation d&apos;ami</source>
+        <target>Friend request</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/Friend-Invitation/invitation.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="InvitationNewUser" datatype="html">
+        <source>Nouvel utilisateur</source>
+        <target>New user</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/Friend-Invitation/invitation.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="InvitationCancel" datatype="html">
+        <source>Annuler</source>
+        <target>Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/Friend-Invitation/invitation.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="InvitationConfirm" datatype="html">
+        <source>Confirmer</source>
+        <target>Confirm</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/module/dialog/Friend-Invitation/invitation.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

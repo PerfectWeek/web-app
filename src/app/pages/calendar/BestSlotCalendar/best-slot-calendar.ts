@@ -16,6 +16,7 @@ import bootstrapPlugin from '@fullcalendar/bootstrap';
 import {Calendar} from '@fullcalendar/core/Calendar';
 import {UsersService} from "../../../core/services/Requests/Users";
 import {CalendarsService} from "../../../core/services/Requests/Calendars";
+import {EventsService} from "../../../core/services/Requests/Events";
 
 @Component({
     selector: 'best-slot_calendar-component',
@@ -40,12 +41,12 @@ export class BestSlotCalendarComponent implements OnInit {
                 public dialog: MatDialog,
                 private requestSrv: RequestService,
                 private usersSrv: UsersService,
+                private eventsSrv: EventsService,
                 private calendarsSrv: CalendarsService,
                 private profileSrv: ProfileService) {
     }
 
     ngOnInit() {
-        console.log("alors", this.slot);
         //this.temp_event = JSON.parse(this.temp_event);
         //this.slot = JSON.parse(this.slot);
         const tmp_date = new Date(this.slot.start_time);
@@ -82,10 +83,8 @@ export class BestSlotCalendarComponent implements OnInit {
     }
 
     get_calendar_events(calendar_id) {
-        this.calendarsSrv.getEvents(calendar_id)
+        this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {})
             .subscribe(ret => {
-                const hexa = ["#3d8fdc"];
-                const backgroundColor_ = hexa[Math.floor(Math.random() * hexa.length)];
                 // const backgroundColor_ = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
                 const borderColor_ = '#1C4891';
                 for (const idx in ret.events) {
@@ -94,7 +93,7 @@ export class BestSlotCalendarComponent implements OnInit {
                         title: ret.events[idx].name,
                         end: ret.events[idx].end_time,
                         start: ret.events[idx].start_time,
-                        backgroundColor: backgroundColor_,
+                        backgroundColor: ret.events[idx].color,
                         borderColor: borderColor_,
                     });
 
@@ -103,13 +102,6 @@ export class BestSlotCalendarComponent implements OnInit {
     }
 
     get_global_calendar(): void {
-        this.profileSrv.userProfile$.subscribe(user => {
-            this.usersSrv.getCalendars(user.pseudo)
-                .subscribe(ret => {
-                    for (let idx in ret.calendars) {
-                        this.get_calendar_events(ret.calendars[idx].calendar.id);
-                    }
-                });
-        });
+        this.profileSrv.userProfile$.subscribe(user => this.get_calendar_events(-1));
     }
 }

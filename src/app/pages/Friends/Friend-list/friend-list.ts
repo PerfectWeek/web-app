@@ -9,6 +9,9 @@ import {User} from "../../../core/models/User";
 import {ConfirmDialog} from "../../../module/dialog/Confirm-dialog/Confirm-dialog";
 import {ToastrService} from "ngx-toastr";
 import {UsersService} from "../../../core/services/Requests/Users";
+import {InvitationsService} from "../../../core/services/Requests/Invitations";
+
+import * as imageUtils from "../../../core/helpers/image"
 
 @Component({
     selector: 'friend-list',
@@ -48,6 +51,7 @@ export class FriendListComponent implements OnInit, AfterViewInit {
     constructor(private profileSrv: ProfileService,
                 private requestSrv: RequestService,
                 private usersSrv: UsersService,
+                private invitationsSrv: InvitationsService,
                 private toastSrv: ToastrService,
                 private router: Router,
                 private dialog: MatDialog) {
@@ -90,15 +94,20 @@ export class FriendListComponent implements OnInit, AfterViewInit {
     }
 
     getFriends() {
-        this.usersSrv.getFriends()
+        this.invitationsSrv.getFriends()
             .subscribe(response => {
-                response.friends.forEach((friend, index) => {
-                    this.usersSrv.getImage(friend.pseudo)
+                let friendsInvitations: any[] = [...response.received.filter(req => req.confirmed === true), ...response.sent.filter(req => req.confirmed === true)];
+                friendsInvitations.forEach((friend, index) => {
+                    this.usersSrv.getImage(friend.user.id)
                         .subscribe(ret => {
-                            this.friends.push({name: friend.pseudo, image: ret.image});
+                            let obj: {image: any} = {image: null};
+                            imageUtils.createImageFromBlob(ret, obj);
+                            setTimeout(() => this.friends.push({name: friend.user.name, image: obj.image}), 50);
                         });
-                    this.displayFriends = this.friends;
-                    this.ready.next(true);
+                    if (index >= friendsInvitations.length - 1) {
+                        this.displayFriends = this.friends;
+                        this.ready.next(true);
+                    }
                 });
             }, err => {
                 this.toastSrv.error(err.error.message, 'Une erreur est survenue');
@@ -148,7 +157,7 @@ export class FriendListComponent implements OnInit, AfterViewInit {
     selectedUser(event) {
         this.userSearchInput.nativeElement.value = '';
         this.searchUser$.next('');
-        this.router.navigate([`profile/${event.option.viewValue}`]);
+        this.router.navigate([`profile/${event.option.value.id}`]);
     }
 
     searchFriend() {

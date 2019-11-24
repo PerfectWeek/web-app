@@ -1,6 +1,6 @@
 <div class="full-view">
     <section #left_view (scroll)="scrolling($event)" class="left-view" id="left-view">
-        <group-list #group_list (group_clicked)="goToGroup($event)"></group-list>
+        <group-list #calendar_list (group_clicked)="goToGroup($event)"></group-list>
     </section>
     <section class="center-view">
         <mwl-demo-component [in_calendar_id]="calendar_id"></mwl-demo-component>

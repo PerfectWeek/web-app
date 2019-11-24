@@ -37,13 +37,24 @@ export class RequestService {
   get(url: string, params?: any, headers?: any): Observable<any> {
 
     const httpParam = RequestService.prepareParams(params);
-    const httpHeader = (RequestService.prepareHeader(headers)).append('Content-Type', 'application/x-www-form-urlencoded');
+    const httpHeader = (RequestService.prepareHeader(headers)).append('Content-Type', 'application/json');
 
     return this.http.get(url, {
       params: httpParam,
       headers: httpHeader
     });
 
+  }
+
+  getImage(url: string, params?: any, headers?:any): Observable<Blob> {
+    const httpParam = RequestService.prepareParams(params);
+    const httpHeader = (RequestService.prepareHeader(headers)).append('Content-Type', 'image/jpeg');
+
+    return this.http.get(url, {
+      params: httpParam,
+      headers: httpHeader,
+      responseType: 'blob'
+    });
   }
 
   postJSON(url: string, body: any, headers?: any): Observable<any> {
@@ -57,7 +68,7 @@ export class RequestService {
   }
 
   post(url: string, body: any, headers?: any): Observable<any> {
-    const httpHeaders = (RequestService.prepareHeader(headers)).append('Content-Type', 'application/x-www-form-urlencoded');
+    const httpHeaders = (RequestService.prepareHeader(headers)).append('Content-Type', 'application/json');
     const params = RequestService.prepareParams(body);
 
     return this.http.post(url, params, {
@@ -66,27 +77,26 @@ export class RequestService {
     );
   }
 
-  postImage(url: string, file, headers?: any): Observable<any> {
+  putImage(url: string, file, headers?: any): Observable<any> {
       let input = new FormData();
       input.append("image", file);
-      return this.http.post(url, input, {
+      return this.http.put(url, input, {
         headers: headers
       });
   }
 
 
   put(url: string, body: any, headers?: any): Observable<any> {
-    const httpHeaders = (RequestService.prepareHeader(headers)).append('Content-Type', 'application/x-www-form-urlencoded');
-    const params = RequestService.prepareParams(body);
+    const httpHeaders = (RequestService.prepareHeader(headers)).append('Content-Type', 'application/json');
 
-    return this.http.put(url, params, {
-        headers: httpHeaders
+    return this.http.put(url, body, {
+        headers: httpHeaders,
       }
     );
   }
 
   delete(url: string, headers?: any): Observable<any> {
-    const httpHeaders = (RequestService.prepareHeader(headers)).append('Content-Type', 'application/x-www-form-urlencoded');
+    const httpHeaders = (RequestService.prepareHeader(headers)).append('Content-Type', 'application/json');
 
     return this.http.delete(url, {
       headers: httpHeaders

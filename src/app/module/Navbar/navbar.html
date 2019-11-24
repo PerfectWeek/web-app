@@ -20,39 +20,50 @@
     <ng-template #navLogin>
       <ul class="navbar-nav mr-auto" data-toggle="collapse" data-target=".navbar-collapse.show">
         <li class="nav-item"><a class="nav-link" routerLink="dashboard">Dashboard</a></li>
-        <li class="nav-item"><a class="nav-link" routerLink="event-suggestions">Evenements</a></li>
+        <li class="nav-item"><a class="nav-link" i18n="@@NavbarEvents" routerLink="event-suggestions">Evenements</a></li>
       </ul>
 
       <ul class="navbar-nav ml-auto" data-toggle="collapse" data-target=".navbar-collapse.show">
         <div class="dropdown">
-          <button class="btn btn-transparent dropdown-toggle" type="button" id="Invitations" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mes invitations</button>
+          <button class="btn btn-transparent dropdown-toggle" type="button" id="Invitations" data-toggle="dropdown" aria-haspopup="true" i18n="@@NavbarInvitations" aria-expanded="false">Mes invitations</button>
           <div class="dropdown-menu" aria-labelledby="Invitations">
-            <h6 class="dropdown-header">Invitations à un calendrier</h6>
+            <h6 class="dropdown-header" i18n="@@NavbarCalendarInvitation">Invitations à un calendrier</h6>
             <a class="dropdown-item" href="javascript:void(0)" (click)="answerRequest(invitation, 'group')" *ngFor="let invitation of groupInvitations.slice(0, 5)">{{invitation.name}}</a>
             <div class="dropdown-divider"></div>
-            <h6 class="dropdown-header">Demandes d'ami</h6>
-            <a class="dropdown-item" href="javascript:void(0)" (click)="answerRequest(invitation, 'friend')" *ngFor="let invitation of friendInvitations.slice(0, 5)">{{invitation.from_user.pseudo}}</a>
+            <h6 class="dropdown-header" i18n="@@NavbarFriendRequests">Demandes d'ami</h6>
+            <a class="dropdown-item" href="javascript:void(0)" (click)="answerRequest(invitation, 'friend')" *ngFor="let invitation of friendInvitations.slice(0, 5)">{{invitation.user.name}}</a>
+            <div class="dropdown-divider"></div>
+            <h6 class="dropdown-header" i18n="@@NavbarEventRequests">Invitation à un &Egrave;vennement</h6>
+            <a class="dropdown-item" href="javascript:void(0)" (click)="answerRequest(invitation, 'event')" *ngFor="let invitation of EventInvitations.slice(0, 5)">{{invitation.name}}</a>
           </div>
         </div>
 
         <li class="nav-item">
-          <a class="nav-link" routerLink="/profile"><i class="fas fa-user"></i> Mon profil</a>
+          <a class="nav-link" i18n="@@NavbarProfileLink" routerLink="/profile"><i class="fas fa-user"></i> Mon profil</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/friends"><i class="fas fa-user-friends"></i> Mes Ami(e)s</a>
+          <a class="nav-link" i18n="@@NavbarFriendsLink" routerLink="/friends"><i class="fas fa-user-friends"></i> Mes Ami(e)s</a>
         </li>
+        <div class="dropdown">
+          <button class="btn btn-transparent dropdown-toggle" type="button" id="Languages" data-toggle="dropdown" aria-haspopup="true" i18n="@@NavbarLanguages" aria-expanded="false">Langues</button>
+          <div class="dropdown-menu" aria-labelledby="Invitations">
+            <ng-container *ngFor="let language of languageList">
+              <a href="/{{language.code}}/" class="dropdown-item">{{language.label}}</a>
+            </ng-container>
+          </div>
+        </div>
         <li class="nav-item">
-            <a class="nav-link button" href="javascript:void(0)" (click)="logout()"><i class="fas fa-sign-out-alt"></i> Se déconnecter</a>
+            <a class="nav-link button" i18n="@@NavbarDisconnect" href="javascript:void(0)" (click)="logout()"><i class="fas fa-sign-out-alt"></i> Se déconnecter</a>
         </li>
       </ul>
     </ng-template>
     <ng-template #navLogout>
       <ul class="navbar-nav ml-auto" data-toggle="collapse" data-target=".navbar-collapse.show">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/registration"><i class="fa fa-user" aria-hidden="true"></i> S'inscrire</a>
+          <a class="nav-link" i18n="@@NavbarToRegistration" routerLink="/registration"><i class="fa fa-user" aria-hidden="true"></i> S'inscrire</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/login"><i class="fas fa-sign-in-alt"></i> Se connecter</a>
+          <a class="nav-link" i18n="@@NavbarToConnection" routerLink="/login"><i class="fas fa-sign-in-alt"></i> Se connecter</a>
         </li>
       </ul>
     </ng-template>

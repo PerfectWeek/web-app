@@ -51,12 +51,12 @@ export class FoundSlotDialog {
                 public dialog: MatDialog,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         this.profileSrv.userProfile$.subscribe(user => {
-            this.usersSrv.getCalendars(user.pseudo)
+            this.calendarsSrv.getConfirmedCalendars()
                 .subscribe(ret => {
                     // console.log(ret.calendars);
                     // let a = ret.calendars.filter(e => { if (PermSrv.permission[e.calendar.role].CRUD === true) return e});
                     // console.log(a);
-                    this.calendars_list = ret.calendars.filter(e => { if (PermSrv.permission[e.calendar.role].CRUD === true) {return e;} } );
+                    this.calendars_list = ret.calendars.filter(e => { if (PermSrv.permission[e.role].CRUD === true) {return e;} } );
                     //this.calendars_list = ret.calendars;
                 });
         });
@@ -99,16 +99,14 @@ export class FoundSlotDialog {
             route_id_calendar = this.data.calendar_id;
         }
         this.toastSrv.success('Recherche de créneau en cours');
-        this.requestSrv.get(`calendars/${route_id_calendar}/assistant/find-best-slots`,
-            {
-                min_time: start,
-                max_time: end,
-                type: this.eventType,
-                location: this.location,
-                duration: this.heure * 60 + this.minute,
-                limit: this.limit
-            }, {Authorization: ''})
-            .subscribe(slots => {
+        this.calendarsSrv.findBestSlot(route_id_calendar, {
+            min_time: start,
+            max_time: end,
+            type: this.eventType,
+            location: this.location,
+            duration: this.heure * 60 + this.minute,
+            limit: this.limit
+        }).subscribe(slots => {
                 this.dialogRef.close();
                 this.ChooseSlot(route_id_calendar, slots, {
                     // name: this.name,
