@@ -25,12 +25,11 @@
                  [matChipInputFor]="userList"
                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                  [matChipInputAddOnBlur]="addOnBlur"
-                 (matChipInputTokenEnd)="addUser($event)"
                  (keyup)="search$.next($event.target.value)">
         </mat-chip-list>
         <mat-autocomplete #users="matAutocomplete" (optionSelected)="selected($event)">
           <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
-            {{user.pseudo}}
+            {{user.name}}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>

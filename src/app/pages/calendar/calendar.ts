@@ -159,24 +159,22 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     get_calendar_events(calendar_id) {
         // const calAPI = this.getAPI();
-        this.api.removeAllEvents();
-        this.calendarsSrv.getEvents(calendar_id)
-            .subscribe(ret => {
-                const hexa = ['#e06868', '#ff906a', '#f2db09', '#3d8fdc', '#45c4d9', '#cae602', '#ffd39b', '#c0e2e1', '#ccffff', '#9c6eb2'];
-                const backgroundColor_ = hexa[Math.floor(Math.random() * hexa.length)];
-                //const backgroundColor_ = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
-                const borderColor_ = '#1C4891';
-                for (const idx in ret.events) {
-                    this.api.addEvent({
-                        id: ret.events[idx].id,
-                        title: ret.events[idx].name,
-                        end: ret.events[idx].end_time,
-                        start: ret.events[idx].start_time,
-                        backgroundColor: backgroundColor_,
-                        borderColor: borderColor_,
-                    });
-                }
-            });
+        this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).subscribe(ret => {
+            this.api.removeAllEvents();
+            const hexa = ['#e06868', '#ff906a', '#f2db09', '#3d8fdc', '#45c4d9', '#cae602', '#ffd39b', '#c0e2e1', '#ccffff', '#9c6eb2'];
+            const backgroundColor_ = hexa[Math.floor(Math.random() * hexa.length)];
+            const borderColor_ = '#1C4891';
+            for (let event of ret.events) {
+                this.api.addEvent({
+                    id: event.id,
+                    title: event.name,
+                    end: event.end_time,
+                    start: event.start_time,
+                    backgroundColor: event.color,
+                    borderColor: borderColor_,
+                });
+            }
+        });
     }
 
     get_in_group_calendar(): void {
@@ -196,14 +194,13 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     get_global_calendar(): void {
-        this.profileSrv.userProfile$.subscribe(user => {
-            this.calendarsSrv.getConfirmedCalendars()
-                .subscribe(ret => {
-                    for (let idx in ret.calendars) {
-                        this.get_calendar_events(ret.calendars[idx].calendar.id);
-                    }
-                });
-        });
+        this.get_calendar_events(-1);
+        // this.profileSrv.userProfile$.subscribe(user => {
+        //     this.calendarsSrv.getConfirmedCalendars()
+        //         .subscribe(ret => {
+        //             this.get_calendar_events(ret.calendars[idx].id);
+        //         });
+        // });
     }
 
     // get_group_info() {
@@ -240,40 +237,29 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     eventClick(event) {
         this.eventsSrv.getEvent(event.event.id).subscribe(ret => {
-            //console.log(ret);
-            this.calendarsSrv.getCalendar(ret.event.calendar_id).subscribe(ret => {
-                // console.log(ret);
-                this.role = ret.calendar.role;
+            this.profileSrv.userProfile$.subscribe(user => {
+                let me = ret.event.attendees.filter(attendee => attendee.id === user.id);
+                this.role = me[0].role;
                 if (this.permSrv.permission[this.role].read === false) {
                     this.toastSrv.error('Vous n\'avez pas les droits de lecture sûr cette évènement');
                     return;
                 }
-
-                const dialogRef = this.dialog.open(ModifyEventDialog, {
-                    width: '650px',
-                    data: {
-                        event,
-                        calendar_locale: this.locale,
-                        calAPI: this.api,
-                        role: this.role
-                    }
-                });
-                if (this.is_global_calendar === true) {
-                    this.role = 'admin';
+            });
+            const dialogRef = this.dialog.open(ModifyEventDialog, {
+                width: '650px',
+                data: {
+                    event,
+                    calendar_locale: this.locale,
+                    calAPI: this.api,
+                    role: this.role
                 }
             });
+            dialogRef.afterClosed()
+                .subscribe(() => this.in_calendar_id === -1 ? this.get_global_calendar() : this.get_in_group_calendar());
+            if (this.is_global_calendar === true) {
+                this.role = 'admin';
+            }
         });
-
-
-        // const dialogRef = this.dialog.open(ModifyEventDialog, {
-        //     width: '650px',
-        //     data: {
-        //         event,
-        //         calendar_locale: this.locale,
-        //         calAPI: this.api,
-        //         role: this.role
-        //     }
-        // });
     }
 
     eventDragStop(event): void {
@@ -282,12 +268,11 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     eventDrop(event): void {
         this.eventsSrv.getEvent(event.event.id).subscribe(ret => {
-            //console.log(ret);
-            this.calendarsSrv.getCalendar(ret.event.calendar_id).subscribe(ret => {
-                //console.log(ret);
-                this.role = ret.calendar.role;
-                if (this.permSrv.permission[this.role].CRUD === false) {
-                    this.toastSrv.error(`En temps que ${this.permSrv.permission[this.role].frRole} vous n'êtes pas autorisez à modifier la durée de cette évènement, vos modification ne seront pas prises en comptes`);
+            this.profileSrv.userProfile$.subscribe(user => {
+                let me = ret.event.attendees.filter(attendee => attendee.id === user.id);
+                this.role = me[0].role;
+                if (this.permSrv.permission[this.role].read === false) {
+                    this.toastSrv.error('Vous n\'avez pas les droits de lecture sûr cette évènement');
                     return;
                 }
                 const api = this.getAPI();
@@ -302,6 +287,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                             description: resp.event.description,
                             start_time: modified_event.start.toISOString(),
                             end_time: modified_event.end.toISOString(),
+                            color: event.event.backgroundColor
                         }).subscribe(ret => {
                             this.toastSrv.success('Evenement modifié');
                         });
@@ -315,8 +301,6 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
             width: '650px',
             data: {
                 calendar_id: this.in_calendar_id ? this.in_calendar_id : this.calendar_id,
-                // calAPI: calAPI_,
-                // calendar_id: this.calendar_id,
                 calAPI: this.api,
                 is_global_calendar: this.is_global_calendar,
                 calendar_locale: this.locale,
@@ -337,15 +321,13 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     eventResize(event) {
         this.eventsSrv.getEvent(event.event.id).subscribe(ret => {
-            //console.log(ret);
-            this.calendarsSrv.getCalendar(ret.event.calendar_id).subscribe(ret => {
-                //console.log(ret);
-                this.role = ret.calendar.role;
-                if (this.permSrv.permission[this.role].CRUD === false) {
-                    this.toastSrv.error(`En temps que ${this.permSrv.permission[this.role].frRole} vous n'êtes pas autorisez à modifier la durée de cette évènement, vos modification ne seront pas prises en comptes`);
+            this.profileSrv.userProfile$.subscribe(user => {
+                let me = ret.event.attendees.filter(attendee => attendee.id === user.id);
+                this.role = me[0].role;
+                if (this.permSrv.permission[this.role].read === false) {
+                    this.toastSrv.error('Vous n\'avez pas les droits de lecture sûr cette évènement');
                     return;
                 }
-
                 const api = this.getAPI();
                 const modified_event = api.getEventById(event.event.id);
                 this.eventsSrv.getEvent(event.event.id)
@@ -358,6 +340,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                             description: resp.event.description,
                             start_time: modified_event.start.toISOString(),
                             end_time: modified_event.end.toISOString(),
+                            color: ret.event.backgroundColor
                         }).subscribe(ret => {
                             this.toastSrv.success('Evenement modifié');
                         });

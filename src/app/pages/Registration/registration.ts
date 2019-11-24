@@ -63,7 +63,6 @@ export class RegistrationComponent {
             return;
         const user: User = this.registrationForm.value;
         delete (<any>user).confirmPassword;
-        console.log('user => ', user);
         this.authReqSrv.register(user)
             .do((response) => this.toastSrv.success('Vous vous êtes inscrit avec succès', 'Inscription effectué'))
             .do(

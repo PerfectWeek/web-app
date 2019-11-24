@@ -14,6 +14,7 @@ import {CalendarsService} from "./Requests/Calendars";
 import {EventsService} from "./Requests/Events";
 
 import * as imageUtils from "../helpers/image"
+import {InvitationsService} from "./Requests/Invitations";
 
 @Injectable()
 export class ProfileService {
@@ -46,6 +47,7 @@ export class ProfileService {
                 private toastSrv: ToastrService,
                 private authSrv: AuthService,
                 private usersSrv: UsersService,
+                private invitationsSrv: InvitationsService,
                 private calendarSrv: CalendarsService,
                 private eventSrv: EventsService,
                 private groupsSrv: GroupsService) {
@@ -67,23 +69,23 @@ export class ProfileService {
     }
 
     public getInvitations() {
-        // this.calendarSrv.getInvitations()
-        //     .subscribe(response => {
-        //         this.invitations.group_invitations = response.calendars;
-        //         this.invitationsSubject.next(this.invitations);
-        //     });
-        //
-        //     this.usersSrv.getFriendInvitations()
-        //     .subscribe(response => {
-        //         this.invitations.friend_invitations = response.friend_requests;
-        //         this.invitationsSubject.next(this.invitations);
-        //     });
-        //
-        //     this.eventSrv.getEvents()
-        //         .subscribe(response => {
-        //             this.invitations.event_invitations = response.events.filter(event => event.status === 'invited');
-        //             this.invitationsSubject.next(this.invitations);
-        //         })
+        this.calendarSrv.getInvitations()
+            .subscribe(response => {
+                this.invitations.group_invitations = response.calendars;
+                this.invitationsSubject.next(this.invitations);
+            });
+
+            this.invitationsSrv.getFriends()
+            .subscribe(response => {
+                this.invitations.friend_invitations = response.received;
+                this.invitationsSubject.next(this.invitations);
+            });
+
+            this.eventSrv.getEvents()
+                .subscribe(response => {
+                    this.invitations.event_invitations = response.events.filter(event => event.status === 'invited');
+                    this.invitationsSubject.next(this.invitations);
+                })
     }
 
     public fetchUser$(): Observable<User> {

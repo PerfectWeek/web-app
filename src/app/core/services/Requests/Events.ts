@@ -11,8 +11,8 @@ export class EventsService {
         return this.requestSrv.postJSON(`events`, body, {Authorization: ''});
     }
 
-    getEvents(): Observable<any> {
-        return this.requestSrv.get(`events`, {}, {Authorization: ''});
+    getEvents(params?: any): Observable<any> {
+        return this.requestSrv.get(`events`, params, {Authorization: ''});
     }
 
     getEvent(event_id: string): Observable<any> {
@@ -47,8 +47,16 @@ export class EventsService {
         return this.requestSrv.get('events', {}, {Authorization: ''});
     }
 
+    setEventStatus(event_id: number, status: string): Observable<any> {
+        return this.requestSrv.put(`events/${event_id}/attendees/me/status`, {status}, {Authorization: ""});
+    }
+
     editUserRole(event_id: string, user_id: number, role: string): Observable<any> {
         return this.requestSrv.put(`events/${event_id}/attendees/${user_id}/role`, role, {Authorization: ''});
+    }
+
+    getSuggestions(params?: any): Observable<any> {
+        return this.requestSrv.get("assistant/event-suggestions", params, {Authorization: ""});
     }
 }
 
@@ -58,7 +66,6 @@ export class EventsService {
 \**********************************************************************************/
 
 // formatBody(body) {
-//     console.log('body => ', body);
 //     let field = 'attendees';
 //     let found: boolean = false;
 //     let end = '"role":"actor"}';

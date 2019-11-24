@@ -9,7 +9,7 @@
                   [selectable]="selectable"
                   [removable]="removable"
                   (removed)="removeUser(user)">
-          {{user}}
+          {{user.name}}
           <mat-icon matChipRemove *ngIf="removable">x</mat-icon>
 
 <!--          <mat-select placeholder="Type" required-->
@@ -33,7 +33,7 @@
       </mat-chip-list>
       <mat-autocomplete #users="matAutocomplete" (optionSelected)="selected($event)">
         <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
-          {{user.pseudo}}
+          {{user.name}}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>

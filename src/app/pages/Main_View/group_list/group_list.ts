@@ -124,7 +124,7 @@ export class GroupListComponent implements OnInit, AfterViewInit {
                                     let acr = obj.name.match(/\b(\w)/g);
                                     obj.name = (acr != null) ?  acr.join('.').toUpperCase() : calendar.name;
                                     this.displayGroupsMobile.push(obj);
-                                    if (index === this.userGroups.length - 1)
+                                    if (index >= this.userGroups.length - 1)
                                         this.ready.next(true);
                                 });
                         });
@@ -157,12 +157,17 @@ export class GroupListComponent implements OnInit, AfterViewInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result !== null && result !== undefined) {
                 result['color'] = "#000000";
-                this.calendarSrv.createCalendar(this.formatBody(result))
-                .subscribe(ret => {
-                    (<any>window).ga('send', 'event', 'Group', 'Creating Group', `Group Name: ${result.name}`);
-                    this.toastSrv.success(`Votre calendrier ${ret.calendar.name} a bien été créé`);
-                    this.ready.next(false);
-                    this.getCalendars();
+                this.calendarSrv.createCalendar(result)
+                .subscribe(calendar => {
+                    delete result.name;
+                    delete result.color;
+                    this.calendarSrv.inviteUsers(calendar.calendar.id, this.formatBody(result))
+                        .subscribe(ret => {
+                            (<any>window).ga('send', 'event', 'Group', 'Creating Group', `Group Name: ${result.id}`);
+                            this.toastSrv.success(`Votre calendrier ${calendar.calendar.name} a bien été créé`);
+                            this.ready.next(false);
+                            this.getCalendars();
+                        })
                     },
                     err => {
                         this.toastSrv.error(err.error.message, 'Une erreur est survenue'); // Display an error message if an error occurs
@@ -203,6 +208,7 @@ export class GroupListComponent implements OnInit, AfterViewInit {
         this.displayGroupsMobile = [];
 
         if (this.input != undefined && this.input != "" && this.input != null) {
+            this.displayGroupsMobile = [];
             this.displayGroups = this.userGroups
                 .filter(group => group.name.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) != -1);
             this.displayGroups.forEach(group => {

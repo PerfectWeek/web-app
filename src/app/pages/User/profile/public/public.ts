@@ -6,6 +6,7 @@ import {ProfileService} from "../../../../core/services/profile.service";
 import {ToastrService} from "ngx-toastr";
 import {UsersService} from "../../../../core/services/Requests/Users";
 import * as imageUtils from "../../../../core/helpers/image";
+import {InvitationsService} from "../../../../core/services/Requests/Invitations";
 
 @Component({
     selector: 'public-profile',
@@ -22,6 +23,7 @@ export class PublicProfileComponent implements OnInit, OnDestroy {
     constructor(private route: ActivatedRoute,
                 private profileSrv: ProfileService,
                 private toastSrv: ToastrService,
+                private invitationSrv: InvitationsService,
                 private router: Router,
                 private usersSrv: UsersService,
                 private requestSrv: RequestService) {
@@ -37,10 +39,12 @@ export class PublicProfileComponent implements OnInit, OnDestroy {
                 });
                 this.usersSrv.getUser(params.id)
                     .subscribe(ret => {
-                            // this.usersSrv.getFriendInvitationStatus(ret.user.pseudo)
-                            // .subscribe(res => {
-                            //     res.status !== 'confirmed' ? this.displayButton = true : null;
-                            // });
+                        this.invitationSrv.getFriends()
+                        .subscribe(res => {
+                            let found = res.received.filter(invitation => invitation.id === this.user.id);
+                            found = (found.length === 0) ?  res.sent.filter(invitation => invitation.user.id === this.user.id) : found;
+                            (found.length === 0 || found[0].confirmed === 'true') ? this.displayButton = true : null;
+                        });
                         this.user = ret.user;
                         this.usersSrv.getImage(ret.user.id)
                             .subscribe(ret => {
@@ -55,7 +59,7 @@ export class PublicProfileComponent implements OnInit, OnDestroy {
     }
 
     sendInvitation() {
-        this.usersSrv.inviteFriend(this.user.name).subscribe((response => {
+        this.invitationSrv.inviteFriend(this.user.id).subscribe((response => {
             this.toastSrv.success("L'invitation a bien été envoyée");
         }));
     }

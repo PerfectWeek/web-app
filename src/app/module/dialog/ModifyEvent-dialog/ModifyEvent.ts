@@ -7,36 +7,12 @@ import {ConfirmDialog} from '../Confirm-dialog/Confirm-dialog';
 import {EventsService} from "../../../core/services/Requests/Events";
 import {PermissionService} from '../../../core/services/permission.service';
 
+import * as imageUtils from "../../../core/helpers/image"
+
 @Component({
     selector: 'event-modification-dialog',
     templateUrl: 'ModifyEvent.html',
     styleUrls: ['ModifyEvent.scss', '../../../../scss/dialog.scss']
-    // styles: ['.mat-raised-button {\n' +
-    // '  box-sizing: border-box;\n' +
-    // '  position: relative;\n' +
-    // '  -webkit-user-select: none;\n' +
-    // '  -moz-user-select: none;\n' +
-    // '  -ms-user-select: none;\n' +
-    // '  user-select: none;\n' +
-    // '  cursor: pointer;\n' +
-    // '  outline: 0;\n' +
-    // '  border: none;\n' +
-    // '  -webkit-tap-highlight-color: transparent;\n' +
-    // '  display: inline-block;\n' +
-    // '  white-space: nowrap;\n' +
-    // '  text-decoration: none;\n' +
-    // '  vertical-align: baseline;\n' +
-    // '  text-align: center;\n' +
-    // '  margin: 0;\n' +
-    // '  min-width: 88px;\n' +
-    // '  line-height: 36px;\n' +
-    // '  padding: 0 16px;\n' +
-    // '  border-radius: 2px;\n' +
-    // '  overflow: visible;\n' +
-    // '  transform: translate3d(0, 0, 0);\n' +
-    // '  transition: background .4s cubic-bezier(.25, .8, .25, 1), box-shadow 280ms cubic-bezier(.4, 0, .2, 1);\n' +
-    // '  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);\n' +
-    // '}']
 })
 export class ModifyEventDialog {
 
@@ -47,11 +23,23 @@ export class ModifyEventDialog {
         location: string,
         description: string,
         visibility: string,
-        backgroundColor: any,
+        backgroundColor: string,
         start: Date,
         end: Date,
         formated_start: Date,
         formated_end: Date,
+    } = {
+        id: null,
+        name: null,
+        type: null,
+        location: null,
+        description: null,
+        visibility: null,
+        backgroundColor: null,
+        start: null,
+        end: null,
+        formated_end: null,
+        formated_start: null
     };
 
     event_image: any;
@@ -75,27 +63,27 @@ export class ModifyEventDialog {
                 public dialogRef: MatDialogRef<ModifyEventDialog>,
                 public dialog: MatDialog,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.pw_event = data.event.event;
-
-        this.eventsSrv.getImage(this.pw_event.id)
-            .subscribe(ret => {
-                this.event_image = ret.image;
+        this.eventsSrv.getImage(data.event.event.id)
+            .subscribe(image => {
+                let obj = {image: null};
+                imageUtils.createImageFromBlob(image, obj);
+                setTimeout(() => {this.event_image = obj.image;}, 50);
             });
 
-        const current_event = this.data.calAPI.getEventById(this.pw_event.id);
-        this.eventsSrv.getEvent(this.pw_event.id)
+        const current_event = this.data.calAPI.getEventById(data.event.event.id);
+        this.eventsSrv.getEvent(data.event.event.id)
             .subscribe(ret => {
-                    this.pw_event.name = ret.event.name;
-                    this.pw_event.type = ret.event.type;
-                    this.pw_event.location = ret.event.location;
-                    this.pw_event.visibility = ret.event.visibility;
-                    this.pw_event.description = ret.event.description;
-                    this.pw_event.formated_start = ret.event.start_time;
-                    this.pw_event.formated_end = ret.event.end_time;
+                this.pw_event.id = ret.event.id;
+                this.pw_event.name = ret.event.name;
+                this.pw_event.type = ret.event.type;
+                this.pw_event.location = ret.event.location;
+                this.pw_event.visibility = ret.event.visibility;
+                this.pw_event.description = ret.event.description;
+                this.pw_event.formated_start = ret.event.start_time;
+                this.pw_event.formated_end = ret.event.end_time;
+                this.pw_event.backgroundColor = ret.event.color;
                 },
-                err => {
-                    ;
-                });
+                err => console.log("err => ", err.message));
     }
 
     modifyEvent() {
@@ -109,6 +97,7 @@ export class ModifyEventDialog {
             description: this.pw_event.description,
             start_time: str_start,
             end_time: str_end,
+            color: this.pw_event.backgroundColor
         }).subscribe(ret => {
                     const current_event = this.data.calAPI.getEventById(this.pw_event.id);
                     current_event.setProp('title', this.pw_event.name);

@@ -49,9 +49,9 @@
                 <button *ngIf="member.name === (user$ | async).name" i18n="@@CalendarInfoLeave" mat-menu-item (click)="leaveGroup()">Quitter le calendrier</button>
                 <section *ngIf="member.name !== (user$ | async).name">
                   <button *ngIf="isAdmin === true" mat-menu-item i18n="@@CalendarInfoDelete" (click)="fireFromGroup(member.name)">Supprimer du calendrier</button>
-                  <button mat-menu-item (click)="goToProfile(member.name)">Accéder à son profil</button>
+                  <button mat-menu-item (click)="goToProfile(member.id)">Accéder à son profil</button>
                   <mat-delimiter></mat-delimiter>
-                  <button mat-menu-item i18n="@@CalendarInfoAddFriend" (click)="addFriend(member.name)">L'ajouter en ami</button>
+                  <button mat-menu-item i18n="@@CalendarInfoAddFriend" (click)="addFriend(member)">L'ajouter en ami</button>
 
                   <button mat-menu-item *ngIf="isAdmin === true" [matMenuTriggerFor]="role_menu">Roles</button>
                   <mat-menu #role_menu="matMenu">

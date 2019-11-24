@@ -56,7 +56,7 @@ export class FoundSlotDialog {
                     // console.log(ret.calendars);
                     // let a = ret.calendars.filter(e => { if (PermSrv.permission[e.calendar.role].CRUD === true) return e});
                     // console.log(a);
-                    this.calendars_list = ret.calendars.filter(e => { if (PermSrv.permission[e.calendar.role].CRUD === true) {return e;} } );
+                    this.calendars_list = ret.calendars.filter(e => { if (PermSrv.permission[e.role].CRUD === true) {return e;} } );
                     //this.calendars_list = ret.calendars;
                 });
         });

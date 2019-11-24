@@ -11,7 +11,7 @@
              (keyup)="searchUser$.next($event.target.value)">
       <mat-autocomplete #users="matAutocomplete" (optionSelected)="selectedUser($event)">
         <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
-          {{user.pseudo}}
+          {{user.name}}
         </mat-option>
       </mat-autocomplete>
     </section>

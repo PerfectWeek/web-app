@@ -21,7 +21,7 @@ export class CreateEventDialog {
     description: string = "";
     eventVisibility = 'public';
     //is_global_calendar = true; //important
-    color: any;
+    color: string = "#ffffff";
     start: Date;
     end: Date;
 
@@ -62,8 +62,6 @@ export class CreateEventDialog {
                     this.start = data.event.start;
                     this.end = data.event.end;
                 }
-                else
-                    console.log("ZERTYUIOP");
         //console.log("read only", this.rd_only);
 
         // this.profileSrv.userProfile$.subscribe(user => {
@@ -84,7 +82,7 @@ export class CreateEventDialog {
                 .subscribe(ret => {
                     // console.log("val", ret.calendars);
                     // console.log("type", typeof ret.calendars);
-                    this.calendars_list = ret.calendars.filter(e => { if (PermSrv.permission[e.calendar.role].CRUD === true) {return e;} } );
+                    this.calendars_list = ret.calendars.filter(e => {if (PermSrv.permission[e.role].CRUD === true) {return e;} });
                     //this.calendars_list = ret.calendars;
                 });
         });
@@ -109,6 +107,7 @@ export class CreateEventDialog {
             calendar_id: this.route_id_calendar,
             start_time: this.start.toISOString(),
             end_time: this.end.toISOString(),
+            color: this.color
         }).subscribe(ret => {
                 this.data.calAPI.addEvent({
                     id: ret.event.id,

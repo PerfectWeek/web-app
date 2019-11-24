@@ -7,7 +7,8 @@ import {UsersService} from '../../core/services/Requests/Users';
 import {CalendarsService} from '../../core/services/Requests/Calendars';
 import {EventsService} from '../../core/services/Requests/Events';
 import {User} from '../../core/models/User';
-import {forEach} from '@angular/router/src/utils/collection';
+
+import * as imageUtils from "../../core/helpers/image"
 
 
 @Component({
@@ -72,21 +73,10 @@ export class EventSuggestionsComponent implements OnInit {
 
         this.profileSrv.userProfile$.subscribe(ret => {
             this.user = ret;
-            this.calendarsSrv.getConfirmedCalendars().subscribe(ret => {
-                ret.calendars.filter(e => {
-                    this.calendars_id.push(e.calendar.id);
-                });
-                this.calendars_id.map(e => {
-                    this.calendarsSrv.getEvents(e).subscribe(ret => {
-                        this.user_events.push(...ret.events);
-                        this.user_events.map(e => {
-                            this.user_events_id.push(e.id);
-                        });
-                    });
-                });
-                // for (const idx in this.calendars_id) {
-                //     this.calendarsSrv.getEvents(this.calendars_id[idx]).subscribe(ret => console.log(ret));
-                // }
+            this.eventsSrv.getEvents().subscribe(ret => {
+                console.log('ret => ', ret.events);
+                this.user_events.push(...ret.events);
+                this.user_events.map(e => this.user_events_id.push(e.id));
             });
         });
     }
@@ -99,7 +89,7 @@ export class EventSuggestionsComponent implements OnInit {
         this.profileSrv.userProfile$.subscribe(user => {
             this.calendarsSrv.getConfirmedCalendars()
                 .subscribe(calendars => {
-                    this.focusedCalendar = calendars.calendars[0].calendar;
+                    this.focusedCalendar = calendars.calendars[0];
                     this.getSuggestions();
                 });
         });
@@ -107,46 +97,31 @@ export class EventSuggestionsComponent implements OnInit {
 
     getSuggestions() {
         this._calendar_id = this.focusedCalendar.id;
-        this.calendarsSrv.getEventSuggestion(this.focusedCalendar.id, {
+        this.eventsSrv.getSuggestions({
             min_time: this.min_date.toISOString(),
             max_time: this.max_date.toISOString(),
-            limit: 20,
         })
             .subscribe(events => {
-                for (let key in events.suggestions) {
-                    this.requestSrv.get(`events/${events.suggestions[key].event.id}/image`, {}, {Authorization: ''}).subscribe(ret => {
-
-                        // console.log(events.suggestions[key].event.id, "===", this.user_events_id);
-                        if (this.user_events_id.indexOf(events.suggestions[key].event.id) === -1) {
-                            this.suggestions.push({
-                                id: events.suggestions[key].event.id,
-                                name: events.suggestions[key].event.name,
-                                description: events.suggestions[key].event.description,
-                                location: events.suggestions[key].event.location,
-                                type: events.suggestions[key].event.type,
-                                visibility: events.suggestions[key].event.visibility,
-                                calendar_id: events.suggestions[key].event.calendar_id,
-                                start_time: new Date(events.suggestions[key].event.start_time),
-                                end_time: new Date(events.suggestions[key].event.end_time),
-                                image: ret.image
-                            });
-                        }
-                    });
-                }
-                // this.suggestions = events.suggestions.map(e => {
-                //         return {
-                //             id: e.event.id,
-                //             name: e.event.name,
-                //             description: e.event.description,
-                //             location: e.event.location,
-                //             type: e.event.type,
-                //             visibility: e.event.visibility,
-                //             calendar_id: e.event.calendar_id,
-                //             start_time: new Date(e.event.start_time),
-                //             end_time: new Date(e.event.end_time),
-                //             image: this.generateEventImage(e.event.type, e.event.id),
-                //         };
-                //});
+                events.suggestions.forEach(event => {
+                    this.eventsSrv.getImage(event.event.id)
+                        .subscribe(ret => {
+                            if (this.user_events_id.indexOf(event.event.id) === -1) {
+                                let suggestion = {
+                                    id: event.event.id,
+                                    name: event.event.name,
+                                    description: event.event.description,
+                                    location: event.event.location,
+                                    type: event.event.type,
+                                    visibility: event.event.visibility,
+                                    start_time: new Date(event.event.start_time),
+                                    end_time: new Date(event.event.end_time),
+                                    image: null
+                                };
+                                imageUtils.createImageFromBlob(ret, suggestion);
+                                setTimeout(() => this.suggestions.push(suggestion), 50);
+                            }
+                        });
+                });
             });
     }
 
@@ -161,7 +136,6 @@ export class EventSuggestionsComponent implements OnInit {
     }
 
     joinEvent(id) {
-        // this.focusedEvent = null;
         this.eventsSrv.changeStatus(id, 'going')
             .subscribe(response => {
                 this.toastSrv.info('Cet évènement a bien été ajouté à votre liste d\'évènements');

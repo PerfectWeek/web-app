@@ -57,7 +57,7 @@ export class GroupCreationDialog implements AfterViewInit {
     separatorKeysCodes: number[] = [ENTER, COMMA];
 
     user: any = null;
-    selectedUsers: { name: string, role: string }[] = [];
+    selectedUsers: any[] = [];
     userCtrl: FormControl = new FormControl();
 
     filteredUsers: BehaviorSubject<User[]>;
@@ -86,28 +86,6 @@ export class GroupCreationDialog implements AfterViewInit {
             .do(() => this.search())
             .subscribe();
     }
-
-    addUser(event) {
-        const input = event.input;
-        const value = event.value;
-        this.usersSrv.getUser(value)
-            .subscribe(ret => {
-                    let id: number = -1;
-                    this.selectedUsers.forEach((atm_user, index) => {
-                        if (atm_user.name === value)
-                            id = index;
-                    });
-                    if (id != -1)
-                        this.selectedUsers.splice(id, 1);
-                    else
-                        this.selectedUsers.push({name: value, role: "admin"});
-                },
-                err => {
-                    this.toastSrv.error(err.message, 'Une erreur est survenue')
-                });
-        input.value = '';
-    }
-
 
     search() {
         this.filteredUsers.next([]);
@@ -146,7 +124,7 @@ export class GroupCreationDialog implements AfterViewInit {
 
     // Add the selected user to the list of selected users and reset the input search value
     selected(event) {
-        this.selectedUsers.push({name: event.option.viewValue, role: "actor"});
+        this.selectedUsers.push(event.option.value);
         let input = (<any>(document.getElementById('UserInput'))).value = ''; // value exists as we are getting an input
         this.userCtrl.setValue(null);
     }
@@ -161,7 +139,7 @@ export class GroupCreationDialog implements AfterViewInit {
     createGroup() {
         let body = {name: this.name};
         this.selectedUsers.forEach((user, index) => {
-            body[`members[${index}]`] = user;
+            body[`members[${index}]`] = {id: user.id, role: 'actor'}
         });
         this.dialogRef.close(body);
     }

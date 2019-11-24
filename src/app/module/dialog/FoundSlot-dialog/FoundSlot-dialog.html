@@ -12,8 +12,8 @@
                                 style="width: 100%"
                                 [(ngModel)]="dialog_calendar_id"
                                 name="dialog_calendar_id" required>
-                        <mat-option *ngFor="let calendar of calendars_list" [value]="calendar.calendar.id">
-                            {{calendar.calendar.name}}
+                        <mat-option *ngFor="let calendar of calendars_list" [value]="calendar.id">
+                            {{calendar.name}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>

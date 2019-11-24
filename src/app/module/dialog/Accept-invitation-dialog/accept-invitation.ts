@@ -42,6 +42,8 @@ export class AcceptInvitationDialog {
         if (data.type === 'group')
             this.title = `Voulez-vous accepter l\'invitation au calendrier ${data.body.name} ?`;
         else if (data.type === 'friend')
-            this.title = `Voulez-vous accepter la demande d'ami de ${data.body.from_user.pseudo} ?`;
+            this.title = `Voulez-vous accepter la demande d'ami de ${data.body.user.name} ?`;
+        else
+            this.title = `Voulez-vous participer à l\'évènement ${data.body.name} ?`;
     }
 }

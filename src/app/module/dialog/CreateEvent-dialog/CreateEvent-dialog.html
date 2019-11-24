@@ -11,8 +11,8 @@
                             style="width: 100%"
                             [(ngModel)]="dialog_calendar_id"
                             name="dialog_calendar_id" required>
-                    <mat-option *ngFor="let calendar of calendars_list" [value]="calendar.calendar.id">
-                        {{calendar.calendar.name}}
+                    <mat-option *ngFor="let calendar of calendars_list" [value]="calendar.id">
+                        {{calendar.name}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -62,13 +62,13 @@
                     </mat-select>
                 </mat-form-field>
 
-<!--                <mat-form-field style="width: 8%;">-->
-<!--                    <mat-label>Couleur:</mat-label>-->
-<!--                    <input matInput-->
-<!--                           type="color"-->
-<!--                           name="color"-->
-<!--                           [(ngModel)]="color">-->
-<!--                </mat-form-field>-->
+                <mat-form-field style="width: 8%;">
+                    <mat-label>Couleur:</mat-label>
+                    <input matInput
+                           type="color"
+                           name="color"
+                           [(ngModel)]="color">
+                </mat-form-field>
             </div>
 
             <div class="my_layout" fxLayout="row">

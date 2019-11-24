@@ -62,22 +62,6 @@ export class UsersService {
         return this.requestSrv.postJSON(`users/${pseudo}/friend-invite`, {}, {Authorization: ''});
     }
 
-    getFriendInvitations(): Observable<any> {
-        return this.requestSrv.get('friend-invites', {}, {Authorization: ''});
-    }
-
-    getFriendInvitationStatus(pseudo: string): Observable<any> {
-        return this.requestSrv.get(`friend-invites/${pseudo}`, {}, {Authorization: ''});
-    }
-
-    acceptFriendRequest(pseudo: string): Observable<any> {
-        return this.requestSrv.postJSON(`friend-invites/${pseudo}/accept`, {}, {Authorization: ''});
-    }
-
-    declineFriendRequest(pseudo: string): Observable<any> {
-        return this.requestSrv.postJSON(`friend-invites/${pseudo}/decline`, {}, {Authorization: ''});
-    }
-
     searchUser(params: any): Observable<any> {
         return this.requestSrv.get(`search/users`, params, {Authorization: ''});
     }

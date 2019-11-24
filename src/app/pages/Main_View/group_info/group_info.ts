@@ -26,6 +26,7 @@ import {CalendarsService} from "../../../core/services/Requests/Calendars";
 
 import * as imageUtils from "../../../core/helpers/image";
 import {User} from "../../../core/models/User";
+import {InvitationsService} from "../../../core/services/Requests/Invitations";
 
 @Component({
     selector: 'group-info',
@@ -79,6 +80,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                 private profileSrv: ProfileService,
                 private usersSrv: UsersService,
                 private calendarSrv: CalendarsService,
+                private invitationsSrv: InvitationsService,
                 private dialog: MatDialog,
                 private router: Router,
                 private cd: ChangeDetectorRef,
@@ -108,7 +110,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                             this.usersSrv.getImage(user.id)
                                 .subscribe(ret => {
                                     imageUtils.createImageFromBlob(ret, this.user);
-                                    setTimeout(() => {this.image = this.user.image}, 10);
+                                    setTimeout(() => {this.image = this.user.image}, 50);
                                 }, err => console.log('err => ', err.message));
                                 this.toastSrv.success("L'image a été uploadé avec succès");
                             }, err => this.toastSrv.error("Une erreur est survenue lors de l'upload de l'image")
@@ -125,7 +127,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                                 setTimeout(() => {
                                     this.image = obj.image;
                                     this.group_image_modified.emit(this.group_id);
-                                }, 10);
+                                }, 50);
                             }, err => console.log('err => ', err.message));
                     }, err => this.toastSrv.error("Une erreur est survenue lors de l'upload de l'image"))
                     .subscribe();
@@ -154,7 +156,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                 this.group.name = ret.calendar.name;
                 this.group_members = ret.calendar.members;
                 this.group_members.forEach((member, index) => {
-                    if (member.name === this.profileSrv.user.name) {
+                    if (member.id === this.profileSrv.user.id) {
                         this.rawRole = member.role;
                         this.userRole = this.rolesfr[`${member.role}`];
                         this.isAdmin = member.role === 'admin';
@@ -233,10 +235,9 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
 
     formatBody(body) {
-        console.log('body => ', body);
         let field = 'members';
         let found: boolean = false;
-        let end = '"role":"actor"}';
+        let end = '"role":"spectator"}';
         let str = 'members":[';
         for (let key in body) {
             if (key.toString().indexOf(field) != -1) {
@@ -319,21 +320,20 @@ export class GroupInfoComponent implements OnInit, OnChanges {
         })
     }
 
-    goToProfile(pseudo) {
-        (<any>window).ga('send', 'event', 'Routing', 'Visiting Profile', `Profile of: ${pseudo}`);
-        this.router.navigate([`profile/${pseudo}`]);
+    goToProfile(id) {
+        (<any>window).ga('send', 'event', 'Routing', 'Visiting Profile', `Profile of: ${id}`);
+        this.router.navigate([`profile/${id}`]);
     }
 
-    addFriend(pseudo) {
-        this.usersSrv.inviteFriend(pseudo)
+    addFriend(user) {
+        this.invitationsSrv.inviteFriend(user.id)
             .subscribe(() => {
-                (<any>window).ga('send', 'event', 'Friends', 'Sending Friend Request', `Request to: ${pseudo}`);
+                (<any>window).ga('send', 'event', 'Friends', 'Sending Friend Request', `Request to: ${user.name}`);
                 this.toastSrv.info("La demande d'ami a été envoyée");
                 }, err => this.toastSrv.warning('Vous avez déjà demandé cette personne en ami'))
     }
 
     changeMemberPermission(member, new_role) {
-        console.log(member, new_role);
         // this.groupsSrv.mod
         this.calendarSrv.editUserRole(this.group_id, member.id, new_role).subscribe(ret => {
             member.role = new_role;

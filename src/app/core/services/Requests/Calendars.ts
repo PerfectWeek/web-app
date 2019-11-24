@@ -43,10 +43,6 @@ export class CalendarsService {
         return this.requestSrv.getImage(`calendars/${calendar_id}/images/icon`, {}, {Authorization: ''})
     }
 
-    getEvents(calendar_id: number): Observable<any> {
-        return this.requestSrv.get(`calendars/${calendar_id}/events`, {}, {Authorization: ''});
-    }
-
     addEvent(calendar_id: number, event_id: number): Observable<any> {
         return this.requestSrv.postJSON(`calendars/${calendar_id}/events`, {event_id}, {Authorization: ''});
     }
@@ -80,11 +76,8 @@ export class CalendarsService {
     }
 
     findBestSlot(calendar_id: number, params: any): Observable<any> {
-        return this.requestSrv.get(`assistant/find-best-slot/${calendar_id}`, params, {Authorization: ''});
+        return this.requestSrv.get(`assistant/find-best-slots/${calendar_id}`, params, {Authorization: ''});
     }
 
-    getEventSuggestion(calendar_id: number, params: any): Observable<any> {
-        return this.requestSrv.get(`assistant/get-event-suggestions`, params,{Authorization: ''});
-    }
 
 }

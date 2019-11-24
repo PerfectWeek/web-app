@@ -129,7 +129,6 @@ export class ProfileComponent implements OnInit {
             this.profileSrv.userProfile$.subscribe(user => {
                 this.usersSrv.putImage(file)
                     .do(() => {
-                        console.log("file => ", file);
                         this.usersSrv.getImage(user.id)
                             .subscribe(ret => {
                                 imageUtils.createImageFromBlob(ret, this.user);
