@@ -173,10 +173,13 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     get_calendar_events(calendar_id) {
+        console.log('calendar_id => ', calendar_id);
         this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).subscribe(ret => {
             this.api.removeAllEvents();
+            console.log('remove all events');
             const borderColor_ = '#1C4891';
             this.calendar_events.push(...ret.events);
+            console.log('push events => ', ret.events);
             for (let event of ret.events) {
                 this.api.addEvent({
                     id: event.id,
@@ -187,6 +190,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                     borderColor: borderColor_,
                 });
             }
+            console.log('events => ', this.api.getEvents());
         });
     }
 

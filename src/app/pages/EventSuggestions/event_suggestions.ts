@@ -56,7 +56,6 @@ export class EventSuggestionsComponent implements OnInit {
 
     @ViewChild('calendar') calendar;
 
-
     constructor(private requestSrv: RequestService,
                 private toastSrv: ToastrService,
                 private usersSrv: UsersService,
@@ -71,11 +70,11 @@ export class EventSuggestionsComponent implements OnInit {
 
     ngOnInit() {
         this.getCalendars();
-
+        console.log('get Calendars');
         this.profileSrv.userProfile$.subscribe(ret => {
             this.user = ret;
             this.eventsSrv.getEvents().subscribe(ret => {
-                console.log('ret => ', ret.events);
+                const callAPI = this.getAPI();
                 this.user_events.push(...ret.events);
                 this.user_events.map(e => this.user_events_id.push(e.id));
             });
@@ -97,7 +96,6 @@ export class EventSuggestionsComponent implements OnInit {
     }
 
     getSuggestions() {
-        this._calendar_id = this.focusedCalendar.id;
         this.eventsSrv.getSuggestions({
             min_time: this.min_date.toISOString(),
             max_time: this.max_date.toISOString(),
@@ -137,7 +135,7 @@ export class EventSuggestionsComponent implements OnInit {
     }
 
     joinEvent(id) {
-        this.eventsSrv.changeStatus(id, 'going')
+        this.eventsSrv.setEventStatus(id, 'going')
             .subscribe(response => {
                 this.toastSrv.info('Cet évènement a bien été ajouté à votre liste d\'évènements');
                 this.focusedEvent = null;

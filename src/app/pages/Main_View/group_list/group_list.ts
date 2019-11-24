@@ -124,9 +124,9 @@ export class GroupListComponent implements OnInit, AfterViewInit {
                                     let acr = obj.name.match(/\b(\w)/g);
                                     obj.name = (acr != null) ?  acr.join('.').toUpperCase() : calendar.name;
                                     this.displayGroupsMobile.push(obj);
-                                    if (index >= this.userGroups.length - 1)
-                                        this.ready.next(true);
                                 });
+                            if (index >= this.userGroups.length - 1)
+                                setTimeout(() => this.ready.next(true), 500);
                         });
                     }
                     else this.ready.next(true);
