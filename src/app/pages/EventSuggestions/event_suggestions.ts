@@ -70,7 +70,6 @@ export class EventSuggestionsComponent implements OnInit {
 
     ngOnInit() {
         this.getCalendars();
-        console.log('get Calendars');
         this.profileSrv.userProfile$.subscribe(ret => {
             this.user = ret;
             this.eventsSrv.getEvents().subscribe(ret => {
