@@ -1,10 +1,17 @@
 <div id="calendar">
-<!--    <div *ngIf="displayOnly === false" class="button_layout" fxLayout="row">-->
-    <div *ngIf="permSrv.permission[role].CRUD === true && displayOnly === false"  class="button_layout" fxLayout="row">
-        <button i18n="@@CalendarFindSlot" class="mat-raised-button btn-secondary" (click)="foundSlots()">Trouver un créneau</button>
-        <button i18n="@@CalendarAddEvent" style="margin-left: 5px" class="mat-raised-button btn-secondary" (click)="addEvent()">Ajouter un évènement</button>
+    <div class="button_layout" fxLayout="row">
+        <button class="mat-raised-button btn-secondary" (click)="switch_map_calendar()">{{this.switch_button_content}}</button>
+        <div *ngIf="permSrv.permission[role].CRUD === true && displayOnly === false">
+            <button i18n="@@CalendarFindSlot" style="margin-left: 5px" class="mat-raised-button btn-secondary" (click)="foundSlots()">Trouver un créneau</button>
+            <button i18n="@@CalendarAddEvent" style="margin-left: 5px" class="mat-raised-button btn-secondary" (click)="addEvent()">Ajouter un évènement</button>
+        </div>
     </div>
-    <full-calendar
+
+<!--    <div *ngIf="permSrv.permission[role].CRUD === true && displayOnly === false"  class="button_layout" fxLayout="row">-->
+
+    <map *ngIf="this.display_map === true" [address]="this.events_with_address"></map>
+
+    <full-calendar *ngIf="this.display_map === false"
             #fullcalendar
             defaultView="dayGridMonth"
             [editable]="!displayOnly"

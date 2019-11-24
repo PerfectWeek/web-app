@@ -17,6 +17,7 @@ import {RegistrationConfirmationComponent} from "./pages/Registration_Confirmati
 import {EventSuggestionsComponent} from './pages/EventSuggestions/event_suggestions';
 import {MainViewComponent} from "./pages/Main_View/main_view";
 import {PublicProfileComponent} from "./pages/User/profile/public/public";
+import {EventComponent} from './pages/Event/event';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -29,6 +30,9 @@ const routes: Routes = [
   { path: 'profile', component: ProfileComponent, canActivate: [isLogged] },
   { path: 'profile/:id', component: PublicProfileComponent, canActivate: [isLogged] },
   { path: 'friends', component: FriendsComponent, canActivate: [isLogged] },
+
+  { path: 'event/:id', component: EventComponent, canActivate: [isLogged ] },
+
   { path: '**', component: NotFoundComponent }
 ];
 
