@@ -7,6 +7,7 @@ import {FoundSlotConfirmDialog} from '../FoundSlotConfirm-dialog/FoundSlotConfir
 import {UsersService} from "../../../core/services/Requests/Users";
 import {CalendarsService} from "../../../core/services/Requests/Calendars";
 import {PermissionService} from '../../../core/services/permission.service';
+import French from 'flatpickr/dist/l10n/fr.js';
 
 @Component({
     selector: 'FoundSlot-dialog',
@@ -14,6 +15,7 @@ import {PermissionService} from '../../../core/services/permission.service';
     styleUrls: ['FoundSlot-dialog.scss', '../../../../scss/dialog.scss']
 })
 export class FoundSlotDialog {
+    locale = French.fr;
     //name: string;
     eventType: string = 'hobby';
     //description: string;

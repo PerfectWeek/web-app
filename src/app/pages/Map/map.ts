@@ -1,6 +1,7 @@
 import {Component, Input, ViewChild, NgZone, OnInit, OnChanges, SimpleChanges, AfterViewInit} from '@angular/core';
 import { MapsAPILoader, AgmMap } from '@agm/core';
 import { GoogleMapsAPIWrapper } from '@agm/core';
+import {CreateEventDialog} from '../../module/dialog/CreateEvent-dialog/CreateEvent-dialog';
 
 declare var google: any;
 
@@ -32,8 +33,9 @@ interface Location {
 
 export class MapComponent implements OnInit, AfterViewInit {
     geocoder: any;
-    public all_location: Location[] = [];
-    // public location: any;
+    public all_location: any = [];
+    //public all_location: Location[] = [];
+    //public location: any;
     public location: Location = {
         lat: 48.8534,
         lng: 2.3488,
@@ -48,7 +50,8 @@ export class MapComponent implements OnInit, AfterViewInit {
     @ViewChild(AgmMap) map: AgmMap;
     @Input('address') address: any = {};
 
-    constructor(public mapsApiLoader: MapsAPILoader,
+    constructor(
+                public mapsApiLoader: MapsAPILoader,
                 private zone: NgZone,
                 private wrapper: GoogleMapsAPIWrapper) {
         this.mapsApiLoader = mapsApiLoader;
@@ -64,12 +67,12 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        console.log("coucou", this.address);
+        // console.log("coucou", this.address);
         for (let event of this.address) {
-            console.log("a oui oui ouiiiiii");
+            // console.log("a oui oui ouiiiiii");
             setTimeout(() => { this.findLocation(event); }, 500);
         }
-        console.log("apres", this.all_location);
+        // console.log("apres", this.all_location);
     }
 
     updateOnMap() {
@@ -132,6 +135,23 @@ export class MapComponent implements OnInit, AfterViewInit {
     create_event(info) {
         console.log("crée un evenement", info);
         this.findAddressByCoordinates(info.coords.lat, info.coords.lng);
+        // const dialogRef = this.dialog.open(CreateEventDialog, {
+        //     width: '650px',
+        //     data: {
+        //         calendar_id: this.in_calendar_id ? this.in_calendar_id : this.calendar_id,
+        //         // calAPI: calAPI_,
+        //         // calendar_id: this.calendar_id,
+        //         calAPI: this.api,
+        //         is_global_calendar: this.is_global_calendar,
+        //         calendar_locale: this.locale,
+        //     }
+        // });
+        // dialogRef.afterClosed().subscribe(result => {
+        //     if (result !== null && result !== undefined) {
+        //
+        //         this.toastSrv.success('L\'événement a bien été créé');
+        //     }
+        // });
     }
 
     // markerDragEnd(m: any, $event: any) {

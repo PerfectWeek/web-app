@@ -8,6 +8,7 @@ import {EventsService} from '../../../core/services/Requests/Events';
 import {PermissionService} from '../../../core/services/permission.service';
 import {EventTypeService} from '../../../core/services/event_type.service';
 import {Location} from '@angular/common';
+import French from 'flatpickr/dist/l10n/fr.js';
 import {ActivatedRoute} from '@angular/router';
 
 @Component({
@@ -31,6 +32,7 @@ export class ModifyEventDialog implements OnInit, OnDestroy {
         formated_end: Date,
     };
 
+    locale = French.fr;
     event_image: any;
 
     is_picture_changed: boolean = false;

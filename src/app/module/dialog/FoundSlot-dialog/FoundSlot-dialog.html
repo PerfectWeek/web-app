@@ -106,6 +106,8 @@
                                dateFormat="Y-m-dTH:i"
                                altFormat="F j, Y H:i"
                                placeholder="Date minimum de debut"
+                               [locale]="locale"
+                               [time24hr]="true"
                                required>
                     </mat-form-field>
                     <p class="error-message" *ngIf="start < this.current_date">la date de début d'évènement ne doit pas
@@ -126,6 +128,8 @@
                                dateFormat="Y-m-dTH:i"
                                altFormat="F j, Y H:i"
                                placeholder="Date maximum de fin"
+                               [locale]="locale"
+                               [time24hr]="true"
                                required>
                     </mat-form-field>
                     <p class="error-message" *ngIf="end < this.current_date">la date de fin d'évènement ne doit pas être

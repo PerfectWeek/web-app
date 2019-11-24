@@ -1,4 +1,15 @@
-import {AfterViewInit, Component, ElementRef, Input, NgZone, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    Input,
+    NgZone,
+    OnChanges,
+    OnInit, QueryList,
+    SimpleChanges,
+    ViewChild,
+    ViewChildren
+} from '@angular/core';
 import {OptionsInput} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -26,31 +37,6 @@ import {EventsService} from '../../core/services/Requests/Events';
 import {GroupsService} from '../../core/services/Requests/Groups';
 import {PermissionService} from '../../core/services/permission.service';
 
-import {AgmMap, GoogleMapsAPIWrapper, MapsAPILoader} from '@agm/core';
-
-// declare var google: any;
-//
-// interface Marker {
-//     lat: number;
-//     lng: number;
-//     label?: string;
-//     draggable: boolean;
-// }
-//
-// interface Location {
-//     lat: number;
-//     lng: number;
-//     viewport?: Object;
-//     zoom: number;
-//     // address_level_1?:string;
-//     // address_level_2?: string;
-//     // address_country?: string;
-//     // address_zip?: string;
-//     // address_state?: string;
-//     marker?: Marker;
-// }
-
-
 @Component({
     selector: 'mwl-demo-component',
     styleUrls: ['calendar.scss',
@@ -76,26 +62,10 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     api: Calendar;
 
-    // lat: number = 48.8534;
-    // lng: number = 2.3488;
     display_map: boolean = false;
-    switch_button_content: string = 'Calendrier';
+    switch_button_content: string = 'Carte';
     calendar_events: any = [];
     events_with_address: any = [];
-    //
-    // all_pos: Location[] = [];
-    // public location:Location = {};//{
-    //     // lat: 51.678418,
-    //     // lng: 7.809007,
-    //     // marker: {
-    //     //     lat: 51.678418,
-    //     //     lng: 7.809007,
-    //     //     draggable: true
-    //     // },
-    //     // zoom: 5
-    // //};
-    // @ViewChild(AgmMap) map: AgmMap;
-    // geocoder: any;
 
     constructor(private modal: NgbModal,
                 public dialog: MatDialog,
@@ -108,76 +78,15 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 private groupsSrv: GroupsService,
                 public permSrv: PermissionService,
                 private router: Router) {
-        // this.mapsApiLoader = mapsApiLoader;
-        // this.zone = zone;
-        // this.wrapper = wrapper;
-        // this.mapsApiLoader.load().then(() => {
-        //     this.geocoder = new google.maps.Geocoder();
-        // });
     }
-
-    // findLocation(address) {
-    //     if (!this.geocoder) {
-    //         this.geocoder = new google.maps.Geocoder();
-    //     }
-    //     this.geocoder.geocode({
-    //         'address': address
-    //     }, (results, status) => {
-    //         console.log('results', results);
-    //         if (status === google.maps.GeocoderStatus.OK) {
-    //             for (var i = 0; i < results[0].address_components.length; i++) {
-    //                 let types = results[0].address_components[i].types;
-    //
-    //                 // if (types.indexOf('locality') !== -1) {
-    //                 //     this.location.address_level_2 = results[0].address_components[i].long_name;
-    //                 // }
-    //                 // if (types.indexOf('country') !== -1) {
-    //                 //     this.location.address_country = results[0].address_components[i].long_name;
-    //                 // }
-    //                 // if (types.indexOf('postal_code') !== -1) {
-    //                 //     this.location.address_zip = results[0].address_components[i].long_name;
-    //                 // }
-    //                 // if (types.indexOf('administrative_area_level_1') !== -1) {
-    //                 //     this.location.address_state = results[0].address_components[i].long_name;
-    //                 // }
-    //             }
-    //             if (results[0].geometry.location) {
-    //                 this.location.lat = results[0].geometry.location.lat();
-    //                 this.location.lng = results[0].geometry.location.lng();
-    //                 //this.all_pos.push(this.location);
-    //                 this.location.marker.lat = results[0].geometry.location.lat();
-    //                 this.location.marker.lng = results[0].geometry.location.lng();
-    //                 this.location.marker.draggable = true;
-    //                 this.location.viewport = results[0].geometry.viewport;
-    //             }
-    //             this.map.triggerResize();
-    //         } else {
-    //             alert("Sorry, this search produced no results.");
-    //         }
-    //     });
-    // }
-
-    // findLocation(address) {
-    //     if (!this.geocoder) {
-    //         this.geocoder = new google.maps.Geocoder();
-    //     }
-    //     this.geocoder.geocode({
-    //         'address': address
-    //     }, (results, status) => {
-    //         console.log(results);
-    //         if (status === google.maps.GeocoderStatus.OK) {
-    //             // decompose the result
-    //         } else {
-    //             console.log("trouve pas l'adresse");
-    //         }
-    //     });
-    // }
 
     ngOnChanges(changes: SimpleChanges) {
         this.calendar_id = +(this.router.url.slice(this.router.url.lastIndexOf('/') + 1));
+        // console.log("lol", this.calendar_id);
         this.is_global_calendar = (!Number.isNaN(this.calendar_id)) ? false : true;
         this.events = [];
         this.in_calendar_id = changes.in_calendar_id.currentValue;
+        // console.log("mdr", this.in_calendar_id);
 
         if (this.in_calendar_id === -1) {
             this.get_global_calendar();
@@ -187,7 +96,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
             this.is_global_calendar = false;
             this.get_in_group_calendar();
         }
-
+        console.log("events", this.events);
         if (this.is_global_calendar === false) {
             this.calendarsSrv.getCalendars(this.in_calendar_id).subscribe(ret => {
                 this.role = ret.calendar.role;
@@ -198,7 +107,6 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     ngOnInit() {
-        // this.test_map() //ici
         this.events = [];
         this.options = {
             editable: true,
@@ -214,7 +122,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                     click: async () => {
                         this.foundSlots();
                     },
-                }
+                },
             },
             header: {
                 left: 'prev,next today',
@@ -230,7 +138,6 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
             eventLimit: true,
             themeSystem: 'bootstrap',
         };
-        //this.events_with_address = this.calendar_events.filter(e => e.location !== '' && new Date(e.end_time) > new Date());
     }
 
     ngAfterViewInit(): void {
@@ -253,18 +160,14 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     get_calendar_events(calendar_id) {
-        // const calAPI = this.getAPI();
         this.api.removeAllEvents();
         this.calendarsSrv.getEvents(calendar_id)
             .subscribe(ret => {
                 const hexa = ['#e06868', '#ff906a', '#f2db09', '#3d8fdc', '#45c4d9', '#cae602', '#ffd39b', '#c0e2e1', '#ccffff', '#9c6eb2'];
                 const backgroundColor_ = hexa[Math.floor(Math.random() * hexa.length)];
-                //const backgroundColor_ = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
                 const borderColor_ = '#1C4891';
                 this.calendar_events.push(...ret.events);
-                //this.calendar_events.push(ret.events);
-
-
+                // this.events.push(...ret.events); //ici
                 for (const idx in ret.events) {
                     this.api.addEvent({
                         id: ret.events[idx].id,
@@ -304,18 +207,6 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 });
         });
     }
-
-    // get_group_info() {
-    //     this.calendar_id = +(this.router.url.slice(this.router.url.lastIndexOf('/') + 1));
-    //     this.is_global_calendar = (!Number.isNaN(this.calendar_id)) ? false : true;
-    //     // if (!Number.isNaN(this.calendar_id)) {
-    //     //     this.is_global_calendar = false;
-    //     //     this.get_group_calendar();
-    //     // } else {
-    //     //     this.is_global_calendar = true;
-    //     //     this.get_global_calendar();
-    //     // }
-    // }
 
     addEvent(): void {
         const dialogRef = this.dialog.open(CreateEventDialog, {
@@ -362,17 +253,6 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 }
             });
         });
-
-
-        // const dialogRef = this.dialog.open(ModifyEventDialog, {
-        //     width: '650px',
-        //     data: {
-        //         event,
-        //         calendar_locale: this.locale,
-        //         calAPI: this.api,
-        //         role: this.role
-        //     }
-        // });
     }
 
     eventDragStop(event): void {
@@ -436,15 +316,12 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     eventResize(event) {
         this.eventsSrv.getEvent(event.event.id).subscribe(ret => {
-            //console.log(ret);
             this.calendarsSrv.getCalendars(ret.event.calendar_id).subscribe(ret => {
-                //console.log(ret);
                 this.role = ret.calendar.role;
                 if (this.permSrv.permission[this.role].CRUD === false) {
                     this.toastSrv.error(`En temps que ${this.permSrv.permission[this.role].frRole} vous n'êtes pas autorisez à modifier la durée de cette évènement, vos modification ne seront pas prises en comptes`);
                     return;
                 }
-
                 const api = this.getAPI();
                 const modified_event = api.getEventById(event.event.id);
                 this.eventsSrv.getEvent(event.event.id)
@@ -480,16 +357,38 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
             // this.findLocation(filter_events[0].location);
             this.switch_button_content = 'Calendrier';
         } else {
-            this.switch_button_content = 'Map';
+            this.switch_button_content = 'Carte';
+
+            const hexa = ['#e06868', '#ff906a', '#f2db09', '#3d8fdc', '#45c4d9', '#cae602', '#ffd39b', '#c0e2e1', '#ccffff', '#9c6eb2'];
+            const backgroundColor_ = hexa[Math.floor(Math.random() * hexa.length)];
+            const borderColor_ = '#1C4891';
+            this.events = [];
+            let tmp = this.api.getEvents();
+            // this.api.removeAllEvents();
+            tmp.forEach(e => {
+                this.events.push({
+                        id: e.id,
+                        title: e.title,
+                        end: e.end,
+                        start: e.start,
+                        backgroundColor: '#ababab',
+                        borderColor: '#ffffff',
+                    });
+            });
+            // let tmp = this.api.getEvents();
+            // this.api.removeAllEvents();
+            // this.events = [];
+            // tmp.forEach(e => {
+            //     this.api.addEvent({
+            //         id: e.id,
+            //         title: e.title,
+            //         end: e.end,
+            //         start: e.start,
+            //         backgroundColor: '#ababab',
+            //         borderColor: '#ffffff',
+            //     });
+            // });
         }
         this.display_map = !this.display_map;
     }
-
-    // clickedevent(a, b) {
-    //     // console("clicked event", a, b);
-    // }
-    //
-    // eventDragEnd(a, b) {
-    //     // console("event drag end", a, b);
-    // }
 }

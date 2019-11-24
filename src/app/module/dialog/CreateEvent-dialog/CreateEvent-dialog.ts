@@ -8,13 +8,14 @@ import {CalendarsService} from "../../../core/services/Requests/Calendars";
 import {PermissionService} from '../../../core/services/permission.service';
 import {EventTypeService} from '../../../core/services/event_type.service';
 
+import French from 'flatpickr/dist/l10n/fr.js';
+
 @Component({
     selector: 'createEvent-creation-dialog',
     templateUrl: 'CreateEvent-dialog.html',
     styleUrls: ['CreateEvent-dialog.scss', '../../../../scss/dialog.scss'],
 })
 export class CreateEventDialog {
-
     name: string = null;
     location: string = "";
     eventType: string = 'hobby';
@@ -32,6 +33,7 @@ export class CreateEventDialog {
     image: any = null;
     route_id_calendar;
 
+    locale = French.fr;
     // eventTypes: any = [{value: 'party', viewValue: 'Fête'},
     //     {value: 'work', viewValue: 'Travail'},
     //     {value: 'hobby', viewValue: 'Loisir'},
