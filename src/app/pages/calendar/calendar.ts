@@ -174,6 +174,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     get_calendar_events(calendar_id) {
         this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).subscribe(ret => {
+            this.calendar_events = [];
             this.api.removeAllEvents();
             const borderColor_ = '#1C4891';
             this.calendar_events.push(...ret.events.filter(event => event.status === "going"));
