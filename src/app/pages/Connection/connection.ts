@@ -64,14 +64,16 @@ export class ConnectionComponent {
     }
 
     public signInGoogle() {
-        this.userService.signIn();
+        this.authReqService.googleAuth().subscribe(ret => {
+            window.location.href = ret.auth_url;
+        });
     }
 
     signInWithFB(): void {
         let self = this;
         FB.login(function (response) {
             if (response.status === 'connected') {
-                self.authReqService.facebookAuth(response["authResponse"]["accessToken"], "")
+                self.authReqService.facebookAuth(response["authResponse"]["accessToken"])
                     .subscribe((resu) => {
                         self.tokenSrv.token = resu["token"];
                         localStorage.setItem('user_pseudo', resu["user"]["pseudo"]);

@@ -36,7 +36,7 @@
   }
 }
 
-@media screen and (max-width: map_get($widths, m) - 50) {
+@media screen and (max-width: map_get($widths, m) - 50), screen and (max-height: map_get($heights, m) - 50) {
   .too-small {
     z-index: 1000;
     display: flex;

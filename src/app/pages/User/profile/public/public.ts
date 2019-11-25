@@ -41,8 +41,7 @@ export class PublicProfileComponent implements OnInit, OnDestroy {
                     .subscribe(ret => {
                         this.invitationSrv.getFriends()
                         .subscribe(res => {
-                            let found = res.received.filter(invitation => invitation.id === this.user.id);
-                            found = (found.length === 0) ?  res.sent.filter(invitation => invitation.user.id === this.user.id) : found;
+                            let found = [...res.received, ...res.sent].filter(friend => friend.user.id == params.id);
                             (found.length === 0 || found[0].confirmed === 'true') ? this.displayButton = true : null;
                         });
                         this.user = ret.user;

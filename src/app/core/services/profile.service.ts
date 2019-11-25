@@ -77,7 +77,7 @@ export class ProfileService {
 
             this.invitationsSrv.getFriends()
             .subscribe(response => {
-                this.invitations.friend_invitations = response.received;
+                this.invitations.friend_invitations = response.received.filter(friend => friend.confirmed === false);
                 this.invitationsSubject.next(this.invitations);
             });
 

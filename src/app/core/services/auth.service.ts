@@ -105,6 +105,13 @@ export class AuthService {
             .do(() => this.logged = true, () => this.logged = false);
     }
 
+    newGoogleConnection(data) {
+        this.auth = data.user;
+        localStorage.setItem('user_pseudo', data.user.name);
+        this.tokenSrv.token = data.token;
+        this.logged = true;
+    }
+
     changeAuth(modification: User): void {
         if (modification.email && modification.email !== this.auth.email) {
             this.auth = {email: modification.email, password: this.auth.password, name: this.auth.name};

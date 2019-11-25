@@ -31,10 +31,6 @@ export class EventsService {
         return this.requestSrv.postJSON(`events/${event_id}/attendees`, users, {Authorization: ''});
     }
 
-    changeStatus(event_id: string, status?: string): Observable<any> {
-        return this.requestSrv.put(`events/${event_id}/attendees/me/status`, status, {Authorization: ''});
-    }
-
     uploadImage(event_id: string, file: any): Observable<any> {
         return this.requestSrv.putImage(`events/${event_id}/images/icon`, file, {Authorization: ''});
     }
