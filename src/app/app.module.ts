@@ -125,6 +125,7 @@ import {EventTypeService} from './core/services/event_type.service';
 import { ShareButtonsModule } from '@ngx-share/buttons';
 import {EventComponent} from './pages/Event/event';
 import {GoogleCallbackComponent} from "./pages/Connection/google-callback/google-callback";
+import {SocketService} from "./core/services/socket.service";
 
 //import {FlexLayoutModule} from '@angular/flex-layout';
 
@@ -248,6 +249,7 @@ let gapiClientConfig: NgGapiClientConfig = {
         InvitationsService,
         EventTypeService,
         GoogleMapsAPIWrapper,
+        SocketService,
         {
             provide: SWIPER_CONFIG,
             useValue: DEFAULT_SWIPER_CONFIG

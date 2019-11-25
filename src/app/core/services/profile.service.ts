@@ -15,6 +15,10 @@ import {EventsService} from "./Requests/Events";
 
 import * as imageUtils from "../helpers/image"
 import {InvitationsService} from "./Requests/Invitations";
+import { environment } from "../../../environments/environment";
+import { SocketService } from "./socket.service";
+import { initSocketHandler } from "./initSocketHandler";
+import { TokenService } from "./token.service";
 
 @Injectable()
 export class ProfileService {
@@ -50,7 +54,10 @@ export class ProfileService {
                 private invitationsSrv: InvitationsService,
                 private calendarSrv: CalendarsService,
                 private eventSrv: EventsService,
-                private groupsSrv: GroupsService) {
+                private groupsSrv: GroupsService,
+                private socketService: SocketService,
+                private tokenService: TokenService,
+    ) {
         this.invitationsSubject = new BehaviorSubject<UserInvitations>({group_invitations: [], friend_invitations: [], event_invitations: []});
         this.invitations$ = this.invitationsSubject.asObservable();
 
@@ -94,6 +101,10 @@ export class ProfileService {
                 tap((data: any) => {
                     this.user = data.user;
                     // this.getInvitations();
+
+                    // Init sockets
+                    this.socketService.initIo(environment.url, initSocketHandler(this.tokenService.token));
+
                     this.userProfileSubject.next(data.user);
                     this.usersSrv.getImage(data.user.id)
                         .subscribe(ret => {
