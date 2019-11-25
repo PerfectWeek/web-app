@@ -23,18 +23,19 @@ export class RegistrationConfirmationComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
-      this.authSrv.validateEmail(params['id'])
-          .subscribe(
-              ret => {
-                  this.isOk = true;
-              },
-              err => {
-                this.toastSrv.error('Une erreur est survenue')
-                this.isOk = false;
-                this.error_message = err.error.message;
-              })
-    })
+      console.log('on init registration confirm');
+        this.route.params.subscribe(params => {
+          this.authSrv.validateEmail(params['id'])
+              .subscribe(
+                  ret => {
+                      this.isOk = true;
+                  },
+                  err => {
+                    this.toastSrv.error('Une erreur est survenue')
+                    this.isOk = false;
+                    this.error_message = err.error.message;
+                  })
+        });
   }
 
   confirmRegistration() {

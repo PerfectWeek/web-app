@@ -21,17 +21,15 @@ export class AuthenticationService {
         return this.requestSrv.postJSON('auth/local/login', body, {noMultiple: ''});
     }
 
-    facebookAuth(access_token: string, refresh_token: string): Observable<any> {
-        return this.requestSrv.get("auth/providers/facebook/callback", {
-            access_token: access_token,
-            refresh_token: refresh_token
-        }, {});
+    facebookAuth(access_token: string, refresh_token?: string): Observable<any> {
+        return this.requestSrv.get("auth/facebook/callback", {access_token}, {});
     }
 
-    googleAuth(access_token: string, refresh_token: string): Observable<any> {
-        return this.requestSrv.get("auth/providers/google/callback",{
-            access_token: access_token,
-            refresh_token: refresh_token
-        }, {});
+    googleAuth(): Observable<any> {
+        return this.requestSrv.get("auth/google/url", {}, {});
+    }
+
+    googleCallback(code: any): Observable<any> {
+        return this.requestSrv.postJSON('auth/google/callback', {code}, {});
     }
 }

@@ -124,6 +124,7 @@ import {AgmCoreModule, GoogleMapsAPIWrapper} from '@agm/core';
 import {EventTypeService} from './core/services/event_type.service';
 import { ShareButtonsModule } from '@ngx-share/buttons';
 import {EventComponent} from './pages/Event/event';
+import {GoogleCallbackComponent} from "./pages/Connection/google-callback/google-callback";
 
 //import {FlexLayoutModule} from '@angular/flex-layout';
 
@@ -167,6 +168,7 @@ let gapiClientConfig: NgGapiClientConfig = {
         PublicProfileComponent,
         FriendsComponent,
         FriendListComponent,
+        GoogleCallbackComponent,
         ConfirmDialog,
         CreateEventDialog,
         GroupCreationDialog,

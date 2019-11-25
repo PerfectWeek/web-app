@@ -83,17 +83,17 @@ export class UserService {
             sessionStorage.setItem(
                 UserService.SESSION_STORAGE_KEY, res.getAuthResponse().access_token
             );
-            this.authReqSrv.googleAuth(this.getToken(), "")
-                .subscribe((resu) => {
-                    this.tokenSrv.token = resu["token"];
-                    localStorage.setItem('user_pseudo', resu["user"]["pseudo"]);
-                    this.authSrv.logged = true;
-                    this.authSrv.auth = {email: resu["user"]["email"], name: resu["user"]["pseudo"]};
-                    this.profileSrv.fetchUser$().subscribe(() => {
-                        (<any>window).ga('send', 'event', 'Login', 'Google Connection', resu["user"]["pseudo"]);
-                        this.router.navigate(['/dashboard']);
-                    });
-                })
+            // this.authReqSrv.googleAuth(this.getToken(), "")
+            //     .subscribe((resu) => {
+            //         this.tokenSrv.token = resu["token"];
+            //         localStorage.setItem('user_pseudo', resu["user"]["pseudo"]);
+            //         this.authSrv.logged = true;
+            //         this.authSrv.auth = {email: resu["user"]["email"], name: resu["user"]["pseudo"]};
+            //         this.profileSrv.fetchUser$().subscribe(() => {
+            //             (<any>window).ga('send', 'event', 'Login', 'Google Connection', resu["user"]["pseudo"]);
+            //             this.router.navigate(['/dashboard']);
+            //         });
+            //     })
         });
     }
 

@@ -18,6 +18,7 @@ import {EventSuggestionsComponent} from './pages/EventSuggestions/event_suggesti
 import {MainViewComponent} from "./pages/Main_View/main_view";
 import {PublicProfileComponent} from "./pages/User/profile/public/public";
 import {EventComponent} from './pages/Event/event';
+import {GoogleCallbackComponent} from "./pages/Connection/google-callback/google-callback";
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -30,7 +31,7 @@ const routes: Routes = [
   { path: 'profile', component: ProfileComponent, canActivate: [isLogged] },
   { path: 'profile/:id', component: PublicProfileComponent, canActivate: [isLogged] },
   { path: 'friends', component: FriendsComponent, canActivate: [isLogged] },
-
+  { path: 'login/google-callback', component: GoogleCallbackComponent, canActivate: [IsLogout]},
   { path: 'event/:id', component: EventComponent, canActivate: [isLogged ] },
 
   { path: '**', component: NotFoundComponent }
