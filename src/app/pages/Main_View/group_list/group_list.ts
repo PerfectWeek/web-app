@@ -57,6 +57,13 @@ export class GroupListComponent implements OnInit, AfterViewInit {
 
     input: any;
 
+    CalendarsUpdate = this.profileSrv.CalendarsUpdate$.subscribe(hasChanged => {
+        if (hasChanged === true) {
+            this.getCalendars();
+            this.profileSrv.CalendarsUpdateSubject.next(false);
+        }
+    });
+
     @ViewChild('user') set content(user: ElementRef) {
         this.user = user;
     }

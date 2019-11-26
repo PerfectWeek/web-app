@@ -12,6 +12,7 @@ import {UsersService} from "../../../core/services/Requests/Users";
 import {InvitationsService} from "../../../core/services/Requests/Invitations";
 
 import * as imageUtils from "../../../core/helpers/image"
+import {Friend} from "../../../core/models/Friend";
 
 @Component({
     selector: 'friend-list',
@@ -46,6 +47,14 @@ export class FriendListComponent implements OnInit, AfterViewInit {
 
     input: any;
 
+    friendsSubscription = this.profileSrv.friendsUpdates$.subscribe(hasChanged => {
+        if (hasChanged === true) {
+            console.log('New friends :D');
+            this.getFriends();
+            this.profileSrv.friendsUpdatesSubject.next(false);
+        }
+    });
+
     friends: any[] = [];
 
     constructor(private profileSrv: ProfileService,
@@ -68,7 +77,6 @@ export class FriendListComponent implements OnInit, AfterViewInit {
             console.log('error => ', error)
         });
         this.getFriends();
-        this.ready.next(true);
     }
 
     ngAfterViewInit() {
@@ -97,6 +105,7 @@ export class FriendListComponent implements OnInit, AfterViewInit {
         this.invitationsSrv.getFriends()
             .subscribe(response => {
                 let friendsInvitations: any[] = [...response.received.filter(req => req.confirmed === true), ...response.sent.filter(req => req.confirmed === true)];
+                this.friends = [];
                 friendsInvitations.forEach((friend, index) => {
                     this.usersSrv.getImage(friend.user.id)
                         .subscribe(ret => {
@@ -108,11 +117,14 @@ export class FriendListComponent implements OnInit, AfterViewInit {
                                     this.displayFriends = this.friends;
                                     this.ready.next(true);
                                 }
-                            }, 50);
+                            }, 100);
                         });
                 });
+                if (friendsInvitations.length === 0)
+                    this.ready.next(true);
             }, err => {
                 this.toastSrv.error(err.error.message, 'Une erreur est survenue');
+                this.ready.next(true);
             });
     }
 

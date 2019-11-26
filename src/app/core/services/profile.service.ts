@@ -17,8 +17,8 @@ import * as imageUtils from "../helpers/image"
 import {InvitationsService} from "./Requests/Invitations";
 import { environment } from "../../../environments/environment";
 import { SocketService } from "./socket.service";
-import { initSocketHandler } from "./initSocketHandler";
 import { TokenService } from "./token.service";
+import {Friend} from "../models/Friend";
 
 @Injectable()
 export class ProfileService {
@@ -41,9 +41,21 @@ export class ProfileService {
 
     userProfile$: Observable<User> = this.userProfileSubject.asObservable();
 
-    invitationsSubject: BehaviorSubject<UserInvitations>;
+    invitationsSubject: BehaviorSubject<UserInvitations> = new BehaviorSubject<UserInvitations>({group_invitations: [], friend_invitations: [], event_invitations: []});
 
-    invitations$: Observable<UserInvitations>;
+    invitations$: Observable<UserInvitations> = this.invitationsSubject.asObservable();
+
+    friendsUpdatesSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+    friendsUpdates$: Observable<boolean> = this.friendsUpdatesSubject.asObservable();
+
+    CalendarsUpdateSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+    CalendarsUpdate$: Observable<boolean> = this.CalendarsUpdateSubject.asObservable();
+
+    EventsUpdateSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+    EventsUpdate$: Observable<boolean> = this.EventsUpdateSubject.asObservable();
 
     private subscription: Subscription;
 
@@ -58,9 +70,6 @@ export class ProfileService {
                 private socketService: SocketService,
                 private tokenService: TokenService,
     ) {
-        this.invitationsSubject = new BehaviorSubject<UserInvitations>({group_invitations: [], friend_invitations: [], event_invitations: []});
-        this.invitations$ = this.invitationsSubject.asObservable();
-
         if (localStorage.getItem('user_pseudo')) {
             let pseudo = localStorage.getItem('user_pseudo');
             this.subscription = this.authSrv.isLogged().pipe(
@@ -69,6 +78,43 @@ export class ProfileService {
             ).subscribe();
         }
     }
+
+    initSocketHandler = (token: string) => (socket: SocketIOClient.Socket) => {
+        console.log("Socket Mamene !");
+
+        socket.emit("authenticate", { token });
+
+        socket.on("exception", (errorMessage: string) => {
+            console.error(`Socket Error: ${errorMessage}`);
+        });
+
+        socket.on("calendar_event_added", (data: any) => {
+            const {title, description, payload} = data;
+            this.EventsUpdateSubject.next(true);
+        });
+
+        socket.on("calendar_member_invite", (data: any) => {
+            const {title, description, payload} = data;
+            this.getInvitations();
+        });
+
+        socket.on("event_invitation", (data: any) => {
+            const {title, description, payload} = data;
+            console.log("event invitation => ", data);
+            this.getInvitations();
+        });
+
+        socket.on("friend_request", (data: any) => {
+            const {title, description, payload} = data;
+            this.getInvitations();
+        });
+
+        socket.on("friend_accepted", (data: any) => {
+            const { title, description, payload } = data;
+            this.friendsUpdatesSubject.next(true);
+        });
+    };
+
 
     public clearUser() {
         this.user = null;
@@ -103,7 +149,7 @@ export class ProfileService {
                     // this.getInvitations();
 
                     // Init sockets
-                    this.socketService.initIo(environment.url, initSocketHandler(this.tokenService.token));
+                    this.socketService.initIo(environment.url, this.initSocketHandler(this.tokenService.token));
 
                     this.userProfileSubject.next(data.user);
                     this.usersSrv.getImage(data.user.id)

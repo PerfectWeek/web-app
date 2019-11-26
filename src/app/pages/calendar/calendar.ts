@@ -67,6 +67,33 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     calendar_events: any = [];
     events_with_address: any = [];
 
+    eventsUpdate = this.profileSrv.EventsUpdate$.subscribe(hasChanged => {
+        if (hasChanged === true) {
+            this.events = [];
+
+            if (this.in_calendar_id === -1) {
+                this.get_global_calendar();
+                this.is_global_calendar = true;
+
+            } else {
+                this.is_global_calendar = false;
+                this.get_in_group_calendar();
+            }
+
+            if (this.is_global_calendar === false) {
+                this.calendarsSrv.getCalendar(this.in_calendar_id).subscribe(ret => {
+                    this.role = ret.calendar.role;
+
+                    // this.api.setOption('editable', this.permSrv.permission[this.role].CRUD); // maybe delete
+                });
+            } else {
+                this.role = 'admin';
+                // this.api.setOption('editable', this.permSrv.permission[this.role].CRUD); // maybe delete
+            }
+            this.profileSrv.EventsUpdateSubject.next(false);
+        }
+    });
+
     constructor(private modal: NgbModal,
                 public dialog: MatDialog,
                 private requestSrv: RequestService,
