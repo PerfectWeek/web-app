@@ -96,7 +96,7 @@
                            i18n-placholder="@@ModifyEventBegDate"
                            placeholder="Date de debut"
                            [locale]="locale"
-                           [time24hr]="data.locale === 'fr'"
+                           [time24hr]="data.locale !== 'en'"
                            required>
                 </mat-form-field>
 
@@ -116,7 +116,7 @@
                            i18n-placholder="@@ModifyEventEndDate"
                            placeholder="Date de fin"
                            [locale]="locale"
-                           [time24hr]="data.locale === 'fr'"
+                           [time24hr]="data.locale !== 'en'"
                            required>
                 </mat-form-field>
             </div>
