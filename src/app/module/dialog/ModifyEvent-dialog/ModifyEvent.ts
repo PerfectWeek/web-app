@@ -60,6 +60,8 @@ export class ModifyEventDialog implements OnInit, OnDestroy {
     eventVisibilities: any = [{value: 'public', viewValue: 'Public'},
         {value: 'private', viewValue: 'Privé'}];
 
+    share_str = "Je vais à l\'évènement ";
+
     constructor(private requestSrv: RequestService,
                 private profileSrv: ProfileService,
                 private eventsSrv: EventsService,
