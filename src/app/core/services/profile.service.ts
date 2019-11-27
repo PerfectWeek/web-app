@@ -90,7 +90,7 @@ export class ProfileService {
 
         socket.on("calendar_event_added", (data: any) => {
             const {title, description, payload} = data;
-            this.EventsUpdateSubject.next(true);
+            this.getInvitations();
         });
 
         socket.on("calendar_member_invite", (data: any) => {
