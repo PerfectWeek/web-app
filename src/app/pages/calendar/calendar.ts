@@ -119,7 +119,6 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 break;
             }
         }
-        // console.log('url_local => ', url_local);
         this.calendar_id = +(this.router.url.slice(this.router.url.lastIndexOf('/') + 1));
 
         // this.url_locale = '';
@@ -230,19 +229,13 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     async get_calendar_events(calendar_id) {
         let ret = await this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).first().toPromise();
-        // this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).subscribe(ret => {
-            console.log("le subscribe est reel");
+
             this.events = []; //ici
             // this.api.removeAllEvents();
             const borderColor_ = '#1C4891';
             this.calendar_events.push(...ret.events);
-            // this.events_with_address = [];
-            // this.events_with_address.push(...ret.events);
-            // console.log("with address", this.events_with_address);
             for (let event of ret.events) {
                 if (event.name === 'Abekran')
-                    console.log(event);
-                // console.log("oklm", event);
                 this.events.push({
                     id: event.id,
                     title: event.name,
@@ -253,30 +246,11 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                     location: event.location,
                     end_time: event.end_time,
                     start_time: event.start_time,
-                    // id: event.id,
-                    // title: event.name,
-                    // end: event.end_time,
-                    // start: event.start_time,
-                    // backgroundColor: event.color,
-                    // borderColor: '#1C4891',
                 });
-                // this.api.addEvent({
-                //     id: event.id,
-                //     title: event.name,
-                //     end: event.end_time,
-                //     start: event.start_time,
-                //     backgroundColor: event.color,
-                //     borderColor: borderColor_,
-                //     location: event.location,
-                //     end_time: event.end_time,
-                //     start_time: event.start_time,
-                // });
             }
-        // });
     }
 
     get_in_group_calendar(): void {
-        console.log("ca rentre");
         this.get_calendar_events(this.in_calendar_id);
         this.calendarsSrv.getCalendar(this.in_calendar_id)
             .subscribe(ret => {
@@ -361,7 +335,6 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
                 this.eventsSrv.getEvent(event.event.id)
                     .subscribe(resp => {
-                        // console.log("resp", resp);
                         this.eventsSrv.modifyEvent(event.event.id, {
                             name: event.event.title,
                             type: resp.event.type,
@@ -373,17 +346,13 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                             color: event.event.backgroundColor
                         }).subscribe(ret => {
                             this.toastSrv.success('Evenement modifié');
-                            console.log("recive", modified_event);
                             modified_event.setExtendedProp('start_time', modified_event.start.toISOString());
                             modified_event.setExtendedProp('end_time', modified_event.end.toISOString());
                             modified_event.setExtendedProp('location', resp.event.location);
-                            console.log("after modif", modified_event);
-                            console.log("\n");
                         });
                     });
             });
         });
-        // console.log("change", this.api.getEvents());
     }
 
     foundSlots(): void {
@@ -404,9 +373,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     dateClick(model) {
-        // console.log("oui", model.date);
-        // this.api.changeView('timeGridDay');
-        // this.api.gotoDate(model.date);
+
     }
 
     eventResize(event) {
