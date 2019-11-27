@@ -5,13 +5,14 @@
             <div class="my_layout" fxLayout="row">
                 <label class="profile-image" for="event_image_file">
                     <img src="{{event_image}}" alt="Profile image and button to change the image"
-                         title="Cliquez pour changer l'image">
+                         i18n-title="@@EventPageImageChangeTitle" title="Cliquez pour changer l'image">
                 </label>
                 <input id="event_image_file" [disabled]="true" type="file" accept=".jpg,.png,.jpeg" class="image-input" style="display: none;">
 
                 <div fxLayout="column" style="display: grid; width: 70%">
                     <mat-form-field>
                         <input matInput
+                               i18n-placeholder="@@EventPageEventNamePlaceholder"
                                placeholder="Nom de l'évenement"
                                [(ngModel)]="this.name"
                                name="title"
@@ -21,6 +22,7 @@
 
                     <mat-form-field>
                         <input matInput
+                               i18n-placeholder="@@EventPageEventDescPlaceholder"
                                placeholder="Description"
                                name="description"
                                [(ngModel)]="this.description"
@@ -30,6 +32,7 @@
 
                     <mat-form-field>
                         <input matInput
+                               i18n-placeholder="@@EventPageEventLocationPlaceholder"
                                placeholder="Lieux"
                                name="location"
                                [(ngModel)]="this.location"
@@ -65,7 +68,7 @@
                 </mat-form-field>
 
                 <mat-form-field style="width: 8%;">
-                    <mat-label>Couleur</mat-label>
+                    <mat-label i18n="@@EventPageEventColor">Couleur</mat-label>
                     <input matInput
                            type="color"
                            name="color"
@@ -88,6 +91,7 @@
                            name="start"
                            dateFormat="Y-m-dTH:i"
                            altFormat="F j, Y H:i"
+                           i18n-placeholder="@@EventPageEventStartPlaceholder"
                            placeholder="Date de debut"
                            required>
                 </mat-form-field>
@@ -105,6 +109,7 @@
                            name="end"
                            dateFormat="Y-m-dTH:i"
                            altFormat="F j, Y H:i"
+                           i18n-placeholder="@@EventPageEventEndPlaceholder"
                            placeholder="Date de fin"
                            required>
                 </mat-form-field>

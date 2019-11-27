@@ -23,7 +23,7 @@
               <mat-form-field>
                 <input type="password" formControlName="password" id="password" class="form-control" matInput i18n-placeholder="@@RegistrationPassword" placeholder="Mot de Passe" required>
               </mat-form-field>
-              <p class="error-message" i18n="@@RegistrationPasswordFormatErrorMessage" *ngIf="registrationForm.get('password').invalid && registrationForm.get('password').errors.pattern">Le mot de passe doit comprendre au moins une lettre et un chiffre et faire au moins 8 caractères.</p>
+              <p class="error-message" i18n="@@RegistrationPasswordFormatErrorMessage" *ngIf="registrationForm.get('password').invalid && registrationForm.get('password').errors.pattern">Le mot de passe doit comprendre au moins une lettre majuscule, une lettre minuscule, un caractère spécial, un chiffre et faire au moins 8 caractères.</p>
             </div>
 
             <div class="input-error-message">

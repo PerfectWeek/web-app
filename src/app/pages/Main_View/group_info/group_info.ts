@@ -76,6 +76,13 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
     new_member: string = '';
 
+    CalendarsUpdate = this.profileSrv.CalendarsUpdate$.subscribe(hasChanged => {
+        if (hasChanged === true) {
+            console.log("Gropu info has changed");
+            this.getInformationData();
+        }
+    });
+
     constructor(private requestSrv: RequestService,
                 private profileSrv: ProfileService,
                 private usersSrv: UsersService,
@@ -154,7 +161,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
         this.calendarSrv.getCalendar(this.group_id)
             .subscribe(ret => {
                 this.group.name = ret.calendar.name;
-                this.group_members = ret.calendar.members;
+                this.group_members = ret.calendar.members.filter(member => member.invitation_confirmed === true);
                 this.group_members.forEach((member, index) => {
                     if (member.id === this.profileSrv.user.id) {
                         this.rawRole = member.role;
@@ -174,7 +181,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
                         imageUtils.createImageFromBlob(ret, obj);
                         setTimeout(() => {
                             this.image = obj.image;
-                        }, 50);
+                        }, 100);
                     }, err => console.log('err => ', err.message));
             });
     }
@@ -260,15 +267,12 @@ export class GroupInfoComponent implements OnInit, OnChanges {
             if (result !== null && result != undefined) {
                 this.calendarSrv.inviteUsers(this.group_id, this.formatBody(result))
                     .subscribe(ret => {
-                        this.ready = false;
-                        this.group_members = ret.members;
+                        this.group_members = ret.members.filter(member => member.member.invitation_confirmed === true);
                         (<any>window).ga('send', 'event', 'Group', 'Adding Members', `Group Name: ${result.name}`);
-                        this.group_members.forEach((member, index) => {
+                        this.group_members.forEach(member => {
                             this.usersSrv.getImage(member.id)
                                 .subscribe(ret => {
-                                    member.image = ret.image;
-                                    if (index === this.group_members.length - 1)
-                                        this.ready = true;
+                                    imageUtils.createImageFromBlob(ret, member);
                                 });
                         });
                         this.toastSrv.success("User ajouté au calendrier");

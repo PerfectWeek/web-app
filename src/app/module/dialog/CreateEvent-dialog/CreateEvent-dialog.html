@@ -89,7 +89,7 @@
                                i18n-placeholder="@@EventCreationBeginningDatePlaceholder"
                                placeholder="Date de debut"
                                [locale]="locale"
-                               [time24hr]="true"
+                               [time24hr]="data.locale === 'fr'"
                                required>
                     </mat-form-field>
                     <p i18n="@@EventCreationBeginningDateErrorMessage" class="error-message" *ngIf="start < this.current_date">La date de début d'évènement ne doit pas
@@ -113,7 +113,7 @@
                                i18n-placeholder="@@EventCreationEndingDatePlaceholder"
                                placeholder="Date de fin"
                                [locale]="locale"
-                               [time24hr]="true"
+                               [time24hr]="data.locale === 'fr'"
                                required>
                     </mat-form-field>
                     <p i18n="@@EventCreationEndingDateErrorMessage" class="error-message" *ngIf="end < this.current_date">La date de fin d'évènement ne doit pas être

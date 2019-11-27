@@ -57,6 +57,13 @@ export class GroupListComponent implements OnInit, AfterViewInit {
 
     input: any;
 
+    CalendarsUpdate = this.profileSrv.CalendarsUpdate$.subscribe(hasChanged => {
+        if (hasChanged === true) {
+            this.getCalendars();
+            this.profileSrv.CalendarsUpdateSubject.next(false);
+        }
+    });
+
     @ViewChild('user') set content(user: ElementRef) {
         this.user = user;
     }
@@ -109,27 +116,26 @@ export class GroupListComponent implements OnInit, AfterViewInit {
                 .subscribe(calendars => {
                     this.displayGroups = [];
                     this.displayGroupsMobile = [];
-                    this.userGroups = [];
-                    if (calendars.calendars.length > 0) {
-                        this.userGroups = calendars.calendars;
-                        this.userGroups.forEach((calendar, index) => {
-                            this.calendarSrv.getImage(calendar.id)
-                                .subscribe(ret => {
-                                    calendar['image'] = null;
-                                    imageUtils.createImageFromBlob(ret, calendar);
-                                    this.displayGroups.push(calendar);
-                                    let obj:any = {};
-                                    for (let key in calendar)
-                                        obj[key] = calendar[key];
-                                    let acr = obj.name.match(/\b(\w)/g);
-                                    obj.name = (acr != null) ?  acr.join('.').toUpperCase() : calendar.name;
-                                    this.displayGroupsMobile.push(obj);
-                                });
-                            if (index >= this.userGroups.length - 1)
-                                setTimeout(() => this.ready.next(true), 500);
-                        });
-                    }
-                    else this.ready.next(true);
+                    this.userGroups = [...calendars.calendars];
+                    this.userGroups.forEach((calendar, index) => {
+                        this.calendarSrv.getImage(calendar.id)
+                            .subscribe(ret => {
+                                calendar['image'] = null;
+                                imageUtils.createImageFromBlob(ret, calendar);
+                                let obj:any = {};
+                                for (let key in calendar)
+                                    obj[key] = calendar[key];
+                                let acr = obj.name.match(/\b(\w)/g);
+                                obj.name = (acr != null) ?  acr.join('.').toUpperCase() : calendar.name;
+                                this.displayGroupsMobile.push(obj);
+                            });
+                        if (index >= this.userGroups.length - 1)
+                            setTimeout(() => {
+                                this.displayGroups = [...this.userGroups];
+                                this.ready.next(true);
+                            }, 500);
+                    });
+                    (this.userGroups.length === 0) ? this.ready.next(true) : null;
                 }, err => console.log("err => ", err.message));
         });
     }
@@ -209,8 +215,8 @@ export class GroupListComponent implements OnInit, AfterViewInit {
 
         if (this.input != undefined && this.input != "" && this.input != null) {
             this.displayGroupsMobile = [];
-            this.displayGroups = this.userGroups
-                .filter(group => group.name.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) != -1);
+            this.displayGroups = [...this.userGroups
+                .filter(group => group.name.toLowerCase().indexOf(this.search$.getValue().toLowerCase()) != -1)];
             this.displayGroups.forEach(group => {
                 let obj = {};
                 for (let key in group)
@@ -222,7 +228,7 @@ export class GroupListComponent implements OnInit, AfterViewInit {
                 group.name = (acr != null) ?  acr.join('.').toUpperCase() : group.name;
             });
         } else {
-            this.displayGroups = this.userGroups;
+            this.displayGroups = this.displayGroups = [...this.userGroups];;
             this.displayGroups.forEach(group => {
                 let obj = {};
                 for (let key in group)

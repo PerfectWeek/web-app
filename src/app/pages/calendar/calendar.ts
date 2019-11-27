@@ -25,7 +25,8 @@ import {Router} from '@angular/router';
 import {EventInput} from '@fullcalendar/core/structs/event';
 import {CreateEventDialog} from '../../module/dialog/CreateEvent-dialog/CreateEvent-dialog';
 import frLocale from '@fullcalendar/core/locales/fr';
-import esLocale from '@fullcalendar/core/locales/es';
+import enLocale from '@fullcalendar/core/locales/en-gb';
+// import esLocale from '@fullcalendar/core/locales/es';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
 import {FoundSlotDialog} from '../../module/dialog/FoundSlot-dialog/FoundSlot-dialog';
 import {ConfirmDialog} from '../../module/dialog/Confirm-dialog/Confirm-dialog';
@@ -55,7 +56,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     @Input('role') role: string = 'admin';
 
-    locale: 'fr';
+    locale: frLocale;
     calendar_id: number = null;
     calendar_name: string = null;
     is_global_calendar: boolean = true;
@@ -65,7 +66,35 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     display_map: boolean = false;
     switch_button_content: string = 'Carte';
     calendar_events: any = [];
-    events_with_address: any = [];
+    url_locale: string = 'fr';
+    //events_with_address: any = [];
+
+    eventsUpdate = this.profileSrv.EventsUpdate$.subscribe(hasChanged => {
+        if (hasChanged === true) {
+            this.events = [];
+
+            if (this.in_calendar_id === -1) {
+                this.get_global_calendar();
+                this.is_global_calendar = true;
+
+            } else {
+                this.is_global_calendar = false;
+                this.get_in_group_calendar();
+            }
+
+            if (this.is_global_calendar === false) {
+                this.calendarsSrv.getCalendar(this.in_calendar_id).subscribe(ret => {
+                    this.role = ret.calendar.role;
+
+                    // this.api.setOption('editable', this.permSrv.permission[this.role].CRUD); // maybe delete
+                });
+            } else {
+                this.role = 'admin';
+                // this.api.setOption('editable', this.permSrv.permission[this.role].CRUD); // maybe delete
+            }
+            this.profileSrv.EventsUpdateSubject.next(false);
+        }
+    });
 
     constructor(private modal: NgbModal,
                 public dialog: MatDialog,
@@ -81,7 +110,29 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     ngOnChanges(changes: SimpleChanges) {
+        let incr = 0;
+        let url_local;
+        for (let i = 0; i <  window.location.href.length; i++) {
+            incr += window.location.href[i] === '/' ? 1 : 0;
+            if (incr === 3) {
+                this.url_locale = window.location.href.substr(i + 1, 2).toLowerCase();
+                break;
+            }
+        }
         this.calendar_id = +(this.router.url.slice(this.router.url.lastIndexOf('/') + 1));
+
+        // this.url_locale = '';
+        if (this.url_locale === 'en') {
+            this.locale = enLocale;
+        }
+        else if (this.url_locale === 'fr') {
+            this.locale = frLocale;
+        }
+        else {
+            this.locale = frLocale;
+        }
+
+
         this.is_global_calendar = (!Number.isNaN(this.calendar_id)) ? false : true;
         this.events = [];
         this.in_calendar_id = changes.in_calendar_id.currentValue;
@@ -98,30 +149,20 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
         if (this.is_global_calendar === false) {
             this.calendarsSrv.getCalendar(this.in_calendar_id).subscribe(ret => {
                 this.role = ret.calendar.role;
-
-                // this.api.setOption('editable', this.permSrv.permission[this.role].CRUD); // maybe delete
             });
         } else {
             this.role = 'admin';
-            // this.api.setOption('editable', this.permSrv.permission[this.role].CRUD); // maybe delete
         }
     }
 
     ngOnInit() {
         this.events = [];
-        // this.get_group_info();
-        // if (this.in_calendar_id) {
-        //     (this.in_calendar_id === -1) ? this.get_global_calendar() : this.getInGroupCalendar();
-        // }
-        // else
-        //     this.get_group_info();
         this.options = {
             editable: true,
             customButtons: {
                 addEventButton: {
                     text: 'Ajouter un evenement',
                     click: async () => {
-                        //this.addEventCallback();
                         this.addEvent();
                     },
                 },
@@ -136,15 +177,10 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 left: 'prev,next today',
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
-                // right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
             },
-            // footer: {
-            //     right: 'FoundSlotButton,addEventButton',
-            //     center: '',
-            // },
             plugins: [bootstrapPlugin, interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
-            locales: [esLocale, frLocale],
-            locale: frLocale,
+            locales: [enLocale, frLocale],
+            locale: this.locale,
             buttonIcons: false,
             weekNumbers: true,
             navLinks: true,
@@ -172,23 +208,46 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
         return this.calendarComponent.getApi();
     }
 
-    get_calendar_events(calendar_id) {
-        this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).subscribe(ret => {
-            this.calendar_events = [];
-            this.api.removeAllEvents();
+    // get_calendar_events(calendar_id) {
+    //     this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).subscribe(ret => {
+    //         this.calendar_events = [];
+    //         this.api.removeAllEvents();
+    //         const borderColor_ = '#1C4891';
+    //         this.calendar_events.push(...ret.events.filter(event => event.status === "going"));
+    //         for (let event of this.calendar_events) {
+    //             this.api.addEvent({
+    //                 id: event.id,
+    //                 title: event.name,
+    //                 end: event.end_time,
+    //                 start: event.start_time,
+    //                 backgroundColor: event.color,
+    //                 borderColor: borderColor_,
+    //             });
+    //         }
+    //     });
+    // }
+
+    async get_calendar_events(calendar_id) {
+        let ret = await this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).first().toPromise();
+
+            this.events = []; //ici
+            // this.api.removeAllEvents();
             const borderColor_ = '#1C4891';
-            this.calendar_events.push(...ret.events.filter(event => event.status === "going"));
-            for (let event of this.calendar_events) {
-                this.api.addEvent({
+            this.calendar_events.push(...ret.events);
+            for (let event of ret.events) {
+                if (event.name === 'Abekran')
+                this.events.push({
                     id: event.id,
                     title: event.name,
                     end: event.end_time,
                     start: event.start_time,
                     backgroundColor: event.color,
                     borderColor: borderColor_,
+                    location: event.location,
+                    end_time: event.end_time,
+                    start_time: event.start_time,
                 });
             }
-        });
     }
 
     get_in_group_calendar(): void {
@@ -220,7 +279,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 // calendar_id: this.calendar_id,
                 calAPI: this.api,
                 is_global_calendar: this.is_global_calendar,
-                calendar_locale: this.locale,
+                locale: this.url_locale,
             }
         });
         dialogRef.afterClosed().subscribe(result => {
@@ -245,7 +304,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 width: '650px',
                 data: {
                     event,
-                    calendar_locale: this.locale,
+                    locale: this.url_locale,
                     calAPI: this.api,
                     role: this.role
                 }
@@ -267,12 +326,13 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
             this.profileSrv.userProfile$.subscribe(user => {
                 let me = ret.event.attendees.filter(attendee => attendee.id === user.id);
                 this.role = me[0].role;
-                if (this.permSrv.permission[this.role].read === false) {
-                    this.toastSrv.error('Vous n\'avez pas les droits de lecture sûr cette évènement');
+                if (this.permSrv.permission[this.role].CRUD === false) {
+                    this.toastSrv.error('Vous n\'avez pas les droits de lecture sûr cet évènement');
                     return;
                 }
                 const api = this.getAPI();
                 const modified_event = api.getEventById(event.event.id);
+
                 this.eventsSrv.getEvent(event.event.id)
                     .subscribe(resp => {
                         this.eventsSrv.modifyEvent(event.event.id, {
@@ -286,6 +346,9 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                             color: event.event.backgroundColor
                         }).subscribe(ret => {
                             this.toastSrv.success('Evenement modifié');
+                            modified_event.setExtendedProp('start_time', modified_event.start.toISOString());
+                            modified_event.setExtendedProp('end_time', modified_event.end.toISOString());
+                            modified_event.setExtendedProp('location', resp.event.location);
                         });
                     });
             });
@@ -299,7 +362,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 calendar_id: this.in_calendar_id ? this.in_calendar_id : this.calendar_id,
                 calAPI: this.api,
                 is_global_calendar: this.is_global_calendar,
-                calendar_locale: this.locale,
+                locale: this.url_locale,
             }
         });
         dialogRef.afterClosed().subscribe(result => {
@@ -310,9 +373,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     dateClick(model) {
-        // console.log("oui", model.date);
-        // this.api.changeView('timeGridDay');
-        // this.api.gotoDate(model.date);
+
     }
 
     eventResize(event) {
@@ -345,52 +406,25 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
         });
     }
 
-    switch_map_calendar() {
+    async switch_map_calendar() {
         // do the request for events
+        const local_en = window.location.href.includes("/en/");
         if (this.display_map === false) {
-        //if (true) {
-            this.events_with_address = this.calendar_events.filter(e => e.location !== '' && new Date(e.end_time) > new Date());
-            // console.log("dkoedoe", filter_events);
-            // console.log("dkoedoe", filter_events[0]);
-            // filter_events.forEach(elem => {
-            //     console.log("test", elem.location);
-            //     // setTimeout(() => {this.findLocation(elem.location); }, 500);
-            // });
-            // console.log("nike", this.all_pos);
-            // this.findLocation(filter_events[0].location);
-            this.switch_button_content = 'Calendrier';
+            this.switch_button_content = local_en === true ? 'Calendar' : 'Calendrier';
         } else {
-            this.switch_button_content = 'Carte';
-
-            const hexa = ['#e06868', '#ff906a', '#f2db09', '#3d8fdc', '#45c4d9', '#cae602', '#ffd39b', '#c0e2e1', '#ccffff', '#9c6eb2'];
-            const backgroundColor_ = hexa[Math.floor(Math.random() * hexa.length)];
-            const borderColor_ = '#1C4891';
+            this.switch_button_content = local_en === true ? "Map" : 'Carte';
             this.events = [];
-            let tmp = this.api.getEvents();
-            // this.api.removeAllEvents();
-            tmp.forEach(e => {
+            let ret = await this.eventsSrv.getEvents(this.in_calendar_id !== -1 ? {"only_calendar_ids[]": this.in_calendar_id}: {}).first().toPromise();
+            ret.events.forEach(e => {
                 this.events.push({
-                        id: e.id,
-                        title: e.title,
-                        end: e.end,
-                        start: e.start,
-                        backgroundColor: '#ababab',
-                        borderColor: '#ffffff',
-                    });
+                    id: e.id,
+                    title: e.name,
+                    end: e.end_time,
+                    start: e.start_time,
+                    backgroundColor: e.color,
+                    borderColor: '#1C4891',
+                });
             });
-            // let tmp = this.api.getEvents();
-            // this.api.removeAllEvents();
-            // this.events = [];
-            // tmp.forEach(e => {
-            //     this.api.addEvent({
-            //         id: e.id,
-            //         title: e.title,
-            //         end: e.end,
-            //         start: e.start,
-            //         backgroundColor: '#ababab',
-            //         borderColor: '#ffffff',
-            //     });
-            // });
         }
         this.display_map = !this.display_map;
     }

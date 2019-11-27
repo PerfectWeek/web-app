@@ -8,7 +8,9 @@ import {EventsService} from '../../../core/services/Requests/Events';
 import {PermissionService} from '../../../core/services/permission.service';
 import {EventTypeService} from '../../../core/services/event_type.service';
 import {Location} from '@angular/common';
-import French from 'flatpickr/dist/l10n/fr.js';
+
+import frLocale from 'flatpickr/dist/l10n/fr.js';
+import enLocale from 'flatpickr/dist/l10n/uk.js';
 import {ActivatedRoute} from '@angular/router';
 
 import * as imageUtils from "../../../core/helpers/image"
@@ -46,17 +48,14 @@ export class ModifyEventDialog implements OnInit, OnDestroy {
         formated_start: null
     };
 
-    locale = French.fr;
+    locale = frLocale.fr;
     event_image: any;
 
     is_picture_changed: boolean = false;
     image_path: any;
 
-    share_url = null;
-    // eventTypes: any = [{value: 'party', viewValue: 'Fête'},
-    //     {value: 'work', viewValue: 'Travail'},
-    //     {value: 'hobby', viewValue: 'Loisir'},
-    //     {value: 'workout', viewValue: 'Entrainement'}];
+    //share_url = null;
+    share_url = 'https://perfect-week.pw';
 
     eventVisibilities: any = [{value: 'public', viewValue: 'Public'},
         {value: 'private', viewValue: 'Privé'}];
@@ -71,13 +70,13 @@ export class ModifyEventDialog implements OnInit, OnDestroy {
                 public dialogRef: MatDialogRef<ModifyEventDialog>,
                 public dialog: MatDialog,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
+        console.log('data => ', data);
         this.eventsSrv.getImage(data.event.event.id)
             .subscribe(image => {
                 let obj = {image: null};
                 imageUtils.createImageFromBlob(image, obj);
                 setTimeout(() => {this.event_image = obj.image;}, 50);
             });
-        this.share_url = `https://wwww.app.perfect-week/event/${this.pw_event.id}`; //a modifier
 
         const current_event = this.data.calAPI.getEventById(data.event.event.id);
         this.eventsSrv.getEvent(data.event.event.id)
@@ -93,14 +92,23 @@ export class ModifyEventDialog implements OnInit, OnDestroy {
                 this.pw_event.backgroundColor = ret.event.color;
                 },
                 err => console.log("err => ", err.message));
+        if (data.locale === 'fr') {
+            this.locale = frLocale.fr;
+        }
+        else if (data.locale === 'en') {
+            this.locale = enLocale.en;
+        }
+        else {
+            this.locale = frLocale.fr;
+        }
     }
 
     ngOnInit(): void {
-        this.location.replaceState(`/event/${this.pw_event.id}`);
+
     }
 
     ngOnDestroy(): void {
-        this.location.replaceState('/dashboard');
+        //this.location.replaceState('/dashboard');
     }
 
     modifyEvent() {

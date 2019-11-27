@@ -37,7 +37,11 @@ export class Navbar implements OnInit, AfterViewInit {
 
     EventInvitations: EventInvitation[] = [];
 
-    invitations$: Observable<UserInvitations>;
+    invitations = this.profileSrv.invitations$.subscribe(invitations => {
+        this.groupInvitations = invitations.group_invitations;
+        this.friendInvitations = invitations.friend_invitations;
+        this.EventInvitations = invitations.event_invitations;
+    });
 
     constructor(private authSrv: AuthService,
                 private router: Router,
@@ -50,7 +54,6 @@ export class Navbar implements OnInit, AfterViewInit {
                 private groupsSrv: GroupsService,
                 private usersSrv: UsersService,
                 private profileSrv: ProfileService) {
-        this.invitations$ = this.profileSrv.invitationsSubject.asObservable();
         if (localStorage.getItem('user_pseudo') != null)
             this.profileSrv.getInvitations();
     }
@@ -59,12 +62,12 @@ export class Navbar implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.invitations$
-            .do(invitations => {
-                this.groupInvitations = invitations.group_invitations;
-                this.friendInvitations = invitations.friend_invitations;
-                this.EventInvitations = invitations.event_invitations;
-            }).subscribe();
+        // this.invitations$
+        //     .do(invitations => {
+        //         this.groupInvitations = invitations.group_invitations;
+        //         this.friendInvitations = invitations.friend_invitations;
+        //         this.EventInvitations = invitations.event_invitations;
+        //     }).subscribe();
     }
 
     handleGroupRequest(invitation, result) {
@@ -74,6 +77,7 @@ export class Navbar implements OnInit, AfterViewInit {
                 .subscribe(ret => {
                     this.toastSrv.success(`Bravo, vous faites maitnenant parti du calendrier ${invitation.name}`);
                     this.profileSrv.getInvitations();
+                    this.profileSrv.CalendarsUpdateSubject.next(true);
                 }, err => this.toastSrv.error('Une erreur est survenue'));
         else
             this.calendarSrv.declineInvitation(invitation.id)
@@ -89,6 +93,7 @@ export class Navbar implements OnInit, AfterViewInit {
                 .subscribe(ret => {
                     this.toastSrv.success(`Bravo, vous êtes maintenant ami avec ${invitation.user.name}`);
                     this.profileSrv.getInvitations();
+                    this.profileSrv.friendsUpdatesSubject.next(true);
                 }, err => this.toastSrv.error('Une erreur est survenue'));
         else
             this.invitationsSrv.declineFriendInvitation(invitation.user.id)
@@ -103,6 +108,7 @@ export class Navbar implements OnInit, AfterViewInit {
             this.eventSrv.setEventStatus(invitation.id, "going")
                 .subscribe(ret => {
                     this.toastSrv.success(`Bravo, vous faites maintenant parti de l'évènement ${invitation.name}`);
+                    this.profileSrv.EventsUpdateSubject.next(true);
                     this.profileSrv.getInvitations();
             });
         else

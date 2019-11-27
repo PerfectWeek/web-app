@@ -1,6 +1,5 @@
 <div id="scale_map">
-<agm-map [address]="address"
-         [(latitude)]="location.lat"
+<agm-map [(latitude)]="location.lat"
          [(longitude)]="location.lng"
          [(zoom)]="location.zoom"
          [disableDefaultUI]="true"
@@ -13,7 +12,8 @@
                     [latitude]="data.lat"
                     [longitude]="data.lng"
                     [markerDraggable]="false"
-                    [label]="data.name"></agm-marker>
+                    [label]="data.name"
+                    (markerClick)="modify_event($event, data.id)"></agm-marker>
 <!--        <agm-marker [(latitude)]="48.8414356"-->
 <!--                    [(longitude)]="2.253048700000022"-->
 <!--                    [markerDraggable]="location.marker.draggable"></agm-marker>-->

@@ -9,7 +9,8 @@ import {PermissionService} from '../../../core/services/permission.service';
 import {EventsService} from "../../../core/services/Requests/Events";
 import {EventTypeService} from '../../../core/services/event_type.service';
 
-import French from 'flatpickr/dist/l10n/fr.js';
+import frLocale from 'flatpickr/dist/l10n/fr.js';
+import enLocale from 'flatpickr/dist/l10n/uk.js';
 
 @Component({
     selector: 'createEvent-creation-dialog',
@@ -22,7 +23,6 @@ export class CreateEventDialog {
     eventType: string = 'hobby';
     description: string = "";
     eventVisibility = 'public';
-    //is_global_calendar = true; //important
     color: string = "#ffffff";
     start: Date;
     end: Date;
@@ -34,11 +34,7 @@ export class CreateEventDialog {
     image: any = null;
     route_id_calendar;
 
-    locale = French.fr;
-    // eventTypes: any = [{value: 'party', viewValue: 'Fête'},
-    //     {value: 'work', viewValue: 'Travail'},
-    //     {value: 'hobby', viewValue: 'Loisir'},
-    //     {value: 'workout', viewValue: 'Entrainement'}];
+    locale = frLocale.fr;
 
     eventVisibilities: any = [{value: 'public', viewValue: 'Public'},
         {value: 'private', viewValue: 'Privé'}];
@@ -59,6 +55,7 @@ export class CreateEventDialog {
                 public dialogRef: MatDialogRef<CreateEventDialog>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
 
+                console.log(data.geocode_address);
                 if (data.event) {
                     this.rd_only = true;
                     this.eventType = data.event.type;
@@ -66,6 +63,21 @@ export class CreateEventDialog {
                     this.start = data.event.start;
                     this.end = data.event.end;
                 }
+                if (data.geocode_address !== undefined) {
+                    console.log("undefined lol");
+                    this.location = data.geocode_address;
+                }
+                console.log("data.locale => ", data.locale);
+                if (data.locale === 'fr') {
+                    this.locale = frLocale.fr;
+                }
+                else if (data.locale === 'en') {
+                    this.locale = enLocale.en;
+                }
+                else {
+                    this.locale = frLocale.fr;
+                }
+
         //console.log("read only", this.rd_only);
 
         // this.profileSrv.userProfile$.subscribe(user => {
@@ -126,7 +138,17 @@ export class CreateEventDialog {
                 });
                 (<any>window).ga('send', 'event', 'Events', 'Event Creation', `Event Name: ${this.name}`);
                 this.toastSrv.success('Evenement ajouté au calendrier');
-                this.dialogRef.close();
+                this.dialogRef.close({
+                    id: ret.event.id,
+                    title: this.name,
+                    start: this.start,
+                    end: this.end,
+                    type: this.eventType,
+                    location: this.location,
+                    backgroundColor: this.color,
+                    description: this.description,
+                    visibility: this.eventVisibility,
+                });
             }, err => this.toastSrv.error('Une erreur est survenue lors de l\'ajout du nouvel evenement'));
     }
 }
