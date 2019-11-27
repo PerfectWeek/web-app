@@ -8,7 +8,9 @@ import {EventsService} from '../../../core/services/Requests/Events';
 import {PermissionService} from '../../../core/services/permission.service';
 import {EventTypeService} from '../../../core/services/event_type.service';
 import {Location} from '@angular/common';
-import French from 'flatpickr/dist/l10n/fr.js';
+
+import frLocale from 'flatpickr/dist/l10n/fr.js';
+import enLocale from 'flatpickr/dist/l10n/uk.js';
 import {ActivatedRoute} from '@angular/router';
 
 import * as imageUtils from "../../../core/helpers/image"
@@ -46,17 +48,14 @@ export class ModifyEventDialog implements OnInit, OnDestroy {
         formated_start: null
     };
 
-    locale = French.fr;
+    locale = frLocale.fr;
     event_image: any;
 
     is_picture_changed: boolean = false;
     image_path: any;
 
-    share_url = null;
-    // eventTypes: any = [{value: 'party', viewValue: 'Fête'},
-    //     {value: 'work', viewValue: 'Travail'},
-    //     {value: 'hobby', viewValue: 'Loisir'},
-    //     {value: 'workout', viewValue: 'Entrainement'}];
+    //share_url = null;
+    share_url = 'https://perfect-week.pw';
 
     eventVisibilities: any = [{value: 'public', viewValue: 'Public'},
         {value: 'private', viewValue: 'Privé'}];
@@ -80,8 +79,6 @@ export class ModifyEventDialog implements OnInit, OnDestroy {
             });
 
         const current_event = this.data.calAPI.getEventById(data.event.event.id);
-        console.log("lolololomdr",data);
-        console.log("lololololol",data.event.event.id);
         this.eventsSrv.getEvent(data.event.event.id)
             .subscribe(ret => {
                 this.pw_event.id = ret.event.id;
@@ -95,9 +92,15 @@ export class ModifyEventDialog implements OnInit, OnDestroy {
                 this.pw_event.backgroundColor = ret.event.color;
                 },
                 err => console.log("err => ", err.message));
-        //this.location.replaceState(`/event/${this.pw_event.id}`);
-        //this.share_url = `https://wwww.app.perfect-week/event/${this.pw_event.id}`; //a modifier
-        this.share_url = 'https://perfect-week.pw/'; //a modifier
+        if (data.locale === 'fr') {
+            this.locale = frLocale.fr;
+        }
+        else if (data.locale === 'en') {
+            this.locale = enLocale.en;
+        }
+        else {
+            this.locale = frLocale.fr;
+        }
     }
 
     ngOnInit(): void {

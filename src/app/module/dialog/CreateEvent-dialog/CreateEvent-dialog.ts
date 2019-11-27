@@ -9,7 +9,8 @@ import {PermissionService} from '../../../core/services/permission.service';
 import {EventsService} from "../../../core/services/Requests/Events";
 import {EventTypeService} from '../../../core/services/event_type.service';
 
-import French from 'flatpickr/dist/l10n/fr.js';
+import frLocale from 'flatpickr/dist/l10n/fr.js';
+import enLocale from 'flatpickr/dist/l10n/uk.js';
 
 @Component({
     selector: 'createEvent-creation-dialog',
@@ -33,7 +34,7 @@ export class CreateEventDialog {
     image: any = null;
     route_id_calendar;
 
-    locale = French.fr;
+    locale = frLocale.fr;
 
     eventVisibilities: any = [{value: 'public', viewValue: 'Public'},
         {value: 'private', viewValue: 'Privé'}];
@@ -66,6 +67,17 @@ export class CreateEventDialog {
                     console.log("undefined lol");
                     this.location = data.geocode_address;
                 }
+                console.log("data.locale => ", data.locale);
+                if (data.locale === 'fr') {
+                    this.locale = frLocale.fr;
+                }
+                else if (data.locale === 'en') {
+                    this.locale = enLocale.en;
+                }
+                else {
+                    this.locale = frLocale.fr;
+                }
+
         //console.log("read only", this.rd_only);
 
         // this.profileSrv.userProfile$.subscribe(user => {

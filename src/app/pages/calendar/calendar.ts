@@ -25,7 +25,8 @@ import {Router} from '@angular/router';
 import {EventInput} from '@fullcalendar/core/structs/event';
 import {CreateEventDialog} from '../../module/dialog/CreateEvent-dialog/CreateEvent-dialog';
 import frLocale from '@fullcalendar/core/locales/fr';
-import esLocale from '@fullcalendar/core/locales/es';
+import enLocale from '@fullcalendar/core/locales/en-gb';
+// import esLocale from '@fullcalendar/core/locales/es';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
 import {FoundSlotDialog} from '../../module/dialog/FoundSlot-dialog/FoundSlot-dialog';
 import {ConfirmDialog} from '../../module/dialog/Confirm-dialog/Confirm-dialog';
@@ -55,7 +56,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     @Input('role') role: string = 'admin';
 
-    locale: 'fr';
+    locale: frLocale;
     calendar_id: number = null;
     calendar_name: string = null;
     is_global_calendar: boolean = true;
@@ -65,6 +66,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     display_map: boolean = false;
     switch_button_content: string = 'Carte';
     calendar_events: any = [];
+    url_locale: string = 'fr';
     //events_with_address: any = [];
 
     constructor(private modal: NgbModal,
@@ -81,8 +83,30 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        console.log("couocucokdeokdeodkoe")
+        let incr = 0;
+        let url_local;
+        for (let i = 0; i <  window.location.href.length; i++) {
+            incr += window.location.href[i] === '/' ? 1 : 0;
+            if (incr === 3) {
+                this.url_locale = window.location.href.substr(i + 1, 2).toLowerCase();
+                break;
+            }
+        }
+        // console.log('url_local => ', url_local);
         this.calendar_id = +(this.router.url.slice(this.router.url.lastIndexOf('/') + 1));
+
+        // this.url_locale = '';
+        if (this.url_locale === 'en') {
+            this.locale = enLocale;
+        }
+        else if (this.url_locale === 'fr') {
+            this.locale = frLocale;
+        }
+        else {
+            this.locale = frLocale;
+        }
+
+
         this.is_global_calendar = (!Number.isNaN(this.calendar_id)) ? false : true;
         this.events = [];
         this.in_calendar_id = changes.in_calendar_id.currentValue;
@@ -129,8 +153,8 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
             },
             plugins: [bootstrapPlugin, interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
-            locales: [esLocale, frLocale],
-            locale: frLocale,
+            locales: [enLocale, frLocale],
+            locale: this.locale,
             buttonIcons: false,
             weekNumbers: true,
             navLinks: true,
@@ -235,7 +259,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 // calendar_id: this.calendar_id,
                 calAPI: this.api,
                 is_global_calendar: this.is_global_calendar,
-                calendar_locale: this.locale,
+                locale: this.url_locale,
             }
         });
         dialogRef.afterClosed().subscribe(result => {
@@ -260,7 +284,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 width: '650px',
                 data: {
                     event,
-                    calendar_locale: this.locale,
+                    locale: this.url_locale,
                     calAPI: this.api,
                     role: this.role
                 }
@@ -323,7 +347,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 calendar_id: this.in_calendar_id ? this.in_calendar_id : this.calendar_id,
                 calAPI: this.api,
                 is_global_calendar: this.is_global_calendar,
-                calendar_locale: this.locale,
+                locale: this.url_locale,
             }
         });
         dialogRef.afterClosed().subscribe(result => {
