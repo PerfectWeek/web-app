@@ -109,7 +109,7 @@
                                i18n-placeholder="@@FoundSlotBeginningDate"
                                placeholder="Date minimum de debut"
                                [locale]="locale"
-                               [time24hr]="true"
+                               [time24hr]="data.locale === 'fr'"
                                required>
                     </mat-form-field>
                     <p i18n="@@FoundSlotBeginningDateErrorMessage" class="error-message" *ngIf="start < this.current_date">La date de début d'évènement ne doit pas
@@ -132,7 +132,7 @@
                                i18n-placeholder="@@FoundSlotEndingDate"
                                placeholder="Date maximum de fin"
                                [locale]="locale"
-                               [time24hr]="true"
+                               [time24hr]="data.locale === 'fr'"
                                required>
                     </mat-form-field>
                     <p i18n="@@FoundSlotEndingDateErrorMessage" class="error-message" *ngIf="end < this.current_date">La date de fin d'évènement ne doit pas être

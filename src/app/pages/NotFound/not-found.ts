@@ -9,6 +9,5 @@ import {RequestService} from "../../core/services/request.service";
 export class NotFoundComponent {
 
   constructor() {
-
   }
 }

@@ -7,7 +7,8 @@ import {FoundSlotConfirmDialog} from '../FoundSlotConfirm-dialog/FoundSlotConfir
 import {UsersService} from "../../../core/services/Requests/Users";
 import {CalendarsService} from "../../../core/services/Requests/Calendars";
 import {PermissionService} from '../../../core/services/permission.service';
-import French from 'flatpickr/dist/l10n/fr.js';
+import frLocale from 'flatpickr/dist/l10n/fr.js';
+import enLocale from 'flatpickr/dist/l10n/uk.js';
 
 @Component({
     selector: 'FoundSlot-dialog',
@@ -15,7 +16,7 @@ import French from 'flatpickr/dist/l10n/fr.js';
     styleUrls: ['FoundSlot-dialog.scss', '../../../../scss/dialog.scss']
 })
 export class FoundSlotDialog {
-    locale = French.fr;
+    locale = frLocale.fr;
     //name: string;
     eventType: string = 'hobby';
     //description: string;
@@ -62,6 +63,15 @@ export class FoundSlotDialog {
                     //this.calendars_list = ret.calendars;
                 });
         });
+        if (data.locale === 'fr') {
+            this.locale = frLocale.fr;
+        }
+        else if (data.locale === 'en') {
+            this.locale = enLocale.en;
+        }
+        else {
+            this.locale = frLocale.fr;
+        }
     }
 
 

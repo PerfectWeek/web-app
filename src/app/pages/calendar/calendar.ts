@@ -25,7 +25,8 @@ import {Router} from '@angular/router';
 import {EventInput} from '@fullcalendar/core/structs/event';
 import {CreateEventDialog} from '../../module/dialog/CreateEvent-dialog/CreateEvent-dialog';
 import frLocale from '@fullcalendar/core/locales/fr';
-import esLocale from '@fullcalendar/core/locales/es';
+import enLocale from '@fullcalendar/core/locales/en-gb';
+// import esLocale from '@fullcalendar/core/locales/es';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
 import {FoundSlotDialog} from '../../module/dialog/FoundSlot-dialog/FoundSlot-dialog';
 import {ConfirmDialog} from '../../module/dialog/Confirm-dialog/Confirm-dialog';
@@ -55,7 +56,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     @Input('role') role: string = 'admin';
 
-    locale: 'fr';
+    locale: frLocale;
     calendar_id: number = null;
     calendar_name: string = null;
     is_global_calendar: boolean = true;
@@ -65,6 +66,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     display_map: boolean = false;
     switch_button_content: string = 'Carte';
     calendar_events: any = [];
+    url_locale: string = 'fr';
     //events_with_address: any = [];
 
     eventsUpdate = this.profileSrv.EventsUpdate$.subscribe(hasChanged => {
@@ -108,7 +110,30 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     ngOnChanges(changes: SimpleChanges) {
+        let incr = 0;
+        let url_local;
+        for (let i = 0; i <  window.location.href.length; i++) {
+            incr += window.location.href[i] === '/' ? 1 : 0;
+            if (incr === 3) {
+                this.url_locale = window.location.href.substr(i + 1, 2).toLowerCase();
+                break;
+            }
+        }
+        // console.log('url_local => ', url_local);
         this.calendar_id = +(this.router.url.slice(this.router.url.lastIndexOf('/') + 1));
+
+        // this.url_locale = '';
+        if (this.url_locale === 'en') {
+            this.locale = enLocale;
+        }
+        else if (this.url_locale === 'fr') {
+            this.locale = frLocale;
+        }
+        else {
+            this.locale = frLocale;
+        }
+
+
         this.is_global_calendar = (!Number.isNaN(this.calendar_id)) ? false : true;
         this.events = [];
         this.in_calendar_id = changes.in_calendar_id.currentValue;
@@ -155,8 +180,8 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
             },
             plugins: [bootstrapPlugin, interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
-            locales: [esLocale, frLocale],
-            locale: frLocale,
+            locales: [enLocale, frLocale],
+            locale: this.locale,
             buttonIcons: false,
             weekNumbers: true,
             navLinks: true,
@@ -205,12 +230,19 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     async get_calendar_events(calendar_id) {
         let ret = await this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).first().toPromise();
+        // this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).subscribe(ret => {
             console.log("le subscribe est reel");
             this.events = []; //ici
             // this.api.removeAllEvents();
             const borderColor_ = '#1C4891';
             this.calendar_events.push(...ret.events);
+            // this.events_with_address = [];
+            // this.events_with_address.push(...ret.events);
+            // console.log("with address", this.events_with_address);
             for (let event of ret.events) {
+                if (event.name === 'Abekran')
+                    console.log(event);
+                // console.log("oklm", event);
                 this.events.push({
                     id: event.id,
                     title: event.name,
@@ -221,11 +253,30 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                     location: event.location,
                     end_time: event.end_time,
                     start_time: event.start_time,
+                    // id: event.id,
+                    // title: event.name,
+                    // end: event.end_time,
+                    // start: event.start_time,
+                    // backgroundColor: event.color,
+                    // borderColor: '#1C4891',
                 });
+                // this.api.addEvent({
+                //     id: event.id,
+                //     title: event.name,
+                //     end: event.end_time,
+                //     start: event.start_time,
+                //     backgroundColor: event.color,
+                //     borderColor: borderColor_,
+                //     location: event.location,
+                //     end_time: event.end_time,
+                //     start_time: event.start_time,
+                // });
             }
+        // });
     }
 
     get_in_group_calendar(): void {
+        console.log("ca rentre");
         this.get_calendar_events(this.in_calendar_id);
         this.calendarsSrv.getCalendar(this.in_calendar_id)
             .subscribe(ret => {
@@ -254,7 +305,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 // calendar_id: this.calendar_id,
                 calAPI: this.api,
                 is_global_calendar: this.is_global_calendar,
-                calendar_locale: this.locale,
+                locale: this.url_locale,
             }
         });
         dialogRef.afterClosed().subscribe(result => {
@@ -279,7 +330,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 width: '650px',
                 data: {
                     event,
-                    calendar_locale: this.locale,
+                    locale: this.url_locale,
                     calAPI: this.api,
                     role: this.role
                 }
@@ -307,8 +358,10 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 }
                 const api = this.getAPI();
                 const modified_event = api.getEventById(event.event.id);
+
                 this.eventsSrv.getEvent(event.event.id)
                     .subscribe(resp => {
+                        // console.log("resp", resp);
                         this.eventsSrv.modifyEvent(event.event.id, {
                             name: event.event.title,
                             type: resp.event.type,
@@ -320,13 +373,17 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                             color: event.event.backgroundColor
                         }).subscribe(ret => {
                             this.toastSrv.success('Evenement modifié');
+                            console.log("recive", modified_event);
                             modified_event.setExtendedProp('start_time', modified_event.start.toISOString());
                             modified_event.setExtendedProp('end_time', modified_event.end.toISOString());
                             modified_event.setExtendedProp('location', resp.event.location);
+                            console.log("after modif", modified_event);
+                            console.log("\n");
                         });
                     });
             });
         });
+        // console.log("change", this.api.getEvents());
     }
 
     foundSlots(): void {
@@ -336,7 +393,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 calendar_id: this.in_calendar_id ? this.in_calendar_id : this.calendar_id,
                 calAPI: this.api,
                 is_global_calendar: this.is_global_calendar,
-                calendar_locale: this.locale,
+                locale: this.url_locale,
             }
         });
         dialogRef.afterClosed().subscribe(result => {
