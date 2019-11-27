@@ -233,8 +233,8 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
             this.events = []; //ici
             this.api.removeAllEvents();
             const borderColor_ = '#1C4891';
-            this.calendar_events.push(...ret.events);
-            for (let event of ret.events) {
+            this.calendar_events.push(...ret.events.filter(event => event.status === "going" || event.status === "none"));
+            for (let event of this.calendar_events.filter(event => event.status === "going" || event.status === "none")) {
                 if (event.name === 'Abekran')
                 this.events.push({
                     id: event.id,
