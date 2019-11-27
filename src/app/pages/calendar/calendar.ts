@@ -205,19 +205,12 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     async get_calendar_events(calendar_id) {
         let ret = await this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).first().toPromise();
-        // this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).subscribe(ret => {
             console.log("le subscribe est reel");
             this.events = []; //ici
             // this.api.removeAllEvents();
             const borderColor_ = '#1C4891';
             this.calendar_events.push(...ret.events);
-            // this.events_with_address = [];
-            // this.events_with_address.push(...ret.events);
-            // console.log("with address", this.events_with_address);
             for (let event of ret.events) {
-                if (event.name === 'Abekran')
-                    console.log(event);
-                // console.log("oklm", event);
                 this.events.push({
                     id: event.id,
                     title: event.name,
@@ -391,10 +384,11 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     async switch_map_calendar() {
         // do the request for events
+        const local_en = window.location.href.includes("/en/");
         if (this.display_map === false) {
-            this.switch_button_content = 'Calendrier';
+            this.switch_button_content = local_en === true ? 'Calendar' : 'Calendrier';
         } else {
-            this.switch_button_content = 'Carte';
+            this.switch_button_content = local_en === true ? "Map" : 'Carte';
             this.events = [];
             let ret = await this.eventsSrv.getEvents(this.in_calendar_id !== -1 ? {"only_calendar_ids[]": this.in_calendar_id}: {}).first().toPromise();
             ret.events.forEach(e => {

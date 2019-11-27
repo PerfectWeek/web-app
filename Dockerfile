@@ -7,7 +7,7 @@ RUN npm install
 
 COPY ./ ./
 
-RUN npm run build:prod
+RUN npm run build-locale
 
 EXPOSE 5000
 

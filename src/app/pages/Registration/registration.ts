@@ -32,7 +32,7 @@ export class RegistrationComponent {
         return this.fb.group({
                 name: [null, Validators.required],
                 email: [null, Validators.compose([Validators.email, Validators.pattern("^\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$"), Validators.required])],
-                password: [null, Validators.compose([Validators.pattern("^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+).{7,}$"), Validators.required])],
+                password: [null, Validators.compose([Validators.pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$&+,:;=?@#|'<>.^*(){}%!-])[A-Za-z\\d$&+,:;=?@#|'<>.^*(){}%!-]{8,}$"), Validators.required])],
                 confirmPassword: [null, Validators.required]
             },
             {
