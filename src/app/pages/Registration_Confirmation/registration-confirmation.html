@@ -1,16 +1,1 @@
-<div class="main-full-component">
-  <div class="main-container" *ngIf="isOk === true">
-    <p i18n="@@RegConfirmSuccess" style="text-align: center">Votre compte a été créé avec succès</p>
-    <div class="buttons-spaced-reversed">
-      <button i18n="@@RegConfirmToConnection" mat-raised-button type="button" class="btn-secondary" (click)="router.navigate(['/login'])">Se connecter</button>
-      <button i18n="@@RegConfirmToRegistration" mat-raised-button type="button" class="btn-primary" (click)="router.navigate(['/'])">Retourner à la page d'inscription</button>
-    </div>
-  </div>
-  <div class="main-container" *ngIf="isOk === false">
-    <p style="text-align: center">{{error_message}}</p>
-    <div class="buttons-spaced-reversed">
-      <button i18n="@@RegConfirmToConnection2" mat-raised-button type="button" class="btn-secondary" (click)="confirmRegistration()">Se connecter</button>
-      <button i18n="@@RegConfirmToRegistration2" mat-raised-button type="button" class="btn-primary" (click)="router.navigate(['/'])">Retourner à la page d'inscription</button>
-    </div>
-  </div>
-</div>
+<div class="main-full-component"></div>

@@ -38,7 +38,6 @@ export class Navbar implements OnInit, AfterViewInit {
     EventInvitations: EventInvitation[] = [];
 
     invitations = this.profileSrv.invitations$.subscribe(invitations => {
-        console.log('invitations => ', invitations);
         this.groupInvitations = invitations.group_invitations;
         this.friendInvitations = invitations.friend_invitations;
         this.EventInvitations = invitations.event_invitations;

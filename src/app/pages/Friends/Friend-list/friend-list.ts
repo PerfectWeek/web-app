@@ -49,7 +49,6 @@ export class FriendListComponent implements OnInit, AfterViewInit {
 
     friendsSubscription = this.profileSrv.friendsUpdates$.subscribe(hasChanged => {
         if (hasChanged === true) {
-            console.log('New friends :D');
             this.getFriends();
             this.profileSrv.friendsUpdatesSubject.next(false);
         }

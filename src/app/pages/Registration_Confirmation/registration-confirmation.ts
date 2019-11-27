@@ -23,23 +23,24 @@ export class RegistrationConfirmationComponent implements OnInit {
   }
 
   ngOnInit() {
-      console.log('on init registration confirm');
         this.route.params.subscribe(params => {
           this.authSrv.validateEmail(params['id'])
               .subscribe(
                   ret => {
+                      this.router.navigate(['/login']);
                       this.isOk = true;
                   },
                   err => {
                     this.toastSrv.error('Une erreur est survenue')
                     this.isOk = false;
                     this.error_message = err.error.message;
-                  })
+                    this.router.navigate(['/register']);
+                  });
         });
   }
 
   confirmRegistration() {
       (<any>window).ga('send', 'event', 'Button', 'Confirming Registration', 'Confirming Registration');
-      this.router.navigate(['/login'])
+      this.router.navigate(['/login']);
   }
 }

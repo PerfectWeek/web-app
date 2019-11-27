@@ -22,7 +22,7 @@ export class AuthenticationService {
     }
 
     facebookAuth(access_token: string, refresh_token?: string): Observable<any> {
-        return this.requestSrv.get("auth/facebook/callback", {access_token}, {});
+        return this.requestSrv.postJSON("auth/facebook/callback", {access_token}, {});
     }
 
     googleAuth(): Observable<any> {
