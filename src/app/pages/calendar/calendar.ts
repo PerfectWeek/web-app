@@ -65,7 +65,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     display_map: boolean = false;
     switch_button_content: string = 'Carte';
     calendar_events: any = [];
-    events_with_address: any = [];
+    //events_with_address: any = [];
 
     eventsUpdate = this.profileSrv.EventsUpdate$.subscribe(hasChanged => {
         if (hasChanged === true) {
@@ -125,30 +125,20 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
         if (this.is_global_calendar === false) {
             this.calendarsSrv.getCalendar(this.in_calendar_id).subscribe(ret => {
                 this.role = ret.calendar.role;
-
-                // this.api.setOption('editable', this.permSrv.permission[this.role].CRUD); // maybe delete
             });
         } else {
             this.role = 'admin';
-            // this.api.setOption('editable', this.permSrv.permission[this.role].CRUD); // maybe delete
         }
     }
 
     ngOnInit() {
         this.events = [];
-        // this.get_group_info();
-        // if (this.in_calendar_id) {
-        //     (this.in_calendar_id === -1) ? this.get_global_calendar() : this.getInGroupCalendar();
-        // }
-        // else
-        //     this.get_group_info();
         this.options = {
             editable: true,
             customButtons: {
                 addEventButton: {
                     text: 'Ajouter un evenement',
                     click: async () => {
-                        //this.addEventCallback();
                         this.addEvent();
                     },
                 },
@@ -163,12 +153,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                 left: 'prev,next today',
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
-                // right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
             },
-            // footer: {
-            //     right: 'FoundSlotButton,addEventButton',
-            //     center: '',
-            // },
             plugins: [bootstrapPlugin, interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
             locales: [esLocale, frLocale],
             locale: frLocale,
@@ -199,23 +184,52 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
         return this.calendarComponent.getApi();
     }
 
-    get_calendar_events(calendar_id) {
-        this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).subscribe(ret => {
-            this.calendar_events = [];
-            this.api.removeAllEvents();
+    // get_calendar_events(calendar_id) {
+    //     this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).subscribe(ret => {
+    //         this.calendar_events = [];
+    //         this.api.removeAllEvents();
+    //         const borderColor_ = '#1C4891';
+    //         this.calendar_events.push(...ret.events.filter(event => event.status === "going"));
+    //         for (let event of this.calendar_events) {
+    //             this.api.addEvent({
+    //                 id: event.id,
+    //                 title: event.name,
+    //                 end: event.end_time,
+    //                 start: event.start_time,
+    //                 backgroundColor: event.color,
+    //                 borderColor: borderColor_,
+    //             });
+    //         }
+    //     });
+    // }
+
+    async get_calendar_events(calendar_id) {
+        let ret = await this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).first().toPromise();
+        // this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).subscribe(ret => {
+            console.log("le subscribe est reel");
+            this.events = []; //ici
+            // this.api.removeAllEvents();
             const borderColor_ = '#1C4891';
-            this.calendar_events.push(...ret.events.filter(event => event.status === "going"));
-            for (let event of this.calendar_events) {
-                this.api.addEvent({
+            this.calendar_events.push(...ret.events);
+            // this.events_with_address = [];
+            // this.events_with_address.push(...ret.events);
+            // console.log("with address", this.events_with_address);
+            for (let event of ret.events) {
+                if (event.name === 'Abekran')
+                    console.log(event);
+                // console.log("oklm", event);
+                this.events.push({
                     id: event.id,
                     title: event.name,
                     end: event.end_time,
                     start: event.start_time,
                     backgroundColor: event.color,
                     borderColor: borderColor_,
+                    location: event.location,
+                    end_time: event.end_time,
+                    start_time: event.start_time,
                 });
             }
-        });
     }
 
     get_in_group_calendar(): void {
@@ -294,8 +308,8 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
             this.profileSrv.userProfile$.subscribe(user => {
                 let me = ret.event.attendees.filter(attendee => attendee.id === user.id);
                 this.role = me[0].role;
-                if (this.permSrv.permission[this.role].read === false) {
-                    this.toastSrv.error('Vous n\'avez pas les droits de lecture sûr cette évènement');
+                if (this.permSrv.permission[this.role].CRUD === false) {
+                    this.toastSrv.error('Vous n\'avez pas les droits de lecture sûr cet évènement');
                     return;
                 }
                 const api = this.getAPI();
@@ -313,6 +327,9 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                             color: event.event.backgroundColor
                         }).subscribe(ret => {
                             this.toastSrv.success('Evenement modifié');
+                            modified_event.setExtendedProp('start_time', modified_event.start.toISOString());
+                            modified_event.setExtendedProp('end_time', modified_event.end.toISOString());
+                            modified_event.setExtendedProp('location', resp.event.location);
                         });
                     });
             });
@@ -372,52 +389,24 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
         });
     }
 
-    switch_map_calendar() {
+    async switch_map_calendar() {
         // do the request for events
         if (this.display_map === false) {
-        //if (true) {
-            this.events_with_address = this.calendar_events.filter(e => e.location !== '' && new Date(e.end_time) > new Date());
-            // console.log("dkoedoe", filter_events);
-            // console.log("dkoedoe", filter_events[0]);
-            // filter_events.forEach(elem => {
-            //     console.log("test", elem.location);
-            //     // setTimeout(() => {this.findLocation(elem.location); }, 500);
-            // });
-            // console.log("nike", this.all_pos);
-            // this.findLocation(filter_events[0].location);
             this.switch_button_content = 'Calendrier';
         } else {
             this.switch_button_content = 'Carte';
-
-            const hexa = ['#e06868', '#ff906a', '#f2db09', '#3d8fdc', '#45c4d9', '#cae602', '#ffd39b', '#c0e2e1', '#ccffff', '#9c6eb2'];
-            const backgroundColor_ = hexa[Math.floor(Math.random() * hexa.length)];
-            const borderColor_ = '#1C4891';
             this.events = [];
-            let tmp = this.api.getEvents();
-            // this.api.removeAllEvents();
-            tmp.forEach(e => {
+            let ret = await this.eventsSrv.getEvents(this.in_calendar_id !== -1 ? {"only_calendar_ids[]": this.in_calendar_id}: {}).first().toPromise();
+            ret.events.forEach(e => {
                 this.events.push({
-                        id: e.id,
-                        title: e.title,
-                        end: e.end,
-                        start: e.start,
-                        backgroundColor: '#ababab',
-                        borderColor: '#ffffff',
-                    });
+                    id: e.id,
+                    title: e.name,
+                    end: e.end_time,
+                    start: e.start_time,
+                    backgroundColor: e.color,
+                    borderColor: '#1C4891',
+                });
             });
-            // let tmp = this.api.getEvents();
-            // this.api.removeAllEvents();
-            // this.events = [];
-            // tmp.forEach(e => {
-            //     this.api.addEvent({
-            //         id: e.id,
-            //         title: e.title,
-            //         end: e.end,
-            //         start: e.start,
-            //         backgroundColor: '#ababab',
-            //         borderColor: '#ffffff',
-            //     });
-            // });
         }
         this.display_map = !this.display_map;
     }

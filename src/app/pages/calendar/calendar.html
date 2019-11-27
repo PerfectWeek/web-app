@@ -9,7 +9,14 @@
 
 <!--    <div *ngIf="permSrv.permission[role].CRUD === true && displayOnly === false"  class="button_layout" fxLayout="row">-->
 
-    <map *ngIf="this.display_map === true" [address]="this.events_with_address"></map>
+    <map *ngIf="this.display_map === true"
+         [in_calendar_id]="this.in_calendar_id"
+         [is_global_calendar] = "this.is_global_calendar"
+         [calendarApi]="this.api"
+         [calendar_locale]="this.locale"
+         [role]="this.role"
+    ></map>
+    <!--    [address]="this.events_with_address"-->
 
     <full-calendar *ngIf="this.display_map === false"
             #fullcalendar

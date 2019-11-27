@@ -71,15 +71,17 @@ export class ModifyEventDialog implements OnInit, OnDestroy {
                 public dialogRef: MatDialogRef<ModifyEventDialog>,
                 public dialog: MatDialog,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
+        console.log('data => ', data);
         this.eventsSrv.getImage(data.event.event.id)
             .subscribe(image => {
                 let obj = {image: null};
                 imageUtils.createImageFromBlob(image, obj);
                 setTimeout(() => {this.event_image = obj.image;}, 50);
             });
-        this.share_url = `https://wwww.app.perfect-week/event/${this.pw_event.id}`; //a modifier
 
         const current_event = this.data.calAPI.getEventById(data.event.event.id);
+        console.log("lolololomdr",data);
+        console.log("lololololol",data.event.event.id);
         this.eventsSrv.getEvent(data.event.event.id)
             .subscribe(ret => {
                 this.pw_event.id = ret.event.id;
@@ -93,14 +95,17 @@ export class ModifyEventDialog implements OnInit, OnDestroy {
                 this.pw_event.backgroundColor = ret.event.color;
                 },
                 err => console.log("err => ", err.message));
+        //this.location.replaceState(`/event/${this.pw_event.id}`);
+        //this.share_url = `https://wwww.app.perfect-week/event/${this.pw_event.id}`; //a modifier
+        this.share_url = 'https://perfect-week.pw/'; //a modifier
     }
 
     ngOnInit(): void {
-        this.location.replaceState(`/event/${this.pw_event.id}`);
+
     }
 
     ngOnDestroy(): void {
-        this.location.replaceState('/dashboard');
+        //this.location.replaceState('/dashboard');
     }
 
     modifyEvent() {
