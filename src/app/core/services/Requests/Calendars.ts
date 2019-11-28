@@ -72,7 +72,7 @@ export class CalendarsService {
     }
 
     editUserRole(calendar_id: number, user_id: number, role: string): Observable<any> {
-        return this.requestSrv.put(`calendars/${calendar_id}/members/${user_id}/role`, role, {Authorization: ''});
+        return this.requestSrv.put(`calendars/${calendar_id}/members/${user_id}/role`, {role}, {Authorization: ''});
     }
 
     findBestSlot(calendar_id: number, params: any): Observable<any> {

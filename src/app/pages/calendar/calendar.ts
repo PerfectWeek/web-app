@@ -351,7 +351,12 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result !== null && result !== undefined) {
-
+                let test = {...result,
+                    end_time: result.end,
+                    start_time: result.start};
+                delete test.visibility;
+                delete test.type;
+                this.events.push(test);
                 this.toastSrv.success('L\'événement a bien été créé');
             }
         });

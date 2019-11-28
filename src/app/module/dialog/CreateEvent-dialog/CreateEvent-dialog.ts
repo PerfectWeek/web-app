@@ -125,17 +125,17 @@ export class CreateEventDialog {
             end_time: this.end.toISOString(),
             color: this.color
         }).subscribe(ret => {
-                this.data.calAPI.addEvent({
-                    id: ret.event.id,
-                    title: this.name,
-                    start: this.start,
-                    end: this.end,
-                    type: this.eventType,
-                    location: this.location,
-                    backgroundColor: this.color,
-                    description: this.description,
-                    visibility: this.eventVisibility,
-                });
+                // this.data.calAPI.addEvent({
+                //     id: ret.event.id,
+                //     title: this.name,
+                //     start: this.start,
+                //     end: this.end,
+                //     type: this.eventType,
+                //     location: this.location,
+                //     backgroundColor: this.color,
+                //     description: this.description,
+                //     visibility: this.eventVisibility,
+                // });
                 (<any>window).ga('send', 'event', 'Events', 'Event Creation', `Event Name: ${this.name}`);
                 this.toastSrv.success('Evenement ajouté au calendrier');
                 this.dialogRef.close({
