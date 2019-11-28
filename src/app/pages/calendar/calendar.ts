@@ -53,6 +53,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     @Input('in_calendar_id') in_calendar_id = null;
     @Input('displayOnly') displayOnly: boolean = false;
+    @Input('displayMap') displayMap: boolean = true;
 
     @Input('role') role: string = 'admin';
 
@@ -408,12 +409,12 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                             visibility: resp.event.visibility,
                             description: resp.event.description,
                             start_time: modified_event.start.toISOString(),
-                            end_time: modified_event.end.toISOString(),
+                            end_time: (modified_event.extendedProps.end_time.toString() === modified_event.extendedProps.start_time.toString()) ? modified_event.start.toISOString(): modified_event.end.toISOString(),
                             color: event.event.backgroundColor
                         }).subscribe(ret => {
                             this.toastSrv.success('Evenement modifié');
-                            modified_event.setExtendedProp('start_time', modified_event.start.toISOString());
-                            modified_event.setExtendedProp('end_time', modified_event.end.toISOString());
+                            modified_event.setExtendedProp('start_time', ret.event.start_time);
+                            modified_event.setExtendedProp('end_time', ret.event.end_time);
                             modified_event.setExtendedProp('location', resp.event.location);
                         });
                     });
@@ -462,7 +463,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                             visibility: resp.event.visibility,
                             description: resp.event.description,
                             start_time: modified_event.start.toISOString(),
-                            end_time: modified_event.end.toISOString(),
+                            end_time: (modified_event.extendedProps.end_time.toString() === modified_event.extendedProps.start_time.toString()) ? modified_event.start.toISOString(): modified_event.end.toISOString(),
                             color: ret.event.backgroundColor
                         }).subscribe(ret => {
                             this.toastSrv.success('Evenement modifié');
