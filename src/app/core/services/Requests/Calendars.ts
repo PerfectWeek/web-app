@@ -27,8 +27,8 @@ export class CalendarsService {
         return this.requestSrv.get(`calendars`, {'invitation_status': 'confirmed'}, {Authorization: ''});
     }
 
-    modifyCalendar(calendar_id: number, name: string): Observable<any> {
-        return this.requestSrv.put(`calendars/${calendar_id}`, {name}, {Authorization: ''});
+    modifyCalendar(calendar_id: number, calendar: any): Observable<any> {
+        return this.requestSrv.put(`calendars/${calendar_id}`, calendar, {Authorization: ''});
     }
 
     deleteCalendar(calendar_id: number): Observable<any> {
@@ -72,7 +72,7 @@ export class CalendarsService {
     }
 
     editUserRole(calendar_id: number, user_id: number, role: string): Observable<any> {
-        return this.requestSrv.put(`calendars/${calendar_id}/members/${user_id}/role`, role, {Authorization: ''});
+        return this.requestSrv.put(`calendars/${calendar_id}/members/${user_id}/role`, {role}, {Authorization: ''});
     }
 
     findBestSlot(calendar_id: number, params: any): Observable<any> {

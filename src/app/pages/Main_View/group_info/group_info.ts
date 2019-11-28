@@ -160,7 +160,7 @@ export class GroupInfoComponent implements OnInit, OnChanges {
     getGroupInformation() {
         this.calendarSrv.getCalendar(this.group_id)
             .subscribe(ret => {
-                this.group.name = ret.calendar.name;
+                this.group = ret.calendar;
                 this.group_members = ret.calendar.members.filter(member => member.invitation_confirmed === true);
                 this.group_members.forEach((member, index) => {
                     if (member.id === this.profileSrv.user.id) {
@@ -228,14 +228,16 @@ export class GroupInfoComponent implements OnInit, OnChanges {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result != null && result.value != this.group[`${fieldname}`]) {
+                delete this.group.members;
                 this.group[`${fieldname}`] = result.value;
-                this.calendarSrv.modifyCalendar(this.group_id, this.group.name).subscribe(ret => {
-                        this.group[`${fieldname}`] = ret.group[`${fieldname}`];
-                        if (fieldname === 'name') {
-                            this.group_modified.emit(ret.group.id);
-                        }
-                        this.toastSrv.success(`Le ${fieldname === 'name' ? 'nom' : fieldname} de ce calendrier a bien été modifié`);
-                    })
+                this.calendarSrv.modifyCalendar(this.group_id, this.group).subscribe(ret => {
+                    this.group[`${fieldname}`] = ret.calendar[`${fieldname}`];
+                    if (fieldname === 'name') {
+                        this.group_modified.emit(ret.calendar.id);
+                        console.log('emit');
+                    }
+                    this.toastSrv.success(`Le ${fieldname === 'name' ? 'nom' : fieldname} de ce calendrier a bien été modifié`);
+                })
             }
         })
     }
