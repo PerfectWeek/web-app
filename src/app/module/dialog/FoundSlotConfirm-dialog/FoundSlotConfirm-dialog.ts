@@ -59,7 +59,7 @@ export class FoundSlotConfirmDialog {
         const start = this.data.slots.slots[this.index].start_time;
         const end = this.data.slots.slots[this.index].end_time;
         const dialogConfirmRef = this.dialog.open(CreateEventDialog, {
-            width: '1300px',
+            width: '650px',
             data: {
                 calendar_id: route_id_calendar,
                 is_global_calendar: false,

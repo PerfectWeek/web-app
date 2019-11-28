@@ -63,6 +63,7 @@ export class FoundSlotDialog {
                     //this.calendars_list = ret.calendars;
                 });
         });
+        console.log("data.locale", data.locale);
         if (data.locale === 'fr') {
             this.locale = frLocale.fr;
         }

@@ -53,6 +53,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
 
     @Input('in_calendar_id') in_calendar_id = null;
     @Input('displayOnly') displayOnly: boolean = false;
+    @Input('displayMap') displayMap: boolean = true;
 
     @Input('role') role: string = 'admin';
 
@@ -120,7 +121,6 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
             }
         }
         this.calendar_id = +(this.router.url.slice(this.router.url.lastIndexOf('/') + 1));
-
         // this.url_locale = '';
         if (this.url_locale === 'en') {
             this.locale = enLocale;
@@ -227,15 +227,51 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
     //     });
     // }
 
-    async get_calendar_events(calendar_id) {
-        let ret = await this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).first().toPromise();
-
-            this.events = []; //ici
-            this.api.removeAllEvents();
+    // async get_calendar_events(calendar_id) {
+    //     let ret = await this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).first().toPromise();
+    //     this.events = [];
+    //     const borderColor_ = '#1C4891';
+    //     this.calendar_events.push(...ret.events);
+    //     for (let event of ret.events) {
+    //         this.events.push({
+    //             id: event.id,
+    //             title: event.name,
+    //             end: event.end_time,
+    //             start: event.start_time,
+    //             backgroundColor: event.color,
+    //             borderColor: borderColor_,
+    //             location: event.location,
+    //             end_time: event.end_time,
+    //             start_time: event.start_time,
+    //         });
+    //     }
+    // }
+    // get_calendar_events(calendar_id) {
+    //     this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).subscribe(ret => {
+    //         this.events = [];
+    //         const borderColor_ = '#1C4891';
+    //         this.calendar_events.push(...ret.events);
+    //         for (let event of ret.events) {
+    //             this.events.push({
+    //                 id: event.id,
+    //                 title: event.name,
+    //                 end: event.end_time,
+    //                 start: event.start_time,
+    //                 backgroundColor: event.color,
+    //                 borderColor: borderColor_,
+    //                 location: event.location,
+    //                 end_time: event.end_time,
+    //                 start_time: event.start_time,
+    //             });
+    //         }
+    //     });
+    // }
+    get_calendar_events(calendar_id) {
+        this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).subscribe(ret => {
+            this.events = [];
             const borderColor_ = '#1C4891';
-            this.calendar_events.push(...ret.events.filter(event => event.status === "going" || event.status === "none"));
-            for (let event of this.calendar_events.filter(event => event.status === "going" || event.status === "none")) {
-                if (event.name === 'Abekran')
+            this.calendar_events = [...ret.events.filter(event => event.status === "going")];
+            for (let event of this.calendar_events) {
                 this.events.push({
                     id: event.id,
                     title: event.name,
@@ -247,17 +283,39 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                     end_time: event.end_time,
                     start_time: event.start_time,
                 });
-                this.api.addEvent({
-                    id: event.id,
-                    title: event.name,
-                    end: event.end_time,
-                    start: event.start_time,
-                    location: event.location,
-                    backgroundColor: event.color,
-                    borderColor: borderColor_,
-                });
             }
+        });
     }
+    // async get_calendar_events(calendar_id) {
+    //     let ret = await this.eventsSrv.getEvents(calendar_id !== -1 ? {"only_calendar_ids[]": calendar_id}: {}).first().toPromise();
+    //
+    //         //this.events = []; //ici
+    //         this.api.removeAllEvents();
+    //         const borderColor_ = '#1C4891';
+    //         this.calendar_events.push(...ret.events.filter(event => event.status === "going" || event.status === "none"));
+    //         for (let event of this.calendar_events.filter(event => event.status === "going" || event.status === "none")) {
+    //                 // this.events.push({
+    //                 //     id: event.id,
+    //                 //     title: event.name,
+    //                 //     end: event.end_time,
+    //                 //     start: event.start_time,
+    //                 //     backgroundColor: event.color,
+    //                 //     borderColor: borderColor_,
+    //                 //     location: event.location,
+    //                 //     end_time: event.end_time,
+    //                 //     start_time: event.start_time,
+    //                 // });
+    //             this.api.addEvent({
+    //                 id: event.id,
+    //                 title: event.name,
+    //                 end: event.end_time,
+    //                 start: event.start_time,
+    //                 location: event.location,
+    //                 backgroundColor: event.color,
+    //                 borderColor: borderColor_,
+    //             });
+    //         }
+    // }
 
     get_in_group_calendar(): void {
         this.get_calendar_events(this.in_calendar_id);
@@ -351,12 +409,12 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                             visibility: resp.event.visibility,
                             description: resp.event.description,
                             start_time: modified_event.start.toISOString(),
-                            end_time: modified_event.end.toISOString(),
+                            end_time: (modified_event.extendedProps.end_time.toString() === modified_event.extendedProps.start_time.toString()) ? modified_event.start.toISOString(): modified_event.end.toISOString(),
                             color: event.event.backgroundColor
                         }).subscribe(ret => {
                             this.toastSrv.success('Evenement modifié');
-                            modified_event.setExtendedProp('start_time', modified_event.start.toISOString());
-                            modified_event.setExtendedProp('end_time', modified_event.end.toISOString());
+                            modified_event.setExtendedProp('start_time', ret.event.start_time);
+                            modified_event.setExtendedProp('end_time', ret.event.end_time);
                             modified_event.setExtendedProp('location', resp.event.location);
                         });
                     });
@@ -405,7 +463,7 @@ export class CalendarComponent implements OnInit, OnChanges, AfterViewInit {
                             visibility: resp.event.visibility,
                             description: resp.event.description,
                             start_time: modified_event.start.toISOString(),
-                            end_time: modified_event.end.toISOString(),
+                            end_time: (modified_event.extendedProps.end_time.toString() === modified_event.extendedProps.start_time.toString()) ? modified_event.start.toISOString(): modified_event.end.toISOString(),
                             color: ret.event.backgroundColor
                         }).subscribe(ret => {
                             this.toastSrv.success('Evenement modifié');

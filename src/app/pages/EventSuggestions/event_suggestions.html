@@ -51,11 +51,11 @@
     </section>
 
     <section class="center-view">
-        <mwl-demo-component #calendar [displayOnly]="true" [in_calendar_id]="calendar_id"></mwl-demo-component>
+        <mwl-demo-component #calendar [displayMap]="false" [displayOnly]="true" [in_calendar_id]="calendar_id"></mwl-demo-component>
     </section>
 
 
-    <div class="right-view" *ngIf="focusedEvent">
+    <div class="right-view" *ngIf="focusedEvent" style="max-width: 20% !important;">
         <mat-card class="card-large fullsize">
             <img src="{{focusedEvent[1].image}}" alt="Event image" class="event-image" style="display: block; height: auto; margin-left: auto; margin-right: auto; max-height: 400px; max-width: 400px">
             <div class="event-info-full">
