@@ -105,7 +105,7 @@ export class MapComponent implements OnInit, OnChanges {
     async updateMapLocations() {
         let tmp = [];
         const ret = await this.eventsSrv.getEvents(this.in_calendar_id !== -1 ? {"only_calendar_ids[]": this.in_calendar_id}: {}).first().toPromise();
-        ret.events.forEach((e, index) => {
+        [...ret.events.filter(event => event.status === "going" || event.status === "none")].forEach((e, index) => {
             if (e.location !== '' && new Date(e.end_time) > new Date()) {
                 tmp.push(e);
             }

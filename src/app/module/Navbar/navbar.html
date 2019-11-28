@@ -44,14 +44,14 @@
         <li class="nav-item">
           <a class="nav-link" i18n="@@NavbarFriendsLink" routerLink="/friends"><i class="fas fa-user-friends"></i> Mes Ami(e)s</a>
         </li>
-        <div class="dropdown">
-          <button class="btn btn-transparent dropdown-toggle" type="button" id="Languages" data-toggle="dropdown" aria-haspopup="true" i18n="@@NavbarLanguages" aria-expanded="false">Langues</button>
-          <div class="dropdown-menu" aria-labelledby="Invitations">
-            <ng-container *ngFor="let language of languageList">
-              <a href="/{{language.code}}/" class="dropdown-item">{{language.label}}</a>
-            </ng-container>
-          </div>
-        </div>
+<!--        <div class="dropdown">-->
+<!--          <button class="btn btn-transparent dropdown-toggle" type="button" id="Languages" data-toggle="dropdown" aria-haspopup="true" i18n="@@NavbarLanguages" aria-expanded="false">Langues</button>-->
+<!--          <div class="dropdown-menu" aria-labelledby="Invitations">-->
+<!--            <ng-container *ngFor="let language of languageList">-->
+<!--              <a href="/{{language.code}}/" class="dropdown-item">{{language.label}}</a>-->
+<!--            </ng-container>-->
+<!--          </div>-->
+<!--        </div>-->
         <li class="nav-item">
             <a class="nav-link button" i18n="@@NavbarDisconnect" href="javascript:void(0)" (click)="logout()"><i class="fas fa-sign-out-alt"></i> Se déconnecter</a>
         </li>
