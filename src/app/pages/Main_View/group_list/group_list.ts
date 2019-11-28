@@ -255,8 +255,8 @@ export class GroupListComponent implements OnInit, AfterViewInit {
     modifyGroupName(calendar_id: number) {
         this.calendarSrv.getConfirmedCalendars()
             .subscribe(ret => {
-                (this.userGroups.find(group => group.id === calendar_id)).name = ret.group.name;
-            })
+                (this.userGroups.find(group => group.id === calendar_id)).name = ret.calendars.find(calendar => calendar.id === calendar_id).name;
+            });
     }
 
     leftGroup(group_id: number) {
